@@ -91,8 +91,8 @@ The pairing port and debugging port are different and can change. Never commit t
 
 The Razr has verified:
 
-- StreamingSoundtracks.com and Adagio.FM primary-stream playback;
-- station switching while playback is active;
+- primary-stream playback for all five stations;
+- two consecutive switching cycles covering all five stations while playback remained active;
 - background continuation with a foreground media service;
 - notification permission and visible media notification;
 - system media pause/resume;
@@ -100,18 +100,19 @@ The Razr has verified:
 - correct session metadata and audio focus;
 - no user-facing Next action for the internal fallback item.
 
+Primary-to-source fallback was also verified under a controlled primary-only network failure on a local API 35 emulator. The test left both verified production URLs unchanged and removed its temporary emulator firewall rule afterward.
+
 Before testing, use `adb devices -l` and pass `-s <device>` to ADB commands when an emulator is also running.
 
 ## Immediate next objective
 
-Finish M2 device validation:
+M2 device validation is complete. Proceed to M3 background-playback hardening:
 
-1. Verify 1980s.FM, Death.FM, and Entranced.FM on the Razr.
-2. Exercise primary-to-source fallback under a controlled, local test failure without changing or inventing production URLs.
-3. Verify switching repeatedly among all five stations.
-4. Record results and any stream-specific failures in `docs/m2-validation.md`.
-
-Then proceed to M3 hardening: notification/lock-screen behavior, Bluetooth/headset controls, audio focus transitions, noisy-output handling, and service lifecycle tests.
+1. Verify notification and lock-screen behavior across foreground, background, and task removal.
+2. Verify Bluetooth and wired-headset media controls.
+3. Exercise transient and permanent audio-focus transitions and document the resume policy.
+4. Verify noisy-output handling when a headset or Bluetooth route disconnects.
+5. Harden service lifecycle behavior and add focused automated tests where practical.
 
 ## Station stream evidence
 

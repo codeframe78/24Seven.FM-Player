@@ -44,4 +44,20 @@ On-device playback verification covered:
 - in-app stop returning the session to idle;
 - notification controls that do not expose the internal fallback stream as a user-selectable next item.
 
-No playback exceptions were recorded during these checks. The remaining M2 device work is to verify 1980s.FM, Death.FM, and Entranced.FM and to exercise primary-to-source fallback under a controlled primary-stream failure.
+No playback exceptions were recorded during these checks.
+
+## M2 completion follow-up
+
+On July 13, 2026, the validated debug APK was installed on the Motorola Razr 2023 from the second Windows development machine. The previous debug installation first had to be removed because Android debug keys are machine-specific and its signature did not match the new build.
+
+The remaining live stations were then validated on the Razr:
+
+- 1980s.FM sustained Media3 `PLAYING` state with matching session metadata and no playback error;
+- Death.FM sustained Media3 `PLAYING` state with matching session metadata and no playback error;
+- Entranced.FM sustained Media3 `PLAYING` state with matching session metadata and no playback error.
+
+Two consecutive switching cycles covered all five stations. All ten switches returned to `PLAYING` with metadata matching the selected station. Android reported one application MediaSession throughout the test, and no ExoPlayer, HTTP data-source, or fatal application error was recorded.
+
+Primary-to-source fallback was exercised on the local API 35 emulator without changing either production URL. An emulator-local firewall rule rejected only the resolved address of the 1980s.FM primary relay while leaving the source relay reachable. Media3 progressed from buffering item 0 to buffering item 1 and then `PLAYING` on item 1. The expected primary connection failure was present in the log, the source fallback played successfully, and the temporary firewall rule was removed immediately after the check.
+
+Playback was stopped on both devices after validation. These results complete the planned M2 playback validation.
