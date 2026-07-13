@@ -21,10 +21,13 @@ The audio-focus checks used a temporary local helper application compiled agains
 
 A rooted local API 35 emulator was used to send Android's protected `AUDIO_BECOMING_NOISY` broadcast. Active 1980s.FM playback transitioned from `PLAYING` to `PAUSED`, confirming Media3's noisy-output handling. Playback was stopped after the check.
 
+An Android instrumentation test now exercises the real `MediaSessionService` integration without opening a live stream. It connects a `MediaController`, confirms that play/pause remains available while the internal fallback playlist's Next and Previous commands remain hidden, releases the controller, explicitly stops the running service, and reconnects successfully after service recreation. The test passed on the local API 35 emulator.
+
+The full debug and release unit-test suite, Android lint, debug APK assembly, instrumentation APK assembly, and the API 35 connected test passed after this coverage was added.
+
 ## Remaining M3 work
 
 - Exercise controls from real Bluetooth and wired-headset hardware.
 - Disconnect a real Bluetooth or wired audio route during playback and confirm the same pause policy.
-- Add focused automated coverage for service lifecycle behavior where practical.
 
-Do not mark M3 complete until the remaining hardware and lifecycle coverage is either completed or explicitly descoped.
+Do not mark M3 complete until the remaining hardware coverage is either completed or explicitly descoped.
