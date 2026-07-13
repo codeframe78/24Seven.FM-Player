@@ -27,3 +27,9 @@ Results:
 - Debug APK assembly passed.
 
 No Android device or AVD was connected. Playback of all five live streams, primary-to-source fallback timing, audio focus, notification controls, and station switching under real network conditions still require device validation before M2 is complete.
+
+## Motorola Razr 2023 follow-up
+
+On July 13, 2026, a Motorola Razr 2023 was connected through wireless ADB over Tailscale and identified as Android 15 (API 35), 1080 x 2640 at 420 dpi. The project runtime target was aligned to API 35 while retaining compile SDK 36, which is required by Activity 1.11 and Media3 1.10.
+
+The full `test lint assembleDebug` validation passed with this configuration. The debug APK installed successfully on the Razr, Android reported `minSdk=26 targetSdk=35`, and `MainActivity` completed a successful cold launch. Live stream and background-control verification remain outstanding.

@@ -26,7 +26,7 @@ Audio stream addresses come from station-provided playlists and remain subject t
 
 ## Building
 
-Open the repository in a current Android Studio release with JDK 17. The project targets Android API 36, compiles against Android 36.1, and supports Android 8.0 (API 26) and newer.
+Open the repository in a current Android Studio release with JDK 17. The project targets Android 15 (API 35), matching the primary Motorola Razr 2023 test device, and compiles against API 36 as required by its AndroidX dependencies. It supports Android 8.0 (API 26) and newer.
 
 From PowerShell, validate the project with:
 

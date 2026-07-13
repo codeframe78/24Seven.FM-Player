@@ -34,7 +34,7 @@ Inspect the existing implementation before proposing a rewrite. Preserve the sta
 
 The initial scaffold contains:
 
-- Android application configuration targeting API 36 with minimum API 26
+- Android application configuration compiling against API 36, targeting API 35, and supporting API 26+
 - Kotlin and Jetpack Compose configuration
 - a phone-oriented Now Playing shell with station picker and bottom navigation
 - domain models for stations, capabilities, and stream variants

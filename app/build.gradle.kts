@@ -12,15 +12,11 @@ providers.environmentVariable("TWENTYFOURSEVEN_ANDROID_BUILD_DIR")
 
 android {
     namespace = "com.codeframe78.twentyfourseven.player"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.codeframe78.twentyfourseven.player"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "0.1.0"
     }
