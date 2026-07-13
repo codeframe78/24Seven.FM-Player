@@ -107,12 +107,12 @@ Before testing, use `adb devices -l` and pass `-s <device>` to ADB commands when
 
 ## M3 progress and immediate next objective
 
-M2 device validation is complete. M3 background-playback hardening has verified foreground-to-background playback, lock and idle behavior, task removal, notification continuity, system media commands, transient and permanent audio-focus policy, noisy-output pausing, and automated service stop/reconnect behavior. The transient-focus policy automatically resumes after focus returns; permanent focus loss remains paused until the user explicitly resumes playback.
+M2 device validation is complete. M3 background-playback hardening has verified foreground-to-background playback, lock and idle behavior, task removal, notification continuity, system and real Bluetooth media commands, transient and permanent audio-focus policy, real Bluetooth route-disconnect pausing, simulated noisy-output pausing, and automated service stop/reconnect behavior. The transient-focus policy automatically resumes after focus returns; permanent focus loss remains paused until the user explicitly resumes playback.
 
 Complete the remaining M3 work:
 
-1. Verify controls from real Bluetooth and wired-headset hardware.
-2. Disconnect real Bluetooth and wired audio routes while playing and confirm the noisy-output pause policy.
+1. Verify controls from real wired-headset hardware.
+2. Disconnect the real wired audio route while playing and confirm the noisy-output pause policy.
 
 An API 35 instrumentation test connects through the real `MediaSessionService`, checks that fallback navigation remains hidden, stops the running service, and reconnects after recreation. Run it against an explicit emulator serial with `ANDROID_SERIAL=<emulator>` and `./gradlew connectedDebugAndroidTest` when both an emulator and physical device are connected.
 

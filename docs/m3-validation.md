@@ -25,9 +25,13 @@ An Android instrumentation test now exercises the real `MediaSessionService` int
 
 The full debug and release unit-test suite, Android lint, debug APK assembly, instrumentation APK assembly, and the API 35 connected test passed after this coverage was added.
 
+## Bluetooth hardware
+
+A real Bluetooth A2DP accessory was connected to the Motorola Razr 2023 while StreamingSoundtracks.com was playing. The accessory's play/pause control changed the application MediaSession from `PLAYING` to `PAUSED`, and a second press returned it to `PLAYING`. Powering off or disconnecting the accessory while playback was active removed the A2DP route and automatically changed the application session to `PAUSED`. No playback or fatal application error was recorded. The application was stopped after validation.
+
 ## Remaining M3 work
 
-- Exercise controls from real Bluetooth and wired-headset hardware.
-- Disconnect a real Bluetooth or wired audio route during playback and confirm the same pause policy.
+- Exercise controls from real wired-headset hardware.
+- Disconnect a real wired audio route during playback and confirm the same pause policy.
 
 Do not mark M3 complete until the remaining hardware coverage is either completed or explicitly descoped.
