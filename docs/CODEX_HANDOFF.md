@@ -17,23 +17,24 @@ git switch agent/initial-android-scaffold
 git status
 ```
 
-Read `AGENTS.md`, `README.md`, `CONTRIBUTING.md`, `docs/architecture.md`, and `docs/m2-validation.md` before editing. Preserve the existing station-first domain model and dependency boundaries.
+Read `AGENTS.md`, `README.md`, `CONTRIBUTING.md`, `docs/architecture.md`, `docs/m2-validation.md`, and `docs/m3-validation.md` before editing. Preserve the existing station-first domain model and dependency boundaries.
 
 ## Required Windows environment
 
 - A current Android Studio release
 - JDK 17
+- Android SDK Platform 35
 - Android SDK Platform 36
 - Android SDK Build Tools 36.1.0
 - Android SDK Platform Tools
-- Optional Android Emulator image for API 35 or 36
+- Optional Google APIs x86_64 Android Emulator images for API 35 and API 36
 
 The app compiles against API 36 because the selected AndroidX Activity and Media3 versions require it. It targets API 35 to match the primary Motorola Razr 2023 running Android 15. Minimum SDK is API 26.
 
 Install SDK packages from Android Studio's SDK Manager or with `sdkmanager`:
 
 ```powershell
-sdkmanager "platforms;android-36" "build-tools;36.1.0" "platform-tools"
+sdkmanager "platforms;android-35" "platforms;android-36" "build-tools;36.1.0" "platform-tools" "system-images;android-35;google_apis;x86_64" "system-images;android-36;google_apis;x86_64"
 ```
 
 Do not commit `local.properties`. If Android Studio does not discover the SDK automatically, set `ANDROID_HOME` for the current PowerShell session:
@@ -65,7 +66,7 @@ M1 is complete and CI builds the project with JDK 17 and the committed Gradle wr
 - station metadata in the media notification;
 - notification controls that do not expose the internal fallback playlist.
 
-The latest successful validation ran unit tests for debug and release, Android lint, and `assembleDebug`. See `docs/m1-validation.md` and `docs/m2-validation.md` for exact evidence.
+The latest successful build validation ran unit tests for debug and release, Android lint, and `assembleDebug`. M3 device validation is in progress. See `docs/m1-validation.md`, `docs/m2-validation.md`, and `docs/m3-validation.md` for exact evidence.
 
 ## Physical Razr setup
 
@@ -104,15 +105,17 @@ Primary-to-source fallback was also verified under a controlled primary-only net
 
 Before testing, use `adb devices -l` and pass `-s <device>` to ADB commands when an emulator is also running.
 
-## Immediate next objective
+## M3 progress and immediate next objective
 
-M2 device validation is complete. Proceed to M3 background-playback hardening:
+M2 device validation is complete. M3 background-playback hardening has verified foreground-to-background playback, lock and idle behavior, task removal, notification continuity, system media commands, transient and permanent audio-focus policy, and noisy-output pausing. The transient-focus policy automatically resumes after focus returns; permanent focus loss remains paused until the user explicitly resumes playback.
 
-1. Verify notification and lock-screen behavior across foreground, background, and task removal.
-2. Verify Bluetooth and wired-headset media controls.
-3. Exercise transient and permanent audio-focus transitions and document the resume policy.
-4. Verify noisy-output handling when a headset or Bluetooth route disconnects.
-5. Harden service lifecycle behavior and add focused automated tests where practical.
+Complete the remaining M3 work:
+
+1. Verify controls from real Bluetooth and wired-headset hardware.
+2. Disconnect real Bluetooth and wired audio routes while playing and confirm the noisy-output pause policy.
+3. Harden service lifecycle behavior and add focused automated tests where practical.
+
+The current Windows SDK includes compile platforms 35, 36, and 36.1 plus Google APIs x86_64 emulator images for API 35 and API 36. A temporary API-35 audio-focus helper compiled successfully after Platform 35 was installed; it was uninstalled and deleted after testing.
 
 ## Station stream evidence
 
