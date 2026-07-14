@@ -102,8 +102,8 @@ internal class StationAuthRemoteDataSource(
             requireSameOrigin(uri.toASCIIString(), origin(stationId))
             val connection = uri.toURL().openConnection() as HttpURLConnection
             try {
-                connection.connectTimeout = REQUEST_TIMEOUT_MILLIS
-                connection.readTimeout = REQUEST_TIMEOUT_MILLIS
+                connection.connectTimeout = CONNECT_TIMEOUT_MILLIS
+                connection.readTimeout = READ_TIMEOUT_MILLIS
                 connection.instanceFollowRedirects = false
                 connection.requestMethod = requestMethod
                 connection.setRequestProperty("Accept", "text/html")
@@ -162,7 +162,8 @@ internal class StationAuthRemoteDataSource(
 
     private companion object {
         const val USER_AGENT = "24Seven.FM-Player/0.1 (Android; unofficial non-commercial client)"
-        const val REQUEST_TIMEOUT_MILLIS = 10_000
+        const val CONNECT_TIMEOUT_MILLIS = 15_000
+        const val READ_TIMEOUT_MILLIS = 30_000
         const val MAX_RESPONSE_CHARACTERS = 512_000
         const val MAX_REDIRECTS = 5
         val REDIRECT_STATUSES = setOf(301, 302, 303, 307, 308)
