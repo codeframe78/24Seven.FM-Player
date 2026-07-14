@@ -50,6 +50,9 @@ class MainActivity : ComponentActivity() {
                     onPause = viewModel::pause,
                     onStop = viewModel::stop,
                     onRefreshQueue = viewModel::refreshQueue,
+                    onRefreshAuth = viewModel::refreshAuth,
+                    onSignIn = viewModel::signIn,
+                    onSignOut = viewModel::signOut,
                 )
             }
         }

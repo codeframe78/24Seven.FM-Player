@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.Radio
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.Card
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -48,6 +49,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -57,10 +59,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -96,12 +101,15 @@ internal fun RadioApp(
     onPause: () -> Unit,
     onStop: () -> Unit,
     onRefreshQueue: () -> Unit,
+    onRefreshAuth: () -> Unit = {},
+    onSignIn: (String, String, String) -> Unit = { _, _, _ -> },
+    onSignOut: () -> Unit = {},
 ) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
         if (maxWidth >= 600.dp) {
-            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue)
+            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshAuth, onSignIn, onSignOut)
         } else {
-            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue)
+            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshAuth, onSignIn, onSignOut)
         }
     }
 }
@@ -116,6 +124,9 @@ private fun PhoneShell(
     onPause: () -> Unit,
     onStop: () -> Unit,
     onRefreshQueue: () -> Unit,
+    onRefreshAuth: () -> Unit,
+    onSignIn: (String, String, String) -> Unit,
+    onSignOut: () -> Unit,
 ) {
     Scaffold(
         topBar = { StationTopBar(state, onSelectStation) },
@@ -137,7 +148,7 @@ private fun PhoneShell(
             }
         },
     ) { padding ->
-        DestinationContent(state, padding, onPlay, onPause, onStop, onRefreshQueue)
+        DestinationContent(state, padding, onPlay, onPause, onStop, onRefreshQueue, onRefreshAuth, onSignIn, onSignOut)
     }
 }
 
@@ -151,6 +162,9 @@ private fun TabletShell(
     onPause: () -> Unit,
     onStop: () -> Unit,
     onRefreshQueue: () -> Unit,
+    onRefreshAuth: () -> Unit,
+    onSignIn: (String, String, String) -> Unit,
+    onSignOut: () -> Unit,
 ) {
     Row(Modifier.fillMaxSize()) {
         NavigationRail(Modifier.fillMaxHeight().testTag("tablet_navigation_rail")) {
@@ -174,7 +188,7 @@ private fun TabletShell(
                 }
             },
         ) { padding ->
-            DestinationContent(state, padding, onPlay, onPause, onStop, onRefreshQueue)
+            DestinationContent(state, padding, onPlay, onPause, onStop, onRefreshQueue, onRefreshAuth, onSignIn, onSignOut)
         }
     }
 }
@@ -213,6 +227,9 @@ private fun DestinationContent(
     onPause: () -> Unit,
     onStop: () -> Unit,
     onRefreshQueue: () -> Unit,
+    onRefreshAuth: () -> Unit,
+    onSignIn: (String, String, String) -> Unit,
+    onSignOut: () -> Unit,
 ) {
     when (state.destination) {
         MainDestination.Player -> PlayerScreen(state, padding, onPlay, onPause, onStop)
@@ -227,7 +244,7 @@ private fun DestinationContent(
             padding = padding,
         )
         MainDestination.Queue -> QueueScreen(state, padding, onRefreshQueue)
-        MainDestination.More -> MoreScreen(state, padding)
+        MainDestination.More -> MoreScreen(state, padding, onRefreshAuth, onSignIn, onSignOut)
     }
 }
 
@@ -452,7 +469,13 @@ private fun FeatureScreen(title: String, description: String, icon: ImageVector,
 }
 
 @Composable
-private fun MoreScreen(state: MainUiState, padding: PaddingValues) {
+private fun MoreScreen(
+    state: MainUiState,
+    padding: PaddingValues,
+    onRefreshAuth: () -> Unit,
+    onSignIn: (String, String, String) -> Unit,
+    onSignOut: () -> Unit,
+) {
     Column(
         Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -468,17 +491,79 @@ private fun MoreScreen(state: MainUiState, padding: PaddingValues) {
         Text(state.selectedStation?.description.orEmpty(), style = MaterialTheme.typography.bodyLarge)
         Text("Feature availability", style = MaterialTheme.typography.titleMedium)
         CapabilityCard(state.selectedStation?.capabilities ?: StationCapabilities())
-        Text("Account", style = MaterialTheme.typography.titleMedium)
-        CapabilityRow(
-            "Sign in",
-            state.selectedStation?.capabilities?.supportsAuthentication == true &&
-                state.auth?.status != AuthStatus.Unavailable,
-        )
+        AccountSection(state, onRefreshAuth, onSignIn, onSignOut)
         Text(
             "Features remain unavailable until their station-specific sources and behavior are verified.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+    }
+}
+
+@Composable
+private fun AccountSection(
+    state: MainUiState,
+    onRefresh: () -> Unit,
+    onSignIn: (String, String, String) -> Unit,
+    onSignOut: () -> Unit,
+) {
+    val auth = state.auth
+    var username by remember(state.selectedStation?.id) { mutableStateOf("") }
+    var password by remember(state.selectedStation?.id) { mutableStateOf("") }
+    var securityCode by remember(state.selectedStation?.id) { mutableStateOf("") }
+    Text("Account", style = MaterialTheme.typography.titleMedium)
+    Card(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            when (auth?.status ?: AuthStatus.Unavailable) {
+                AuthStatus.SignedIn -> {
+                    Text("Signed in as ${auth?.displayName.orEmpty()}", fontWeight = FontWeight.Medium)
+                    Button(onClick = onSignOut) { Text("Sign out") }
+                }
+                AuthStatus.LoadingChallenge, AuthStatus.SigningIn -> {
+                    CircularProgressIndicator()
+                    Text(if (auth?.status == AuthStatus.SigningIn) "Signing in…" else "Loading secure sign in…")
+                }
+                AuthStatus.Unavailable -> Button(onClick = onRefresh) { Text("Load sign in") }
+                AuthStatus.SignedOut, AuthStatus.Error -> {
+                    auth?.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                    OutlinedTextField(username, { username = it }, label = { Text("Username") }, singleLine = true)
+                    OutlinedTextField(
+                        password,
+                        { password = it },
+                        label = { Text("Password") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                    )
+                    auth?.challengeImageUrl?.let { url ->
+                        AsyncImage(
+                            model = url,
+                            contentDescription = "Security code image",
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(112.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(Color.White)
+                                .padding(12.dp),
+                        )
+                    }
+                    OutlinedTextField(
+                        securityCode,
+                        { securityCode = it.filter(Char::isLetterOrDigit) },
+                        label = { Text("Security code") },
+                        singleLine = true,
+                    )
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Button(onClick = {
+                            onSignIn(username, password, securityCode)
+                            password = ""
+                            securityCode = ""
+                        }) { Text("Sign in") }
+                        TextButton(onClick = onRefresh) { Text("New code") }
+                    }
+                }
+            }
+        }
     }
 }
 

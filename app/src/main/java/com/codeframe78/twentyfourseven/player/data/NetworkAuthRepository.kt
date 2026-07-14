@@ -1,5 +1,6 @@
 package com.codeframe78.twentyfourseven.player.data
 
+import android.content.Context
 import com.codeframe78.twentyfourseven.player.domain.AuthRepository
 import com.codeframe78.twentyfourseven.player.domain.AuthState
 import com.codeframe78.twentyfourseven.player.domain.AuthStatus
@@ -21,6 +22,9 @@ class NetworkAuthRepository internal constructor(
     private val locks = ConcurrentHashMap<StationId, Mutex>()
 
     constructor() : this(StationAuthRemoteDataSource())
+    constructor(context: Context) : this(
+        StationAuthRemoteDataSource(sessionStore = AndroidKeystoreAuthSessionStore(context)),
+    )
 
     override fun observeAuth(stationId: StationId): Flow<AuthState> = state(stationId).asStateFlow()
 

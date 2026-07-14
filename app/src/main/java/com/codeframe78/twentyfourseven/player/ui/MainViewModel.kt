@@ -107,6 +107,18 @@ class MainViewModel(
         queue.refresh(stations.observeSelectedStation().first().id)
     }
 
+    fun refreshAuth() = viewModelScope.launch {
+        auth.refreshChallenge(stations.observeSelectedStation().first().id)
+    }
+
+    fun signIn(username: String, password: String, securityCode: String) = viewModelScope.launch {
+        auth.signIn(stations.observeSelectedStation().first().id, username, password, securityCode)
+    }
+
+    fun signOut() = viewModelScope.launch {
+        auth.signOut(stations.observeSelectedStation().first().id)
+    }
+
     class Factory(
         private val stations: StationRepository,
         private val playback: PlaybackController,

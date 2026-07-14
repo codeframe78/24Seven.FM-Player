@@ -28,7 +28,11 @@ class BootstrapStationRepository : StationRepository {
     }
 
     private companion object {
-        val queueCapabilities = StationCapabilities(supportsQueue = true, supportsHistory = true)
+        val queueCapabilities = StationCapabilities(
+            supportsAuthentication = true,
+            supportsQueue = true,
+            supportsHistory = true,
+        )
 
         fun streams(domain: String) = listOf(
             StreamVariant("http://hi5.$domain/;", "Primary relay", priority = 0, format = StreamFormat.Aac, bitrateKbps = 128),

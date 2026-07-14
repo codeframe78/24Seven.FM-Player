@@ -62,6 +62,12 @@ must treat that value as sensitive, ignore unrelated links when classifying auth
 log, or expose it. Authenticated cookie names and attributes, failure responses, expiry, and completed logout
 behavior remain to be verified.
 
+On July 13, 2026, native sign-in was successfully completed on the Motorola Razr 2023 using the least-privileged
+StreamingSoundtracks.com account. The administrator entered credentials and the case-sensitive alphanumeric
+security code directly on the device. The app displayed the signed-in account state without retaining the
+password or security-code input. No credential, challenge answer, cookie value, or account-derived URL value
+was captured or committed.
+
 ## Confirmed and remaining protocol questions
 
 The administrator has confirmed login/session permission and station-specific accounts. Protocol research must

@@ -21,6 +21,8 @@ import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.QueueState
 import com.codeframe78.twentyfourseven.player.domain.QueueTrack
 import com.codeframe78.twentyfourseven.player.domain.StationCapabilities
+import com.codeframe78.twentyfourseven.player.domain.AuthState
+import com.codeframe78.twentyfourseven.player.domain.AuthStatus
 import org.junit.Rule
 import org.junit.Test
 
@@ -121,6 +123,38 @@ class RadioAppTest {
         composeRule.onNodeWithText("Upcoming track").assertIsDisplayed()
         composeRule.onNodeWithText("Recently played").assertIsDisplayed()
         composeRule.onNodeWithText("Played track").assertIsDisplayed()
+    }
+
+    @Test
+    fun signedOutAccountRendersNativeCredentialFields() {
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(
+                        destination = MainDestination.More,
+                        selectedStation = station.copy(
+                            capabilities = StationCapabilities(supportsAuthentication = true),
+                        ),
+                        auth = AuthState(
+                            station.id,
+                            AuthStatus.SignedOut,
+                            challengeImageUrl = "https://streamingsoundtracks.com/security-code.png",
+                        ),
+                    ),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("Username").assertExists()
+        composeRule.onNodeWithText("Password").assertExists()
+        composeRule.onNodeWithText("Security code").assertExists()
+        composeRule.onNodeWithText("Sign in").assertExists()
     }
 
     private fun sampleState() = MainUiState(
