@@ -4,7 +4,7 @@ An unofficial, community-built native Android client for the 24seven.FM internet
 
 The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It does not use a WebView and is not affiliated with or endorsed by 24seven.FM or its stations.
 
-## Planned stations
+## Supported stations
 
 - StreamingSoundtracks.com
 - 1980s.FM
@@ -12,31 +12,42 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 - Death.FM
 - Entranced.FM
 
-## Current milestone
+## Current progress
 
-M1 through M8 are complete. The app includes verified playback and Now Playing behavior, administrator-authorized live Queue and History data, native station-scoped authentication, and native station chat.
+M1 through M9 are complete. Playback and every implemented network feature have been exercised on a physical Android 15 Motorola Razr 2023, with automated unit, lint, release-build, and connected-device coverage.
 
-- Station-first domain model
-- MVVM and unidirectional data flow
-- Compose phone navigation shell
-- Media3 `MediaSessionService` for background playback
-- Play, pause, stop, atomic station switching, and one-step stream fallback
-- Immutable playback state exposed through a domain-facing controller
-- Station-scoped immutable now-playing state behind a repository contract
-- Raw live ICY titles in Compose and Android MediaSession metadata
-- Evidence-backed AAC / 128 kbps stream quality
-- Immutable destination state with capability-aware native screens
-- Persistent mini-player outside the Player destination
-- Bottom navigation on phones and a navigation rail at 600 dp and wider
-- Station-scoped live queue/history with native loading, error, empty, and ready states
-- Explicit track title and artist text, station-hosted cover artwork, and a shared 60-second refresh limit
-- Native station-scoped sign-in with a case-sensitive alphanumeric security challenge
-- Android Keystore-protected session restoration, online expiry detection, and sign-out clearing
-- Administrator-authorized native station chat with bounded 30-second reads and memory-only history
-- Protected-session message posting with legacy character-set validation
-- Repository boundaries for future requests
+| Milestone | Status | Delivered |
+| --- | --- | --- |
+| M1 | Complete | Buildable native Android baseline, Gradle wrapper, CI, and Windows setup validation |
+| M2 | Complete | Verified playback for all five stations, atomic switching, and one-step stream fallback |
+| M3 | Complete | Media3 background playback, notification/lock-screen controls, audio focus, and route-change handling |
+| M4 | Complete | Live ICY titles plus station-hosted current-track artwork in Compose and MediaSession metadata |
+| M5 | Complete | Native Player, Chat, Queue, and More destinations; persistent mini-player; adaptive phone/tablet navigation |
+| M6 | Complete | Live Queue and History with artwork and a shared 60-second limit; up to 30 rows on extended station interfaces and 10 on Death.FM's compact feed |
+| M7 | Complete | Native station-scoped authentication, alphanumeric security challenge, and Android-protected session restoration |
+| M8 | Complete | Native station chat reading and protected-session posting, with memory-only history and a 30-second read limit |
+| M9 | Complete | Native catalog search, album/eligibility browsing, explicit confirmation, and one-shot song requests with no automatic retries |
+
+The app is fully native and uses immutable Compose UI state, repository boundaries, and station capability flags. It includes play, pause, stop, live metadata and artwork, a persistent mini-player, capability-aware screens, native loading/error/empty states, and Android Keystore-backed account sessions. Remote data stays bounded to the documented station interfaces and their approved refresh rules.
+
+## Screenshots
+
+These captures are from the physical API 35 Razr using live StreamingSoundtracks.com data, so track and chat content will naturally change over time.
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/player.png" alt="Native player with live artwork and playback controls" width="300"><br><strong>Player and live artwork</strong></td>
+    <td align="center"><img src="docs/screenshots/queue.png" alt="Native upcoming queue with track artwork" width="300"><br><strong>Queue and persistent mini-player</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/chat.png" alt="Native station chat" width="300"><br><strong>Live native chat</strong></td>
+    <td align="center"><img src="docs/screenshots/requests.png" alt="Native station library search" width="300"><br><strong>Song-request library search</strong></td>
+  </tr>
+</table>
 
 Audio stream addresses come from station-provided playlists and remain subject to device verification. Remote interfaces are added only after source verification and permission review. See the milestone research and validation documents under [docs](docs) for authorization, protocol evidence, limits, and device results.
+
+Planned follow-up work includes optional request messages with requester/message display in Queue, plus a native Private Messages experience after its authorization and behavior are settled. See [docs/future-scope.md](docs/future-scope.md).
 
 ## Building
 
@@ -45,7 +56,7 @@ Open the repository in a current Android Studio release with JDK 17. The project
 From PowerShell, validate the project with:
 
 ```powershell
-.\gradlew.bat test lint assembleDebug
+.\gradlew.bat testDebugUnitTest lintDebug assembleRelease
 ```
 
 If the repository is inside a OneDrive-synced directory and Gradle stalls on file operations, direct app build outputs to a local directory before running Gradle:
