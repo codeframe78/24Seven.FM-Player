@@ -14,7 +14,7 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 
 ## Current milestone
 
-M1 through M4 are complete. M4 Now Playing includes verified live ICY titles, stream-quality evidence, continuous title updates, and primary-to-source metadata continuity.
+M1 through M5 are complete. The app now includes verified playback and Now Playing behavior plus native Player, Chat, Queue, and More destinations, a persistent mini-player, and an adaptive navigation rail for wider layouts.
 
 - Station-first domain model
 - MVVM and unidirectional data flow
@@ -25,6 +25,9 @@ M1 through M4 are complete. M4 Now Playing includes verified live ICY titles, st
 - Station-scoped immutable now-playing state behind a repository contract
 - Raw live ICY titles in Compose and Android MediaSession metadata
 - Evidence-backed AAC / 128 kbps stream quality
+- Immutable destination state with capability-aware native screens
+- Persistent mini-player outside the Player destination
+- Bottom navigation on phones and a navigation rail at 600 dp and wider
 - Repository boundaries for future authentication, chat, and requests
 
 Audio stream addresses come from station-provided playlists and remain subject to device verification. API endpoints are intentionally not guessed and will be added only after verification and review of supported integration options.

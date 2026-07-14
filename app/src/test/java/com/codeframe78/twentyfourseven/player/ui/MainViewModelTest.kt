@@ -79,6 +79,24 @@ class MainViewModelTest {
         assertNull(viewModel.uiState.value.nowPlaying.displayTitle)
     }
 
+    @Test
+    fun `destination selection is exposed as immutable ui state`() = runTest(dispatcher) {
+        val viewModel = MainViewModel(
+            BootstrapStationRepository(),
+            FakePlaybackController(),
+            FakeNowPlayingRepository(),
+        )
+        backgroundScope.launch { viewModel.uiState.collect() }
+        advanceUntilIdle()
+
+        assertEquals(MainDestination.Player, viewModel.uiState.value.destination)
+
+        viewModel.selectDestination(MainDestination.Chat)
+        advanceUntilIdle()
+
+        assertEquals(MainDestination.Chat, viewModel.uiState.value.destination)
+    }
+
     private class FakeNowPlayingRepository : NowPlayingRepository {
         val state = MutableStateFlow(NowPlayingState())
 

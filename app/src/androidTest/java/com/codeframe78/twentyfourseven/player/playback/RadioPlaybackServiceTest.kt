@@ -11,6 +11,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import java.util.concurrent.TimeUnit
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,6 +22,9 @@ class RadioPlaybackServiceTest {
 
     @Test
     fun sessionHidesFallbackNavigationAndReconnectsAfterServiceStop() {
+        val serviceIntent = Intent(context, RadioPlaybackService::class.java)
+        assertNotNull(context.startService(serviceIntent))
+
         connectController().useOnMainThread { controller ->
             val commands = controller.availableCommands
             assertTrue(commands.contains(Player.COMMAND_PLAY_PAUSE))
@@ -30,7 +34,7 @@ class RadioPlaybackServiceTest {
             assertFalse(commands.contains(Player.COMMAND_SEEK_TO_PREVIOUS_MEDIA_ITEM))
         }
 
-        assertTrue(context.stopService(Intent(context, RadioPlaybackService::class.java)))
+        assertTrue(context.stopService(serviceIntent))
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
         connectController().useOnMainThread { controller ->

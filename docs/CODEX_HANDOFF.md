@@ -74,7 +74,15 @@ M4 now includes:
 - matching live titles in Compose and Android MediaSession metadata;
 - protocol-verified AAC and advertised 128 kbps quality labels.
 
-The latest successful build validation ran unit tests for debug and release, Android lint, `assembleDebug`, instrumentation APK assembly, and the API 35 connected service test. M3 and M4 device validation are complete. See `docs/m1-validation.md`, `docs/m2-validation.md`, `docs/m3-validation.md`, and `docs/m4-metadata-research.md` for exact evidence.
+M5 now includes:
+
+- immutable Player, Chat, Queue, and More destination state;
+- working native destinations with capability-aware unavailable states;
+- a persistent mini-player on secondary destinations;
+- bottom navigation below 600 dp and a navigation rail on wider layouts;
+- unit and Compose device coverage for navigation and adaptive branch selection.
+
+The latest successful build validation ran unit tests for debug and release, Android lint, `assembleDebug`, instrumentation APK assembly, and API 35 connected tests. M3 through M5 device validation is complete. See `docs/m1-validation.md`, `docs/m2-validation.md`, `docs/m3-validation.md`, `docs/m4-metadata-research.md`, and `docs/m5-validation.md` for exact evidence.
 
 ## Physical Razr setup
 
@@ -113,13 +121,15 @@ Primary-to-source fallback was also verified under a controlled primary-only net
 
 Before testing, use `adb devices -l` and pass `-s <device>` to ADB commands when an emulator is also running.
 
-## M3 and M4 completion
+## M3 through M5 completion
 
 M3 background-playback hardening is complete. It verified foreground-to-background playback, lock and idle behavior, task removal, notification continuity, system and real Bluetooth media commands, transient and permanent audio-focus policy, real Bluetooth route-disconnect pausing, protected noisy-output broadcast handling, and automated service stop/reconnect behavior. The transient-focus policy automatically resumes after focus returns; permanent focus loss remains paused until the user explicitly resumes playback.
 
 No physical wired or USB-C accessory was available. Do not claim that physical test occurred. The system headset-hook command, Android's protected noisy-output broadcast, and real Bluetooth disconnect cover the relevant application and Media3 paths; physical wired coverage is non-blocking and can be added later.
 
 M4 Now Playing is complete. A continuous physical-device run verified that a changed raw title updated both Compose and the application MediaSession while playback remained healthy. A controlled API 35 emulator run verified that the source fallback item continued publishing a non-empty ICY title after the expected primary failure. Metadata fields and artwork that are not present in the verified ICY source remain intentionally unavailable, and playback does not depend on metadata.
+
+M5 Native Navigation is complete. Player, Chat, Queue, and More are real native destinations, secondary destinations retain a persistent mini-player, and wider layouts select a navigation rail. Chat and Queue intentionally show capability-aware unavailable states until their later protocol milestones; M5 does not guess or implement remote endpoints.
 
 See `docs/m4-metadata-research.md` for per-relay ICY headers, field constraints, implementation evidence, and device results.
 

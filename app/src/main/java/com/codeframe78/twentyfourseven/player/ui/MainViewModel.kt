@@ -11,16 +11,20 @@ import com.codeframe78.twentyfourseven.player.domain.PlaybackState
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingRepository
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingState
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+
+enum class MainDestination { Player, Chat, Queue, More }
 
 data class MainUiState(
     val stations: List<Station> = emptyList(),
     val selectedStation: Station? = null,
     val playback: PlaybackState = PlaybackState(),
     val nowPlaying: NowPlayingState = NowPlayingState(),
+    val destination: MainDestination = MainDestination.Player,
 )
 
 class MainViewModel(
@@ -28,18 +32,22 @@ class MainViewModel(
     private val playback: PlaybackController,
     private val nowPlaying: NowPlayingRepository,
 ) : ViewModel() {
+    private val destination = MutableStateFlow(MainDestination.Player)
+
     val uiState: StateFlow<MainUiState> = combine(
         stations.observeStations(),
         stations.observeSelectedStation(),
         playback.state,
         nowPlaying.observeNowPlaying(),
-    ) { all, selected, playbackState, nowPlayingState ->
+        destination,
+    ) { all, selected, playbackState, nowPlayingState, selectedDestination ->
         MainUiState(
             stations = all,
             selectedStation = selected,
             playback = playbackState,
             nowPlaying = nowPlayingState.takeIf { it.stationId == selected.id }
                 ?: NowPlayingState(stationId = selected.id),
+            destination = selectedDestination,
         )
     }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MainUiState())
@@ -54,6 +62,9 @@ class MainViewModel(
     fun play() = playback.play()
     fun pause() = playback.pause()
     fun stop() = playback.stop()
+    fun selectDestination(destination: MainDestination) {
+        this.destination.value = destination
+    }
 
     class Factory(
         private val stations: StationRepository,

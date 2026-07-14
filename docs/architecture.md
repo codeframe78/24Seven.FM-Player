@@ -32,6 +32,12 @@ Live ICY titles flow from the service-owned player through a station-scoped `Now
 
 `RadioPlaybackService` owns the single `ExoPlayer` and `MediaSession`. The application connects through a Media3 `MediaController` adapter implementing the domain-facing `PlaybackController` interface. Switching stations stops the current item and atomically replaces the playlist with the selected station's ordered primary and fallback streams; two stations can never play simultaneously. The service advances to the fallback once when the primary stream fails.
 
+## Native navigation
+
+The selected Player, Chat, Queue, or More destination is immutable `MainUiState` owned by `MainViewModel`. Destination composables emit navigation and playback actions upward. Secondary destinations reuse the same domain playback and now-playing state through a persistent mini-player; they never connect to Media3 directly.
+
+The phone shell uses bottom navigation below 600 dp. Wider layouts use a navigation rail and content pane. Chat and Queue remain navigable native destinations while unsupported, but their content is controlled by station capability flags and does not imply that an unverified endpoint exists.
+
 ## Authentication
 
 Authentication will live behind `AuthRepository`. Composables never read or store cookies. If the network uses legacy form login, its CSRF, redirect, and session-cookie behavior will be handled by the data layer. No credentials or captured session values belong in the repository.
