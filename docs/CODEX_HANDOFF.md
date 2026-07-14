@@ -209,6 +209,9 @@ browser requested `Just Testing` using song ID `263260`; its fresh response gene
 `M10 fresh browser workflow` was saved and displayed in Queue. The adapter now parses and strictly validates the
 server-generated form action, posts with that ID and the actual response referer, and recognizes the saved-message
 response. It never guesses an ID or retries the song after an unreadable response; the read timeout is 60 seconds.
+It now stops reading once the complete message form or saved-message acknowledgement has arrived, rather than
+waiting for the remainder of the legacy response. The corrected debug build is installed on the Razr; one
+user-initiated native request with a short, unique message still needs queue confirmation.
 One future eligible native-app confirmation remains. See `docs/m10-request-attribution-research.md` and
 `docs/m10-validation.md`.
 

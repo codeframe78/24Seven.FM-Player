@@ -51,6 +51,13 @@ required message ID is unavailable, so the adapter does not guess, post a messag
 read timeout gives the slow response more time. Final native-app confirmation remains outstanding, so M10 stays in
 progress.
 
+The next native attempt also showed that a response can remain open after the complete confirmation form has
+arrived. The adapter now stops reading the accepted response as soon as that complete form is present, and stops
+reading the message response as soon as its saved-message acknowledgement is present. This keeps the existing
+one-shot request/message contract while avoiding dependence on the remainder of a large legacy page. The behavior
+is covered by a regression test using responses larger than the normal safety limit. Final native queue confirmation
+is still required.
+
 Only StreamingSoundtracks.com advertises the request-message capability because that is the station whose exact
 authenticated form contract was inspected. The other four stations retain native song requesting without the
 message field until their post-request forms are independently verified.

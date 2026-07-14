@@ -82,6 +82,7 @@ internal class StationSongRequestRemoteDataSource(
             ),
             authenticated = true,
             cookieManager = manager,
+            stopReadingWhen = ::containsCompleteMessageForm,
         )
         val submission = classifySubmission(page.html)
         if (submission !is RequestSubmissionResult.Submitted || message.isBlank()) {
@@ -148,6 +149,7 @@ internal class StationSongRequestRemoteDataSource(
                     "remLen" to (MAX_REQUEST_MESSAGE_CHARACTERS - message.length).toString(),
                 ),
                 referer = form.referer,
+                stopReadingWhen = { it.contains("message has been saved", ignoreCase = true) },
             )
         }.getOrNull()
         if (messageResult == null) return null
@@ -204,6 +206,7 @@ internal class StationSongRequestRemoteDataSource(
         method: String = "GET",
         formFields: Map<String, String> = emptyMap(),
         referer: URI? = null,
+        stopReadingWhen: ((String) -> Boolean)? = null,
     ): AuthenticatedPage {
         var uri = initialUri
         var requestMethod = method
@@ -250,7 +253,7 @@ internal class StationSongRequestRemoteDataSource(
                 if (status !in 200..299) throw IOException("Station returned HTTP $status")
                 val charset = responseCharset(connection.contentType)
                 val html = connection.inputStream.bufferedReader(charset).use {
-                    it.readBounded(MAX_RESPONSE_CHARACTERS)
+                    it.readBoundedUntil(MAX_RESPONSE_CHARACTERS, stopReadingWhen)
                 }
                 return AuthenticatedPage(html, uri.toASCIIString())
             } finally {
@@ -288,6 +291,11 @@ internal class StationSongRequestRemoteDataSource(
     private fun responseCharset(contentType: String?): Charset {
         val declared = contentType?.substringAfter("charset=", "")?.substringBefore(';')?.trim()?.trim('"')
         return runCatching { Charset.forName(declared.orEmpty()) }.getOrDefault(StandardCharsets.ISO_8859_1)
+    }
+
+    private fun containsCompleteMessageForm(html: String): Boolean {
+        val actionIndex = html.indexOf("submitmessage", ignoreCase = true)
+        return actionIndex >= 0 && html.indexOf("</form>", startIndex = actionIndex, ignoreCase = true) >= 0
     }
 
     private fun origin(stationId: StationId): String = ORIGINS[stationId] ?: throw IOException("Unsupported station")

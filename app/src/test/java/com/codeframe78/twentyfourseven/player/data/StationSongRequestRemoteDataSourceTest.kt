@@ -80,6 +80,32 @@ class StationSongRequestRemoteDataSourceTest {
     }
 
     @Test
+    fun `optional message does not wait for the rest of a large accepted page`() = runTest {
+        val store = sessionStore()
+        val connections = mutableListOf<FakeConnection>()
+        val acceptedPrefix = """
+            Your request has successfully been delivered to the DJ application.
+            <form action="/modules.php?name=Album&amp;action=submitmessage&amp;asin=B00005BG8G&amp;id=2055716">
+              <textarea name="msg"></textarea>
+              <input name="send" type="submit" value="Send">
+              <input name="remLen" value="80" readonly>
+            </form>
+        """.trimIndent()
+        val remote = StationSongRequestRemoteDataSource(sessionStore = store) { uri ->
+            when (connections.size) {
+                0 -> FakeConnection(uri.toURL(), acceptedPrefix + "x".repeat(1_000_000))
+                else -> FakeConnection(uri.toURL(), "Your message has been saved." + "x".repeat(1_000_000))
+            }.also(connections::add)
+        }
+
+        val result = remote.submit(stationId, track(), "M10 Android app test")
+
+        assertEquals(RequestSubmissionResult.Submitted("Request and optional message sent."), result)
+        assertEquals(2, connections.size)
+        assertEquals("POST", connections[1].requestMethod)
+    }
+
+    @Test
     fun `indeterminate request does not guess message id or retry song`() = runTest {
         val store = sessionStore()
         val connections = mutableListOf<FakeConnection>()

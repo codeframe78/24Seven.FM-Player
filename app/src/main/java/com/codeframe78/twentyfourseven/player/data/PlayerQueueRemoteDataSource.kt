@@ -90,6 +90,13 @@ internal class PlayerQueueRemoteDataSource(
 }
 
 internal fun Reader.readBounded(maxCharacters: Int): String {
+    return readBoundedUntil(maxCharacters)
+}
+
+internal fun Reader.readBoundedUntil(
+    maxCharacters: Int,
+    stopReadingWhen: ((String) -> Boolean)? = null,
+): String {
     val result = StringBuilder()
     val buffer = CharArray(8_192)
     while (true) {
@@ -97,5 +104,6 @@ internal fun Reader.readBounded(maxCharacters: Int): String {
         if (count < 0) return result.toString()
         if (result.length + count > maxCharacters) throw IOException("Station response was too large")
         result.append(buffer, 0, count)
+        if (stopReadingWhen?.invoke(result.toString()) == true) return result.toString()
     }
 }
