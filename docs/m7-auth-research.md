@@ -1,10 +1,22 @@
 # M7 authentication research
 
+## Authorization
+
+On July 13, 2026, a station administrator authorized this unofficial, non-commercial native Android app to use
+the public-facing login and session interfaces across all five stations. User-entered credentials may be
+submitted, resulting sessions may be retained in Android-protected storage, and login research plus
+least-privileged testing are permitted.
+
+Accounts are currently station-specific, although the administrator noted that this may change. The app must
+therefore keep authentication station-scoped while allowing a future shared-account implementation behind the
+same repository contract.
+
+This authorization does not yet cover chat reads/writes or song-request submission.
+
 ## Scope and current boundary
 
-M7 will add native account authentication only after the station administrator confirms that the unofficial,
-non-commercial Android app may use the login and session interfaces. The earlier authorization for public
-queue and history polling does not authorize authentication, chat, or request submission.
+M7 adds native account authentication under the authorization above. The earlier authorization for public
+queue and history polling remains separate and does not authorize chat or request submission.
 
 The repository currently contains only safe groundwork:
 
@@ -18,20 +30,42 @@ Public station pages state that registered members can use chat and song request
 visible across the station sites, but this is not sufficient evidence that account databases, login behavior,
 or browser sessions are shared. No login was attempted during this research.
 
-## Administrator confirmation required
+## Public login protocol evidence
 
-Before the network implementation begins, obtain written confirmation of:
+On July 13, 2026, the public home page for each station exposed the same login form shape:
 
-1. Permission for this app to submit login requests and maintain authenticated sessions across each of the
-   five station sites.
-2. Whether one account works network-wide or each station has an independent account and session.
-3. Whether an app-specific API exists and is preferred over the legacy browser form.
-4. Any login rate limit, CAPTCHA, multi-factor authentication, lockout, or automated-client restriction.
-5. Whether the app may retain session material in Android-protected storage and how long a session should
+| Station | Verified HTTPS origin | Method and public action |
+| --- | --- | --- |
+| StreamingSoundtracks.com | `https://streamingsoundtracks.com/` | `POST /modules.php?name=Your_Account` |
+| 1980s.FM | `https://1980s.fm/` | `POST /modules.php?name=Your_Account` |
+| Adagio.FM | `https://adagio.fm/` | `POST /modules.php?name=Your_Account` |
+| Death.FM | `https://death.fm/` | `POST /modules.php?name=Your_Account` |
+| Entranced.FM | `https://entranced.fm/` | `POST /modules.php?name=Your_Account` |
+
+Each form uses `username`, `user_password`, `gfx_check`, a transient six-digit `random_num`, and the operation
+`login`. The page renders a security-code image derived from the transient challenge, so native login must show
+that image and require the user to enter its code. Challenge values must remain memory-only and must never be
+logged or committed. A fresh anonymous page load did not set a cookie on any of the five origins.
+
+The `www.streamingsoundtracks.com` HTTPS host presented a certificate-name mismatch to the Windows client. The
+certificate-valid canonical origin is `https://streamingsoundtracks.com/`, which served the matching form. The
+app must not disable certificate validation or send credentials to the mismatched `www` origin.
+
+No form was submitted during this pass. Successful-login signals, authenticated cookie names and attributes,
+failure responses, expiry, and logout remain to be verified with a least-privileged station account.
+
+## Confirmed and remaining protocol questions
+
+The administrator has confirmed login/session permission and station-specific accounts. Protocol research must
+still determine:
+
+1. Whether an app-specific API exists and is preferred over the legacy browser form.
+2. Any login rate limit, CAPTCHA, multi-factor authentication, lockout, or automated-client restriction.
+3. How long a session should
    remain valid.
-6. The authoritative signals for successful login, expired sessions, disabled accounts, and logout.
-7. Whether registration and password recovery must remain external website flows.
-8. A least-privileged test account or an administrator-supervised device test. Credentials must be supplied
+4. The authoritative signals for successful login, expired sessions, disabled accounts, and logout.
+5. Whether registration and password recovery must remain external website flows.
+6. A least-privileged test account or an administrator-supervised device test. Credentials must be supplied
    out of band or typed directly on the device and must never enter source control, documentation, logs, or
    test fixtures.
 

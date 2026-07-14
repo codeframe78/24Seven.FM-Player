@@ -148,9 +148,10 @@ M6 Queue and History is complete. The administrator-authorized public player int
 
 M7 Authentication groundwork has started. A station-scoped repository contract, immutable authentication
 states, unavailable implementation, and capability-aware account status are present without any concrete
-login endpoint or secret handling. Authentication remains disabled pending the administrator confirmations
-listed in `docs/m7-auth-research.md`. The public queue/history permission does not cover authentication, chat,
-or request submission.
+login endpoint or secret handling. On July 13, 2026, a station administrator authorized use of the public-facing
+login and session interfaces across all five stations, user-entered credential submission, Android-protected
+session retention, research, and least-privileged testing. Accounts are currently station-specific, although
+that may change. Chat and request submission remain outside the authorization.
 
 The groundwork passed unit tests, lint, debug and release compilation, Windows validation, the GitHub Android
 build, and all four connected tests on the Motorola Razr 2023 running API 35. These results do not validate a
