@@ -51,8 +51,16 @@ The `www.streamingsoundtracks.com` HTTPS host presented a certificate-name misma
 certificate-valid canonical origin is `https://streamingsoundtracks.com/`, which served the matching form. The
 app must not disable certificate validation or send credentials to the mismatched `www` origin.
 
-No form was submitted during this pass. Successful-login signals, authenticated cookie names and attributes,
-failure responses, expiry, and logout remain to be verified with a least-privileged station account.
+A least-privileged StreamingSoundtracks.com account was subsequently used through the visible in-app browser,
+with credentials entered directly by the administrator. Successful login redirected to the account profile.
+Both the profile and a later home-page navigation displayed the matching welcome identity and same-origin
+logout action, while the anonymous password field was absent. These three conditions form the native success
+rule; no cookie values or stored password data were inspected.
+
+The legacy signed-in page also contained an unrelated link with an account-derived value in its URL. The app
+must treat that value as sensitive, ignore unrelated links when classifying authentication, and never store,
+log, or expose it. Authenticated cookie names and attributes, failure responses, expiry, and completed logout
+behavior remain to be verified.
 
 ## Confirmed and remaining protocol questions
 
