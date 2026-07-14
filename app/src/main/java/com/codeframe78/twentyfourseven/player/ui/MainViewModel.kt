@@ -12,6 +12,8 @@ import com.codeframe78.twentyfourseven.player.domain.NowPlayingRepository
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingState
 import com.codeframe78.twentyfourseven.player.domain.QueueRepository
 import com.codeframe78.twentyfourseven.player.domain.QueueState
+import com.codeframe78.twentyfourseven.player.domain.AuthRepository
+import com.codeframe78.twentyfourseven.player.domain.AuthState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,6 +33,7 @@ data class MainUiState(
     val playback: PlaybackState = PlaybackState(),
     val nowPlaying: NowPlayingState = NowPlayingState(),
     val queue: QueueState? = null,
+    val auth: AuthState? = null,
     val destination: MainDestination = MainDestination.Player,
 )
 
@@ -40,6 +43,7 @@ class MainViewModel(
     private val playback: PlaybackController,
     private val nowPlaying: NowPlayingRepository,
     private val queue: QueueRepository,
+    private val auth: AuthRepository,
 ) : ViewModel() {
     private val destination = MutableStateFlow(MainDestination.Player)
 
@@ -55,7 +59,15 @@ class MainViewModel(
             }
         }
 
-    private val stationContent = combine(nowPlaying.observeNowPlaying(), selectedQueue, ::StationContent)
+    private val selectedAuth = stations.observeSelectedStation()
+        .flatMapLatest { station -> auth.observeAuth(station.id) }
+
+    private val stationContent = combine(
+        nowPlaying.observeNowPlaying(),
+        selectedQueue,
+        selectedAuth,
+        ::StationContent,
+    )
 
     val uiState: StateFlow<MainUiState> = combine(
         stations.observeStations(),
@@ -71,6 +83,7 @@ class MainViewModel(
             nowPlaying = content.nowPlaying.takeIf { it.stationId == selected.id }
                 ?: NowPlayingState(stationId = selected.id),
             queue = content.queue.takeIf { it.stationId == selected.id },
+            auth = content.auth.takeIf { it.stationId == selected.id },
             destination = selectedDestination,
         )
     }
@@ -99,15 +112,17 @@ class MainViewModel(
         private val playback: PlaybackController,
         private val nowPlaying: NowPlayingRepository,
         private val queue: QueueRepository,
+        private val auth: AuthRepository,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            MainViewModel(stations, playback, nowPlaying, queue) as T
+            MainViewModel(stations, playback, nowPlaying, queue, auth) as T
     }
 }
 
 private data class StationContent(
     val nowPlaying: NowPlayingState,
     val queue: QueueState,
+    val auth: AuthState,
 )
 

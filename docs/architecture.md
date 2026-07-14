@@ -48,6 +48,10 @@ The phone shell uses bottom navigation below 600 dp. Wider layouts use a navigat
 
 Authentication will live behind `AuthRepository`. Composables never read or store cookies. If the network uses legacy form login, its CSRF, redirect, and session-cookie behavior will be handled by the data layer. No credentials or captured session values belong in the repository.
 
+The contract and UI state are station-scoped because shared accounts and sessions have not been verified. The
+default implementation remains unavailable, and authentication capability flags remain false until explicit
+authorization and protocol evidence exist. See `docs/m7-auth-research.md`.
+
 ## Chat
 
 Chat will depend on a replaceable transport contract. Network inspection must determine whether each station uses WebSocket, server-sent events, long polling, or ordinary polling before an implementation is selected.

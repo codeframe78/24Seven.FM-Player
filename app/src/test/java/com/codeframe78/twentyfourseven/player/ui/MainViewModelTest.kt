@@ -1,6 +1,7 @@
 package com.codeframe78.twentyfourseven.player.ui
 
 import com.codeframe78.twentyfourseven.player.data.BootstrapStationRepository
+import com.codeframe78.twentyfourseven.player.data.UnavailableAuthRepository
 import com.codeframe78.twentyfourseven.player.domain.PlaybackController
 import com.codeframe78.twentyfourseven.player.domain.PlaybackState
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingRepository
@@ -49,7 +50,13 @@ class MainViewModelTest {
         val stations = BootstrapStationRepository()
         val playback = FakePlaybackController()
         val queue = FakeQueueRepository()
-        val viewModel = MainViewModel(stations, playback, FakeNowPlayingRepository(), queue)
+        val viewModel = MainViewModel(
+            stations,
+            playback,
+            FakeNowPlayingRepository(),
+            queue,
+            UnavailableAuthRepository(),
+        )
         advanceUntilIdle()
 
         assertEquals("sst", playback.selectedStation?.id?.value)
@@ -76,6 +83,7 @@ class MainViewModelTest {
             FakePlaybackController(),
             nowPlaying,
             FakeQueueRepository(),
+            UnavailableAuthRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -100,6 +108,7 @@ class MainViewModelTest {
             FakePlaybackController(),
             FakeNowPlayingRepository(),
             FakeQueueRepository(),
+            UnavailableAuthRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -120,11 +129,13 @@ class MainViewModelTest {
             FakePlaybackController(),
             FakeNowPlayingRepository(),
             queue,
+            UnavailableAuthRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
 
         assertEquals(StationId("sst"), viewModel.uiState.value.queue?.stationId)
+        assertEquals(StationId("sst"), viewModel.uiState.value.auth?.stationId)
 
         viewModel.selectDestination(MainDestination.Queue)
         advanceUntilIdle()
@@ -135,6 +146,7 @@ class MainViewModelTest {
         advanceUntilIdle()
 
         assertEquals(StationId("death"), viewModel.uiState.value.queue?.stationId)
+        assertEquals(StationId("death"), viewModel.uiState.value.auth?.stationId)
         assertEquals(QueueLoadStatus.Unavailable, viewModel.uiState.value.queue?.status)
         assertEquals(StationId("death"), queue.observedStation)
         assertEquals(1, queue.activeObservations)

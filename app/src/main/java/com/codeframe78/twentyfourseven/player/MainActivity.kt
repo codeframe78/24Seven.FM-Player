@@ -37,6 +37,7 @@ class MainActivity : ComponentActivity() {
                     container.playbackController,
                     container.nowPlayingRepository,
                     container.queueRepository,
+                    container.authRepository,
                 ),
             )
             val state = viewModel.uiState.collectAsStateWithLifecycle().value

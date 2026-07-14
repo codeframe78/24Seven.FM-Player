@@ -3,6 +3,7 @@ package com.codeframe78.twentyfourseven.player.domain
 @JvmInline value class StationId(val value: String)
 
 data class StationCapabilities(
+    val supportsAuthentication: Boolean = false,
     val supportsChat: Boolean = false,
     val supportsRequests: Boolean = false,
     val supportsQueue: Boolean = false,

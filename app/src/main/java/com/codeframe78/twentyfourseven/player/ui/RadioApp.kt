@@ -65,6 +65,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.codeframe78.twentyfourseven.player.domain.PlaybackStatus
+import com.codeframe78.twentyfourseven.player.domain.AuthStatus
 import com.codeframe78.twentyfourseven.player.domain.HistoryTrack
 import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.QueueTrack
@@ -467,6 +468,12 @@ private fun MoreScreen(state: MainUiState, padding: PaddingValues) {
         Text(state.selectedStation?.description.orEmpty(), style = MaterialTheme.typography.bodyLarge)
         Text("Feature availability", style = MaterialTheme.typography.titleMedium)
         CapabilityCard(state.selectedStation?.capabilities ?: StationCapabilities())
+        Text("Account", style = MaterialTheme.typography.titleMedium)
+        CapabilityRow(
+            "Sign in",
+            state.selectedStation?.capabilities?.supportsAuthentication == true &&
+                state.auth?.status != AuthStatus.Unavailable,
+        )
         Text(
             "Features remain unavailable until their station-specific sources and behavior are verified.",
             style = MaterialTheme.typography.bodyMedium,
@@ -479,6 +486,7 @@ private fun MoreScreen(state: MainUiState, padding: PaddingValues) {
 private fun CapabilityCard(capabilities: StationCapabilities) {
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            CapabilityRow("Authentication", capabilities.supportsAuthentication)
             CapabilityRow("Chat", capabilities.supportsChat)
             CapabilityRow("Queue", capabilities.supportsQueue)
             CapabilityRow("History", capabilities.supportsHistory)

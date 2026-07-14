@@ -146,6 +146,12 @@ M5 Native Navigation is complete. Player, Chat, Queue, and More are real native 
 
 M6 Queue and History is complete. The administrator-authorized public player interface supplies live data for all five stations without authentication. The app makes one request only while Queue is selected, enforces the authorized 60-second minimum interval across automatic and manual refresh, preserves explicit track and artist text, and displays only station-hosted cover artwork. See `docs/m6-queue-research.md` and `docs/m6-validation.md`.
 
+M7 Authentication groundwork has started. A station-scoped repository contract, immutable authentication
+states, unavailable implementation, and capability-aware account status are present without any concrete
+login endpoint or secret handling. Authentication remains disabled pending the administrator confirmations
+listed in `docs/m7-auth-research.md`. The public queue/history permission does not cover authentication, chat,
+or request submission.
+
 See `docs/m4-metadata-research.md` for per-relay ICY headers, field constraints, implementation evidence, and device results.
 
 An API 35 instrumentation test connects through the real `MediaSessionService`, checks that fallback navigation remains hidden, stops the running service, and reconnects after recreation. Run it against an explicit emulator serial with `ANDROID_SERIAL=<emulator>` and `./gradlew connectedDebugAndroidTest` when both an emulator and physical device are connected.

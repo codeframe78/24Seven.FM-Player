@@ -31,6 +31,7 @@ M1 through M6 are complete. The app includes verified playback and Now Playing b
 - Station-scoped live queue/history with native loading, error, empty, and ready states
 - Explicit track title and artist text, station-hosted cover artwork, and a shared 60-second refresh limit
 - Repository boundaries for future authentication, chat, and requests
+- Safe station-scoped M7 authentication groundwork with no unverified login integration
 
 Audio stream addresses come from station-provided playlists and remain subject to device verification. Remote interfaces are added only after source verification and permission review. See [docs/m6-queue-research.md](docs/m6-queue-research.md) and [docs/m6-validation.md](docs/m6-validation.md) for the queue/history authorization, protocol evidence, limits, and device results.
 
