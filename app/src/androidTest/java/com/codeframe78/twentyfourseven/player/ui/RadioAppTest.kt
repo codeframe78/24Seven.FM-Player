@@ -16,6 +16,11 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
 import com.codeframe78.twentyfourseven.player.domain.Station
 import com.codeframe78.twentyfourseven.player.domain.StationId
+import com.codeframe78.twentyfourseven.player.domain.HistoryTrack
+import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
+import com.codeframe78.twentyfourseven.player.domain.QueueState
+import com.codeframe78.twentyfourseven.player.domain.QueueTrack
+import com.codeframe78.twentyfourseven.player.domain.StationCapabilities
 import org.junit.Rule
 import org.junit.Test
 
@@ -35,6 +40,7 @@ class RadioAppTest {
                     onPlay = {},
                     onPause = {},
                     onStop = {},
+                    onRefreshQueue = {},
                 )
             }
         }
@@ -67,12 +73,46 @@ class RadioAppTest {
                         onPlay = {},
                         onPause = {},
                         onStop = {},
+                        onRefreshQueue = {},
                     )
                 }
             }
         }
 
         composeRule.onNodeWithTag("tablet_navigation_rail").assertExists()
+    }
+
+    @Test
+    fun readyQueueRendersUpcomingAndHistoryNatively() {
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(
+                        destination = MainDestination.Queue,
+                        selectedStation = station.copy(
+                            capabilities = StationCapabilities(supportsQueue = true, supportsHistory = true),
+                        ),
+                        queue = QueueState(
+                            stationId = station.id,
+                            status = QueueLoadStatus.Ready,
+                            upcoming = listOf(QueueTrack(1, "Upcoming track", "Upcoming album", "3:21")),
+                            recentlyPlayed = listOf(HistoryTrack("Played track", "Played album", "4:05")),
+                        ),
+                    ),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("Up next").assertIsDisplayed()
+        composeRule.onNodeWithText("Upcoming track").assertIsDisplayed()
+        composeRule.onNodeWithText("Recently played").assertIsDisplayed()
+        composeRule.onNodeWithText("Played track").assertIsDisplayed()
     }
 
     private fun sampleState() = MainUiState(

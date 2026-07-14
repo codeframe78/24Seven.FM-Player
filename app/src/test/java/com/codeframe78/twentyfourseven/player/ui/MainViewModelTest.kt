@@ -5,6 +5,9 @@ import com.codeframe78.twentyfourseven.player.domain.PlaybackController
 import com.codeframe78.twentyfourseven.player.domain.PlaybackState
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingRepository
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingState
+import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
+import com.codeframe78.twentyfourseven.player.domain.QueueRepository
+import com.codeframe78.twentyfourseven.player.domain.QueueState
 import com.codeframe78.twentyfourseven.player.domain.Station
 import com.codeframe78.twentyfourseven.player.domain.StationId
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +16,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -42,7 +47,8 @@ class MainViewModelTest {
     fun `selection and playback actions are delegated through domain contracts`() = runTest(dispatcher) {
         val stations = BootstrapStationRepository()
         val playback = FakePlaybackController()
-        val viewModel = MainViewModel(stations, playback, FakeNowPlayingRepository())
+        val queue = FakeQueueRepository()
+        val viewModel = MainViewModel(stations, playback, FakeNowPlayingRepository(), queue)
         advanceUntilIdle()
 
         assertEquals("sst", playback.selectedStation?.id?.value)
@@ -51,18 +57,25 @@ class MainViewModelTest {
         viewModel.play()
         viewModel.pause()
         viewModel.stop()
+        viewModel.refreshQueue()
         advanceUntilIdle()
 
         assertEquals("adagio", playback.selectedStation?.id?.value)
         assertEquals(1, playback.playCalls)
         assertEquals(1, playback.pauseCalls)
         assertEquals(1, playback.stopCalls)
+        assertEquals(StationId("adagio"), queue.refreshedStation)
     }
 
     @Test
     fun `now playing title updates remain scoped to the selected station`() = runTest(dispatcher) {
         val nowPlaying = FakeNowPlayingRepository()
-        val viewModel = MainViewModel(BootstrapStationRepository(), FakePlaybackController(), nowPlaying)
+        val viewModel = MainViewModel(
+            BootstrapStationRepository(),
+            FakePlaybackController(),
+            nowPlaying,
+            FakeQueueRepository(),
+        )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
 
@@ -85,6 +98,7 @@ class MainViewModelTest {
             BootstrapStationRepository(),
             FakePlaybackController(),
             FakeNowPlayingRepository(),
+            FakeQueueRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -95,6 +109,27 @@ class MainViewModelTest {
         advanceUntilIdle()
 
         assertEquals(MainDestination.Chat, viewModel.uiState.value.destination)
+    }
+
+    @Test
+    fun `queue state follows selected station and stays immutable`() = runTest(dispatcher) {
+        val queue = FakeQueueRepository()
+        val viewModel = MainViewModel(
+            BootstrapStationRepository(),
+            FakePlaybackController(),
+            FakeNowPlayingRepository(),
+            queue,
+        )
+        backgroundScope.launch { viewModel.uiState.collect() }
+        advanceUntilIdle()
+
+        assertEquals(StationId("sst"), viewModel.uiState.value.queue?.stationId)
+
+        viewModel.selectStation(StationId("death"))
+        advanceUntilIdle()
+
+        assertEquals(StationId("death"), viewModel.uiState.value.queue?.stationId)
+        assertEquals(QueueLoadStatus.Unavailable, viewModel.uiState.value.queue?.status)
     }
 
     private class FakeNowPlayingRepository : NowPlayingRepository {
@@ -124,6 +159,19 @@ class MainViewModelTest {
 
         override fun stop() {
             stopCalls++
+        }
+    }
+
+    private class FakeQueueRepository : QueueRepository {
+        var refreshedStation: StationId? = null
+
+        override fun observeQueue(stationId: StationId): Flow<QueueState> =
+            MutableSharedFlow<QueueState>(replay = 1).also {
+                it.tryEmit(QueueState(stationId))
+            }
+
+        override suspend fun refresh(stationId: StationId) {
+            refreshedStation = stationId
         }
     }
 }

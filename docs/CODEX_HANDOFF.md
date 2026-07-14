@@ -82,6 +82,16 @@ M5 now includes:
 - bottom navigation below 600 dp and a navigation rail on wider layouts;
 - unit and Compose device coverage for navigation and adaptive branch selection.
 
+M6 groundwork now includes:
+
+- a station-scoped `QueueRepository` domain contract;
+- immutable unavailable, loading, ready, and error states;
+- native upcoming-queue and recently-played rendering with refresh actions;
+- unit and Compose coverage for station scoping and ready-state rendering;
+- sanitized source research in `docs/m6-queue-research.md`.
+
+Live M6 data remains blocked. The public players rely on undocumented HTML fragments that failed for four of five stations during verification, while Live Studio reparses complete page HTML. Do not commit or implement those internal requests. Keep all queue/history capabilities disabled until 24seven.FM provides a supported structured feed or written authorization and polling guidance.
+
 The latest successful build validation ran unit tests for debug and release, Android lint, `assembleDebug`, instrumentation APK assembly, and API 35 connected tests. M3 through M5 device validation is complete. See `docs/m1-validation.md`, `docs/m2-validation.md`, `docs/m3-validation.md`, `docs/m4-metadata-research.md`, and `docs/m5-validation.md` for exact evidence.
 
 ## Physical Razr setup

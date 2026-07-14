@@ -10,10 +10,15 @@ import com.codeframe78.twentyfourseven.player.domain.PlaybackController
 import com.codeframe78.twentyfourseven.player.domain.PlaybackState
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingRepository
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingState
+import com.codeframe78.twentyfourseven.player.domain.QueueRepository
+import com.codeframe78.twentyfourseven.player.domain.QueueState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -24,29 +29,39 @@ data class MainUiState(
     val selectedStation: Station? = null,
     val playback: PlaybackState = PlaybackState(),
     val nowPlaying: NowPlayingState = NowPlayingState(),
+    val queue: QueueState? = null,
     val destination: MainDestination = MainDestination.Player,
 )
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class MainViewModel(
     private val stations: StationRepository,
     private val playback: PlaybackController,
     private val nowPlaying: NowPlayingRepository,
+    private val queue: QueueRepository,
 ) : ViewModel() {
     private val destination = MutableStateFlow(MainDestination.Player)
+
+    private val selectedQueue = stations.observeSelectedStation().flatMapLatest { station ->
+        queue.observeQueue(station.id)
+    }
+
+    private val stationContent = combine(nowPlaying.observeNowPlaying(), selectedQueue, ::StationContent)
 
     val uiState: StateFlow<MainUiState> = combine(
         stations.observeStations(),
         stations.observeSelectedStation(),
         playback.state,
-        nowPlaying.observeNowPlaying(),
+        stationContent,
         destination,
-    ) { all, selected, playbackState, nowPlayingState, selectedDestination ->
+    ) { all, selected, playbackState, content, selectedDestination ->
         MainUiState(
             stations = all,
             selectedStation = selected,
             playback = playbackState,
-            nowPlaying = nowPlayingState.takeIf { it.stationId == selected.id }
+            nowPlaying = content.nowPlaying.takeIf { it.stationId == selected.id }
                 ?: NowPlayingState(stationId = selected.id),
+            queue = content.queue.takeIf { it.stationId == selected.id },
             destination = selectedDestination,
         )
     }
@@ -66,13 +81,24 @@ class MainViewModel(
         this.destination.value = destination
     }
 
+    fun refreshQueue() = viewModelScope.launch {
+        queue.refresh(stations.observeSelectedStation().first().id)
+    }
+
     class Factory(
         private val stations: StationRepository,
         private val playback: PlaybackController,
         private val nowPlaying: NowPlayingRepository,
+        private val queue: QueueRepository,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T = MainViewModel(stations, playback, nowPlaying) as T
+        override fun <T : ViewModel> create(modelClass: Class<T>): T =
+            MainViewModel(stations, playback, nowPlaying, queue) as T
     }
 }
+
+private data class StationContent(
+    val nowPlaying: NowPlayingState,
+    val queue: QueueState,
+)
 

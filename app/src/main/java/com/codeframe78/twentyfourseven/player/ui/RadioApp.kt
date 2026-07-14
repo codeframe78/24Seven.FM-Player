@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -25,6 +27,7 @@ import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Radio
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -34,6 +37,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -58,6 +62,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.codeframe78.twentyfourseven.player.domain.PlaybackStatus
+import com.codeframe78.twentyfourseven.player.domain.HistoryTrack
+import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
+import com.codeframe78.twentyfourseven.player.domain.QueueTrack
 import com.codeframe78.twentyfourseven.player.domain.StationCapabilities
 import com.codeframe78.twentyfourseven.player.domain.StationId
 import com.codeframe78.twentyfourseven.player.domain.StreamFormat
@@ -83,12 +90,13 @@ internal fun RadioApp(
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onStop: () -> Unit,
+    onRefreshQueue: () -> Unit,
 ) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
         if (maxWidth >= 600.dp) {
-            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop)
+            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue)
         } else {
-            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop)
+            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue)
         }
     }
 }
@@ -102,6 +110,7 @@ private fun PhoneShell(
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onStop: () -> Unit,
+    onRefreshQueue: () -> Unit,
 ) {
     Scaffold(
         topBar = { StationTopBar(state, onSelectStation) },
@@ -123,7 +132,7 @@ private fun PhoneShell(
             }
         },
     ) { padding ->
-        DestinationContent(state, padding, onPlay, onPause, onStop)
+        DestinationContent(state, padding, onPlay, onPause, onStop, onRefreshQueue)
     }
 }
 
@@ -136,6 +145,7 @@ private fun TabletShell(
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onStop: () -> Unit,
+    onRefreshQueue: () -> Unit,
 ) {
     Row(Modifier.fillMaxSize()) {
         NavigationRail(Modifier.fillMaxHeight().testTag("tablet_navigation_rail")) {
@@ -159,7 +169,7 @@ private fun TabletShell(
                 }
             },
         ) { padding ->
-            DestinationContent(state, padding, onPlay, onPause, onStop)
+            DestinationContent(state, padding, onPlay, onPause, onStop, onRefreshQueue)
         }
     }
 }
@@ -197,6 +207,7 @@ private fun DestinationContent(
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onStop: () -> Unit,
+    onRefreshQueue: () -> Unit,
 ) {
     when (state.destination) {
         MainDestination.Player -> PlayerScreen(state, padding, onPlay, onPause, onStop)
@@ -210,17 +221,118 @@ private fun DestinationContent(
             icon = Icons.AutoMirrored.Filled.Chat,
             padding = padding,
         )
-        MainDestination.Queue -> FeatureScreen(
-            title = "Queue",
-            description = if (state.selectedStation?.capabilities?.supportsQueue == true) {
-                "Queue support is available for this station but its verified data source is not implemented yet."
-            } else {
-                "No supported queue or history source has been verified for this station yet."
-            },
-            icon = Icons.AutoMirrored.Filled.QueueMusic,
-            padding = padding,
-        )
+        MainDestination.Queue -> QueueScreen(state, padding, onRefreshQueue)
         MainDestination.More -> MoreScreen(state, padding)
+    }
+}
+
+@Composable
+private fun QueueScreen(state: MainUiState, padding: PaddingValues, onRefresh: () -> Unit) {
+    val queue = state.queue
+    val supportsQueueOrHistory = state.selectedStation?.capabilities?.run {
+        supportsQueue || supportsHistory
+    } == true
+    when {
+        !supportsQueueOrHistory ||
+            queue == null || queue.status == QueueLoadStatus.Unavailable -> FeatureScreen(
+                title = "Queue",
+                description = "No supported queue or history source has been verified for this station yet.",
+                icon = Icons.AutoMirrored.Filled.QueueMusic,
+                padding = padding,
+            )
+        queue.status == QueueLoadStatus.Loading -> Box(
+            Modifier.fillMaxSize().padding(padding),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator()
+        }
+        queue.status == QueueLoadStatus.Error -> Column(
+            Modifier.fillMaxSize().padding(padding).padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Text("Queue unavailable", style = MaterialTheme.typography.headlineSmall)
+            Spacer(Modifier.height(8.dp))
+            Text(
+                queue.errorMessage ?: "The station data could not be refreshed.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(Modifier.height(16.dp))
+            TextButton(onClick = onRefresh) {
+                Icon(Icons.Default.Refresh, contentDescription = null)
+                Text("Try again")
+            }
+        }
+        else -> QueueLists(queue.upcoming, queue.recentlyPlayed, padding, onRefresh)
+    }
+}
+
+@Composable
+private fun QueueLists(
+    upcoming: List<QueueTrack>,
+    history: List<HistoryTrack>,
+    padding: PaddingValues,
+    onRefresh: () -> Unit,
+) {
+    LazyColumn(
+        Modifier.fillMaxSize().padding(padding),
+        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        item {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text("Up next", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.weight(1f))
+                IconButton(onClick = onRefresh) {
+                    Icon(Icons.Default.Refresh, contentDescription = "Refresh queue")
+                }
+            }
+        }
+        if (upcoming.isEmpty()) {
+            item { EmptyTrackList("The station queue is currently empty.") }
+        } else {
+            items(upcoming, key = { "queue-${it.position}-${it.displayTitle}" }) { track ->
+                TrackCard(track.position.toString(), track.displayTitle, track.albumTitle, track.durationLabel)
+            }
+        }
+        item {
+            Spacer(Modifier.height(8.dp))
+            Text("Recently played", style = MaterialTheme.typography.headlineSmall)
+        }
+        if (history.isEmpty()) {
+            item { EmptyTrackList("No recent history is available.") }
+        } else {
+            items(history) { track ->
+                TrackCard(null, track.displayTitle, track.albumTitle, track.durationLabel)
+            }
+        }
+    }
+}
+
+@Composable
+private fun EmptyTrackList(message: String) {
+    Text(message, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(vertical = 8.dp))
+}
+
+@Composable
+private fun TrackCard(position: String?, title: String, album: String?, duration: String?) {
+    Card(Modifier.fillMaxWidth()) {
+        Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+            position?.let {
+                Text(it, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                Spacer(Modifier.width(14.dp))
+            }
+            Column(Modifier.weight(1f)) {
+                Text(title, style = MaterialTheme.typography.titleMedium)
+                album?.let {
+                    Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                }
+            }
+            duration?.let {
+                Spacer(Modifier.width(12.dp))
+                Text(it, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
     }
 }
 

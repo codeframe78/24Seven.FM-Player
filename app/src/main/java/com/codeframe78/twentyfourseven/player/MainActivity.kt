@@ -36,6 +36,7 @@ class MainActivity : ComponentActivity() {
                     container.stationRepository,
                     container.playbackController,
                     container.nowPlayingRepository,
+                    container.queueRepository,
                 ),
             )
             val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -47,6 +48,7 @@ class MainActivity : ComponentActivity() {
                     onPlay = viewModel::play,
                     onPause = viewModel::pause,
                     onStop = viewModel::stop,
+                    onRefreshQueue = viewModel::refreshQueue,
                 )
             }
         }

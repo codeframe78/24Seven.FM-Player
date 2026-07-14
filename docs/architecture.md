@@ -38,6 +38,12 @@ The selected Player, Chat, Queue, or More destination is immutable `MainUiState`
 
 The phone shell uses bottom navigation below 600 dp. Wider layouts use a navigation rail and content pane. Chat and Queue remain navigable native destinations while unsupported, but their content is controlled by station capability flags and does not imply that an unverified endpoint exists.
 
+## Queue and history
+
+`QueueRepository` is station-scoped and exposes immutable unavailable, loading, ready, and error state. `MainViewModel` switches the observed repository flow when the selected `StationId` changes, and Compose only renders the resulting state or emits a refresh action upward.
+
+The production implementation remains explicitly unavailable. Research found only unreliable internal HTML fragments and full-page HTML refreshes, not a supported structured feed. No station capability may be enabled until a source and its permitted use are verified. See `docs/m6-queue-research.md`.
+
 ## Authentication
 
 Authentication will live behind `AuthRepository`. Composables never read or store cookies. If the network uses legacy form login, its CSRF, redirect, and session-cookie behavior will be handled by the data layer. No credentials or captured session values belong in the repository.
