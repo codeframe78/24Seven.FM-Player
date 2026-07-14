@@ -14,7 +14,7 @@ class UnavailableAuthRepositoryTest {
         val stationId = StationId("sst")
         val repository = UnavailableAuthRepository()
 
-        repository.signIn(stationId, "not-stored", "not-stored")
+        repository.signIn(stationId, "not-stored", "not-stored", "not-stored")
         val state = repository.observeAuth(stationId).first()
 
         assertEquals(stationId, state.stationId)

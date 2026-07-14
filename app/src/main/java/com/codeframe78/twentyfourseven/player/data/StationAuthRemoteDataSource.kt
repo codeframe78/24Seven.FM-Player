@@ -23,6 +23,7 @@ internal interface AuthRemoteDataSource {
         password: String,
         securityCode: String,
     ): AuthenticatedPage
+    suspend fun signOut(stationId: StationId)
 }
 
 internal class StationAuthRemoteDataSource(
@@ -52,6 +53,19 @@ internal class StationAuthRemoteDataSource(
             "op" to "login",
         ).joinToString("&") { (name, value) -> "${encode(name)}=${encode(value)}" }
         request(stationId, URI(challenge.actionUrl), method = "POST", body = body)
+    }
+
+    override suspend fun signOut(stationId: StationId) = withContext(Dispatchers.IO) {
+        try {
+            request(
+                stationId,
+                URI(origin(stationId)).resolve("/modules.php?name=Your_Account&op=logout"),
+                method = "GET",
+            )
+            Unit
+        } finally {
+            cookieManagers.remove(stationId)
+        }
     }
 
     private fun request(stationId: StationId, initialUri: URI, method: String, body: String? = null): AuthenticatedPage {
