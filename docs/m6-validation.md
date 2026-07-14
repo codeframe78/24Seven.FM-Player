@@ -23,6 +23,8 @@ A one-time on-device integration test made one authorized request per station. S
 
 On 2026-07-13, the queue adapter was extended to display at most 30 upcoming and 30 played tracks from the public `Queue_Played` tables. Parser tests verify explicit field extraction, removal of requester text from titles, same-station artwork enforcement, and the 30-row ceiling. Death.FM retains its verified compact feed because its extended interface was unreliable; this keeps every refresh to one request and preserves the 60-second limiter.
 
+Physical-device inspection then exposed a legacy nested-table edge case: the Queue and Played tables share an outer layout table. The parser now considers only rows owned by each inner section table, preventing recently played tracks from being appended to the numbered upcoming queue. The nested live structure is covered by regression tests.
+
 The native StreamingSoundtracks.com Queue screen was visually inspected. It displayed ordered upcoming tracks, track title above artist, station cover artwork, refresh control, persistent mini-player, and phone bottom navigation. The inspection caught and corrected an initial field-semantic mismatch before publication. Temporary screenshots and UI hierarchy files were deleted and were not committed.
 
 ## Build gate

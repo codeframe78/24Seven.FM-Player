@@ -44,13 +44,21 @@ internal class PlayerQueueResponseParser {
         require(maxTracks in 1..MAX_VISIBLE_TRACKS)
         val document = Jsoup.parse(html, baseUrl)
         val queueTable = document.select("table").firstOrNull { table ->
-            table.selectFirst("th")?.text()?.trim().equals("Queue", ignoreCase = true)
+            directRows(table).any { row ->
+                row.children().any { cell ->
+                    cell.normalName() == "th" && cell.text().trim().equals("Queue", ignoreCase = true)
+                }
+            }
         }
         val playedTable = document.select("table").firstOrNull { table ->
-            table.selectFirst("th")?.text()?.trim().equals("Played", ignoreCase = true)
+            directRows(table).any { row ->
+                row.children().any { cell ->
+                    cell.normalName() == "th" && cell.text().trim().equals("Played", ignoreCase = true)
+                }
+            }
         }
         return QueuePayload(
-            upcoming = queueTable?.select("tr").orEmpty().mapNotNull { row ->
+            upcoming = queueTable?.let(::directRows).orEmpty().mapNotNull { row ->
                 val track = parseExtendedRow(row, baseUrl) ?: return@mapNotNull null
                 QueueTrack(
                     position = track.position,
@@ -61,7 +69,7 @@ internal class PlayerQueueResponseParser {
                     artworkUrl = track.artworkUrl,
                 )
             }.take(maxTracks),
-            recentlyPlayed = playedTable?.select("tr").orEmpty().mapNotNull { row ->
+            recentlyPlayed = playedTable?.let(::directRows).orEmpty().mapNotNull { row ->
                 val track = parseExtendedRow(row, baseUrl) ?: return@mapNotNull null
                 HistoryTrack(
                     displayTitle = track.displayTitle,
@@ -72,6 +80,14 @@ internal class PlayerQueueResponseParser {
                 )
             }.take(maxTracks),
         )
+    }
+
+    private fun directRows(table: Element): List<Element> = table.children().flatMap { child ->
+        when (child.normalName()) {
+            "tr" -> listOf(child)
+            "tbody", "thead", "tfoot" -> child.children().filter { it.normalName() == "tr" }
+            else -> emptyList()
+        }
     }
 
     private fun rows(html: String, baseUrl: String): List<Element> =

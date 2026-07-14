@@ -90,15 +90,23 @@ class PlayerQueueResponseParserTest {
     """.trimIndent()
 
     private fun extendedPage(queue: String, history: String) = """
-        <table>
-          <tr><th colspan="3">Queue</th></tr>
-          <tr><th>Position</th><th>Cover</th><th>Track</th></tr>
-          $queue
-        </table>
-        <table>
-          <tr><th colspan="3">Played</th></tr>
-          <tr><th>Position</th><th>Cover</th><th>Track</th></tr>
-          $history
+        <table class="layout">
+          <tr>
+            <td>
+              <table class="queue">
+                <tr><th colspan="3">Queue</th></tr>
+                <tr><th>Position</th><th>Cover</th><th>Track</th></tr>
+                $queue
+              </table>
+            </td>
+            <td>
+              <table class="played">
+                <tr><th colspan="3">Played</th></tr>
+                <tr><th>Position</th><th>Cover</th><th>Track</th></tr>
+                $history
+              </table>
+            </td>
+          </tr>
         </table>
     """.trimIndent()
 
