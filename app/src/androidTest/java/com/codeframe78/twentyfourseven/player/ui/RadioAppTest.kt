@@ -128,6 +128,33 @@ class RadioAppTest {
     }
 
     @Test
+    fun artworkPlayerControlsRemainReachableInShortWideLayout() {
+        composeRule.setContent {
+            MaterialTheme {
+                Box(Modifier.requiredSize(1000.dp, 400.dp)) {
+                    RadioApp(
+                        state = sampleState().copy(
+                            nowPlaying = NowPlayingState(
+                                station.id,
+                                "Current track",
+                                "https://streamingsoundtracks.com/images/cover/500/B00Q5M2SYS.jpg",
+                            ),
+                        ),
+                        onSelectStation = {},
+                        onSelectDestination = {},
+                        onPlay = {},
+                        onPause = {},
+                        onStop = {},
+                        onRefreshQueue = {},
+                    )
+                }
+            }
+        }
+
+        composeRule.onNodeWithText("Stop").performScrollTo().assertIsDisplayed()
+    }
+
+    @Test
     fun readyQueueRendersUpcomingAndHistoryNatively() {
         composeRule.setContent {
             MaterialTheme {

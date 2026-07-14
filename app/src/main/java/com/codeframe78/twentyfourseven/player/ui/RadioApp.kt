@@ -579,7 +579,7 @@ private fun PlayerScreen(
     onStop: () -> Unit,
 ) {
     Column(
-        Modifier.fillMaxSize().padding(padding).padding(24.dp),
+        Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {

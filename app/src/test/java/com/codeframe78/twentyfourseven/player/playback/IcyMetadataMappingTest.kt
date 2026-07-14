@@ -6,7 +6,9 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.extractor.metadata.icy.IcyInfo
 import com.codeframe78.twentyfourseven.player.domain.StationId
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 @androidx.annotation.OptIn(UnstableApi::class)
@@ -43,5 +45,13 @@ class IcyMetadataMappingTest {
         assertEquals("StreamingSoundtracks.com", liveMetadata.artist)
         assertEquals("StreamingSoundtracks.com", liveMetadata.albumTitle)
         assertEquals("24seven.FM", liveMetadata.subtitle)
+    }
+
+    @Test
+    fun `metadata-only media replacement preserves pending artwork`() {
+        assertFalse(shouldClearNowPlaying("death:0", "death:0"))
+        assertTrue(shouldClearNowPlaying("death:0", "death:1"))
+        assertTrue(shouldClearNowPlaying("death:0", "sst:0"))
+        assertTrue(shouldClearNowPlaying(null, "death:0"))
     }
 }

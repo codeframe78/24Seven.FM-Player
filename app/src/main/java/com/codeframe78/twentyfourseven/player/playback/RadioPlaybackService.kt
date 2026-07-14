@@ -39,6 +39,7 @@ class RadioPlaybackService : MediaSessionService() {
     private val artworkScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var artworkJob: Job? = null
     private var activeNowPlaying: NowPlayingState? = null
+    private var activeMediaId: String? = null
     private val sessionPlayer by lazy {
         object : ForwardingPlayer(player) {
             override fun getAvailableCommands(): Player.Commands = super.getAvailableCommands()
@@ -61,8 +62,11 @@ class RadioPlaybackService : MediaSessionService() {
     }
     private val metadataListener = object : Player.Listener {
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            val incomingMediaId = mediaItem?.mediaId
+            if (!shouldClearNowPlaying(activeMediaId, incomingMediaId)) return
             artworkJob?.cancel()
             activeNowPlaying = null
+            activeMediaId = incomingMediaId
             nowPlayingPublisher.clear(mediaItem?.stationId())
         }
 
@@ -71,6 +75,7 @@ class RadioPlaybackService : MediaSessionService() {
             val nowPlaying = metadata.toNowPlayingState(stationId) ?: return
             if (activeNowPlaying?.stationId == stationId && activeNowPlaying?.displayTitle == nowPlaying.displayTitle) return
             artworkJob?.cancel()
+            activeMediaId = player.currentMediaItem?.mediaId
             activeNowPlaying = nowPlaying
             updateSessionMetadata(nowPlaying)
             nowPlayingPublisher.publish(nowPlaying)
@@ -153,4 +158,7 @@ internal fun MediaMetadata.withNowPlayingTitle(displayTitle: String): MediaMetad
         .setSubtitle("24seven.FM")
         .build()
 }
+
+internal fun shouldClearNowPlaying(activeMediaId: String?, incomingMediaId: String?): Boolean =
+    activeMediaId == null || incomingMediaId == null || activeMediaId != incomingMediaId
 
