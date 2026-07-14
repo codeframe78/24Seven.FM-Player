@@ -191,29 +191,26 @@ See `docs/m4-metadata-research.md` for per-relay ICY headers, field constraints,
 
 Future product scope includes a native authenticated Private Messages inbox/read/compose/reply/send experience. It is recorded in `docs/future-scope.md`; do not implement PM access until its authorization, refresh limits, retention, deletion, attachment, and station-account behavior are explicitly settled.
 
-M10 request attribution and optional request messages is in final validation. The public extended Queue/History interface exposes an
-explicit requester profile link and, when supplied, a separate italic request message. Both are now parsed into
-bounded domain fields and rendered independently of track metadata. Death.FM's compact feed does not expose these
-fields. StreamingSoundtracks.com's authenticated post-request form was inspected without another submission: it
-posts `msg` with an 80-character limit only after the song request has already been accepted. The native dialog
-implements that exact two-step contract, keeps the message transient, never retries the song mutation, and gates
-the field behind a station capability so the other four stations are not assumed compatible. The first live message
-attempt did not appear; the build was corrected to mirror the form's `remLen` control and safely upgrade the station's
-same-host HTTP redirect back to its verified HTTPS page without exposing cookies. A second controlled Razr request
-was queued with requester attribution but no message because the accepted song mutation returned no readable response
-and the prior sequence exited before the separate message POST. The adapter now sends a non-blank confirmed message
-once after that indeterminate outcome without ever retrying the song. Unit, lint, release, and all 10 Razr
-instrumentation tests pass. A subsequent app attempt still omitted its message. A fresh controlled browser workflow
-then proved the actual root cause: the song request ID and server-generated message-record ID are distinct. The
-browser requested `Just Testing` using song ID `263260`; its fresh response generated message ID `2055716`; and
-`M10 fresh browser workflow` was saved and displayed in Queue. The adapter now parses and strictly validates the
-server-generated form action, posts with that ID and the actual response referer, and recognizes the saved-message
-response. It never guesses an ID or retries the song after an unreadable response; the read timeout is 60 seconds.
-It now stops reading once the complete message form or saved-message acknowledgement has arrived, rather than
-waiting for the remainder of the legacy response. The corrected debug build is installed on the Razr; one
-user-initiated native request with a short, unique message still needs queue confirmation.
-One future eligible native-app confirmation remains. See `docs/m10-request-attribution-research.md` and
-`docs/m10-validation.md`.
+M10 request attribution and optional request messages is complete. The public extended Queue/History interface exposes
+an explicit requester profile link and, when supplied, a separate italic request message. Both are parsed into bounded
+domain fields and rendered independently of track metadata. Death.FM's compact feed does not expose these fields.
+StreamingSoundtracks.com's authenticated post-request form uses a separate 80-character `msg` POST only after the
+song request has been reported accepted. The native dialog implements that two-step contract, keeps the message
+transient, never retries the song mutation, and gates the field behind a station capability so the other four stations
+are not assumed compatible.
+
+Live investigation established three legacy requirements: the browser submits `msg`, `send`, and `remLen`; the request
+response redirects through the public `www` HTTP alias; and the message form's server-generated record ID is distinct
+from the song ID. The adapter parses and strictly validates the form action, matching album and numeric record ID,
+canonicalizes only the verified SST alias to `https://streamingsoundtracks.com`, posts with the actual response referer,
+and stops reading once the complete form or saved-message acknowledgement has arrived. If the accepted response is
+unreadable, the adapter does not guess an ID, post a message, or retry the song. It also requires an explicit request-
+success phrase and presents station acknowledgements as pending until Queue confirms the result.
+
+Final native validation used the VIP account and the least-played suggestion flow. `Clipped Ears` by Nicholas Pike
+entered the public Queue with `Requested by MorG` and the exact message `M10-VIP-least-2-20260714`; the native Queue
+rendered the same requester and message separately on the API 35 Razr. Unit, lint, release, and all 10 Razr
+instrumentation tests pass. See `docs/m10-request-attribution-research.md` and `docs/m10-validation.md`.
 
 An API 35 instrumentation test connects through the real `MediaSessionService`, checks that fallback navigation remains hidden, stops the running service, and reconnects after recreation. Run it against an explicit emulator serial with `ANDROID_SERIAL=<emulator>` and `./gradlew connectedDebugAndroidTest` when both an emulator and physical device are connected.
 

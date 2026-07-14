@@ -14,7 +14,7 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 
 ## Current progress
 
-M1 through M9 are complete. M10 is in final live validation: requester attribution is working, and the optional-message adapter now parses and validates the station-generated message-record ID instead of reusing the unrelated song ID. It never guesses an ID or retries a song after an unreadable response. Automated unit, lint, release-build, and connected-device coverage is green.
+M1 through M10 are complete. Native song requesting now includes station-provided random and least-played suggestions, requester attribution, and the verified StreamingSoundtracks.com optional-message workflow. The adapter parses and validates the station-generated message-record ID, never guesses an ID, never retries a song after an unreadable response, and presents station acknowledgements as pending until Queue confirms the result. Automated unit, lint, release-build, and connected-device coverage is green.
 
 | Milestone | Status | Delivered |
 | --- | --- | --- |
@@ -27,7 +27,7 @@ M1 through M9 are complete. M10 is in final live validation: requester attributi
 | M7 | Complete | Native station-scoped authentication, alphanumeric security challenge, and Android-protected session restoration |
 | M8 | Complete | Native station chat reading and protected-session posting, with memory-only history and a 30-second read limit |
 | M9 | Complete | Native catalog search, album/eligibility browsing, explicit confirmation, and one-shot song requests with no automatic retries |
-| M10 | In progress | Explicit requester identity/message display and an exact 80-character StreamingSoundtracks.com message form using the station-generated message-record ID; final native-app confirmation remains |
+| M10 | Complete | Requester identity/message display, random and least-played suggestions, and the exact 80-character StreamingSoundtracks.com message form using the station-generated message-record ID; verified end to end on a VIP request |
 
 The app is fully native and uses immutable Compose UI state, repository boundaries, and station capability flags. It includes play, pause, stop, live metadata and artwork, a persistent mini-player, capability-aware screens, native loading/error/empty states, and Android Keystore-backed account sessions. Remote data stays bounded to the documented station interfaces and their approved refresh rules.
 
@@ -44,11 +44,14 @@ These captures are from the physical API 35 Razr using live StreamingSoundtracks
     <td align="center"><img src="docs/screenshots/chat.png" alt="Native station chat" width="300"><br><strong>Live native chat</strong></td>
     <td align="center"><img src="docs/screenshots/requests.png" alt="Native station library search" width="300"><br><strong>Song-request library search</strong></td>
   </tr>
+  <tr>
+    <td align="center" colspan="2"><img src="docs/screenshots/vip-request-message-success.png" alt="Verified native VIP request with requester attribution and exact message in Queue" width="300"><br><strong>Verified request attribution and message</strong></td>
+  </tr>
 </table>
 
 Audio stream addresses come from station-provided playlists and remain subject to device verification. Remote interfaces are added only after source verification and permission review. See the milestone research and validation documents under [docs](docs) for authorization, protocol evidence, limits, and device results.
 
-Planned follow-up work includes final live request-message confirmation and a native Private Messages experience after its authorization and behavior are settled. See [docs/future-scope.md](docs/future-scope.md).
+Planned follow-up work includes a native Private Messages experience after its authorization and behavior are settled. See [docs/future-scope.md](docs/future-scope.md).
 
 ## Building
 

@@ -33,9 +33,10 @@ Blank messages produce no second request, and the message remains transient and 
 
 The first live attempt queued the song but did not display its message. Follow-up inspection found two legacy-form
 details missing from the initial adapter: the browser also submits the read-only remaining-character control, and
-the station redirects the accepted HTTPS request to a same-host HTTP message page. The corrected adapter submits
-all three successful controls (`msg`, `send`, and `remLen`) and upgrades only that same-host legacy redirect back to
-the independently verified HTTPS form. Protected cookies are never sent over HTTP.
+the station redirects the accepted HTTPS request through its public `www` HTTP alias. The corrected adapter submits
+all three successful controls (`msg`, `send`, and `remLen`) and canonicalizes only the verified SST alias back to
+`https://streamingsoundtracks.com`. Protected cookies are never sent over HTTP, and no alias was assumed for the
+other stations.
 
 A second controlled Razr attempt and a subsequent app attempt both queued songs without their messages. The earlier
 timeout-recovery theory was then tested with a fresh authenticated browser request rather than another guessed app
@@ -48,15 +49,20 @@ It now parses the station-generated form action from the accepted response; vali
 path, Album action, matching album ID, numeric message ID, and expected controls; uses the actual response URL as
 referer; and recognizes the station's saved-message confirmation. If the accepted response cannot be read, the
 required message ID is unavailable, so the adapter does not guess, post a message, or retry the song. A 60-second
-read timeout gives the slow response more time. Final native-app confirmation remains outstanding, so M10 stays in
-progress.
+read timeout gives the slow response more time.
 
 The next native attempt also showed that a response can remain open after the complete confirmation form has
 arrived. The adapter now stops reading the accepted response as soon as that complete form is present, and stops
 reading the message response as soon as its saved-message acknowledgement is present. This keeps the existing
 one-shot request/message contract while avoiding dependence on the remainder of a large legacy page. The behavior
-is covered by a regression test using responses larger than the normal safety limit. Final native queue confirmation
-is still required.
+is covered by a regression test using responses larger than the normal safety limit.
+
+Final native verification used the VIP account and an explicit least-played suggestion. `Clipped Ears` by Nicholas
+Pike from *For the Love of Spock* entered Queue with `Requested by MorG` and the exact message
+`M10-VIP-least-2-20260714`. The native Queue rendered the requester and message separately. Earlier station-reported
+success pages that did not produce a Queue row demonstrated why acknowledgements are not described as verified:
+the app now requires an explicit request-success phrase before posting a message and directs the listener to confirm
+Queue before requesting again.
 
 Only StreamingSoundtracks.com advertises the request-message capability because that is the station whose exact
 authenticated form contract was inspected. The other four stations retain native song requesting without the
