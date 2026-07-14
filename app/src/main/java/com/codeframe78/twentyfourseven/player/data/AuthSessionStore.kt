@@ -16,7 +16,8 @@ import javax.crypto.spec.GCMParameterSpec
 
 internal interface AuthSessionStore {
     fun load(stationId: StationId, expectedDomain: String): List<HttpCookie>
-    fun save(stationId: StationId, expectedDomain: String, cookies: List<HttpCookie>)
+    fun loadDisplayName(stationId: StationId): String?
+    fun save(stationId: StationId, expectedDomain: String, cookies: List<HttpCookie>, displayName: String)
     fun clear(stationId: StationId)
 }
 
@@ -26,37 +27,56 @@ internal class AndroidKeystoreAuthSessionStore(context: Context) : AuthSessionSt
     override fun load(stationId: StationId, expectedDomain: String): List<HttpCookie> {
         val encrypted = preferences.getString(key(stationId), null) ?: return emptyList()
         return runCatching {
-            val parts = encrypted.split('.', limit = 2)
-            require(parts.size == 2)
-            val cipher = Cipher.getInstance(TRANSFORMATION)
-            cipher.init(
-                Cipher.DECRYPT_MODE,
-                secretKey(),
-                GCMParameterSpec(TAG_LENGTH_BITS, Base64.decode(parts[0], Base64.NO_WRAP)),
-            )
-            val json = String(cipher.doFinal(Base64.decode(parts[1], Base64.NO_WRAP)), Charsets.UTF_8)
-            decodeCookies(json, expectedDomain)
+            decodeCookies(decrypt(encrypted), expectedDomain)
         }.getOrElse {
             clear(stationId)
             emptyList()
         }
     }
 
-    override fun save(stationId: StationId, expectedDomain: String, cookies: List<HttpCookie>) {
-        val json = encodeCookies(cookies.filter { it.matchesDomain(expectedDomain) })
+    override fun loadDisplayName(stationId: StationId): String? = preferences
+        .getString(identityKey(stationId), null)
+        ?.let { encrypted -> runCatching { decrypt(encrypted) }.getOrNull() }
+        ?.takeIf { it.isNotBlank() }
+
+    override fun save(
+        stationId: StationId,
+        expectedDomain: String,
+        cookies: List<HttpCookie>,
+        displayName: String,
+    ) {
+        val json = encodeCookies(cookies.filter { it.matchesDomain(expectedDomain) }, expectedDomain)
         if (json == "[]") {
             clear(stationId)
             return
         }
-        val cipher = Cipher.getInstance(TRANSFORMATION)
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey())
-        val encrypted = cipher.doFinal(json.toByteArray(Charsets.UTF_8))
-        val value = listOf(cipher.iv, encrypted).joinToString(".") { Base64.encodeToString(it, Base64.NO_WRAP) }
-        preferences.edit().putString(key(stationId), value).apply()
+        preferences.edit()
+            .putString(key(stationId), encrypt(json))
+            .putString(identityKey(stationId), encrypt(displayName))
+            .apply()
     }
 
     override fun clear(stationId: StationId) {
-        preferences.edit().remove(key(stationId)).apply()
+        preferences.edit().remove(key(stationId)).remove(identityKey(stationId)).apply()
+    }
+
+    private fun encrypt(value: String): String {
+        val cipher = Cipher.getInstance(TRANSFORMATION)
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey())
+        val encrypted = cipher.doFinal(value.toByteArray(Charsets.UTF_8))
+        return listOf(cipher.iv, encrypted).joinToString(".") { Base64.encodeToString(it, Base64.NO_WRAP) }
+    }
+
+    private fun decrypt(value: String): String {
+        val parts = value.split('.', limit = 2)
+        require(parts.size == 2)
+        val cipher = Cipher.getInstance(TRANSFORMATION)
+        cipher.init(
+            Cipher.DECRYPT_MODE,
+            secretKey(),
+            GCMParameterSpec(TAG_LENGTH_BITS, Base64.decode(parts[0], Base64.NO_WRAP)),
+        )
+        return String(cipher.doFinal(Base64.decode(parts[1], Base64.NO_WRAP)), Charsets.UTF_8)
     }
 
     private fun secretKey(): SecretKey {
@@ -76,14 +96,14 @@ internal class AndroidKeystoreAuthSessionStore(context: Context) : AuthSessionSt
         }
     }
 
-    private fun encodeCookies(cookies: List<HttpCookie>): String = JSONArray().apply {
+    private fun encodeCookies(cookies: List<HttpCookie>, expectedDomain: String): String = JSONArray().apply {
         cookies.forEach { cookie ->
             put(JSONObject().apply {
                 put("name", cookie.name)
                 put("value", cookie.value)
-                put("domain", cookie.domain)
+                put("domain", cookie.domain?.trimStart('.')?.takeIf(String::isNotBlank) ?: expectedDomain)
                 put("path", cookie.path ?: "/")
-                put("secure", cookie.secure)
+                put("secure", true)
                 put("httpOnly", cookie.isHttpOnly)
                 put("maxAge", cookie.maxAge)
             })
@@ -108,11 +128,12 @@ internal class AndroidKeystoreAuthSessionStore(context: Context) : AuthSessionSt
     }
 
     private fun HttpCookie.matchesDomain(expectedDomain: String): Boolean {
-        val normalized = domain?.trimStart('.') ?: return false
-        return normalized.equals(expectedDomain, ignoreCase = true) && secure
+        val normalized = domain?.trimStart('.')?.takeIf(String::isNotBlank) ?: expectedDomain
+        return normalized.equals(expectedDomain, ignoreCase = true)
     }
 
     private fun key(stationId: StationId) = "station_${stationId.value}"
+    private fun identityKey(stationId: StationId) = "identity_${stationId.value}"
 
     private companion object {
         const val PREFERENCES_NAME = "protected_auth_sessions"
@@ -124,15 +145,25 @@ internal class AndroidKeystoreAuthSessionStore(context: Context) : AuthSessionSt
 
 internal class InMemoryAuthSessionStore : AuthSessionStore {
     private val sessions = mutableMapOf<StationId, List<HttpCookie>>()
+    private val identities = mutableMapOf<StationId, String>()
     override fun load(stationId: StationId, expectedDomain: String): List<HttpCookie> =
         sessions[stationId].orEmpty().map(::copyCookie)
 
-    override fun save(stationId: StationId, expectedDomain: String, cookies: List<HttpCookie>) {
+    override fun loadDisplayName(stationId: StationId): String? = identities[stationId]
+
+    override fun save(
+        stationId: StationId,
+        expectedDomain: String,
+        cookies: List<HttpCookie>,
+        displayName: String,
+    ) {
         sessions[stationId] = cookies.map(::copyCookie)
+        identities[stationId] = displayName
     }
 
     override fun clear(stationId: StationId) {
         sessions.remove(stationId)
+        identities.remove(stationId)
     }
 
     private fun copyCookie(cookie: HttpCookie) = HttpCookie(cookie.name, cookie.value).also {

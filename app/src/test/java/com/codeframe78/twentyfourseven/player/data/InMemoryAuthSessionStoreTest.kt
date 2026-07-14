@@ -19,11 +19,12 @@ class InMemoryAuthSessionStoreTest {
             isHttpOnly = true
         }
 
-        store.save(sst, "streamingsoundtracks.com", listOf(cookie))
+        store.save(sst, "streamingsoundtracks.com", listOf(cookie), "Listener")
         val restored = store.load(sst, "streamingsoundtracks.com").single()
 
         assertEquals("sensitive", restored.value)
         assertNotSame(cookie, restored)
+        assertEquals("Listener", store.loadDisplayName(sst))
         assertTrue(store.load(StationId("adagio"), "adagio.fm").isEmpty())
 
         store.clear(sst)

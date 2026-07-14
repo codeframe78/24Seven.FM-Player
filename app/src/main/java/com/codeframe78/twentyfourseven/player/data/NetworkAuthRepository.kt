@@ -28,6 +28,14 @@ class NetworkAuthRepository internal constructor(
 
     override fun observeAuth(stationId: StationId): Flow<AuthState> = state(stationId).asStateFlow()
 
+    override suspend fun restoreSession(stationId: StationId): Unit = lock(stationId).withLock {
+        if (state(stationId).value.status != AuthStatus.Unavailable) return@withLock
+        remote.restoredDisplayName(stationId)?.let { displayName ->
+            state(stationId).value = AuthState(stationId, AuthStatus.SignedIn, displayName = displayName)
+        }
+        Unit
+    }
+
     override suspend fun refreshChallenge(stationId: StationId) = lock(stationId).withLock {
         loadChallenge(stationId, errorMessage = null)
     }
@@ -50,7 +58,7 @@ class NetworkAuthRepository internal constructor(
             val origin = "${action.scheme}://${action.authority}/"
             resultParser.parseSignedInDisplayName(page.html, origin, username)
         }.onSuccess { displayName ->
-            remote.persistSession(stationId)
+            remote.persistSession(stationId, displayName)
             challenges.remove(stationId)
             state(stationId).value = AuthState(stationId, AuthStatus.SignedIn, displayName = displayName)
         }.onFailure {

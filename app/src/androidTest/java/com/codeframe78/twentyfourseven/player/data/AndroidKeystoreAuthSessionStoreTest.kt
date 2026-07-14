@@ -17,18 +17,19 @@ class AndroidKeystoreAuthSessionStoreTest {
         val stationId = StationId("keystore-test")
         store.clear(stationId)
         val cookie = HttpCookie("session", "instrumentation-only-value").apply {
-            domain = "streamingsoundtracks.com"
             path = "/"
-            secure = true
             isHttpOnly = true
         }
 
-        store.save(stationId, "streamingsoundtracks.com", listOf(cookie))
+        store.save(stationId, "streamingsoundtracks.com", listOf(cookie), "Listener")
         val restored = store.load(stationId, "streamingsoundtracks.com")
 
         assertEquals(1, restored.size)
         assertEquals("session", restored.single().name)
         assertEquals("instrumentation-only-value", restored.single().value)
+        assertEquals("streamingsoundtracks.com", restored.single().domain)
+        assertTrue(restored.single().secure)
+        assertEquals("Listener", store.loadDisplayName(stationId))
         assertTrue(store.load(stationId, "example.com").isEmpty())
         store.clear(stationId)
         assertTrue(store.load(stationId, "streamingsoundtracks.com").isEmpty())

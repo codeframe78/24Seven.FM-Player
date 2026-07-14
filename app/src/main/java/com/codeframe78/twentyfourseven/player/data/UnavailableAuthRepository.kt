@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.flowOf
 class UnavailableAuthRepository : AuthRepository {
     override fun observeAuth(stationId: StationId): Flow<AuthState> = flowOf(AuthState(stationId))
 
+    override suspend fun restoreSession(stationId: StationId) = Unit
+
     override suspend fun refreshChallenge(stationId: StationId) = Unit
 
     override suspend fun signIn(

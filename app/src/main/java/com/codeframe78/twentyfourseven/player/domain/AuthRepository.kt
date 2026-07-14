@@ -15,6 +15,8 @@ data class AuthState(
 interface AuthRepository {
     fun observeAuth(stationId: StationId): Flow<AuthState>
 
+    suspend fun restoreSession(stationId: StationId)
+
     suspend fun refreshChallenge(stationId: StationId)
 
     /** Credentials are transient inputs and must never be persisted or logged. */

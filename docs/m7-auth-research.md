@@ -68,6 +68,16 @@ security code directly on the device. The app displayed the signed-in account st
 password or security-code input. No credential, challenge answer, cookie value, or account-derived URL value
 was captured or committed.
 
+The station's legacy session cookie was host-only and did not carry a `Secure` attribute. The first persistence
+implementation correctly rejected it but therefore could not restore the session. The revised store accepts
+cookies only from the station-isolated HTTPS client, normalizes host-only scope to the selected station's exact
+domain, and upgrades the restored cookie to HTTPS-only before encrypting it. The signed-in display identity is
+encrypted separately; passwords and security-code answers are never persisted.
+
+After signing in with the revised build, a real application process stop and restart on the Razr restored the
+signed-in identity automatically. The Android Keystore instrumentation test also verifies encrypted cookie and
+identity round-trip, exact-domain enforcement, HTTPS-only restoration, and clearing.
+
 ## Confirmed and remaining protocol questions
 
 The administrator has confirmed login/session permission and station-specific accounts. Protocol research must

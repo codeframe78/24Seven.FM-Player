@@ -93,6 +93,9 @@ class MainViewModel(
         viewModelScope.launch {
             stations.observeSelectedStation().collect(playback::selectStation)
         }
+        viewModelScope.launch {
+            stations.observeSelectedStation().collect { station -> auth.restoreSession(station.id) }
+        }
     }
 
     fun selectStation(id: StationId) = viewModelScope.launch { stations.selectStation(id) }

@@ -63,9 +63,21 @@ class NetworkAuthRepositoryTest {
         assertEquals(AuthStatus.SignedOut, repository.observeAuth(stationId).first().status)
     }
 
+    @Test
+    fun `stored identity restores signed-in state without credentials`() = runTest {
+        val repository = NetworkAuthRepository(FakeAuthRemoteDataSource(challenge, restoredName = "Listener"))
+
+        repository.restoreSession(stationId)
+
+        val state = repository.observeAuth(stationId).first()
+        assertEquals(AuthStatus.SignedIn, state.status)
+        assertEquals("Listener", state.displayName)
+    }
+
     private class FakeAuthRemoteDataSource(
         private val challenge: LoginChallenge,
         private val failSignIn: Boolean = false,
+        private val restoredName: String? = null,
     ) : AuthRemoteDataSource {
         var challengeCalls = 0
         var signOutCalls = 0
@@ -96,7 +108,9 @@ class NetworkAuthRepositoryTest {
             signOutCalls++
         }
 
-        override fun persistSession(stationId: StationId) {
+        override fun restoredDisplayName(stationId: StationId): String? = restoredName
+
+        override fun persistSession(stationId: StationId, displayName: String) {
             persistCalls++
         }
     }

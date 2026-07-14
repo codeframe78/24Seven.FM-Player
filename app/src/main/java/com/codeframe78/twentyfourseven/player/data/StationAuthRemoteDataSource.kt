@@ -23,7 +23,8 @@ internal interface AuthRemoteDataSource {
         password: String,
         securityCode: String,
     ): AuthenticatedPage
-    fun persistSession(stationId: StationId)
+    fun restoredDisplayName(stationId: StationId): String?
+    fun persistSession(stationId: StationId, displayName: String)
     suspend fun signOut(stationId: StationId)
 }
 
@@ -71,10 +72,15 @@ internal class StationAuthRemoteDataSource(
         }
     }
 
-    override fun persistSession(stationId: StationId) {
+    override fun restoredDisplayName(stationId: StationId): String? {
+        if (cookieManager(stationId).cookieStore.cookies.isEmpty()) return null
+        return sessionStore.loadDisplayName(stationId)
+    }
+
+    override fun persistSession(stationId: StationId, displayName: String) {
         val domain = URI(origin(stationId)).host
         val cookies = cookieManager(stationId).cookieStore.cookies
-        sessionStore.save(stationId, domain, cookies)
+        sessionStore.save(stationId, domain, cookies, displayName)
     }
 
     private fun request(stationId: StationId, initialUri: URI, method: String, body: String? = null): AuthenticatedPage {
