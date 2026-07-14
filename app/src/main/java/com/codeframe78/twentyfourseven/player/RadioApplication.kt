@@ -11,6 +11,8 @@ import com.codeframe78.twentyfourseven.player.data.StationAuthRemoteDataSource
 import com.codeframe78.twentyfourseven.player.data.StationChatRemoteDataSource
 import com.codeframe78.twentyfourseven.player.data.NetworkSongRequestRepository
 import com.codeframe78.twentyfourseven.player.data.StationSongRequestRemoteDataSource
+import com.codeframe78.twentyfourseven.player.data.StationNowPlayingArtworkRepository
+import com.codeframe78.twentyfourseven.player.domain.NowPlayingArtworkRepository
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingPublisher
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingRepository
 import com.codeframe78.twentyfourseven.player.domain.SongRequestRepository
@@ -28,6 +30,7 @@ class AppContainer(application: Application) {
     val playbackController by lazy { Media3PlaybackController(application) }
     val nowPlayingRepository: NowPlayingRepository = nowPlayingStore
     val nowPlayingPublisher: NowPlayingPublisher = nowPlayingStore
+    val nowPlayingArtworkRepository: NowPlayingArtworkRepository = StationNowPlayingArtworkRepository()
     val queueRepository = PollingQueueRepository()
     val authRepository = NetworkAuthRepository(
         StationAuthRemoteDataSource(sessionStore = authSessionStore),

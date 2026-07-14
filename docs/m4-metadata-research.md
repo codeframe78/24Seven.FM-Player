@@ -42,3 +42,11 @@ Primary-to-source fallback was verified under a controlled primary-only network 
 A continuous-playback check on the Motorola Razr 2023 observed one station until its raw title changed. The updated Compose title and the application MediaSession title matched, both remained in `PLAYING`, the session reported no error, and log inspection found no player or fatal application error. The observation allowed up to ten minutes rather than assuming a short track boundary; the verified transition occurred after 40 seconds in this run. The active speaker route was read back at 0/15 before playback, and the original unmuted 7/15 volume plus the original screen timeout were restored afterward.
 
 These results complete M4. Artwork and separately structured artist, album, composer, and duration remain intentionally unavailable because the verified source supplies only one composite ICY title. Playback continues independently when metadata is absent.
+
+## Current-track artwork addendum (2026-07-14)
+
+The public native station player was later verified to read `ASIN` and `CoverLink` from the station-owned `soap/FM24sevenJSON.php?action=GetCurrentlyPlaying` response. The same contract exists across all five station domains. StreamingSoundtracks.com, 1980s.FM, Adagio.FM, and Entranced.FM returned a live same-station cover during verification; Death.FM returned no current artwork at that observation time.
+
+The Android app now makes one bounded, unauthenticated current-track read when a distinct ICY title arrives. It validates HTTPS and the selected station host, follows the player site's explicit 500-pixel ASIN cover convention, and publishes optional artwork to immutable Compose state and MediaSession metadata. It does not add a timer, infer track fields, or make playback depend on this response. Missing or failed artwork remains a valid title-only state.
+
+On the API 35 Motorola Razr 2023, a live 1980s.FM track displayed its station-hosted album cover on both the main Player and persistent mini-player while the title matched across both surfaces. Playback was stopped after validation. The full unit suite, Android lint, release assembly, and nine connected Compose/service tests passed.

@@ -189,6 +189,8 @@ directs the listener to Queue, and suppresses immediate resubmission. See `docs/
 
 See `docs/m4-metadata-research.md` for per-relay ICY headers, field constraints, implementation evidence, and device results.
 
+Future product scope now includes optional member messages on song requests plus requester/message display in Queue, and a native authenticated Private Messages inbox/read/compose/reply/send experience. These are recorded in `docs/future-scope.md`; do not implement PM access until its authorization, refresh limits, retention, deletion, attachment, and station-account behavior are explicitly settled.
+
 An API 35 instrumentation test connects through the real `MediaSessionService`, checks that fallback navigation remains hidden, stops the running service, and reconnects after recreation. Run it against an explicit emulator serial with `ANDROID_SERIAL=<emulator>` and `./gradlew connectedDebugAndroidTest` when both an emulator and physical device are connected.
 
 The current Windows SDK includes compile platforms 35, 36, and 36.1 plus Google APIs x86_64 emulator images for API 35 and API 36. A temporary API-35 audio-focus helper compiled successfully after Platform 35 was installed; it was uninstalled and deleted after testing.

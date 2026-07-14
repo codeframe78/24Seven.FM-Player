@@ -25,7 +25,7 @@ The initial stream addresses were extracted from station-provided PLS playlists.
 
 All ten committed relay URLs advertise `audio/aacp` and 128 kbps through ICY headers. The catalog therefore records `StreamFormat.Aac` and 128 kbps based on protocol evidence, not hostname inference. Revalidate this evidence before changing the labels.
 
-Live ICY titles flow from the service-owned player through a station-scoped `NowPlayingRepository` contract. Compose receives only immutable domain state. ICY supplies one composite title, so the application displays it unchanged and does not guess artist, album, composer, duration, or artwork fields.
+Live ICY titles flow from the service-owned player through a station-scoped `NowPlayingRepository` contract. Compose receives only immutable domain state. ICY supplies one composite title, so the application displays it unchanged and does not guess artist, album, composer, or duration fields. On each distinct ICY title, the service requests the station's public current-track record once and optionally enriches state and MediaSession metadata with an explicit same-station cover URL. This is event-driven rather than separately polled, and artwork failure never affects playback or title updates.
 
 
 ## Playback ownership

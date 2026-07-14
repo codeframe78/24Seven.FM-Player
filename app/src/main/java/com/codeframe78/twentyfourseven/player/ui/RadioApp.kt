@@ -583,6 +583,15 @@ private fun PlayerScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
+        state.nowPlaying.artworkUrl?.let { artworkUrl ->
+            AsyncImage(
+                model = artworkUrl,
+                contentDescription = "Album artwork",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(200.dp).clip(RoundedCornerShape(16.dp)),
+            )
+            Spacer(Modifier.height(20.dp))
+        }
         Text(state.selectedStation?.shortName ?: "24seven.FM", style = MaterialTheme.typography.displaySmall)
         Spacer(Modifier.height(12.dp))
         Text(
@@ -932,7 +941,14 @@ private fun MiniPlayer(
             Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(Icons.Default.Radio, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+            state.nowPlaying.artworkUrl?.let { artworkUrl ->
+                AsyncImage(
+                    model = artworkUrl,
+                    contentDescription = "Now playing album artwork",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(6.dp)),
+                )
+            } ?: Icon(Icons.Default.Radio, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
                 Text(

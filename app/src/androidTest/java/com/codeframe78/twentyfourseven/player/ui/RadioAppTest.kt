@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.codeframe78.twentyfourseven.player.domain.Station
 import com.codeframe78.twentyfourseven.player.domain.StationId
 import com.codeframe78.twentyfourseven.player.domain.HistoryTrack
+import com.codeframe78.twentyfourseven.player.domain.NowPlayingState
 import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.QueueState
 import com.codeframe78.twentyfourseven.player.domain.QueueTrack
@@ -91,6 +93,38 @@ class RadioAppTest {
         }
 
         composeRule.onNodeWithTag("tablet_navigation_rail").assertExists()
+    }
+
+    @Test
+    fun nowPlayingArtworkRendersOnPlayerAndMiniPlayer() {
+        composeRule.setContent {
+            var state by remember {
+                mutableStateOf(
+                    sampleState().copy(
+                        nowPlaying = NowPlayingState(
+                            station.id,
+                            "Current track",
+                            "https://streamingsoundtracks.com/images/cover/500/B00Q5M2SYS.jpg",
+                        ),
+                    ),
+                )
+            }
+            MaterialTheme {
+                RadioApp(
+                    state = state,
+                    onSelectStation = {},
+                    onSelectDestination = { state = state.copy(destination = it) },
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                )
+            }
+        }
+
+        composeRule.onNodeWithContentDescription("Album artwork").assertIsDisplayed()
+        composeRule.onNodeWithText("Chat").performClick()
+        composeRule.onNodeWithContentDescription("Now playing album artwork").assertIsDisplayed()
     }
 
     @Test

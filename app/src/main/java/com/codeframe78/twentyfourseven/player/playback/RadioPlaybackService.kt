@@ -1,5 +1,6 @@
 package com.codeframe78.twentyfourseven.player.playback
 
+import android.net.Uri
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.ForwardingPlayer
@@ -15,8 +16,15 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.codeframe78.twentyfourseven.player.RadioApplication
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingPublisher
+import com.codeframe78.twentyfourseven.player.domain.NowPlayingArtworkRepository
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingState
 import com.codeframe78.twentyfourseven.player.domain.StationId
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 @androidx.annotation.OptIn(markerClass = [UnstableApi::class])
 class RadioPlaybackService : MediaSessionService() {
@@ -25,6 +33,12 @@ class RadioPlaybackService : MediaSessionService() {
     private val nowPlayingPublisher: NowPlayingPublisher by lazy {
         (application as RadioApplication).appContainer.nowPlayingPublisher
     }
+    private val artworkRepository: NowPlayingArtworkRepository by lazy {
+        (application as RadioApplication).appContainer.nowPlayingArtworkRepository
+    }
+    private val artworkScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private var artworkJob: Job? = null
+    private var activeNowPlaying: NowPlayingState? = null
     private val sessionPlayer by lazy {
         object : ForwardingPlayer(player) {
             override fun getAvailableCommands(): Player.Commands = super.getAvailableCommands()
@@ -47,14 +61,27 @@ class RadioPlaybackService : MediaSessionService() {
     }
     private val metadataListener = object : Player.Listener {
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            artworkJob?.cancel()
+            activeNowPlaying = null
             nowPlayingPublisher.clear(mediaItem?.stationId())
         }
 
         override fun onMetadata(metadata: Metadata) {
             val stationId = player.currentMediaItem?.stationId() ?: return
             val nowPlaying = metadata.toNowPlayingState(stationId) ?: return
+            if (activeNowPlaying?.stationId == stationId && activeNowPlaying?.displayTitle == nowPlaying.displayTitle) return
+            artworkJob?.cancel()
+            activeNowPlaying = nowPlaying
             updateSessionMetadata(nowPlaying)
             nowPlayingPublisher.publish(nowPlaying)
+            artworkJob = artworkScope.launch {
+                val artworkUrl = runCatching { artworkRepository.fetchArtwork(stationId) }.getOrNull() ?: return@launch
+                if (activeNowPlaying != nowPlaying || player.currentMediaItem?.stationId() != stationId) return@launch
+                val enriched = nowPlaying.copy(artworkUrl = artworkUrl)
+                activeNowPlaying = enriched
+                updateSessionMetadata(enriched)
+                nowPlayingPublisher.publish(enriched)
+            }
         }
     }
 
@@ -79,11 +106,17 @@ class RadioPlaybackService : MediaSessionService() {
         val index = player.currentMediaItemIndex
         val currentItem = player.currentMediaItem ?: return
         val displayTitle = nowPlaying.displayTitle ?: return
-        if (currentItem.mediaMetadata.title == displayTitle) return
+        val artworkUri = nowPlaying.artworkUrl?.let(Uri::parse)
+        if (currentItem.mediaMetadata.title == displayTitle && currentItem.mediaMetadata.artworkUri == artworkUri) return
         player.replaceMediaItem(
             index,
             currentItem.buildUpon()
-                .setMediaMetadata(currentItem.mediaMetadata.withNowPlayingTitle(displayTitle))
+                .setMediaMetadata(
+                    currentItem.mediaMetadata.withNowPlayingTitle(displayTitle)
+                        .buildUpon()
+                        .setArtworkUri(artworkUri)
+                        .build(),
+                )
                 .build(),
         )
     }
@@ -91,6 +124,7 @@ class RadioPlaybackService : MediaSessionService() {
     override fun onDestroy() {
         player.removeListener(fallbackListener)
         player.removeListener(metadataListener)
+        artworkScope.cancel()
         nowPlayingPublisher.clear()
         mediaSession.release()
         player.release()
