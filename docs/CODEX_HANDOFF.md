@@ -152,6 +152,10 @@ login endpoint or secret handling. Authentication remains disabled pending the a
 listed in `docs/m7-auth-research.md`. The public queue/history permission does not cover authentication, chat,
 or request submission.
 
+The groundwork passed unit tests, lint, debug and release compilation, Windows validation, the GitHub Android
+build, and all four connected tests on the Motorola Razr 2023 running API 35. These results do not validate a
+login protocol because no login was attempted.
+
 See `docs/m4-metadata-research.md` for per-relay ICY headers, field constraints, implementation evidence, and device results.
 
 An API 35 instrumentation test connects through the real `MediaSessionService`, checks that fallback navigation remains hidden, stops the running service, and reconnects after recreation. Run it against an explicit emulator serial with `ANDROID_SERIAL=<emulator>` and `./gradlew connectedDebugAndroidTest` when both an emulator and physical device are connected.

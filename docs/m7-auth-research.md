@@ -55,3 +55,12 @@ Authorization for chat reads/writes and song requests will be documented separat
 - Compose tests for validation, progress, errors, signed-in identity, and logout.
 - A least-privileged physical-device login/logout/expiry pass on the Motorola Razr 2023.
 - Regression validation for public playback and queue/history while signed out.
+
+## Groundwork validation
+
+The safe authentication groundwork passed unit tests, lint, debug and release compilation, and the repository's
+Windows validation script. All four existing connected Android tests also passed on the Motorola Razr 2023
+running API 35 after wireless ADB was restored. The GitHub Android build passed for commit `bb416d0`.
+
+This validates the repository boundary and unavailable UI state only. No login request was made, and no live
+authentication behavior should be considered validated.
