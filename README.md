@@ -32,7 +32,8 @@ M1 through M7 are complete. The app includes verified playback and Now Playing b
 - Explicit track title and artist text, station-hosted cover artwork, and a shared 60-second refresh limit
 - Native station-scoped sign-in with a case-sensitive alphanumeric security challenge
 - Android Keystore-protected session restoration, online expiry detection, and sign-out clearing
-- Repository boundaries for future chat and requests
+- Safe station-scoped M8 chat repository groundwork with no network transport
+- Repository boundaries for future chat protocol and requests
 
 Audio stream addresses come from station-provided playlists and remain subject to device verification. Remote interfaces are added only after source verification and permission review. See [docs/m6-queue-research.md](docs/m6-queue-research.md), [docs/m6-validation.md](docs/m6-validation.md), [docs/m7-auth-research.md](docs/m7-auth-research.md), and [docs/m7-validation.md](docs/m7-validation.md) for authorization, protocol evidence, limits, and device results.
 

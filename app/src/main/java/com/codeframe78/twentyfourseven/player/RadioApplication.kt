@@ -5,6 +5,7 @@ import com.codeframe78.twentyfourseven.player.data.BootstrapStationRepository
 import com.codeframe78.twentyfourseven.player.data.InMemoryNowPlayingRepository
 import com.codeframe78.twentyfourseven.player.data.PollingQueueRepository
 import com.codeframe78.twentyfourseven.player.data.NetworkAuthRepository
+import com.codeframe78.twentyfourseven.player.data.UnavailableChatRepository
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingPublisher
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingRepository
 import com.codeframe78.twentyfourseven.player.playback.Media3PlaybackController
@@ -22,5 +23,6 @@ class AppContainer(application: Application) {
     val nowPlayingPublisher: NowPlayingPublisher = nowPlayingStore
     val queueRepository = PollingQueueRepository()
     val authRepository = NetworkAuthRepository(application)
+    val chatRepository = UnavailableChatRepository()
 }
 

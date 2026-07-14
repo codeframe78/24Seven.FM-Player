@@ -162,6 +162,12 @@ uses the strict signed-in classifier to clear an expired anonymous session. Acco
 shared behavior is verified. Chat and request submission remain outside the authorization. See
 `docs/m7-auth-research.md` and `docs/m7-validation.md`.
 
+M8 Chat safe groundwork has started. A station-scoped repository contract, immutable chat state and message
+model, unavailable implementation, and destination-scoped ViewModel observation are present without any network
+transport or posting method. Existing authorization explicitly excludes chat reads and writes, so capability
+flags remain disabled and no chat traffic has been inspected. Continue only after the administrator defines read,
+write, display-field, connection-rate, and least-privileged testing permission. See `docs/m8-chat-research.md`.
+
 See `docs/m4-metadata-research.md` for per-relay ICY headers, field constraints, implementation evidence, and device results.
 
 An API 35 instrumentation test connects through the real `MediaSessionService`, checks that fallback navigation remains hidden, stops the running service, and reconnects after recreation. Run it against an explicit emulator serial with `ANDROID_SERIAL=<emulator>` and `./gradlew connectedDebugAndroidTest` when both an emulator and physical device are connected.

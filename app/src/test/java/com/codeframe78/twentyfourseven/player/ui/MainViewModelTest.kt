@@ -2,6 +2,9 @@ package com.codeframe78.twentyfourseven.player.ui
 
 import com.codeframe78.twentyfourseven.player.data.BootstrapStationRepository
 import com.codeframe78.twentyfourseven.player.data.UnavailableAuthRepository
+import com.codeframe78.twentyfourseven.player.data.UnavailableChatRepository
+import com.codeframe78.twentyfourseven.player.domain.ChatRepository
+import com.codeframe78.twentyfourseven.player.domain.ChatState
 import com.codeframe78.twentyfourseven.player.domain.PlaybackController
 import com.codeframe78.twentyfourseven.player.domain.PlaybackState
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingRepository
@@ -56,6 +59,7 @@ class MainViewModelTest {
             FakeNowPlayingRepository(),
             queue,
             UnavailableAuthRepository(),
+            UnavailableChatRepository(),
         )
         advanceUntilIdle()
 
@@ -84,6 +88,7 @@ class MainViewModelTest {
             nowPlaying,
             FakeQueueRepository(),
             UnavailableAuthRepository(),
+            UnavailableChatRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -109,6 +114,7 @@ class MainViewModelTest {
             FakeNowPlayingRepository(),
             FakeQueueRepository(),
             UnavailableAuthRepository(),
+            UnavailableChatRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -130,6 +136,7 @@ class MainViewModelTest {
             FakeNowPlayingRepository(),
             queue,
             UnavailableAuthRepository(),
+            UnavailableChatRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -154,6 +161,39 @@ class MainViewModelTest {
         viewModel.selectDestination(MainDestination.Player)
         advanceUntilIdle()
         assertEquals(0, queue.activeObservations)
+    }
+
+    @Test
+    fun `chat state is station scoped and observed only on chat destination`() = runTest(dispatcher) {
+        val chat = FakeChatRepository()
+        val viewModel = MainViewModel(
+            BootstrapStationRepository(),
+            FakePlaybackController(),
+            FakeNowPlayingRepository(),
+            FakeQueueRepository(),
+            UnavailableAuthRepository(),
+            chat,
+        )
+        backgroundScope.launch { viewModel.uiState.collect() }
+        advanceUntilIdle()
+
+        assertEquals(StationId("sst"), viewModel.uiState.value.chat?.stationId)
+        assertEquals(0, chat.activeObservations)
+
+        viewModel.selectDestination(MainDestination.Chat)
+        advanceUntilIdle()
+        assertEquals(StationId("sst"), chat.observedStation)
+        assertEquals(1, chat.activeObservations)
+
+        viewModel.selectStation(StationId("adagio"))
+        advanceUntilIdle()
+        assertEquals(StationId("adagio"), viewModel.uiState.value.chat?.stationId)
+        assertEquals(StationId("adagio"), chat.observedStation)
+        assertEquals(1, chat.activeObservations)
+
+        viewModel.selectDestination(MainDestination.Player)
+        advanceUntilIdle()
+        assertEquals(0, chat.activeObservations)
     }
 
     private class FakeNowPlayingRepository : NowPlayingRepository {
@@ -207,5 +247,25 @@ class MainViewModelTest {
         override suspend fun refresh(stationId: StationId) {
             refreshedStation = stationId
         }
+    }
+
+    private class FakeChatRepository : ChatRepository {
+        var observedStation: StationId? = null
+        var activeObservations = 0
+
+        override fun observeChat(stationId: StationId): Flow<ChatState> {
+            observedStation = stationId
+            return flow {
+                activeObservations++
+                emit(ChatState(stationId))
+                try {
+                    awaitCancellation()
+                } finally {
+                    activeObservations--
+                }
+            }
+        }
+
+        override suspend fun refresh(stationId: StationId) = Unit
     }
 }

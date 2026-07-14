@@ -38,6 +38,7 @@ class MainActivity : ComponentActivity() {
                     container.nowPlayingRepository,
                     container.queueRepository,
                     container.authRepository,
+                    container.chatRepository,
                 ),
             )
             val state = viewModel.uiState.collectAsStateWithLifecycle().value

@@ -59,7 +59,11 @@ cookie manager and protected storage even if the remote logout request fails. Se
 
 ## Chat
 
-Chat will depend on a replaceable transport contract. Network inspection must determine whether each station uses WebSocket, server-sent events, long polling, or ordinary polling before an implementation is selected.
+Chat depends on a station-scoped `ChatRepository`. `MainViewModel` observes it only while Chat is selected and
+cancels collection on destination or station changes. The current implementation remains unavailable and makes
+no network requests because chat reads and writes are not yet authorized. Network research must determine
+whether each station uses WebSocket, server-sent events, long polling, or ordinary polling before a transport is
+selected. See `docs/m8-chat-research.md`.
 
 ## Initial modules
 

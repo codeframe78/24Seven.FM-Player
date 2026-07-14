@@ -14,6 +14,8 @@ import com.codeframe78.twentyfourseven.player.domain.QueueRepository
 import com.codeframe78.twentyfourseven.player.domain.QueueState
 import com.codeframe78.twentyfourseven.player.domain.AuthRepository
 import com.codeframe78.twentyfourseven.player.domain.AuthState
+import com.codeframe78.twentyfourseven.player.domain.ChatRepository
+import com.codeframe78.twentyfourseven.player.domain.ChatState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,6 +36,7 @@ data class MainUiState(
     val nowPlaying: NowPlayingState = NowPlayingState(),
     val queue: QueueState? = null,
     val auth: AuthState? = null,
+    val chat: ChatState? = null,
     val destination: MainDestination = MainDestination.Player,
 )
 
@@ -44,6 +47,7 @@ class MainViewModel(
     private val nowPlaying: NowPlayingRepository,
     private val queue: QueueRepository,
     private val auth: AuthRepository,
+    private val chat: ChatRepository,
 ) : ViewModel() {
     private val destination = MutableStateFlow(MainDestination.Player)
 
@@ -62,10 +66,23 @@ class MainViewModel(
     private val selectedAuth = stations.observeSelectedStation()
         .flatMapLatest { station -> auth.observeAuth(station.id) }
 
+    private val selectedChat = combine(
+        stations.observeSelectedStation(),
+        destination,
+    ) { station, selectedDestination -> station to selectedDestination }
+        .flatMapLatest { (station, selectedDestination) ->
+            if (selectedDestination == MainDestination.Chat) {
+                chat.observeChat(station.id)
+            } else {
+                flowOf(ChatState(station.id))
+            }
+        }
+
     private val stationContent = combine(
         nowPlaying.observeNowPlaying(),
         selectedQueue,
         selectedAuth,
+        selectedChat,
         ::StationContent,
     )
 
@@ -84,6 +101,7 @@ class MainViewModel(
                 ?: NowPlayingState(stationId = selected.id),
             queue = content.queue.takeIf { it.stationId == selected.id },
             auth = content.auth.takeIf { it.stationId == selected.id },
+            chat = content.chat.takeIf { it.stationId == selected.id },
             destination = selectedDestination,
         )
     }
@@ -114,6 +132,10 @@ class MainViewModel(
         auth.refreshChallenge(stations.observeSelectedStation().first().id)
     }
 
+    fun refreshChat() = viewModelScope.launch {
+        chat.refresh(stations.observeSelectedStation().first().id)
+    }
+
     fun signIn(username: String, password: String, securityCode: String) = viewModelScope.launch {
         auth.signIn(stations.observeSelectedStation().first().id, username, password, securityCode)
     }
@@ -128,10 +150,11 @@ class MainViewModel(
         private val nowPlaying: NowPlayingRepository,
         private val queue: QueueRepository,
         private val auth: AuthRepository,
+        private val chat: ChatRepository,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            MainViewModel(stations, playback, nowPlaying, queue, auth) as T
+            MainViewModel(stations, playback, nowPlaying, queue, auth, chat) as T
     }
 }
 
@@ -139,5 +162,6 @@ private data class StationContent(
     val nowPlaying: NowPlayingState,
     val queue: QueueState,
     val auth: AuthState,
+    val chat: ChatState,
 )
 
