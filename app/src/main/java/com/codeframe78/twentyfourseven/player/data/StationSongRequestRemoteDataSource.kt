@@ -13,6 +13,7 @@ import java.net.CookieManager
 import java.net.CookiePolicy
 import java.net.HttpURLConnection
 import java.net.URI
+import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
@@ -74,77 +75,70 @@ internal class StationSongRequestRemoteDataSource(
         val origin = origin(stationId)
         val manager = authenticatedCookieManager(stationId, origin)
         if (manager.cookieStore.cookies.isEmpty()) return@withContext RequestSubmissionResult.AuthenticationRequired
-        val page = try {
-            request(
-                stationId,
-                URI(origin).resolve(
-                    "/modules.php?name=Req&asin=${encode(track.albumId)}&songID=${encode(track.songId)}",
-                ),
-                authenticated = true,
-                cookieManager = manager,
-            )
-        } catch (failure: IOException) {
-            if (message.isBlank()) throw failure
-            return@withContext postOptionalMessage(
-                stationId,
-                track,
-                message,
-                manager,
-                "The request response could not be read, but the optional message form was sent once. " +
-                    "Check Queue for both. The song request was not retried.",
-                loadFormFirst = true,
-            ) ?: throw failure
-        }
+        val page = request(
+            stationId,
+            URI(origin).resolve(
+                "/modules.php?name=Req&asin=${encode(track.albumId)}&songID=${encode(track.songId)}",
+            ),
+            authenticated = true,
+            cookieManager = manager,
+        )
         val submission = classifySubmission(page.html)
         if (submission !is RequestSubmissionResult.Submitted || message.isBlank()) {
             return@withContext submission
         }
 
+        val messageForm = requestMessageForm(stationId, track.albumId, page)
+            ?: return@withContext RequestSubmissionResult.Submitted(
+                "Request accepted, but the station did not provide a valid optional-message form. " +
+                    "The request was not retried.",
+            )
         postOptionalMessage(
             stationId,
-            track,
             message,
             manager,
-            "Request and optional message sent.",
+            messageForm,
         ) ?: RequestSubmissionResult.Submitted(
             "Request accepted, but the optional message could not be confirmed. The request was not retried.",
         )
     }
 
+    private fun requestMessageForm(
+        stationId: StationId,
+        albumId: String,
+        page: AuthenticatedPage,
+    ): RequestMessageForm? {
+        val referer = runCatching { URI(page.finalUrl) }.getOrNull() ?: return null
+        val form = Jsoup.parse(page.html, page.finalUrl).selectFirst(
+            "form:has(textarea[name=msg]):has([name=send]):has([name=remLen])",
+        ) ?: return null
+        if (form.selectFirst("[name=send][value=Send]") == null) return null
+        val action = runCatching { referer.resolve(form.attr("action")) }.getOrNull() ?: return null
+        val expected = URI(origin(stationId))
+        if (action.scheme != "https" || !action.host.equals(expected.host, true) || action.port != expected.port) {
+            return null
+        }
+        val parameters = runCatching { queryParameters(action) }.getOrNull() ?: return null
+        if (
+            action.path != "/modules.php" || parameters["name"] != "Album" ||
+            parameters["action"] != "submitmessage" || parameters["asin"] != albumId ||
+            parameters["id"]?.matches(NUMERIC_ID) != true
+        ) {
+            return null
+        }
+        return RequestMessageForm(action, referer)
+    }
+
     private fun postOptionalMessage(
         stationId: StationId,
-        track: RequestableTrack,
         message: String,
         manager: CookieManager,
-        successNotice: String,
-        loadFormFirst: Boolean = false,
+        form: RequestMessageForm,
     ): RequestSubmissionResult? {
-        val origin = origin(stationId)
-        val messageFormUri = URI(origin).resolve(
-            "/modules.php?name=Album&action=writemessage" +
-                "&asin=${encode(track.albumId)}&id=${encode(track.songId)}",
-        )
-        if (loadFormFirst) {
-            val formPage = runCatching {
-                request(
-                    stationId,
-                    messageFormUri,
-                    authenticated = true,
-                    cookieManager = manager,
-                )
-            }.getOrNull() ?: return null
-            val form = Jsoup.parse(formPage.html).selectFirst(
-                "form[action*=action=submitmessage]:has([name=msg]):has([name=send])",
-            ) ?: return null
-            if (form.selectFirst("[name=remLen]") == null) return null
-        }
         val messageResult = runCatching {
             request(
                 stationId,
-                URI(origin).resolve(
-                    "/modules.php?name=Album&action=submitmessage" +
-                        "&asin=${encode(track.albumId)}&id=${encode(track.songId)}",
-                ),
+                form.action,
                 authenticated = true,
                 cookieManager = manager,
                 method = "POST",
@@ -153,7 +147,7 @@ internal class StationSongRequestRemoteDataSource(
                     "send" to "Send",
                     "remLen" to (MAX_REQUEST_MESSAGE_CHARACTERS - message.length).toString(),
                 ),
-                referer = messageFormUri,
+                referer = form.referer,
             )
         }.getOrNull()
         if (messageResult == null) return null
@@ -162,10 +156,27 @@ internal class StationSongRequestRemoteDataSource(
             RequestSubmissionResult.Submitted(
                 "Request accepted, but the optional message was not added because the station sign-in expired.",
             )
+        } else if (messageText.contains("message has been saved", true)) {
+            RequestSubmissionResult.Submitted("Request and optional message sent.")
         } else {
-            RequestSubmissionResult.Submitted(successNotice)
+            RequestSubmissionResult.Submitted(
+                "Request accepted, but the optional message response was not recognized. " +
+                    "The request was not retried.",
+            )
         }
     }
+
+    private fun queryParameters(uri: URI): Map<String, String> = uri.rawQuery.orEmpty()
+        .split('&')
+        .mapNotNull { field ->
+            if (field.isBlank()) return@mapNotNull null
+            val separator = field.indexOf('=')
+            val name = if (separator >= 0) field.substring(0, separator) else field
+            val value = if (separator >= 0) field.substring(separator + 1) else ""
+            URLDecoder.decode(name, StandardCharsets.UTF_8.name()) to
+                URLDecoder.decode(value, StandardCharsets.UTF_8.name())
+        }
+        .toMap()
 
     private fun classifySubmission(html: String): RequestSubmissionResult {
         val text = Jsoup.parse(html).text().replace(Regex("\\s+"), " ").trim()
@@ -285,7 +296,7 @@ internal class StationSongRequestRemoteDataSource(
     private companion object {
         const val USER_AGENT = "24Seven.FM-Player/0.1 (Android; unofficial non-commercial client)"
         const val CONNECT_TIMEOUT_MILLIS = 15_000
-        const val READ_TIMEOUT_MILLIS = 30_000
+        const val READ_TIMEOUT_MILLIS = 60_000
         const val MAX_RESPONSE_CHARACTERS = 1_000_000
         const val MAX_REDIRECTS = 5
         const val MAX_NOTICE_CHARACTERS = 240
@@ -307,4 +318,6 @@ internal class StationSongRequestRemoteDataSource(
             StationId("entranced") to "https://entranced.fm/",
         )
     }
+
+    private data class RequestMessageForm(val action: URI, val referer: URI)
 }

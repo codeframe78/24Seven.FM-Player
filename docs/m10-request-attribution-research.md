@@ -27,11 +27,9 @@ action with the verified album and numeric song identifiers. It names the messag
 value `send=Send`, and its published counter truncates input at 80 characters.
 
 The native confirmation dialog mirrors that 80-character limit. A single explicit confirmation first performs the
-existing one-shot song request. A non-blank message then produces at most one same-origin authenticated form post
-after either a readable accepted result or an indeterminate response failure. This accommodates the verified case
-where the station accepted the mutation but did not return a readable response before the client timeout. The song
-mutation is never retried. Blank messages produce no second request, and the message remains transient and is
-neither logged nor persisted.
+existing one-shot song request. A non-blank message produces at most one same-origin authenticated form post only
+when the accepted response contains a valid station-generated message form. The song mutation is never retried.
+Blank messages produce no second request, and the message remains transient and is neither logged nor persisted.
 
 The first live attempt queued the song but did not display its message. Follow-up inspection found two legacy-form
 details missing from the initial adapter: the browser also submits the read-only remaining-character control, and
@@ -39,16 +37,19 @@ the station redirects the accepted HTTPS request to a same-host HTTP message pag
 all three successful controls (`msg`, `send`, and `remLen`) and upgrades only that same-host legacy redirect back to
 the independently verified HTTPS form. Protected cookies are never sent over HTTP.
 
-A second controlled Razr attempt queued the song with requester attribution but without its message. The client had
-received no readable response to the song mutation and therefore exited before its separate message POST. The
-adapter now posts a non-blank confirmed message exactly once after that indeterminate outcome without retrying the
-song. A subsequent live result showed that a direct timeout-recovery POST still did not attach. Read-only inspection
-of the authenticated website confirmed that its workflow includes the per-track `writemessage` form as an
-intermediate step; the direct recovery POST had skipped it. This was the remaining verified browser/app mismatch.
-The recovery path now loads and validates that form before posting, while the normal readable-response path already
-loads it through the station redirect. Automated coverage verifies exactly one song GET, one form GET, and one
-message POST in the timeout path. Final live queue confirmation of this sequence remains outstanding, so M10 stays
-in progress. Already queued songs must not be resubmitted for validation.
+A second controlled Razr attempt and a subsequent app attempt both queued songs without their messages. The earlier
+timeout-recovery theory was then tested with a fresh authenticated browser request rather than another guessed app
+mutation. `Just Testing` from *Soleil Rouge* used song ID `263260` in the request link, but the accepted response
+generated message-record ID `2055716` in the optional form. The message `M10 fresh browser workflow` was submitted
+through that fresh form, acknowledged as saved, and displayed in the public Queue.
+
+The distinct IDs establish the root cause: the adapter had incorrectly reused the song ID for `submitmessage`.
+It now parses the station-generated form action from the accepted response; validates its same-origin scheme, host,
+path, Album action, matching album ID, numeric message ID, and expected controls; uses the actual response URL as
+referer; and recognizes the station's saved-message confirmation. If the accepted response cannot be read, the
+required message ID is unavailable, so the adapter does not guess, post a message, or retry the song. A 60-second
+read timeout gives the slow response more time. Final native-app confirmation remains outstanding, so M10 stays in
+progress.
 
 Only StreamingSoundtracks.com advertises the request-message capability because that is the station whose exact
 authenticated form contract was inspected. The other four stations retain native song requesting without the

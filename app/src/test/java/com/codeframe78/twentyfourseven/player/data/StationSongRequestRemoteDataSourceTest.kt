@@ -36,29 +36,37 @@ class StationSongRequestRemoteDataSourceTest {
                     uri.toURL(),
                     "",
                     status = HttpURLConnection.HTTP_MOVED_TEMP,
-                    location = "http://streamingsoundtracks.com/modules.php?name=Album&action=writemessage&asin=B0F1S53ZB6&id=2055693",
+                    location = "http://streamingsoundtracks.com/modules.php?name=Album&action=writemessage&asin=B00005BG8G&id=2055716",
                 )
                 1 -> FakeConnection(
                     uri.toURL(),
-                    "Your request has successfully been delivered to the DJ application.",
+                    """
+                        Your request has successfully been delivered to the DJ application.
+                        <form action="/modules.php?name=Album&amp;action=submitmessage&amp;asin=B00005BG8G&amp;id=2055716">
+                          <textarea name="msg"></textarea>
+                          <input name="send" type="submit" value="Send">
+                          <input name="remLen" value="80" readonly>
+                        </form>
+                    """.trimIndent(),
                 )
-                else -> FakeConnection(uri.toURL(), "Your message has been added.")
+                else -> FakeConnection(uri.toURL(), "Your message has been saved.")
             }.also(connections::add)
         }
 
         val result = remote.submit(
             stationId,
-            RequestableTrack("B0F1S53ZB6", "2055693", "Track", eligible = true),
+            RequestableTrack("B00005BG8G", "263260", "Just Testing", eligible = true),
             "Great choice!",
         )
 
         assertTrue(result is RequestSubmissionResult.Submitted)
         assertEquals(3, connections.size)
         assertEquals("GET", connections[0].requestMethod)
+        assertTrue(connections[0].url.file.contains("songID=263260"))
         assertEquals("https", connections[1].url.protocol)
         assertEquals("POST", connections[2].requestMethod)
         assertEquals(
-            "/modules.php?name=Album&action=submitmessage&asin=B0F1S53ZB6&id=2055693",
+            "/modules.php?name=Album&action=submitmessage&asin=B00005BG8G&id=2055716",
             connections[2].url.file,
         )
         assertEquals(
@@ -66,46 +74,28 @@ class StationSongRequestRemoteDataSourceTest {
             connections[2].postedBody.toString(Charsets.UTF_8.name()),
         )
         assertEquals(
-            "https://streamingsoundtracks.com/modules.php?name=Album&action=writemessage&asin=B0F1S53ZB6&id=2055693",
+            "https://streamingsoundtracks.com/modules.php?name=Album&action=writemessage&asin=B00005BG8G&id=2055716",
             connections[2].capturedRequestProperties["Referer"],
         )
     }
 
     @Test
-    fun `indeterminate request sends message once without retrying song`() = runTest {
+    fun `indeterminate request does not guess message id or retry song`() = runTest {
         val store = sessionStore()
         val connections = mutableListOf<FakeConnection>()
         val remote = StationSongRequestRemoteDataSource(sessionStore = store) { uri ->
-            when (connections.size) {
-                0 -> FakeConnection(uri.toURL(), "", responseFailure = SocketTimeoutException("slow response"))
-                1 -> FakeConnection(
-                    uri.toURL(),
-                    """
-                        <form action="/modules.php?name=Album&amp;action=submitmessage&amp;asin=B0F1S53ZB6&amp;id=2055693">
-                          <textarea name="msg"></textarea>
-                          <input name="send" type="submit" value="Send">
-                          <input name="remLen" value="80" readonly>
-                        </form>
-                    """.trimIndent(),
-                )
-                else -> FakeConnection(uri.toURL(), "Message accepted")
-            }.also(connections::add)
+            FakeConnection(uri.toURL(), "", responseFailure = SocketTimeoutException("slow response"))
+                .also(connections::add)
         }
 
-        val result = remote.submit(stationId, track(), "M10 Android app test")
+        val failure = runCatching {
+            remote.submit(stationId, track(), "M10 Android app test")
+        }.exceptionOrNull()
 
-        assertTrue(result is RequestSubmissionResult.Submitted)
-        assertEquals(3, connections.size)
+        assertTrue(failure is SocketTimeoutException)
+        assertEquals(1, connections.size)
         assertEquals("GET", connections[0].requestMethod)
         assertTrue(connections[0].url.file.contains("name=Req"))
-        assertEquals("GET", connections[1].requestMethod)
-        assertTrue(connections[1].url.file.contains("action=writemessage"))
-        assertEquals("POST", connections[2].requestMethod)
-        assertTrue(connections[2].url.file.contains("action=submitmessage"))
-        assertEquals(
-            "msg=M10+Android+app+test&send=Send&remLen=60",
-            connections[2].postedBody.toString(Charsets.UTF_8.name()),
-        )
     }
 
     private fun sessionStore() = InMemoryAuthSessionStore().apply {
@@ -121,7 +111,7 @@ class StationSongRequestRemoteDataSourceTest {
         )
     }
 
-    private fun track() = RequestableTrack("B0F1S53ZB6", "2055693", "Track", eligible = true)
+    private fun track() = RequestableTrack("B00005BG8G", "263260", "Just Testing", eligible = true)
 
     private class FakeConnection(
         url: URL,
