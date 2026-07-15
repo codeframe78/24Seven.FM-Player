@@ -2,15 +2,15 @@
 
 ## Resume status — July 14, 2026
 
-- Current milestone: M19 1980s.FM certification (preflight next; M17 remains deferred for server repair).
+- Current milestone: M19 1980s.FM certification (public/device gate passed; representative account evidence pending; M17 remains deferred for server repair).
 - Last completed milestone: M18 StreamingSoundtracks.com certification in `docs/m18-sst-certification.md`. The latest production implementation remains M16 `90a7f98`; M18 required no code or stream change.
 - Latest successful validation: debug unit tests, lint, debug install, and 21/21 wired Android 16 Razr instrumentation tests after M18; a fresh silent smoke test reconfirmed SST playback, metadata/artwork, Queue, Chat, Favorites gating, and all five navigation targets.
 - Architecture: one native Compose app module; immutable state/actions; station-scoped repository contracts; one Media3 service-owned player/session; Android Keystore-backed per-station sessions.
 - Decisions: queued and recently played tracks share visible red `Track Recently Played`; reasons remain distinct internally. Available tracks use green `Request Now`. Other restrictions retain accurate separate labels. Revalidation must fail closed before mutation.
 - Known blockers: Queue rows lack stable track IDs; M17 Private Messages remains deferred for server fixes; Death.FM's configured HTTPS origin currently fails modern TLS. The Play developer account is approved; signing/configuration work remains intentionally sequenced at M23–M24.
 - Roadmap model: M13–M17 shared features, M18–M22 individual station certification, and M23–M24 distribution/publication. Certification milestones harden the shared app and must not create station-specific forks.
-- Next concrete task: present the M19 Task Complexity Level plus T-shirt preflight, then establish independent 1980s.FM evidence without inheriting SST account, membership, or request assumptions.
-- Likely next files: 1980s.FM certification evidence/matrices and targeted parser/repository/UI tests only for proven station differences; working shared implementations should remain untouched when evidence already proves them.
+- Next concrete task: obtain representative 1980s.FM user-entered sign-in evidence when available; meanwhile continue the non-authenticated M20 Adagio.FM gate without inheriting 1980s/SST assumptions.
+- Likely next files: Adagio certification evidence plus targeted parser/repository/UI tests only for proven station differences; retain the M19 capability test and public/device record while its account gate waits.
 - Branch: `agent/initial-android-scaffold`.
 - Latest implementation commit: `90a7f98`.
 - Latest successfully pushed implementation commit: `90a7f98` on `origin/agent/initial-android-scaffold`; the branch is published through the M18 certification checkpoint.
@@ -293,6 +293,16 @@ paused and the original media volume restored. The full unit suite, lint, debug 
 tests pass. No production mutation, stream change, or station-specific fork was introduced. Native Private Messages
 remain explicitly outside M18 under the M17 server-repair deferral. See
 `docs/screenshots/m18-sst-certification.png`.
+
+M19 1980s.FM certification is in progress. Its unchanged primary relay reached live playback on the wired Razr with
+a current structured title, artist, same-station cover, and no fatal exception; M2 retains the controlled source-
+fallback proof. The public extended Queue endpoint returned HTTP 200 with separate Queue/Played tables, native Chat
+and Favorites showed correct signed-out boundaries, a least-played suggestion returned catalog content without a
+mutation, and the native username/password/CAPTCHA/security-code form loaded. Games opened in a Chrome Custom Tab
+and Back returned to the app. A focused test now prevents 1980s.FM from inheriting SST-only request-message or
+listener-activity flags. Final certification still needs a representative 1980s.FM account for protected sign-in,
+restore/logout, Favorites, authenticated Chat/requests, and membership/request-activity determination. See
+`docs/m19-1980s-certification.md` and `docs/screenshots/m19-1980s-certification.png`.
 
 ## Station stream evidence
 

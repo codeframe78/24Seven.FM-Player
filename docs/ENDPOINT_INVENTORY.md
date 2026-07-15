@@ -41,3 +41,4 @@ All relative HTTPS paths below are resolved independently against one of these f
 - M15 performs no polling or mutations. It allows only exact same-origin SST history/timer/profile reads, caps history at ten, and reports unknown rather than inferring membership or cooldown.
 - M16 opens only immutable catalog entries after an explicit tap. It performs no native page fetch, polling, caching, form submission, cookie transfer, or session bridging; the selected browser owns any browser session and privacy behavior.
 - M18 certified the existing SST inventory without adding or changing an endpoint, stream address, request limit, polling interval, mutation, or session rule.
+- M19 reconfirmed the existing 1980s.FM extended Queue endpoint at HTTP 200 with separate bounded Queue/Played tables and exercised its existing read-only least-played suggestion and login-challenge paths without adding an endpoint or mutation.

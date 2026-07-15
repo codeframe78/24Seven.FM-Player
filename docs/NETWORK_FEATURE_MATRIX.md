@@ -2,6 +2,10 @@
 
 Audited July 14, 2026. `Implemented` means present in native code; `verified` distinguishes live evidence from structural similarity. Every account/session remains station-specific. StreamingSoundtracks.com completed its current-Alpha certification in M18; Private Messages remain separately deferred as M17.
 
+M19 public/device evidence now directly verifies 1980s.FM playback, metadata/artwork, Queue/History, public Chat,
+signed-out Favorites/request boundaries, least-played request browsing, native sign-in challenge loading, and trusted
+Games/secondary pages. Authenticated account behavior and membership/request-activity differences remain pending.
+
 | Feature | StreamingSoundtracks.com | 1980s.FM | Adagio.FM | Death.FM | Entranced.FM | Native possible | Auth required | VIP required | Structured endpoint | Browser fallback | Status | Notes/blockers |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Live playback | Yes | Yes | Yes | Yes | Yes | Yes | No | No | PLS/ICY | No | Implemented/verified | Two ordered AAC relays per station |

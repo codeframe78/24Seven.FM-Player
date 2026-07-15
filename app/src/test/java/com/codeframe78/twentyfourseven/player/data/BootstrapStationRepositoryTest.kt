@@ -128,4 +128,40 @@ class BootstrapStationRepositoryTest {
             stations.single { it.id == StationId("sst") }.secondaryPages.last().kind,
         )
     }
+
+    @Test
+    fun `1980s certification contract does not inherit SST only capabilities`() = runTest {
+        val station = repository.observeStations().first().single { it.id == StationId("1980s") }
+
+        with(station.capabilities) {
+            assertEquals(true, supportsAuthentication)
+            assertEquals(true, supportsChat)
+            assertEquals(true, supportsFavorites)
+            assertEquals(true, supportsQueue)
+            assertEquals(true, supportsHistory)
+            assertEquals(true, supportsRequests)
+            assertEquals(true, supportsSecondaryContent)
+            assertEquals(false, supportsRequestMessages)
+            assertEquals(false, supportsListenerActivity)
+        }
+        assertEquals("https://1980s.fm/", station.websiteUrl)
+        assertEquals(
+            listOf(
+                StationPageKind.Website,
+                StationPageKind.Forums,
+                StationPageKind.Members,
+                StationPageKind.Statistics,
+                StationPageKind.TopTracks,
+                StationPageKind.Contact,
+                StationPageKind.Membership,
+                StationPageKind.Games,
+                StationPageKind.Awards,
+            ),
+            station.secondaryPages.map { it.kind },
+        )
+        assertEquals(
+            true,
+            station.secondaryPages.all { StationPageTrustPolicy.trustedUrl(station, it) == it.url },
+        )
+    }
 }

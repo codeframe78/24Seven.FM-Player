@@ -35,7 +35,9 @@ This classification supplements the required XS–XXL T-shirt size, rationale, e
 - Dependencies: the existing verified stream/Queue/chat interfaces and, for authenticated checks, a representative 1980s.FM account plus user-entered CAPTCHA.
 - Principal risk: no representative 1980s.FM protected session is currently available, and its membership/request rules may differ from SST despite similar legacy pages.
 - Completion gate: playback/fallback, metadata/artwork, Queue/History, account isolation, chat, Favorites, requests, membership/request-activity support, secondary pages, and explicit unavailable states are independently evidenced; validators, wired-device verification, documentation, and publication pass.
-- Status: preflight is next; implementation has not started.
+- Status: in progress. Public playback, fallback evidence, metadata/artwork, Queue/History, Chat, request browsing,
+  sign-in challenge loading, capability boundaries, and a Games Custom Tab round trip pass. Representative
+  authenticated account evidence remains required; see [m19-1980s-certification.md](m19-1980s-certification.md).
 
 ## Latest completed milestone
 

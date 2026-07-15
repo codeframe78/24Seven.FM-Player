@@ -56,7 +56,7 @@ These milestones harden and certify the shared app against each station; they do
 | Milestone | Size | Estimate | Status | Certification emphasis |
 | --- | --- | --- | --- | --- |
 | M18 StreamingSoundtracks.com | S | 2–4 hours | ✅ Complete ([evidence](docs/m18-sst-certification.md)) | VIP/non-admin behavior, 30-row Queue, request messages, Favorites, chat, and authenticated workflows |
-| M19 1980s.FM | M | 4–7 hours | 🚧 Current; preflight next | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
+| M19 1980s.FM | M | 4–7 hours | 🚧 Current; public/device pass, account evidence pending ([evidence](docs/m19-1980s-certification.md)) | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
 | M20 Adagio.FM | M | 4–7 hours | ⏳ Planned | Classical metadata presentation, independent account/session behavior, requests, Favorites, chat, and fallback |
 | M21 Death.FM | L | 6–10 hours | ⏳ Planned | Compact Queue feed, sparse metadata/artwork, RIP membership behavior, requests, chat, and fallback |
 | M22 Entranced.FM | M | 4–7 hours | ⏳ Planned | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |

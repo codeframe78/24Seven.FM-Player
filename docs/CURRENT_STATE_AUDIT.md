@@ -68,7 +68,7 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 
 ## Tests and latest baseline
 
-- 126 `@Test` declarations currently cover parsers, repositories, station definitions, session isolation primitives, startup preference restoration, listener activity, station-page trust policy, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
+- 127 `@Test` declarations currently cover parsers, repositories, station definitions and certification contracts, session isolation primitives, startup preference restoration, listener activity, station-page trust policy, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
 - Latest full local evidence: debug compile, debug unit tests, lint, debug install, and 21/21 wired Android 16 Razr instrumentation tests pass.
 - M18's station certification and fresh physical-device evidence are recorded in `m18-sst-certification.md`.
 
@@ -78,6 +78,7 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 - Station origins are repeated across several adapters; consolidation is desirable when it can be done without destabilizing their separate trust policies.
 - Sleep timer and local track favorites are not implemented. Request history/membership is currently enabled only for SST; the other stations await certification evidence.
 - Live authentication differences across 1980s.FM, Adagio.FM, Death.FM, and Entranced.FM still need representative user-entered account/CAPTCHA verification during M19–M22.
+- M19's 1980s.FM public/device gate passes, including its native login challenge, but no representative station account is available yet for protected restoration/logout, Favorites, authenticated Chat/requests, or membership/request-activity determination.
 - M17 Private Messages is deliberately deferred because of known legacy server issues.
 - Death.FM's configured HTTPS website currently fails modern TLS negotiation, so M16 secondary browser pages remain explicitly unavailable for that station rather than downgrading to HTTP.
 - Google approved the Play developer account on July 14, 2026. External Alpha distribution remains sequenced after M15–M22 and still requires Play App Signing setup, a securely held upload key, final release validation, and explicit publication authorization.
