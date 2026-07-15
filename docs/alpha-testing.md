@@ -3,7 +3,7 @@
 ## Supported devices
 
 - Android 8.0 (API 26) or newer.
-- Phones, landscape phones, tablets, foldables, and freely resized Android windows are supported through responsive layouts. The primary physical validation device is a Motorola Razr 2023 on Android 15/API 35.
+- Phones, landscape phones, tablets, foldables, and freely resized Android windows are supported through responsive layouts. The primary physical validation device is a Motorola Razr 2023 on Android 16; the app target remains API 35.
 
 ## Installation and updates
 
@@ -25,7 +25,7 @@ Do not distribute the development debug APK as the public Alpha. Its machine-loc
 4. Start one station, verify audio and artwork/title behavior, then switch stations.
 5. Leave the app and verify the media notification and background controls.
 6. Check Queue and recently played content.
-7. If using a test account, verify sign in, session restoration, Chat, and Favorites. Confirm eligible Favorites show a green `Request Now`; recently played or queued tracks show a red `Track Recently Played` and cannot be selected.
+7. If using a test account, verify sign in, session restoration, Chat, and Favorites. On SST, open More and refresh Request activity to verify recent requests, readiness, and the explicit membership indicator. Confirm eligible Favorites show a green `Request Now`; recently played or queued tracks show a red `Track Recently Played` and cannot be selected.
 8. Submit an eligible favorite or catalog track only through the explicit confirmation while respecting station cooldowns.
 9. Press Back twice and verify the exit confirmation. Choose **Keep listening** unless intentionally stopping playback.
 

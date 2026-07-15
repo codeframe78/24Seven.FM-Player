@@ -4,8 +4,8 @@ Updated July 14, 2026 after adopting explicit certification milestones for all f
 
 ## Planning model
 
-- M1–M14 are complete and retain their existing evidence and published commits.
-- M15–M17 complete the remaining shared product capabilities once, using immutable Compose state, repository contracts, capability flags, and station-isolated protected sessions.
+- M1–M15 are complete and retain their existing evidence and published commits.
+- M16–M17 complete the remaining shared product capabilities once, using immutable Compose state, repository contracts, capability flags, and station-isolated protected sessions.
 - M18–M22 certify the shared implementation against each station. They are hardening and evidence gates, not station-specific application forks.
 - M23–M24 are the final distribution and publication gates.
 - Private Messages remains numbered as M17 but deferred pending legacy server repair and verified production limits.
@@ -23,29 +23,28 @@ This classification supplements the required XS–XXL T-shirt size, rationale, e
 
 ## Current milestone
 
-### M15 — Request history, cooldown, and membership state
+### M16 — Secondary community/content access
 
 - Task Complexity Level: 2 — Feature Logic & API Integration
-- Size: L
-- Estimated elapsed time: 4–8 hours
-- Usage intensity: High
+- Size: M
+- Estimated elapsed time: 2–4 hours
+- Usage intensity: Medium
 - Confidence: Medium
-- Outcome: model and present station-scoped request history, cooldown, and VIP/RIP membership state only where authenticated evidence supports it.
-- Expected layers: protocol research and authorization inventory, station-scoped repository contracts, immutable ViewModel state, capability-aware UI, conservative parsing/error states, tests, documentation, and wired-device smoke tests.
-- Dependencies: existing protected sessions, request repository behavior, account UI, and representative authenticated station evidence.
-- Principal risk: legacy pages may expose inconsistent membership/cooldown wording or identifiers, and administrator/VIP behavior must not be generalized to ordinary users or other stations.
-- Completion gate: verified states are station scoped and understandable; unsupported/unknown states remain explicit; no polling or mutation is introduced without permission; tests and available device verification pass; documentation and publication are complete.
+- Outcome: add a concise capability-aware native directory for selected verified public station modules, opening browser-appropriate destinations in Android Custom Tabs without introducing a WebView.
+- Expected layers: route inventory and trust policy, immutable route presentation models, station capability mapping, lifecycle-safe Custom Tab launch actions, accessible Compose UI, tests, documentation, and wired-device smoke tests.
+- Dependencies: verified public HTTPS station routes, existing More navigation, and Android activity launch handling.
+- Principal risk: deciding which legacy modules provide enough listener value and stable routing to expose without recreating low-value web navigation natively.
+- Completion gate: only allowlisted same-station HTTPS routes are reachable; unsupported modules remain absent or explicit; existing native destinations are not duplicated; no WebView is introduced; tests and available device verification pass; documentation and publication are complete.
 - Status: preflight is next; implementation has not started.
 
 ## Latest completed milestone
 
-M14 Local personalization completed July 14, 2026 in `81c2c4e`. Startup resolution occurs before the first playback selection, valid last/fixed station IDs persist locally, corrupt or removed IDs fall back safely, and the native UI distinguishes device settings from station accounts, Favorites, and membership. Unit tests, lint, debug assembly, and 18/18 wired Razr instrumentation tests pass. See [m14-validation.md](m14-validation.md).
+M15 Request history, cooldown, and membership completed July 14, 2026 in `b19d5fe`. A memory-only station-scoped repository presents the verified SST last-ten history, explicit VIP/RIP membership evidence, and request readiness/wait minutes without polling or mutation. Other stations remain unavailable until certification. Unit tests, lint, debug assembly/install, and 19/19 wired Razr instrumentation tests pass. See [m15-validation.md](m15-validation.md).
 
 ## Shared feature milestones
 
 | Milestone | Size | Estimate | Usage | Rationale and outcome | Primary confidence variable |
 | --- | --- | --- | --- | --- | --- |
-| M16 Secondary community/content access | M | 2–4 hours | Medium | Add capability-aware native or Custom Tab routes for selected verified public modules without using a WebView replacement | Product prioritization and safe route verification |
 | M17 Private Messages | L (provisional) | 4–8 hours after server repair | High | Add native station-isolated inbox/read/compose/reply/refresh and explicit user-initiated send over existing protected sessions | Website repair, production limits, and consistent authenticated forms |
 
 Each shared milestone includes repository/ViewModel/UI work as applicable, lifecycle-safe state, accessibility semantics, focused tests, affected-module validation, wired Razr inspection, documentation, a focused commit, push, and remote confirmation.

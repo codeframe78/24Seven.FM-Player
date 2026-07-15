@@ -30,7 +30,7 @@ internal fun PrivacySection() {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text("No advertising, analytics, tracking, or developer-operated data server.")
             Text(
-                "Station sessions are encrypted on this device. Chat history, favorite-track lists, and pending request text are not retained by the app.",
+                "Station sessions are encrypted on this device. Chat history, favorite-track lists, request activity, membership indicators, and pending request text are not retained by the app.",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyMedium,
             )
@@ -57,6 +57,7 @@ private fun PrivacyNoticeDialog(onDismiss: () -> Unit) {
                 Text("Data handled by the Alpha", style = MaterialTheme.typography.titleSmall)
                 Text("The app connects directly to the selected 24Seven.FM station for live audio, artwork, public Queue/History, catalog, and Chat data.")
                 Text("Credentials are sent only when you explicitly sign in. Passwords and security-code answers are not saved. Successful station sessions and display identity are encrypted locally with Android Keystore and are removed by Sign out, clearing app data, or uninstalling.")
+                Text("Where verified, recent request summaries, station-reported request readiness, membership indicators, and favorite-track lists are loaded for the signed-in station account. They remain in memory and are cleared from the interface on Sign out.")
                 Text("Chat posts, song requests, and optional request messages are sent only after explicit actions. Chat history and pending request text are transient. The app contains no ads, analytics, tracking SDK, crash reporting, or developer-operated backend.")
                 Text("Station operators and network providers may retain their normal server or network logs independently of this application.")
                 Text("Permissions", style = MaterialTheme.typography.titleSmall)

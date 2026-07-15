@@ -12,6 +12,7 @@ Last updated: July 14, 2026.
 - **User submissions:** Chat posts, song requests, and optional request messages are sent only after an explicit user action. The app does not automate or bulk-submit requests.
 - **Chat history:** Chat messages are kept in memory for the current app session and are not persisted by the app.
 - **Favorite tracks:** Favorite lists are loaded only after station sign-in, kept in memory, and cleared from the interface when the user signs out. They are not written to app storage.
+- **Request activity and membership:** Where verified for a station, the app can load the signed-in member's recent request summaries, station-reported request readiness, and explicit membership indicator. These values are kept in memory, cleared from the interface on sign-out, and are not written to app storage.
 
 The application does not include advertising, analytics, crash-reporting, tracking SDKs, or a developer-operated data server. Station operators and network providers may independently retain normal server or network logs; those systems are outside this application's control.
 
@@ -26,7 +27,7 @@ The app does not request contacts, location, microphone, camera, photos, phone, 
 
 ## Retention and deletion
 
-Protected station sessions remain on the device until Sign out, app-data clearing, or uninstall. Chat, favorite-track lists, and pending song-request text are transient. Android's app settings can clear all locally retained application data.
+Protected station sessions remain on the device until Sign out, app-data clearing, or uninstall. Chat, favorite-track lists, request activity, membership indicators, and pending song-request text are transient. Android's app settings can clear all locally retained application data.
 
 ## Alpha limitations
 

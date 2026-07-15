@@ -36,7 +36,7 @@ Live ICY titles flow from the service-owned player through a station-scoped `Now
 
 The selected Player, Chat, Queue, or More destination is immutable `MainUiState` owned by `MainViewModel`. Destination composables emit navigation and playback actions upward. Secondary destinations reuse the same domain playback and now-playing state through a persistent mini-player; they never connect to Media3 directly.
 
-The phone shell uses bottom navigation below 600 dp. Wider layouts use a navigation rail and content pane. Chat remains a navigable unavailable destination. Queue content is controlled by verified station capability flags and repository state.
+The phone shell uses bottom navigation below 600 dp. Wider layouts use a navigation rail and content pane. Chat, Favorites, Queue, and authenticated listener activity remain controlled by verified station capability flags and repository state.
 
 ## Queue and history
 
@@ -70,6 +70,14 @@ revalidated when the station is reachable; an anonymous response clears them, wh
 the protected cached identity so public playback remains available offline. Sign-out clears both the in-memory
 cookie manager and protected storage even if the remote logout request fails. See `docs/m7-auth-research.md` and
 `docs/m7-validation.md`.
+
+`ListenerActivityRepository` owns memory-only authenticated request history, cooldown/readiness, and explicit
+membership evidence. `MainViewModel` observes it only for a verified station while More is selected and refreshes
+only on destination entry or an explicit listener action; there is no polling or mutation. The SST adapter reads an
+exact last-ten history page and only follows same-origin allowlisted timer/profile sources discovered in that page.
+Administrative rank, newsletter subscription wording, and generic navigation never imply VIP/RIP membership.
+Unsupported or missing evidence remains explicit `Unknown`, and sign-out clears only that station's activity state.
+See `docs/m15-request-activity-research.md`.
 
 ## Chat
 

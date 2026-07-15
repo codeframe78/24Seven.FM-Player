@@ -24,11 +24,15 @@ All relative HTTPS paths below are resolved independently against one of these f
 | SST only | Optional request message | Server-returned same-origin `/modules.php?name=Album&action=submitmessage...` form | Form POST | SST session | Only after explicit accepted request; 80 chars | Message failure never repeats song request | Administrator-authorized and verified |
 | All five | Favorites discovery | `/modules.php?name=Favorites` | Bounded authenticated HTML | Station session | On destination open/manual refresh; no polling | Sign-in-specific or generic load error | Administrator-authorized; implemented |
 | All five | Favorites list | Strict same-origin `/modules/Favorites/thelist.php?user2view=<discovered-id>` | Bounded HTML | Station session | Loaded after discovery; memory-only | Reject cross-origin/malformed list URL | Implemented; SST live verified |
+| SST only | Listener request history | `/modules.php?name=Your_Requests` | Bounded ISO-8859-1 HTML | SST session | More destination/manual refresh only; memory-only; up to 10 rows | Sign-in-specific or generic load error | Administrator-authorized; M15 implemented and live researched |
+| SST only | Request cooldown/readiness | Page-discovered exact `/modules/VIP_Subscribe/vip_req_timer.php` | Bounded HTML | SST session | At most once per explicit listener-activity refresh | Unknown when trusted evidence is absent | M15 implemented; representative VIP evidence verified |
+| SST only | Membership badge | Page-discovered same-origin forum profile with bounded numeric member identifier | Bounded HTML | SST session | At most once per explicit listener-activity refresh | Unknown when profile or explicit badge is absent | M15 implemented; VIP evidence verified; rank ignored |
 | All five | Public secondary modules | Account, PM, forums, members, queue, history, news and station-specific module links | Legacy HTML | Mixed | No native polling configured | Open only through a future documented native/Custom Tab policy | Audited; mostly planned/deferred |
 
 ## Caching and safety policy
 
-- Queue, chat, request catalog, and Favorites data are memory-only today. Queue retains its last ready state when a later refresh fails.
+- Queue, chat, request catalog, Favorites, and listener request-activity data are memory-only today. Queue retains its last ready state when a later refresh fails.
 - Artwork URL acceptance is restricted to the selected station host. Authentication, request, chat, and Favorites actions require same-origin validation.
 - Public queue polling must remain at or below once per 60 seconds per selected station. Chat reads must remain at or below once per 30 seconds.
 - M12 fails closed when queue or fresh eligibility cannot be established before a request; it never infers `Request Now` solely from stale display state.
+- M15 performs no polling or mutations. It allows only exact same-origin SST history/timer/profile reads, caps history at ten, and reports unknown rather than inferring membership or cooldown.

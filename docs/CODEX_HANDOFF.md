@@ -2,18 +2,18 @@
 
 ## Resume status — July 14, 2026
 
-- Current milestone: M15 Request history, cooldown, and membership state (preflight next; implementation not started).
-- Last completed milestone: M14 Local personalization and station preferences in `81c2c4e`. M11–M13 and early M23/Favorites preparation remain preserved; M23 remains deferred until M15–M22 are complete.
-- Latest successful validation: full debug unit suite, lint, debug assembly, and 18/18 wired Android 16 Razr instrumentation tests after M14; physical inspection confirmed the Device preferences card.
+- Current milestone: M16 Secondary community/content access (preflight next; implementation not started).
+- Last completed milestone: M15 Request history, cooldown, and membership state in `b19d5fe`. M11–M14 and early M23/Favorites preparation remain preserved; M23 remains deferred until M15–M22 are complete.
+- Latest successful validation: full debug unit suite, lint, debug install, and 19/19 wired Android 16 Razr instrumentation tests after M15; physical inspection confirmed the SST request-activity capability and signed-out card.
 - Architecture: one native Compose app module; immutable state/actions; station-scoped repository contracts; one Media3 service-owned player/session; Android Keystore-backed per-station sessions.
 - Decisions: queued and recently played tracks share visible red `Track Recently Played`; reasons remain distinct internally. Available tracks use green `Request Now`. Other restrictions retain accurate separate labels. Revalidation must fail closed before mutation.
 - Known blockers: Queue rows lack stable track IDs; M17 Private Messages remains deferred for server fixes. The Play developer account is approved; signing/configuration work remains intentionally sequenced at M23–M24.
 - Roadmap model: M13–M17 shared features, M18–M22 individual station certification, and M23–M24 distribution/publication. Certification milestones harden the shared app and must not create station-specific forks.
-- Next concrete task: present the M15 Task Complexity Level plus T-shirt preflight, then audit permitted authenticated request-history/membership evidence before adding any source or UI state.
-- Likely next files: request/account domain contracts, authenticated remote adapters and parsers only where verified, `MainViewModel`, capability-aware More/Requests composables, tests, and protocol documentation.
+- Next concrete task: present the M16 Task Complexity Level plus T-shirt preflight, audit verified listener-value public routes, then add an allowlisted capability-aware Custom Tab directory without introducing a WebView.
+- Likely next files: station route presentation contracts, `MainViewModel`/activity launch actions, capability-aware More composables, Android manifest/dependency wiring only if required, tests, and route-policy documentation.
 - Branch: `agent/initial-android-scaffold`.
-- Latest implementation commit: `81c2c4e`.
-- Latest successfully pushed implementation commit: `81c2c4e` on `origin/agent/initial-android-scaffold`; the branch is published through the accompanying M14 documentation checkpoint.
+- Latest implementation commit: `b19d5fe`.
+- Latest successfully pushed implementation commit: `b19d5fe` on `origin/agent/initial-android-scaffold`; the branch is published through the accompanying M15 documentation checkpoint.
 - Required planning documents: `CURRENT_STATE_AUDIT.md`, `NETWORK_FEATURE_MATRIX.md`, `ENDPOINT_INVENTORY.md`, `AUTHENTICATION_MATRIX.md`, and `IMPLEMENTATION_PLAN.md`.
 
 ## Mission and repository
@@ -45,7 +45,7 @@ Read `AGENTS.md`, `README.md`, `CONTRIBUTING.md`, `docs/architecture.md`, `docs/
 - Android SDK Platform Tools
 - Optional Google APIs x86_64 Android Emulator images for API 35 and API 36
 
-The app compiles against API 36 because the selected AndroidX Activity and Media3 versions require it. It targets API 35 to match the primary Motorola Razr 2023 running Android 15. Minimum SDK is API 26.
+The app compiles against API 36 because the selected AndroidX Activity and Media3 versions require it. It targets API 35 and is currently validated on the primary Motorola Razr 2023 running Android 16. Minimum SDK is API 26.
 
 Install SDK packages from Android Studio's SDK Manager or with `sdkmanager`:
 
@@ -117,7 +117,7 @@ The latest successful build validation ran unit tests for debug and release, And
 
 The primary device is a Motorola Razr 2023:
 
-- Android 15 / API 35
+- Android 16 (app target remains API 35)
 - device model reported by ADB: `motorola_razr_2023`
 - physical display: 1080 x 2640 at 420 dpi
 
@@ -260,6 +260,17 @@ dialog and one-shot request path. SST live validation loaded all 1,500 tracks fo
 Razr; no request was submitted during this validation. Unit tests, affected-module lint, debug assembly, and all 13 API
 35 emulator instrumentation tests pass. See `README.md`, `PRIVACY.md`, `docs/alpha-testing.md`, and
 `docs/screenshots/favorites.png`.
+
+M15 Request history, cooldown, and membership is complete in `b19d5fe`. The station-scoped
+`ListenerActivityRepository` loads only while More is selected or the listener explicitly refreshes, keeps all results
+in memory, and clears a station's state on sign-out. Representative authenticated SST evidence supplies the exact
+last-ten request table, a same-origin VIP request timer, and a profile-scoped VIP badge separately from administrator
+rank. The parser bounds rows and text, rejects cross-origin/unrecognized discovery links, and reports missing evidence
+as unknown. Only SST is enabled; the other four stations remain unverified until M19–M22. No mutation or polling was
+introduced. Unit tests, lint, debug install, and all 19 wired Android 16 Razr instrumentation tests pass. The physical
+fresh-install screenshot shows the explicit signed-out card; authenticated production refresh requires a user-entered
+CAPTCHA and remains a certification check. See `docs/m15-request-activity-research.md`, `docs/m15-validation.md`, and
+`docs/screenshots/m15-request-activity.png`.
 
 ## Station stream evidence
 
