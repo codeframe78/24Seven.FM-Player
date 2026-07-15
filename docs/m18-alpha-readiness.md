@@ -1,6 +1,6 @@
-# M17 Alpha Test Distribution readiness
+# M18 Alpha Test Distribution readiness
 
-Prepared early on July 14, 2026. Final milestone review is deferred until M13–M16 are complete.
+Prepared early on July 14, 2026. Final milestone review is deferred until M13–M17 are complete.
 
 ## Estimate
 

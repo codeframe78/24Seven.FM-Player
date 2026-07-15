@@ -13,7 +13,7 @@ Audited July 14, 2026 on `agent/initial-android-scaffold` at `36d832a`, with all
 
 ## Protected uncommitted work
 
-At the time of this audit, the working tree contained the complete M11 adaptive UI, early M17 Alpha distribution preparation, and authenticated five-station Favorites browsing. It included modified and untracked Kotlin, tests, artwork, screenshots, release/privacy documentation, and signing-validation scripts. This work predated the M12 queue-status milestone and was preserved intact.
+At the time of this audit, the working tree contained the complete M11 adaptive UI, early M18 Alpha distribution preparation, and authenticated five-station Favorites browsing. It included modified and untracked Kotlin, tests, artwork, screenshots, release/privacy documentation, and signing-validation scripts. This work predated the M12 queue-status milestone and was preserved intact.
 
 ## Architecture
 
@@ -41,7 +41,7 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 | M9 | Native catalog search and explicit one-shot requests, `m9-*` | Complete and pushed |
 | M10 | Request attribution/messages and random suggestions, `m10-*` | Complete and pushed |
 | M11 | Adaptive UI, theme, logo, previews, double-Back exit, `m11-*` | Complete locally; protected and not yet pushed |
-| M17 (prepared early) | Alpha version/privacy/signing guardrails plus Favorites integration | Preserved for refresh after M13–M16; external distribution also depends on Play Console activation |
+| M18 (prepared early) | Alpha version/privacy/signing guardrails plus Favorites integration | Preserved for refresh after M13–M17; external distribution also depends on Play Console activation |
 
 ## Existing screens and navigation
 
@@ -76,7 +76,7 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 - Request results, Favorites, queue, and history have separate sources of truth without a request-status resolver.
 - Station origins are repeated across several adapters; consolidation is desirable but not required for M12.
 - The selected/default station is not durably persisted. Sleep timer, local favorites, request history, membership status, and consolidated Accounts UI are not implemented.
-- Private Messages are deliberately deferred because of known legacy server issues.
+- M17 Private Messages is deliberately deferred because of known legacy server issues.
 - External Alpha distribution is blocked until Google activates the developer account and upload signing is completed.
 
 ## Public five-station audit summary

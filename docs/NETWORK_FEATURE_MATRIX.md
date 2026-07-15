@@ -18,7 +18,7 @@ Audited July 14, 2026. `Implemented` means present in native code; `verified` di
 | Native login | Yes | Yes | Yes | Yes | Yes | Yes | N/A | No | Legacy form/CAPTCHA | No | Implemented; SST physical validation | Sessions isolated by station ID and host |
 | Server favorite tracks | Yes | Same module | Same module | Same module | Same module | Yes | Yes | No known requirement | Favorites discovery/list HTML | No | Implemented; SST live verified | Other four share audited module and adapter contract; live account verification remains |
 | Community chat | Yes | Same module | Same module | Same module | Same module | Yes | Read public; post authenticated | No | ClearChat HTML | No | Implemented; SST live verified | 30-second minimum, history memory-only |
-| Private Messages | Yes | Yes | Yes | Yes | Yes | Potentially | Yes | No | Legacy HTML | Possibly | Deferred | Underlying website/server issues must be fixed first |
+| Private Messages | Yes | Yes | Yes | Yes | Yes | Potentially | Yes | No | Legacy HTML | Possibly | M17 deferred | Underlying website/server issues and production limits must be resolved first |
 | Forums/profiles/members | Yes | Yes | Yes | Yes | Yes | Native optional | Mixed | Some areas | Legacy HTML | Custom Tab preferred initially | Planned/deferred | Avoid reproducing low-value legacy pages |
 | News/announcements | Yes | Yes | Yes | Yes | Yes | Yes if structured | No | No | Legacy HTML | Custom Tab likely | Planned | Content audit only; no parser yet |
 | Contests/downloads/galleries/interviews | Rich SST set | Station subset | Station subset | Station subset | Station subset | Selective | Mixed | Mixed | Mostly legacy HTML | Yes | Planned/deferred | Station-specific, lower-priority secondary content |

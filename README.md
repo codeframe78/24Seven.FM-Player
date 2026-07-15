@@ -14,7 +14,7 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 
 ## Alpha status
 
-Milestones M1–M12 are complete and published on the development branch. M13 Independent Accounts UX is next and has not started. Alpha distribution and Play publication are intentionally deferred to M17–M18, after the remaining feature milestones.
+Milestones M1–M12 are complete and published on the development branch. M13 Independent Accounts UX is next and has not started. Private Messages are restored to the roadmap as M17, while Alpha distribution and Play publication are deferred to M18–M19.
 
 The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, live metadata and artwork, queue/history, station-scoped authentication, chat, song requests, and signed-in favorite-track browsing. Request availability is conservatively revalidated against fresh station and Queue data before submission. Unit tests, lint, debug assembly, 13/13 API 35 emulator tests, and physical Razr inspection are green.
 
@@ -45,7 +45,7 @@ Detailed scope, estimates, dependencies, and risks are maintained in [the implem
 | --- | --- | --- | --- | --- | --- | --- |
 | M13 Independent Accounts UX | L | ⏳ Preflight ready; not started | Show all five independent account states and strengthen pairwise isolation coverage | 4–8 hours | High | Live verification depends on station-specific test accounts and challenge flows |
 
-Early Alpha distribution preparation is preserved on this branch, but M17 will not be considered active or complete until M13–M16 are finished. Google Play activation remains an external dependency for the final M17–M18 release work.
+Early Alpha distribution preparation is preserved on this branch, but M18 will not be considered active or complete until M13–M17 are finished. Google Play activation remains an external dependency for the final M18–M19 release work.
 
 ### Upcoming Milestones
 
@@ -54,9 +54,9 @@ Early Alpha distribution preparation is preserved on this branch, but M17 will n
 | M14 Local personalization | M | 2–4 hours | Default/last station and clearly local favorites/preferences | Persistence design | ⏳ Planned |
 | M15 Request history/membership | L | 4–8 hours | Station-specific history, cooldown, VIP/RIP state | Further verified account evidence | ⏳ Planned |
 | M16 Secondary content access | M | 2–4 hours | Capability-aware Custom Tab routes for selected public modules | Product prioritization | ⏳ Planned |
-| M17 Alpha distribution readiness | M | 1–2 focused days | Refresh and finalize privacy, signing, tester, bundle, and Play-readiness work after feature completion | M13–M16 complete and Play activation | ⏸ Deferred |
-| M18 Alpha publication | M | 1–3 hours after activation | Signed Play bundle and internal/closed test release | Play activation and explicit release approval | ⛔ Blocked |
-| Private Messages | L provisional | 4–8 hours after server repair | Native station-isolated inbox and compose/reply | Legacy server fixes | 🧊 Deferred |
+| M17 Private Messages | L provisional | 4–8 hours after server repair | Native station-isolated inbox, read, compose, reply, and explicit send | Legacy server fixes and verified production limits | 🧊 Deferred |
+| M18 Alpha distribution readiness | M | 1–2 focused days | Refresh and finalize privacy, signing, tester, bundle, and Play-readiness work after feature completion | M13–M17 complete and Play activation | ⏸ Deferred |
+| M19 Alpha publication | M | 1–3 hours after activation | Signed Play bundle and internal/closed test release | Play activation and explicit release approval | ⛔ Blocked |
 
 The app is fully native and uses immutable Compose UI state, repository boundaries, and station capability flags. It includes play, pause, stop, live metadata and artwork, a persistent mini-player, signed-in favorite-track browsing/filtering, capability-aware screens, native loading/error/empty states, and Android Keystore-backed account sessions. Remote data stays bounded to the documented station interfaces and their approved refresh rules.
 
@@ -81,9 +81,9 @@ These captures are from the physical API 35 Razr using live StreamingSoundtracks
 
 Audio stream addresses come from station-provided playlists and remain subject to device verification. Remote interfaces are added only after source verification and permission review. See the milestone research and validation documents under [docs](docs) for authorization, protocol evidence, limits, and device results.
 
-Planned follow-up work includes a native Private Messages experience after its authorization and behavior are settled. See [docs/future-scope.md](docs/future-scope.md).
+M17 tracks the native Private Messages experience, which remains deferred until the website's underlying server issues and production behavior are settled. See [docs/future-scope.md](docs/future-scope.md).
 
-Alpha testers and distributors should read [the privacy notice](PRIVACY.md), [Alpha testing guide](docs/alpha-testing.md), [release notes](docs/releases/0.1.0-alpha01.md), [Play Console checklist](docs/play-console-checklist.md), and [M17 signing handoff](docs/m17-alpha-readiness.md). Development debug APKs are not intended for external distribution.
+Alpha testers and distributors should read [the privacy notice](PRIVACY.md), [Alpha testing guide](docs/alpha-testing.md), [release notes](docs/releases/0.1.0-alpha01.md), [Play Console checklist](docs/play-console-checklist.md), and [M18 signing handoff](docs/m18-alpha-readiness.md). Development debug APKs are not intended for external distribution.
 
 ## Building
 

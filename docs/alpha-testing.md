@@ -53,7 +53,7 @@ Never include passwords, security-code answers or images, cookies, session value
 
 ## Known Alpha boundaries
 
-- Private Messages are deferred because of underlying website/server issues.
+- M17 Private Messages is deferred because of underlying website/server issues.
 - Sleep timer, Cast/audio-output selection, and diagnostics are not implemented.
 - Station accounts are currently station-specific.
 - Public station interfaces can change independently of the app.

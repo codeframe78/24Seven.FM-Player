@@ -34,7 +34,7 @@ The worktree was clean at audit time. This milestone evolves the existing native
 
 ## Features investigated but not implemented
 
-Favorites, sleep timer, share, Cast or audio-output selection, user settings, diagnostics, general station-selection persistence, and native Private Messages do not exist in the current code or tests. M11 will not add inactive controls or speculative backends for them. Private Messages remain intentionally deferred because of known website/server issues.
+Favorites, sleep timer, share, Cast or audio-output selection, user settings, diagnostics, general station-selection persistence, and native Private Messages do not exist in the current code or tests. M11 will not add inactive controls or speculative backends for them. Private Messages are now tracked as M17 and remain deferred because of known website/server issues.
 
 An older paragraph in `docs/future-scope.md` describes request messages as future work. The later M10 research, validation, commits, working code, and tests establish that SST request messages are now implemented; that working behavior takes precedence.
 

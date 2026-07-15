@@ -8,7 +8,8 @@ Updated July 14, 2026 after renumbering the roadmap so Alpha distribution follow
 - M11 Adaptive Alpha UI is complete and published in `4735f13`.
 - M12 Queue-aware request availability is complete, validated, and published in `4735f13`.
 - M13 is the next milestone and has not started.
-- Early M17 Alpha Test Distribution Readiness artifacts are preserved and published, but the milestone is deferred until M13–M16 are complete. External completion also depends on Play Console activation and final upload signing.
+- M17 Private Messages is restored to the numbered roadmap but remains deferred pending legacy server fixes and verified production limits.
+- Early M18 Alpha Test Distribution Readiness artifacts are preserved and published, but the milestone is deferred until M13–M17 are complete. External completion also depends on Play Console activation and final upload signing.
 
 ## Current milestone
 
@@ -32,8 +33,8 @@ Updated July 14, 2026 after renumbering the roadmap so Alpha distribution follow
 | M14 Local personalization and station preferences | M | 2–4 hours | Medium | Persist default/last station and clearly labeled local favorites without merging server collections | Storage design; planned |
 | M15 Request history, cooldown, and membership state | L | 4–8 hours | High | Add station-scoped request history and accurate cooldown/VIP/RIP labels where verified | Further endpoint/account evidence; planned |
 | M16 Secondary community/content access | M | 2–4 hours | Medium | Add safe capability-aware Custom Tab routes for selected public content without a WebView replacement | Product prioritization of modules; planned |
-| M17 Alpha Test Distribution Readiness | M | 1–2 focused days | Medium | Refresh and finalize privacy, signing, tester, bundle, and Play-readiness work after feature completion | Early artifacts preserved; deferred until M13–M16 complete and Play activation |
-| M18 Alpha publication completion | M | 1–3 hours after activation | Medium | Create/verify signed Play bundle and internal/closed test release | Google developer account activation and explicit release authorization; blocked |
-| Private Messages | L (provisional) | 4–8 hours after server fix | High | Native inbox/read/compose/reply using station-isolated sessions | Website server issues; deferred |
+| M17 Private Messages | L (provisional) | 4–8 hours after server fix | High | Native station-isolated inbox/read/compose/reply and explicit user-initiated send | Website server issues and production limits; deferred |
+| M18 Alpha Test Distribution Readiness | M | 1–2 focused days | Medium | Refresh and finalize privacy, signing, tester, bundle, and Play-readiness work after feature completion | Early artifacts preserved; deferred until M13–M17 complete and Play activation |
+| M19 Alpha publication completion | M | 1–3 hours after activation | Medium | Create/verify signed Play bundle and internal/closed test release | Google developer account activation and explicit release authorization; blocked |
 
 No item is classified XL. Any future phase that exceeds L will be divided before implementation.
