@@ -4,16 +4,26 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.codeframe78.twentyfourseven.player.ui.DoubleBackExitGate
 import com.codeframe78.twentyfourseven.player.ui.MainViewModel
 import com.codeframe78.twentyfourseven.player.ui.RadioApp
+import com.codeframe78.twentyfourseven.player.ui.theme.TwentyFourSevenTheme
 
 class MainActivity : ComponentActivity() {
     private val notificationPermissionLauncher = registerForActivityResult(
@@ -40,10 +50,24 @@ class MainActivity : ComponentActivity() {
                     container.authRepository,
                     container.chatRepository,
                     container.songRequestRepository,
+                    container.favoriteTracksRepository,
                 ),
             )
             val state = viewModel.uiState.collectAsStateWithLifecycle().value
-            MaterialTheme(colorScheme = darkColorScheme()) {
+            TwentyFourSevenTheme {
+                var showExitConfirmation by remember { mutableStateOf(false) }
+                val exitGate = remember { DoubleBackExitGate() }
+                BackHandler(enabled = !showExitConfirmation) {
+                    if (exitGate.registerPress(SystemClock.elapsedRealtime())) {
+                        showExitConfirmation = true
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Press Back again to review exit options",
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
                 RadioApp(
                     state = state,
                     onSelectStation = viewModel::selectStation,
@@ -53,6 +77,7 @@ class MainActivity : ComponentActivity() {
                     onStop = viewModel::stop,
                     onRefreshQueue = viewModel::refreshQueue,
                     onRefreshChat = viewModel::refreshChat,
+                    onRefreshFavorites = viewModel::refreshFavorites,
                     onSendChatMessage = viewModel::sendChatMessage,
                     onRefreshAuth = viewModel::refreshAuth,
                     onSignIn = viewModel::signIn,
@@ -61,9 +86,36 @@ class MainActivity : ComponentActivity() {
                     onSuggestRequest = viewModel::suggestRequest,
                     onOpenRequestAlbum = viewModel::openRequestAlbum,
                     onPrepareRequest = viewModel::prepareSongRequest,
+                    onPrepareFavoriteRequest = viewModel::prepareFavoriteRequest,
                     onCancelRequest = viewModel::cancelSongRequest,
                     onConfirmRequest = viewModel::confirmSongRequest,
                 )
+                if (showExitConfirmation) {
+                    AlertDialog(
+                        onDismissRequest = {
+                            showExitConfirmation = false
+                            exitGate.reset()
+                        },
+                        title = { Text("Exit 24Seven.FM Player?") },
+                        text = { Text("Exiting stops live playback. You can leave the app normally to keep listening in the background.") },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    viewModel.stop()
+                                    finishAndRemoveTask()
+                                },
+                            ) { Text("Stop and exit") }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = {
+                                    showExitConfirmation = false
+                                    exitGate.reset()
+                                },
+                            ) { Text("Keep listening") }
+                        },
+                    )
+                }
             }
         }
     }

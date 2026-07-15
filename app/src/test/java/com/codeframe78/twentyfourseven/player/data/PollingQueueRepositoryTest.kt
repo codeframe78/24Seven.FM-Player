@@ -12,6 +12,7 @@ import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -75,7 +76,27 @@ class PollingQueueRepositoryTest {
         assertEquals("Queue and history could not be refreshed.", states.last().errorMessage)
     }
 
-    private class FakeRemote(private val failure: Throwable? = null) : QueueRemoteDataSource {
+    @Test
+    fun `failed refresh preserves cached rows but marks them stale`() = runTest {
+        val remote = FakeRemote()
+        val repository = PollingQueueRepository(
+            remote = remote,
+            elapsedRealtimeMillis = { testScheduler.currentTime },
+        )
+        repository.refresh(stationId)
+        advanceTimeBy(60_000)
+        remote.failure = IllegalStateException("sensitive server detail")
+
+        repository.refresh(stationId)
+
+        val state = repository.currentQueue(stationId)
+        assertEquals(QueueLoadStatus.Ready, state.status)
+        assertEquals("Upcoming", state.upcoming.single().displayTitle)
+        assertTrue(state.isStale)
+        assertEquals("Cached Queue data could not be refreshed.", state.errorMessage)
+    }
+
+    private class FakeRemote(var failure: Throwable? = null) : QueueRemoteDataSource {
         var calls = 0
 
         override suspend fun fetch(stationId: StationId): QueuePayload {

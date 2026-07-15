@@ -2,6 +2,8 @@ package com.codeframe78.twentyfourseven.player.data
 
 import com.codeframe78.twentyfourseven.player.domain.RequestSearchResult
 import com.codeframe78.twentyfourseven.player.domain.RequestableTrack
+import com.codeframe78.twentyfourseven.player.domain.TrackRequestAvailability
+import com.codeframe78.twentyfourseven.player.domain.classifyStationRequestAvailability
 import org.jsoup.Jsoup
 import java.net.URI
 
@@ -43,6 +45,8 @@ internal class SongRequestPageParser {
             }?.let { queryValue(it, "songID") }
             val eligible = requestImage.attr("src").contains("requestbutton_request") &&
                 songId?.matches(NUMERIC_ID) == true
+            val stationMessage = requestImage.attr("title").ifBlank { requestImage.attr("alt") }
+                .clean().takeIf(String::isNotBlank)
 
             val cells = row.select("td")
             val titleCell = cells.firstOrNull { cell ->
@@ -65,6 +69,12 @@ internal class SongRequestPageParser {
                 artist = artist,
                 duration = duration,
                 eligible = eligible,
+                albumTitle = albumTitle,
+                availability = if (eligible) {
+                    TrackRequestAvailability.available()
+                } else {
+                    classifyStationRequestAvailability(stationMessage)
+                },
             )
         }.distinctBy { it.songId.ifBlank { "${it.title}|${it.artist}" } }.take(MAX_TRACKS)
         return RequestAlbum(albumTitle, tracks)
@@ -105,7 +115,18 @@ internal class SongRequestPageParser {
             val artist = descriptor.substringAfterLast(" - ", "").clean().ifBlank { null }
             RequestAlbum(
                 albumTitle,
-                listOf(RequestableTrack(albumId, songId, title, artist, duration, eligible = true)),
+                listOf(
+                    RequestableTrack(
+                        albumId = albumId,
+                        songId = songId,
+                        title = title,
+                        artist = artist,
+                        duration = duration,
+                        eligible = true,
+                        albumTitle = albumTitle,
+                        availability = TrackRequestAvailability.available(),
+                    ),
+                ),
             )
         }
         return suggestion ?: RequestAlbum(null, emptyList())

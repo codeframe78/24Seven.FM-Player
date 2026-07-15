@@ -10,6 +10,18 @@ providers.environmentVariable("TWENTYFOURSEVEN_ANDROID_BUILD_DIR")
     .orNull
     ?.let { layout.buildDirectory.set(file(it)) }
 
+val uploadStoreFile = providers.environmentVariable("TWENTYFOURSEVEN_UPLOAD_STORE_FILE").orNull
+val uploadStorePassword = providers.environmentVariable("TWENTYFOURSEVEN_UPLOAD_STORE_PASSWORD").orNull
+val uploadKeyAlias = providers.environmentVariable("TWENTYFOURSEVEN_UPLOAD_KEY_ALIAS").orNull
+val uploadKeyPassword = providers.environmentVariable("TWENTYFOURSEVEN_UPLOAD_KEY_PASSWORD").orNull
+val uploadSigningValues = listOf(uploadStoreFile, uploadStorePassword, uploadKeyAlias, uploadKeyPassword)
+val hasAnyUploadSigningValue = uploadSigningValues.any { !it.isNullOrBlank() }
+val hasCompleteUploadSigning = uploadSigningValues.all { !it.isNullOrBlank() }
+
+require(!hasAnyUploadSigningValue || hasCompleteUploadSigning) {
+    "Incomplete Play upload signing environment. Supply all four TWENTYFOURSEVEN_UPLOAD_* values or none."
+}
+
 android {
     namespace = "com.codeframe78.twentyfourseven.player"
     compileSdk = 36
@@ -17,11 +29,28 @@ android {
         applicationId = "com.codeframe78.twentyfourseven.player"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.1.0-alpha01"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures { compose = true }
+    signingConfigs {
+        if (hasCompleteUploadSigning) {
+            create("playUpload") {
+                storeFile = file(uploadStoreFile!!)
+                storePassword = uploadStorePassword
+                keyAlias = uploadKeyAlias
+                keyPassword = uploadKeyPassword
+            }
+        }
+    }
+    buildTypes {
+        getByName("release") {
+            if (hasCompleteUploadSigning) {
+                signingConfig = signingConfigs.getByName("playUpload")
+            }
+        }
+    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17

@@ -9,10 +9,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performScrollTo
@@ -21,10 +24,13 @@ import com.codeframe78.twentyfourseven.player.domain.Station
 import com.codeframe78.twentyfourseven.player.domain.StationId
 import com.codeframe78.twentyfourseven.player.domain.HistoryTrack
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingState
+import com.codeframe78.twentyfourseven.player.domain.PlaybackState
+import com.codeframe78.twentyfourseven.player.domain.PlaybackStatus
 import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.QueueState
 import com.codeframe78.twentyfourseven.player.domain.QueueTrack
 import com.codeframe78.twentyfourseven.player.domain.StationCapabilities
+import com.codeframe78.twentyfourseven.player.domain.StreamVariant
 import com.codeframe78.twentyfourseven.player.domain.AuthState
 import com.codeframe78.twentyfourseven.player.domain.AuthStatus
 import com.codeframe78.twentyfourseven.player.domain.ChatLoadStatus
@@ -33,6 +39,11 @@ import com.codeframe78.twentyfourseven.player.domain.ChatState
 import com.codeframe78.twentyfourseven.player.domain.RequestableTrack
 import com.codeframe78.twentyfourseven.player.domain.SongRequestLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.SongRequestState
+import com.codeframe78.twentyfourseven.player.domain.FavoriteTrack
+import com.codeframe78.twentyfourseven.player.domain.FavoriteTracksLoadStatus
+import com.codeframe78.twentyfourseven.player.domain.FavoriteTracksState
+import com.codeframe78.twentyfourseven.player.domain.TrackRequestAvailability
+import com.codeframe78.twentyfourseven.player.domain.TrackRequestStatus
 import org.junit.Rule
 import org.junit.Test
 import org.junit.Assert.assertEquals
@@ -155,6 +166,58 @@ class RadioAppTest {
     }
 
     @Test
+    fun playerControlsDispatchPlaybackAndWrappedStationActions() {
+        val selectedStations = mutableListOf<StationId>()
+        var playCount = 0
+        var pauseCount = 0
+        val adagio = station.copy(id = StationId("adagio"), name = "Adagio.FM", shortName = "Adagio")
+        composeRule.setContent {
+            var state by remember {
+                mutableStateOf(
+                    sampleState().copy(
+                        stations = listOf(station, adagio),
+                        selectedStation = station.copy(
+                            streams = listOf(StreamVariant("https://example.invalid/live", "Test", 0)),
+                        ),
+                    ),
+                )
+            }
+            MaterialTheme {
+                RadioApp(
+                    state = state,
+                    onSelectStation = { id ->
+                        selectedStations += id
+                        val selected = state.stations.first { it.id == id }
+                        state = state.copy(selectedStation = selected.copy(streams = state.selectedStation?.streams.orEmpty()))
+                    },
+                    onSelectDestination = {},
+                    onPlay = {
+                        playCount += 1
+                        state = state.copy(playback = PlaybackState(state.selectedStation?.id, PlaybackStatus.Playing))
+                    },
+                    onPause = {
+                        pauseCount += 1
+                        state = state.copy(playback = PlaybackState(state.selectedStation?.id, PlaybackStatus.Paused))
+                    },
+                    onStop = {},
+                    onRefreshQueue = {},
+                )
+            }
+        }
+
+        composeRule.onNodeWithContentDescription("Next station").performClick()
+        composeRule.onNodeWithContentDescription("Previous station").performClick()
+        composeRule.onNodeWithContentDescription("Play live radio").performClick()
+        composeRule.onNodeWithContentDescription("Pause live radio").performClick()
+
+        composeRule.runOnIdle {
+            assertEquals(listOf(StationId("adagio"), StationId("sst")), selectedStations)
+            assertEquals(1, playCount)
+            assertEquals(1, pauseCount)
+        }
+    }
+
+    @Test
     fun readyQueueRendersUpcomingAndHistoryNatively() {
         composeRule.setContent {
             MaterialTheme {
@@ -229,6 +292,27 @@ class RadioAppTest {
         composeRule.onNodeWithText("Password").assertExists()
         composeRule.onNodeWithText("Security code").assertExists()
         composeRule.onNodeWithText("Sign in").assertExists()
+    }
+
+    @Test
+    fun privacyNoticeIsReachableNativelyFromMore() {
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(destination = MainDestination.More),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("Read privacy notice").performScrollTo().performClick()
+        composeRule.onNodeWithText("Data handled by the Alpha").assertIsDisplayed()
+        composeRule.onNodeWithText("Close").assertIsDisplayed()
     }
 
     @Test
@@ -313,7 +397,7 @@ class RadioAppTest {
             }
         }
 
-        composeRule.onNodeWithText("Request").performScrollTo().performClick()
+        composeRule.onAllNodesWithText("Request Now").assertCountEquals(2)[1].performScrollTo().performClick()
         composeRule.onNodeWithText("Request this track?").assertIsDisplayed()
         composeRule.onNodeWithText("Message (optional)").performTextInput("Enjoy this one")
         composeRule.onNodeWithText("14/80").assertIsDisplayed()
@@ -322,6 +406,86 @@ class RadioAppTest {
             assertEquals(listOf("12345"), prepared)
             assertEquals(listOf("Enjoy this one"), confirmedMessages)
         }
+    }
+
+    @Test
+    fun favoritesShowAccessibleStoplightsAndReuseRequestConfirmation() {
+        val prepared = mutableListOf<FavoriteTrack>()
+        val availableRequest = RequestableTrack("ALBUM_1", "12345", "Available favorite", "Composer", "3:21", true)
+        val available = FavoriteTrack(
+            position = 1,
+            title = "Available favorite",
+            album = "Available album",
+            artist = "Composer",
+            duration = "3:21",
+            requestTrack = availableRequest,
+        )
+        val unavailable = FavoriteTrack(
+            position = 2,
+            title = "Unavailable favorite",
+            album = "Unavailable album",
+            artist = "Other composer",
+            availabilityMessage = "Last played today; requestable again tomorrow.",
+        )
+        val queued = FavoriteTrack(
+            position = 3,
+            title = "Queued favorite",
+            album = "Queued album",
+            artist = "Queue composer",
+            availability = TrackRequestAvailability(
+                TrackRequestStatus.InCurrentQueue,
+                "This track is currently in the station queue.",
+            ),
+        )
+        composeRule.setContent {
+            var state by remember {
+                mutableStateOf(
+                    sampleState().copy(
+                        selectedStation = station.copy(
+                            capabilities = StationCapabilities(
+                                supportsAuthentication = true,
+                                supportsFavorites = true,
+                                supportsRequests = true,
+                            ),
+                        ),
+                        auth = AuthState(station.id, AuthStatus.SignedIn, displayName = "Listener"),
+                        favorites = FavoriteTracksState(
+                            station.id,
+                            FavoriteTracksLoadStatus.Ready,
+                            tracks = listOf(available, unavailable, queued),
+                        ),
+                        requests = SongRequestState(station.id, SongRequestLoadStatus.Ready),
+                    ),
+                )
+            }
+            MaterialTheme {
+                RadioApp(
+                    state = state,
+                    onSelectStation = {},
+                    onSelectDestination = { state = state.copy(destination = it) },
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                    onPrepareFavoriteRequest = {
+                        prepared += it
+                        state = state.copy(requests = state.requests?.copy(pendingRequest = it.requestTrack))
+                    },
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("Favorites").performClick()
+        composeRule.onNodeWithContentDescription("Request Now — track is currently available to request").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Track Recently Played — track is not currently available to request").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Track Recently Played — track is currently in the station queue and cannot be requested again").assertIsDisplayed()
+        composeRule.onNodeWithTag("request_status_green").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("request_status_red").assertCountEquals(2)
+        composeRule.onAllNodesWithText("Track Recently Played").assertCountEquals(2)
+        composeRule.onNodeWithText("Last played today; requestable again tomorrow.").assertIsDisplayed()
+        composeRule.onAllNodesWithText("Request Now").assertCountEquals(2)[1].performClick()
+        composeRule.onNodeWithText("Request this track?").assertIsDisplayed()
+        composeRule.runOnIdle { assertEquals(listOf(available), prepared) }
     }
 
     private fun sampleState() = MainUiState(

@@ -10,12 +10,15 @@ import com.codeframe78.twentyfourseven.player.data.PollingChatRepository
 import com.codeframe78.twentyfourseven.player.data.StationAuthRemoteDataSource
 import com.codeframe78.twentyfourseven.player.data.StationChatRemoteDataSource
 import com.codeframe78.twentyfourseven.player.data.NetworkSongRequestRepository
+import com.codeframe78.twentyfourseven.player.data.NetworkFavoriteTracksRepository
+import com.codeframe78.twentyfourseven.player.data.StationFavoriteTracksRemoteDataSource
 import com.codeframe78.twentyfourseven.player.data.StationSongRequestRemoteDataSource
 import com.codeframe78.twentyfourseven.player.data.StationNowPlayingArtworkRepository
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingArtworkRepository
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingPublisher
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingRepository
 import com.codeframe78.twentyfourseven.player.domain.SongRequestRepository
+import com.codeframe78.twentyfourseven.player.domain.FavoriteTracksRepository
 import com.codeframe78.twentyfourseven.player.playback.Media3PlaybackController
 
 class RadioApplication : Application() {
@@ -40,6 +43,9 @@ class AppContainer(application: Application) {
     )
     val songRequestRepository: SongRequestRepository = NetworkSongRequestRepository(
         StationSongRequestRemoteDataSource(sessionStore = authSessionStore),
+    )
+    val favoriteTracksRepository: FavoriteTracksRepository = NetworkFavoriteTracksRepository(
+        StationFavoriteTracksRemoteDataSource(sessionStore = authSessionStore),
     )
 }
 

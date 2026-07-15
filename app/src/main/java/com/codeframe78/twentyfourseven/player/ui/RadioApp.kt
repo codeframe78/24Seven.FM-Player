@@ -18,30 +18,26 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.QueueMusic
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Radio
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.Card
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -61,34 +57,36 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.Image
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.codeframe78.twentyfourseven.player.domain.PlaybackStatus
 import com.codeframe78.twentyfourseven.player.domain.AuthStatus
 import com.codeframe78.twentyfourseven.player.domain.ChatLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.HistoryTrack
+import com.codeframe78.twentyfourseven.player.domain.FavoriteTrack
 import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.QueueTrack
 import com.codeframe78.twentyfourseven.player.domain.StationCapabilities
 import com.codeframe78.twentyfourseven.player.domain.StationId
-import com.codeframe78.twentyfourseven.player.domain.StreamFormat
 import com.codeframe78.twentyfourseven.player.domain.RequestSearchField
 import com.codeframe78.twentyfourseven.player.domain.RequestSuggestionMode
 import com.codeframe78.twentyfourseven.player.domain.SongRequestLoadStatus
-import com.codeframe78.twentyfourseven.player.domain.MAX_REQUEST_MESSAGE_CHARACTERS
 import coil3.compose.AsyncImage
+import com.codeframe78.twentyfourseven.player.R
 
 private val navigationItems = listOf(
     NavigationItem(MainDestination.Player, "Player", Icons.Default.Radio),
+    NavigationItem(MainDestination.Favorites, "Favorites", Icons.Default.Favorite),
     NavigationItem(MainDestination.Chat, "Chat", Icons.AutoMirrored.Filled.Chat),
     NavigationItem(MainDestination.Queue, "Queue", Icons.AutoMirrored.Filled.QueueMusic),
     NavigationItem(MainDestination.More, "More", Icons.Default.MoreHoriz),
@@ -109,6 +107,7 @@ internal fun RadioApp(
     onPause: () -> Unit,
     onStop: () -> Unit,
     onRefreshQueue: () -> Unit,
+    onRefreshFavorites: () -> Unit = {},
     onRefreshChat: () -> Unit = {},
     onSendChatMessage: (String) -> Unit = {},
     onRefreshAuth: () -> Unit = {},
@@ -118,14 +117,15 @@ internal fun RadioApp(
     onSuggestRequest: (RequestSuggestionMode) -> Unit = {},
     onOpenRequestAlbum: (String) -> Unit = {},
     onPrepareRequest: (String) -> Unit = {},
+    onPrepareFavoriteRequest: (FavoriteTrack) -> Unit = {},
     onCancelRequest: () -> Unit = {},
     onConfirmRequest: (String) -> Unit = {},
 ) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
         if (maxWidth >= 600.dp) {
-            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest)
+            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest)
         } else {
-            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest)
+            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest)
         }
     }
 }
@@ -140,6 +140,7 @@ private fun PhoneShell(
     onPause: () -> Unit,
     onStop: () -> Unit,
     onRefreshQueue: () -> Unit,
+    onRefreshFavorites: () -> Unit,
     onRefreshChat: () -> Unit,
     onSendChatMessage: (String) -> Unit,
     onRefreshAuth: () -> Unit,
@@ -149,15 +150,16 @@ private fun PhoneShell(
     onSuggestRequest: (RequestSuggestionMode) -> Unit,
     onOpenRequestAlbum: (String) -> Unit,
     onPrepareRequest: (String) -> Unit,
+    onPrepareFavoriteRequest: (FavoriteTrack) -> Unit,
     onCancelRequest: () -> Unit,
     onConfirmRequest: (String) -> Unit,
 ) {
     Scaffold(
-        topBar = { StationTopBar(state, onSelectStation) },
+        topBar = { StationTopBar(state, onSelectDestination) },
         bottomBar = {
             Column {
                 if (state.destination != MainDestination.Player) {
-                    MiniPlayer(state, onSelectDestination, onPlay, onPause)
+                    PersistentMiniPlayer(state, onSelectDestination, onPlay, onPause)
                 }
                 NavigationBar(Modifier.testTag("phone_navigation_bar")) {
                     navigationItems.forEach { item ->
@@ -172,7 +174,7 @@ private fun PhoneShell(
             }
         },
     ) { padding ->
-        DestinationContent(state, padding, onPlay, onPause, onStop, onRefreshQueue, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest)
+        DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest)
     }
 }
 
@@ -186,6 +188,7 @@ private fun TabletShell(
     onPause: () -> Unit,
     onStop: () -> Unit,
     onRefreshQueue: () -> Unit,
+    onRefreshFavorites: () -> Unit,
     onRefreshChat: () -> Unit,
     onSendChatMessage: (String) -> Unit,
     onRefreshAuth: () -> Unit,
@@ -195,6 +198,7 @@ private fun TabletShell(
     onSuggestRequest: (RequestSuggestionMode) -> Unit,
     onOpenRequestAlbum: (String) -> Unit,
     onPrepareRequest: (String) -> Unit,
+    onPrepareFavoriteRequest: (FavoriteTrack) -> Unit,
     onCancelRequest: () -> Unit,
     onConfirmRequest: (String) -> Unit,
 ) {
@@ -213,39 +217,51 @@ private fun TabletShell(
         VerticalDivider(Modifier.fillMaxHeight())
         Scaffold(
             modifier = Modifier.weight(1f),
-            topBar = { StationTopBar(state, onSelectStation) },
+            topBar = { StationTopBar(state, onSelectDestination) },
             bottomBar = {
                 if (state.destination != MainDestination.Player) {
-                    MiniPlayer(state, onSelectDestination, onPlay, onPause)
+                    PersistentMiniPlayer(state, onSelectDestination, onPlay, onPause)
                 }
             },
         ) { padding ->
-            DestinationContent(state, padding, onPlay, onPause, onStop, onRefreshQueue, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest)
+            DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun StationTopBar(state: MainUiState, onSelectStation: (StationId) -> Unit) {
-    var menuOpen by remember { mutableStateOf(false) }
+private fun StationTopBar(
+    state: MainUiState,
+    onSelectDestination: (MainDestination) -> Unit,
+) {
     CenterAlignedTopAppBar(
+        navigationIcon = {
+            Image(
+                painter = painterResource(R.drawable.app_logo),
+                contentDescription = "24Seven.FM logo",
+                modifier = Modifier.padding(start = 12.dp).size(40.dp).clip(RoundedCornerShape(10.dp)),
+            )
+        },
         title = {
-            Box {
-                TextButton(onClick = { menuOpen = true }) {
-                    Text(state.selectedStation?.name ?: "Choose station")
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("24Seven.FM", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                TextButton(
+                    onClick = { onSelectDestination(MainDestination.Player) },
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+                ) {
+                    Text(
+                        state.selectedStation?.name ?: "Choose station",
+                        style = MaterialTheme.typography.labelMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
                 }
-                DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-                    state.stations.forEach { station ->
-                        DropdownMenuItem(
-                            text = { Text(station.name) },
-                            onClick = {
-                                onSelectStation(station.id)
-                                menuOpen = false
-                            },
-                        )
-                    }
-                }
+            }
+        },
+        actions = {
+            IconButton(onClick = { onSelectDestination(MainDestination.More) }) {
+                Icon(Icons.Default.MoreVert, contentDescription = "Account and station options")
             }
         },
     )
@@ -255,10 +271,13 @@ private fun StationTopBar(state: MainUiState, onSelectStation: (StationId) -> Un
 private fun DestinationContent(
     state: MainUiState,
     padding: PaddingValues,
+    onSelectStation: (StationId) -> Unit,
+    onSelectDestination: (MainDestination) -> Unit,
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onStop: () -> Unit,
     onRefreshQueue: () -> Unit,
+    onRefreshFavorites: () -> Unit,
     onRefreshChat: () -> Unit,
     onSendChatMessage: (String) -> Unit,
     onRefreshAuth: () -> Unit,
@@ -268,11 +287,21 @@ private fun DestinationContent(
     onSuggestRequest: (RequestSuggestionMode) -> Unit,
     onOpenRequestAlbum: (String) -> Unit,
     onPrepareRequest: (String) -> Unit,
+    onPrepareFavoriteRequest: (FavoriteTrack) -> Unit,
     onCancelRequest: () -> Unit,
     onConfirmRequest: (String) -> Unit,
 ) {
     when (state.destination) {
-        MainDestination.Player -> PlayerScreen(state, padding, onPlay, onPause, onStop)
+        MainDestination.Player -> AdaptivePlayerScreen(state, padding, onSelectStation, onPlay, onPause, onStop)
+        MainDestination.Favorites -> FavoriteTracksScreen(
+            state = state,
+            padding = padding,
+            onRefresh = onRefreshFavorites,
+            onPrepareRequest = onPrepareFavoriteRequest,
+            onCancelRequest = onCancelRequest,
+            onConfirmRequest = onConfirmRequest,
+            onOpenAccount = { onSelectDestination(MainDestination.More) },
+        )
         MainDestination.Chat -> ChatScreen(state, padding, onRefreshChat, onSendChatMessage)
         MainDestination.Queue -> QueueScreen(state, padding, onRefreshQueue)
         MainDestination.More -> MoreScreen(state, padding, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest)
@@ -469,7 +498,14 @@ private fun QueueScreen(state: MainUiState, padding: PaddingValues, onRefresh: (
                 Text("Try again")
             }
         }
-        else -> QueueLists(queue.upcoming, queue.recentlyPlayed, padding, onRefresh)
+        else -> QueueLists(
+            queue.upcoming,
+            queue.recentlyPlayed,
+            queue.isStale,
+            queue.errorMessage,
+            padding,
+            onRefresh,
+        )
     }
 }
 
@@ -477,6 +513,8 @@ private fun QueueScreen(state: MainUiState, padding: PaddingValues, onRefresh: (
 private fun QueueLists(
     upcoming: List<QueueTrack>,
     history: List<HistoryTrack>,
+    isStale: Boolean,
+    refreshMessage: String?,
     padding: PaddingValues,
     onRefresh: () -> Unit,
 ) {
@@ -491,6 +529,14 @@ private fun QueueLists(
                 IconButton(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = "Refresh queue")
                 }
+            }
+        }
+        if (isStale) {
+            item {
+                Text(
+                    refreshMessage ?: "Showing cached Queue data while a fresh copy is unavailable.",
+                    color = MaterialTheme.colorScheme.error,
+                )
             }
         }
         if (upcoming.isEmpty()) {
@@ -601,70 +647,6 @@ private fun TrackCard(
 }
 
 @Composable
-private fun PlayerScreen(
-    state: MainUiState,
-    padding: PaddingValues,
-    onPlay: () -> Unit,
-    onPause: () -> Unit,
-    onStop: () -> Unit,
-) {
-    Column(
-        Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        state.nowPlaying.artworkUrl?.let { artworkUrl ->
-            AsyncImage(
-                model = artworkUrl,
-                contentDescription = "Album artwork",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.size(200.dp).clip(RoundedCornerShape(16.dp)),
-            )
-            Spacer(Modifier.height(20.dp))
-        }
-        Text(state.selectedStation?.shortName ?: "24seven.FM", style = MaterialTheme.typography.displaySmall)
-        Spacer(Modifier.height(12.dp))
-        Text(
-            state.nowPlaying.displayTitle ?: "Live radio",
-            style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center,
-            maxLines = 3,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Spacer(Modifier.height(6.dp))
-        Text(
-            state.playback.errorMessage ?: state.selectedStation?.description.orEmpty(),
-            color = if (state.playback.status == PlaybackStatus.Error) {
-                MaterialTheme.colorScheme.error
-            } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
-            },
-            textAlign = TextAlign.Center,
-        )
-        Spacer(Modifier.height(32.dp))
-        val active = state.playback.status.isActive
-        FilledIconButton(
-            onClick = if (active) onPause else onPlay,
-            enabled = state.selectedStation?.streams?.isNotEmpty() == true,
-            shape = CircleShape,
-        ) {
-            Icon(
-                if (active) Icons.Default.Pause else Icons.Default.PlayArrow,
-                contentDescription = if (active) "Pause" else "Play",
-            )
-        }
-        TextButton(onClick = onStop, enabled = state.playback.status != PlaybackStatus.Idle) {
-            Icon(Icons.Default.Stop, contentDescription = null)
-            Text("Stop")
-        }
-        Text("LIVE • ${state.playback.status.displayName}", style = MaterialTheme.typography.labelLarge)
-        state.selectedStation?.streams?.minByOrNull { it.priority }?.qualityLabel?.let { quality ->
-            Text(quality, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
-    }
-}
-
-@Composable
 private fun FeatureScreen(title: String, description: String, icon: ImageVector, padding: PaddingValues) {
     Column(
         Modifier.fillMaxSize().padding(padding).padding(32.dp),
@@ -715,6 +697,7 @@ private fun MoreScreen(
         CapabilityCard(state.selectedStation?.capabilities ?: StationCapabilities())
         AccountSection(state, onRefreshAuth, onSignIn, onSignOut)
         SongRequestSection(state, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest)
+        PrivacySection()
         Text(
             "Features remain unavailable until their station-specific sources and behavior are verified.",
             style = MaterialTheme.typography.bodyMedium,
@@ -806,40 +789,7 @@ private fun SongRequestSection(
     var fieldMenuOpen by remember { mutableStateOf(false) }
     val signedIn = state.auth?.status == AuthStatus.SignedIn
 
-    requests?.pendingRequest?.let { track ->
-        var requestMessage by remember(track.albumId, track.songId) { mutableStateOf("") }
-        AlertDialog(
-            onDismissRequest = onCancelRequest,
-            title = { Text("Request this track?") },
-            text = {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(
-                        buildString {
-                            append(track.title)
-                            track.artist?.let { append(" — $it") }
-                            append("\n\nThe station enforces queue, artist, album, eligibility, and cooldown rules. This sends one request and will not retry automatically.")
-                        },
-                    )
-                    if (state.selectedStation?.capabilities?.supportsRequestMessages == true) {
-                        OutlinedTextField(
-                            value = requestMessage,
-                            onValueChange = { requestMessage = it.take(MAX_REQUEST_MESSAGE_CHARACTERS) },
-                            label = { Text("Message (optional)") },
-                            supportingText = { Text("${requestMessage.length}/$MAX_REQUEST_MESSAGE_CHARACTERS") },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = { onConfirmRequest(requestMessage) },
-                    enabled = requests.status != SongRequestLoadStatus.Submitting,
-                ) { Text("Send request") }
-            },
-            dismissButton = { TextButton(onClick = onCancelRequest) { Text("Cancel") } },
-        )
-    }
+    RequestConfirmationDialog(state, onCancelRequest, onConfirmRequest)
 
     Text("Song requests", style = MaterialTheme.typography.titleMedium)
     Card(Modifier.fillMaxWidth()) {
@@ -945,14 +895,23 @@ private fun SongRequestSection(
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
+                            RequestStatusIndicator(
+                                availability = track.availability,
+                                modifier = Modifier.padding(top = 4.dp),
+                            )
+                            track.availability.detail?.let { detail ->
+                                Text(
+                                    detail,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
                         }
-                        if (track.eligible) {
+                        if (track.availability.canRequest) {
                             TextButton(
                                 onClick = { onPrepareRequest(track.songId) },
-                                enabled = signedIn && requests.status == SongRequestLoadStatus.Ready,
-                            ) { Text("Request") }
-                        } else {
-                            Text("Unavailable", style = MaterialTheme.typography.bodySmall)
+                                enabled = requests.status == SongRequestLoadStatus.Ready,
+                            ) { Text("Request Now") }
                         }
                     }
                 }
@@ -967,6 +926,7 @@ private fun CapabilityCard(capabilities: StationCapabilities) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             CapabilityRow("Authentication", capabilities.supportsAuthentication)
             CapabilityRow("Chat", capabilities.supportsChat)
+            CapabilityRow("Favorites", capabilities.supportsFavorites)
             CapabilityRow("Queue", capabilities.supportsQueue)
             CapabilityRow("History", capabilities.supportsHistory)
             CapabilityRow("Requests", capabilities.supportsRequests)
@@ -986,86 +946,3 @@ private fun CapabilityRow(label: String, supported: Boolean) {
         )
     }
 }
-
-@Composable
-private fun MiniPlayer(
-    state: MainUiState,
-    onSelectDestination: (MainDestination) -> Unit,
-    onPlay: () -> Unit,
-    onPause: () -> Unit,
-) {
-    Surface(
-        onClick = { onSelectDestination(MainDestination.Player) },
-        modifier = Modifier.fillMaxWidth(),
-        tonalElevation = 3.dp,
-    ) {
-        Row(
-            Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            state.nowPlaying.artworkUrl?.let { artworkUrl ->
-                AsyncImage(
-                    model = artworkUrl,
-                    contentDescription = "Now playing album artwork",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(6.dp)),
-                )
-            } ?: Icon(Icons.Default.Radio, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-            Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f)) {
-                Text(
-                    state.nowPlaying.displayTitle ?: "Live radio",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontWeight = FontWeight.Medium,
-                )
-                Text(
-                    state.selectedStation?.shortName.orEmpty(),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            IconButton(
-                onClick = if (state.playback.status.isActive) onPause else onPlay,
-                enabled = state.selectedStation?.streams?.isNotEmpty() == true,
-            ) {
-                Icon(
-                    if (state.playback.status.isActive) Icons.Default.Pause else Icons.Default.PlayArrow,
-                    contentDescription = if (state.playback.status.isActive) "Pause" else "Play",
-                )
-            }
-        }
-    }
-}
-
-private val com.codeframe78.twentyfourseven.player.domain.StreamVariant.qualityLabel: String?
-    get() {
-        val formatLabel = when (format) {
-            StreamFormat.Aac -> "AAC"
-            StreamFormat.Mp3 -> "MP3"
-            StreamFormat.Hls -> "HLS"
-            StreamFormat.Unknown -> null
-        }
-        return listOfNotNull(formatLabel, bitrateKbps?.let { "$it kbps" })
-            .takeIf(List<String>::isNotEmpty)
-            ?.joinToString(" • ")
-    }
-
-private val PlaybackStatus.isActive: Boolean
-    get() = this in setOf(
-        PlaybackStatus.Connecting,
-        PlaybackStatus.Buffering,
-        PlaybackStatus.Playing,
-        PlaybackStatus.Retrying,
-    )
-
-private val PlaybackStatus.displayName: String
-    get() = when (this) {
-        PlaybackStatus.Idle -> "Not connected"
-        PlaybackStatus.Connecting -> "Connecting"
-        PlaybackStatus.Buffering -> "Buffering"
-        PlaybackStatus.Playing -> "Playing"
-        PlaybackStatus.Paused -> "Paused"
-        PlaybackStatus.Retrying -> "Trying fallback"
-        PlaybackStatus.Error -> "Playback error"
-    }

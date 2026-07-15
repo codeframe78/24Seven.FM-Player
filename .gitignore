@@ -5,6 +5,10 @@ local.properties
 *.iml
 *.apk
 *.aab
+*.jks
+*.keystore
+keystore.properties
+signing.properties
 captures/
 *.har
 .codex-remote-attachments/

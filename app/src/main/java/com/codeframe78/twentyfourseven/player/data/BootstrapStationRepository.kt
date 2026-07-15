@@ -31,6 +31,7 @@ class BootstrapStationRepository : StationRepository {
         val queueCapabilities = StationCapabilities(
             supportsAuthentication = true,
             supportsChat = true,
+            supportsFavorites = true,
             supportsQueue = true,
             supportsHistory = true,
             supportsRequests = true,

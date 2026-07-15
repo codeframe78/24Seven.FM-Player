@@ -1,0 +1,27 @@
+# 24seven.FM network feature matrix
+
+Audited July 14, 2026. `Implemented` means present in native code; `verified` distinguishes live evidence from structural similarity. Every account/session remains station-specific.
+
+| Feature | StreamingSoundtracks.com | 1980s.FM | Adagio.FM | Death.FM | Entranced.FM | Native possible | Auth required | VIP required | Structured endpoint | Browser fallback | Status | Notes/blockers |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Live playback | Yes | Yes | Yes | Yes | Yes | Yes | No | No | PLS/ICY | No | Implemented/verified | Two ordered AAC relays per station |
+| Now-playing title | Yes | Yes | Yes | Yes | Yes | Yes | No | No | ICY | No | Implemented/verified | Composite ICY title preserved |
+| Current artwork | Yes | Yes | Yes | Yes | Yes | Yes | No | No | JSON + station image | No | Implemented/verified | Event-driven, station-hosted only |
+| Upcoming queue | Extended | Extended | Extended | Compact | Extended | Yes | No | No | HTML/JSON | No | Implemented/verified | 60-second shared minimum; up to 30 rows on extended feeds |
+| Played history | Extended | Extended | Extended | Compact | Extended | Yes | No | No | HTML/JSON | No | Implemented/verified | Current app shows recent rows, not full archive pagination |
+| Request attribution/message display | Yes | Observed structure not message-verified | Same | Compact feed lacks fields | Same | Yes | No | No | Extended queue HTML | No | Implemented where supplied | SST message verified end to end |
+| Library search/album tracks | Yes | Yes | Yes | Yes | Yes | Yes | No for browse | No | Public HTML | No | Implemented; SST live verified | Station-specific catalog context retained |
+| Track requests | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Station rules may vary | Public HTML mutation with protected session | No | Implemented; M13 hardening planned | Explicit confirmation, no retry |
+| Random/least-played suggestion | Yes | Shared site structure | Shared | Shared | Shared | Yes | No for browse | No | Request HTML | No | Implemented | User initiated only |
+| Optional request message | Yes | Not verified | Not verified | Not verified | Not verified | Yes for SST | Yes | No | Post-acceptance form | No | SST implemented only | 80 characters; separate message record ID |
+| Request availability | Yes | Yes | Yes | Yes | Yes | Yes | Browse no; submit yes | Rules vary | Request/Favorites HTML + Queue | No | M13 implemented/validated | Structured station-scoped resolution, exact accessible labels, stale-data fail-closed behavior, and pre-submit revalidation |
+| Native login | Yes | Yes | Yes | Yes | Yes | Yes | N/A | No | Legacy form/CAPTCHA | No | Implemented; SST physical validation | Sessions isolated by station ID and host |
+| Server favorite tracks | Yes | Same module | Same module | Same module | Same module | Yes | Yes | No known requirement | Favorites discovery/list HTML | No | Implemented; SST live verified | Other four share audited module and adapter contract; live account verification remains |
+| Community chat | Yes | Same module | Same module | Same module | Same module | Yes | Read public; post authenticated | No | ClearChat HTML | No | Implemented; SST live verified | 30-second minimum, history memory-only |
+| Private Messages | Yes | Yes | Yes | Yes | Yes | Potentially | Yes | No | Legacy HTML | Possibly | Deferred | Underlying website/server issues must be fixed first |
+| Forums/profiles/members | Yes | Yes | Yes | Yes | Yes | Native optional | Mixed | Some areas | Legacy HTML | Custom Tab preferred initially | Planned/deferred | Avoid reproducing low-value legacy pages |
+| News/announcements | Yes | Yes | Yes | Yes | Yes | Yes if structured | No | No | Legacy HTML | Custom Tab likely | Planned | Content audit only; no parser yet |
+| Contests/downloads/galleries/interviews | Rich SST set | Station subset | Station subset | Station subset | Station subset | Selective | Mixed | Mixed | Mostly legacy HTML | Yes | Planned/deferred | Station-specific, lower-priority secondary content |
+| Membership/VIP status | VIP | VIP | VIP | RIP | VIP | Yes if reliably exposed | Yes | N/A | Not yet verified | Custom Tab for purchase/manage | Not implemented | Must never transfer status across stations |
+| Local favorites/preferences | N/A | N/A | N/A | N/A | N/A | Yes | No | No | Local persistence | No | Planned | Clearly separate from server favorites |
+| Sleep timer | N/A | N/A | N/A | N/A | N/A | Yes | No | No | Local playback | No | Planned | No current implementation |

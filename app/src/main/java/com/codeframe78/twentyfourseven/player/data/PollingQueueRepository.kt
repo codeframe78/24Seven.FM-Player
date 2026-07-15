@@ -55,7 +55,9 @@ class PollingQueueRepository internal constructor(
             lastAttempts[stationId] = now
             val state = state(stationId)
             if (state.value.status != QueueLoadStatus.Ready) {
-                state.value = state.value.copy(status = QueueLoadStatus.Loading, errorMessage = null)
+                state.value = state.value.copy(status = QueueLoadStatus.Loading, errorMessage = null, isStale = false)
+            } else {
+                state.value = state.value.copy(isStale = true, errorMessage = null)
             }
             runCatching { remote.fetch(stationId) }
                 .onSuccess { payload ->
@@ -64,10 +66,16 @@ class PollingQueueRepository internal constructor(
                         status = QueueLoadStatus.Ready,
                         upcoming = payload.upcoming,
                         recentlyPlayed = payload.recentlyPlayed,
+                        isStale = false,
                     )
                 }
                 .onFailure {
-                    if (state.value.status != QueueLoadStatus.Ready) {
+                    if (state.value.status == QueueLoadStatus.Ready) {
+                        state.value = state.value.copy(
+                            isStale = true,
+                            errorMessage = "Cached Queue data could not be refreshed.",
+                        )
+                    } else {
                         state.value = QueueState(
                             stationId = stationId,
                             status = QueueLoadStatus.Error,
@@ -77,6 +85,8 @@ class PollingQueueRepository internal constructor(
                 }
         }
     }
+
+    override suspend fun currentQueue(stationId: StationId): QueueState = state(stationId).value
 
     private fun state(stationId: StationId): MutableStateFlow<QueueState> =
         states.getOrPut(stationId) { MutableStateFlow(QueueState(stationId)) }

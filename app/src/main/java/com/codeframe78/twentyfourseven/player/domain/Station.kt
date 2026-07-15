@@ -5,6 +5,7 @@ package com.codeframe78.twentyfourseven.player.domain
 data class StationCapabilities(
     val supportsAuthentication: Boolean = false,
     val supportsChat: Boolean = false,
+    val supportsFavorites: Boolean = false,
     val supportsRequests: Boolean = false,
     val supportsRequestMessages: Boolean = false,
     val supportsQueue: Boolean = false,

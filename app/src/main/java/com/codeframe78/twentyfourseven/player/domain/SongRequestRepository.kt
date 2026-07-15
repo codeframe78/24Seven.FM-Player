@@ -32,7 +32,21 @@ data class RequestableTrack(
     val artist: String? = null,
     val duration: String? = null,
     val eligible: Boolean,
-)
+    val albumTitle: String? = null,
+    val availability: TrackRequestAvailability = if (eligible) {
+        TrackRequestAvailability.available()
+    } else {
+        TrackRequestAvailability.unknown()
+    },
+) {
+    val identity: RequestTrackIdentity get() = RequestTrackIdentity(
+        songId = songId,
+        albumId = albumId,
+        title = title,
+        artist = artist,
+        albumTitle = albumTitle,
+    )
+}
 
 data class SongRequestState(
     val stationId: StationId,
@@ -53,6 +67,7 @@ interface SongRequestRepository {
     suspend fun suggest(stationId: StationId, mode: RequestSuggestionMode)
     suspend fun openAlbum(stationId: StationId, albumId: String)
     suspend fun prepareRequest(stationId: StationId, songId: String)
+    suspend fun prepareRequest(stationId: StationId, track: RequestableTrack)
     suspend fun cancelRequest(stationId: StationId)
-    suspend fun confirmRequest(stationId: StationId, message: String = "")
+    suspend fun confirmRequest(stationId: StationId, queue: QueueState, message: String = "")
 }

@@ -7,6 +7,11 @@ import com.codeframe78.twentyfourseven.player.domain.SongRequestRepository
 import com.codeframe78.twentyfourseven.player.domain.SongRequestState
 import com.codeframe78.twentyfourseven.player.domain.StationId
 import com.codeframe78.twentyfourseven.player.domain.MAX_REQUEST_MESSAGE_CHARACTERS
+import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
+import com.codeframe78.twentyfourseven.player.domain.QueueState
+import com.codeframe78.twentyfourseven.player.domain.TrackRequestAvailability
+import com.codeframe78.twentyfourseven.player.domain.TrackRequestAvailabilityResolver
+import com.codeframe78.twentyfourseven.player.domain.TrackRequestStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -86,20 +91,98 @@ internal class NetworkSongRequestRepository(
         update(stationId) { it.copy(pendingRequest = track, notice = null, errorMessage = null) }
     }
 
+    override suspend fun prepareRequest(stationId: StationId, track: com.codeframe78.twentyfourseven.player.domain.RequestableTrack) =
+        lock(stationId).withLock {
+            if (!track.eligible) return@withLock
+            update(stationId) { it.copy(pendingRequest = track, notice = null, errorMessage = null) }
+        }
+
     override suspend fun cancelRequest(stationId: StationId) = lock(stationId).withLock {
         update(stationId) { it.copy(pendingRequest = null) }
     }
 
-    override suspend fun confirmRequest(stationId: StationId, message: String) = lock(stationId).withLock {
+    override suspend fun confirmRequest(stationId: StationId, queue: QueueState, message: String) = lock(stationId).withLock {
         val pending = state(stationId).value.pendingRequest ?: return@withLock
         val normalizedMessage = message.trim()
         require(normalizedMessage.length <= MAX_REQUEST_MESSAGE_CHARACTERS) { "Request message is too long" }
+        if (queue.stationId != stationId || queue.status != QueueLoadStatus.Ready) {
+            update(stationId) {
+                it.copy(
+                    pendingRequest = null,
+                    errorMessage = "Requests Temporarily Unavailable. Refresh Queue before trying again.",
+                )
+            }
+            return@withLock
+        }
         update(stationId) { it.copy(status = SongRequestLoadStatus.Submitting, errorMessage = null, notice = null) }
-        runCatching { remote.submit(stationId, pending, normalizedMessage) }
+        val currentTrack = runCatching { remote.loadAlbum(stationId, pending.albumId) }
+            .getOrElse {
+                update(stationId) { state ->
+                    state.copy(
+                        status = SongRequestLoadStatus.Ready,
+                        pendingRequest = null,
+                        errorMessage = "Requests Temporarily Unavailable. Current track eligibility could not be confirmed.",
+                    )
+                }
+                return@withLock
+            }
+            .tracks
+            .firstOrNull { it.songId == pending.songId }
+        if (currentTrack == null) {
+            update(stationId) {
+                it.copy(
+                    status = SongRequestLoadStatus.Ready,
+                    pendingRequest = null,
+                    errorMessage = "Requests Temporarily Unavailable. This track is no longer listed by the station.",
+                )
+            }
+            return@withLock
+        }
+        val availability = TrackRequestAvailabilityResolver.resolve(
+            stationId,
+            currentTrack.identity,
+            currentTrack.availability,
+            queue,
+        )
+        if (!availability.canRequest) {
+            update(stationId) {
+                it.copy(
+                    status = SongRequestLoadStatus.Ready,
+                    pendingRequest = null,
+                    tracks = it.tracks.map { track ->
+                        if (track.songId == pending.songId) {
+                            track.copy(eligible = false, availability = availability)
+                        } else {
+                            track
+                        }
+                    },
+                    errorMessage = availability.rejectionMessage(),
+                )
+            }
+            return@withLock
+        }
+        runCatching { remote.submit(stationId, currentTrack, normalizedMessage) }
             .onSuccess { result ->
                 when (result) {
                     is RequestSubmissionResult.Submitted -> update(stationId) { current ->
-                        current.copy(status = SongRequestLoadStatus.Ready, pendingRequest = null, notice = result.message, tracks = current.tracks.map { if (it.songId == pending.songId) it.copy(eligible = false) else it })
+                        current.copy(
+                            status = SongRequestLoadStatus.Ready,
+                            pendingRequest = null,
+                            notice = result.message,
+                            tracks = current.tracks.map {
+                                if (it.songId == pending.songId) {
+                                    it.copy(
+                                        eligible = false,
+                                        availability = TrackRequestAvailability(
+                                            TrackRequestStatus.RequestsUnavailable,
+                                            "The request was submitted; confirm its queue position before requesting again.",
+                                        ),
+                                    )
+                                } else {
+                                    it
+                                }
+                            },
+                        )
                     }
                     is RequestSubmissionResult.Rejected -> update(stationId) { it.copy(status = SongRequestLoadStatus.Ready, pendingRequest = null, errorMessage = result.message) }
                     RequestSubmissionResult.AuthenticationRequired -> update(stationId) { it.copy(status = SongRequestLoadStatus.Ready, pendingRequest = null, errorMessage = "Sign in to this station before requesting a song.") }
@@ -111,7 +194,17 @@ internal class NetworkSongRequestRepository(
                         status = SongRequestLoadStatus.Ready,
                         pendingRequest = null,
                         tracks = current.tracks.map {
-                            if (it.songId == pending.songId) it.copy(eligible = false) else it
+                            if (it.songId == pending.songId) {
+                                it.copy(
+                                    eligible = false,
+                                    availability = TrackRequestAvailability(
+                                        TrackRequestStatus.RequestsUnavailable,
+                                        "The request result could not be confirmed; check Queue before trying again.",
+                                    ),
+                                )
+                            } else {
+                                it
+                            }
                         },
                         errorMessage = "The station may have received this request, but confirmation could not be read. " +
                             "${confirmationFailureDetail(failure)} Check Queue before trying again. Nothing was retried.",
@@ -145,5 +238,16 @@ internal class NetworkSongRequestRepository(
             "The station response did not explicitly confirm the request."
         failure is IOException -> "The confirmation connection failed."
         else -> "The confirmation could not be processed."
+    }
+
+    private fun TrackRequestAvailability.rejectionMessage(): String = when (status) {
+        TrackRequestStatus.InCurrentQueue, TrackRequestStatus.RecentlyPlayed ->
+            "Track Recently Played. ${detail.orEmpty()}".trim()
+        TrackRequestStatus.AuthenticationRequired -> "Sign In to Request. ${detail.orEmpty()}".trim()
+        TrackRequestStatus.UserCooldown -> "Request Cooldown Active. ${detail.orEmpty()}".trim()
+        TrackRequestStatus.MembershipRequired -> "VIP Membership Required. ${detail.orEmpty()}".trim()
+        TrackRequestStatus.RequestLimitReached -> "Request Limit Reached. ${detail.orEmpty()}".trim()
+        TrackRequestStatus.StationUnavailable -> "Station Unavailable. ${detail.orEmpty()}".trim()
+        else -> "Requests Temporarily Unavailable. ${detail.orEmpty()}".trim()
     }
 }

@@ -60,6 +60,7 @@ class PlayerQueueResponseParserTest {
         with(result.upcoming.single()) {
             assertEquals(1, position)
             assertEquals("Track", displayTitle)
+            assertEquals("ALBUM_1", albumId)
             assertEquals("Artist", artistName)
             assertEquals("Album", albumTitle)
             assertEquals("4:05", durationLabel)
@@ -155,7 +156,7 @@ class PlayerQueueResponseParserTest {
             <tr>
               <td><b>$position</b><br>$duration</td>
               <td><img src="$artwork"></td>
-              <td><b>$album</b> - <i>$artist</i><br>$title<br>$requesterHtml</td>
+              <td><a href="/modules.php?name=Album&amp;asin=ALBUM_$position"><b>$album</b></a> - <i>$artist</i><br>$title<br>$requesterHtml</td>
             </tr>
         """.trimIndent()
     }

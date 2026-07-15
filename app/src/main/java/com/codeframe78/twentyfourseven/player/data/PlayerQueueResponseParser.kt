@@ -21,6 +21,8 @@ internal class PlayerQueueResponseParser {
                 QueueTrack(
                     position = index + 1,
                     displayTitle = track.displayTitle,
+                    songId = track.songId,
+                    albumId = track.albumId,
                     artistName = track.artistName,
                     albumTitle = track.albumTitle,
                     durationLabel = track.durationLabel,
@@ -33,6 +35,8 @@ internal class PlayerQueueResponseParser {
                 val track = parseRow(row, baseUrl) ?: return@mapNotNull null
                 HistoryTrack(
                     displayTitle = track.displayTitle,
+                    songId = track.songId,
+                    albumId = track.albumId,
                     artistName = track.artistName,
                     albumTitle = track.albumTitle,
                     durationLabel = track.durationLabel,
@@ -67,6 +71,8 @@ internal class PlayerQueueResponseParser {
                 QueueTrack(
                     position = track.position,
                     displayTitle = track.displayTitle,
+                    songId = track.songId,
+                    albumId = track.albumId,
                     artistName = track.artistName,
                     albumTitle = track.albumTitle,
                     durationLabel = track.durationLabel,
@@ -79,6 +85,8 @@ internal class PlayerQueueResponseParser {
                 val track = parseExtendedRow(row, baseUrl) ?: return@mapNotNull null
                 HistoryTrack(
                     displayTitle = track.displayTitle,
+                    songId = track.songId,
+                    albumId = track.albumId,
                     artistName = track.artistName,
                     albumTitle = track.albumTitle,
                     durationLabel = track.durationLabel,
@@ -109,6 +117,8 @@ internal class PlayerQueueResponseParser {
         if (displayTitle.isEmpty()) return null
         return ParsedTrack(
             displayTitle = displayTitle,
+            songId = requestIdentifier(cells[2], "songID"),
+            albumId = requestIdentifier(cells[2], "asin"),
             artistName = artistName,
             albumTitle = null,
             durationLabel = null,
@@ -136,6 +146,8 @@ internal class PlayerQueueResponseParser {
         return ExtendedTrack(
             position = position,
             displayTitle = title,
+            songId = requestIdentifier(details, "songID"),
+            albumId = requestIdentifier(details, "asin"),
             artistName = artist,
             albumTitle = album,
             durationLabel = duration,
@@ -174,8 +186,19 @@ internal class PlayerQueueResponseParser {
             (host == baseHost || host.endsWith(".$baseHost"))
     }.getOrDefault(false)
 
+    private fun requestIdentifier(details: Element, name: String): String? = details.select("a[href]")
+        .asSequence()
+        .mapNotNull { link -> runCatching { URI(link.absUrl("href")) }.getOrNull() }
+        .flatMap { uri -> uri.rawQuery.orEmpty().split('&').asSequence() }
+        .mapNotNull { pair -> pair.split('=', limit = 2).takeIf { it.size == 2 } }
+        .firstOrNull { it[0].equals(name, ignoreCase = true) }
+        ?.get(1)
+        ?.takeIf { it.matches(SAFE_IDENTIFIER) }
+
     private data class ParsedTrack(
         val displayTitle: String,
+        val songId: String?,
+        val albumId: String?,
         val artistName: String?,
         val albumTitle: String?,
         val durationLabel: String?,
@@ -187,6 +210,8 @@ internal class PlayerQueueResponseParser {
     private data class ExtendedTrack(
         val position: Int,
         val displayTitle: String,
+        val songId: String?,
+        val albumId: String?,
         val artistName: String?,
         val albumTitle: String,
         val durationLabel: String,
@@ -203,5 +228,6 @@ internal class PlayerQueueResponseParser {
         val REQUESTER_PREFIX = Regex("^\\s*Request\\s+By:\\s*", RegexOption.IGNORE_CASE)
         const val MAX_REQUESTER_CHARACTERS = 80
         const val MAX_REQUEST_MESSAGE_CHARACTERS = 240
+        val SAFE_IDENTIFIER = Regex("[A-Za-z0-9_.-]{1,64}")
     }
 }

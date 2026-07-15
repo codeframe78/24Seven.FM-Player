@@ -4,6 +4,7 @@ import com.codeframe78.twentyfourseven.player.data.BootstrapStationRepository
 import com.codeframe78.twentyfourseven.player.data.UnavailableAuthRepository
 import com.codeframe78.twentyfourseven.player.data.UnavailableChatRepository
 import com.codeframe78.twentyfourseven.player.data.UnavailableSongRequestRepository
+import com.codeframe78.twentyfourseven.player.data.UnavailableFavoriteTracksRepository
 import com.codeframe78.twentyfourseven.player.domain.ChatRepository
 import com.codeframe78.twentyfourseven.player.domain.ChatState
 import com.codeframe78.twentyfourseven.player.domain.PlaybackController
@@ -13,6 +14,13 @@ import com.codeframe78.twentyfourseven.player.domain.NowPlayingState
 import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.QueueRepository
 import com.codeframe78.twentyfourseven.player.domain.QueueState
+import com.codeframe78.twentyfourseven.player.domain.QueueTrack
+import com.codeframe78.twentyfourseven.player.domain.FavoriteTrack
+import com.codeframe78.twentyfourseven.player.domain.FavoriteTracksLoadStatus
+import com.codeframe78.twentyfourseven.player.domain.FavoriteTracksRepository
+import com.codeframe78.twentyfourseven.player.domain.FavoriteTracksState
+import com.codeframe78.twentyfourseven.player.domain.RequestableTrack
+import com.codeframe78.twentyfourseven.player.domain.TrackRequestStatus
 import com.codeframe78.twentyfourseven.player.domain.Station
 import com.codeframe78.twentyfourseven.player.domain.StationId
 import kotlinx.coroutines.Dispatchers
@@ -62,6 +70,7 @@ class MainViewModelTest {
             UnavailableAuthRepository(),
             UnavailableChatRepository(),
             UnavailableSongRequestRepository(),
+            UnavailableFavoriteTracksRepository(),
         )
         advanceUntilIdle()
 
@@ -92,6 +101,7 @@ class MainViewModelTest {
             UnavailableAuthRepository(),
             UnavailableChatRepository(),
             UnavailableSongRequestRepository(),
+            UnavailableFavoriteTracksRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -119,6 +129,7 @@ class MainViewModelTest {
             UnavailableAuthRepository(),
             UnavailableChatRepository(),
             UnavailableSongRequestRepository(),
+            UnavailableFavoriteTracksRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -142,6 +153,7 @@ class MainViewModelTest {
             UnavailableAuthRepository(),
             UnavailableChatRepository(),
             UnavailableSongRequestRepository(),
+            UnavailableFavoriteTracksRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -179,6 +191,7 @@ class MainViewModelTest {
             UnavailableAuthRepository(),
             chat,
             UnavailableSongRequestRepository(),
+            UnavailableFavoriteTracksRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -207,6 +220,70 @@ class MainViewModelTest {
         viewModel.selectDestination(MainDestination.Player)
         advanceUntilIdle()
         assertEquals(0, chat.activeObservations)
+    }
+
+    @Test
+    fun `favorites recalculate when selected station queue changes`() = runTest(dispatcher) {
+        val stationId = StationId("sst")
+        val queue = FakeQueueRepository()
+        val favoriteRequest = RequestableTrack(
+            albumId = "ALBUM_1",
+            songId = "12345",
+            title = "Example Track",
+            artist = "Example Artist",
+            eligible = true,
+            albumTitle = "Example Album",
+        )
+        val favorites = FakeFavoriteTracksRepository(
+            FavoriteTracksState(
+                stationId,
+                FavoriteTracksLoadStatus.Ready,
+                tracks = listOf(
+                    FavoriteTrack(
+                        position = 1,
+                        title = "Example Track",
+                        album = "Example Album",
+                        artist = "Example Artist",
+                        requestTrack = favoriteRequest,
+                    ),
+                ),
+            ),
+        )
+        val viewModel = MainViewModel(
+            BootstrapStationRepository(),
+            FakePlaybackController(),
+            FakeNowPlayingRepository(),
+            queue,
+            UnavailableAuthRepository(),
+            UnavailableChatRepository(),
+            UnavailableSongRequestRepository(),
+            favorites,
+        )
+        backgroundScope.launch { viewModel.uiState.collect() }
+        viewModel.selectDestination(MainDestination.Favorites)
+        queue.emit(QueueState(stationId, QueueLoadStatus.Ready))
+        advanceUntilIdle()
+        assertEquals(TrackRequestStatus.Available, viewModel.uiState.value.favorites?.tracks?.single()?.availability?.status)
+
+        queue.emit(
+            QueueState(
+                stationId,
+                QueueLoadStatus.Ready,
+                upcoming = listOf(
+                    QueueTrack(
+                        1,
+                        "Example Track",
+                        albumId = "ALBUM_1",
+                        artistName = "Example Artist",
+                        albumTitle = "Example Album",
+                    ),
+                ),
+            ),
+        )
+        advanceUntilIdle()
+
+        assertEquals(TrackRequestStatus.InCurrentQueue, viewModel.uiState.value.favorites?.tracks?.single()?.availability?.status)
+        assertEquals(1, queue.activeObservations)
     }
 
     private class FakeNowPlayingRepository : NowPlayingRepository {
@@ -243,14 +320,14 @@ class MainViewModelTest {
         var refreshedStation: StationId? = null
         var observedStation: StationId? = null
         var activeObservations = 0
+        private val states = mutableMapOf<StationId, MutableStateFlow<QueueState>>()
 
         override fun observeQueue(stationId: StationId): Flow<QueueState> {
             observedStation = stationId
             return flow {
                 activeObservations++
-                emit(QueueState(stationId))
                 try {
-                    awaitCancellation()
+                    state(stationId).collect { emit(it) }
                 } finally {
                     activeObservations--
                 }
@@ -259,6 +336,25 @@ class MainViewModelTest {
 
         override suspend fun refresh(stationId: StationId) {
             refreshedStation = stationId
+        }
+
+        override suspend fun currentQueue(stationId: StationId): QueueState = state(stationId).value
+
+        fun emit(queue: QueueState) {
+            state(queue.stationId).value = queue
+        }
+
+        private fun state(stationId: StationId) = states.getOrPut(stationId) {
+            MutableStateFlow(QueueState(stationId))
+        }
+    }
+
+    private class FakeFavoriteTracksRepository(initial: FavoriteTracksState) : FavoriteTracksRepository {
+        private val state = MutableStateFlow(initial)
+        override fun observeFavorites(stationId: StationId): Flow<FavoriteTracksState> = state
+        override suspend fun refresh(stationId: StationId) = Unit
+        override suspend fun clear(stationId: StationId) {
+            state.value = FavoriteTracksState(stationId)
         }
     }
 

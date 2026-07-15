@@ -1,0 +1,84 @@
+# Current state audit
+
+Audited July 14, 2026 on `agent/initial-android-scaffold` at `36d832a`, with all existing tracked and untracked work preserved.
+
+## Repository and environment
+
+- Expected and configured remote: `https://github.com/codeframe78/24Seven.FM-Player.git` for fetch and push.
+- Active branch: `agent/initial-android-scaffold`.
+- Latest local and successfully pushed commit: `36d832a` (`Optimize Android validation performance`).
+- One Android application module, `:app`; application ID `com.codeframe78.twentyfourseven.player`.
+- Kotlin 2.2.21, AGP 8.13.2, JDK 17, Compose BOM 2026.06.00, Media3 1.10.1, minSdk 26, targetSdk 35, compileSdk 36.
+- The current environment has unrestricted filesystem access, network access, no sandbox, and approval mode `never`.
+
+## Protected uncommitted work
+
+The working tree contains the complete M11 adaptive UI, locally prepared M12 Alpha distribution work, and authenticated five-station Favorites browsing. It includes modified and untracked Kotlin, tests, artwork, screenshots, release/privacy documentation, and signing-validation scripts. This work predates the current queue-status milestone and must not be reset, restored, cleaned, or silently mixed with unrelated changes.
+
+## Architecture
+
+- Native Kotlin/Compose MVVM with immutable `MainUiState` and actions emitted to `MainViewModel`.
+- Domain repository interfaces separate Compose/ViewModels from network and Media3 implementations.
+- `RadioPlaybackService` owns the single ExoPlayer and MediaSession; `Media3PlaybackController` is the app-facing adapter.
+- `BootstrapStationRepository` owns the five-station catalog, stable IDs, ordered streams, and capability flags.
+- Public and authenticated transports are station-scoped and validate expected HTTPS origins. Stream cleartext exceptions remain limited to the five verified relay domains.
+- Authentication cookies and display identities are keyed by `StationId`, domain-filtered, and AES-GCM encrypted through Android Keystore-backed storage. Passwords and CAPTCHA answers remain transient.
+- Queue and Chat polling are lifecycle-selected and rate-limited to 60 and 30 seconds respectively. Favorites and request catalog reads are user initiated.
+- Application wiring remains explicit in `RadioApplication.AppContainer`; no dependency-injection framework or additional module has been introduced.
+
+## Completed milestone evidence
+
+| Milestone | Repository evidence | Current status |
+| --- | --- | --- |
+| M1 | Gradle wrapper, CI/build scripts, `m1-validation.md` | Complete and pushed |
+| M2 | Five verified PLS catalogs, atomic switching/fallback, `m2-validation.md` | Complete and pushed |
+| M3 | Media3 service/session, focus/route controls, `m3-validation.md` | Complete and pushed |
+| M4 | ICY metadata and station artwork, `m4-metadata-research.md` | Complete and pushed |
+| M5 | Native navigation and persistent mini-player, `m5-validation.md` | Complete and pushed |
+| M6 | Native Queue/History, bounded 60-second polling, `m6-*` | Complete and pushed |
+| M7 | Station-scoped native login and protected restoration, `m7-*` | Complete and pushed |
+| M8 | Native memory-only chat and posting, `m8-*` | Complete and pushed |
+| M9 | Native catalog search and explicit one-shot requests, `m9-*` | Complete and pushed |
+| M10 | Request attribution/messages and random suggestions, `m10-*` | Complete and pushed |
+| M11 | Adaptive UI, theme, logo, previews, double-Back exit, `m11-*` | Complete locally; protected and not yet pushed |
+| M12 | Alpha version/privacy/signing guardrails plus Favorites integration | Locally prepared; external distribution blocked on Play Console activation |
+
+## Existing screens and navigation
+
+- Player: responsive Now Playing dashboard, station carousel, previous/next and play/pause controls.
+- Favorites: authenticated server-favorite list with filter and request entry point.
+- Chat: native station chat read/post surface.
+- Queue: upcoming queue and recently played lists with artwork, requester, and message fields where supplied.
+- More: capability summary, station account, privacy notice, request search/suggestions/album tracks.
+- A persistent mini-player remains present away from Player; compact layouts use bottom navigation and wider layouts use a rail.
+
+## Current data sources and persistence
+
+- Five bundled PLS resources provide the verified primary and fallback streams.
+- ICY metadata is playback-event driven; current artwork comes from the station JSON interface.
+- Queue/History uses the extended public Queue page on four stations and the compact player JSON feed on Death.FM.
+- Authentication, chat posting, requests, and Favorites reuse station-specific protected sessions.
+- Selected station, queue, chat, request catalog results, Favorites lists, and request messages are in memory. Authentication sessions persist encrypted. There is no Room database, local listening history, or local track-favorites collection.
+
+## Tests and latest baseline
+
+- 85 `@Test` declarations currently cover parsers, repositories, station definitions, session isolation primitives, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
+- Latest full local evidence: debug compile, debug unit tests, lint, and debug assembly pass; 13/13 API 35 instrumentation tests pass.
+- A new baseline will be recorded before the M13 application-code edit and repeated at the milestone gate.
+
+## Known defects and technical debt
+
+- Request availability is currently a Boolean (`RequestableTrack.eligible`) instead of structured domain state.
+- Favorites availability is inferred from a missing request link plus free-form server text; the UI says `Available`/`Unavailable`, not the new exact labels.
+- Queue and history models do not preserve stable station track IDs. Safe fallback matching therefore needs title, artist/composer, and album—not title alone.
+- `MainViewModel` observes Queue only on the Queue destination, so Favorites and Requests cannot react immediately to queue changes.
+- Request confirmation does not refresh queue membership or re-read current track eligibility immediately before mutation.
+- Request results, Favorites, queue, and history have separate sources of truth without a request-status resolver.
+- Station origins are repeated across several adapters; consolidation is desirable but not required for M13.
+- The selected/default station is not durably persisted. Sleep timer, local favorites, request history, membership status, and consolidated Accounts UI are not implemented.
+- Private Messages are deliberately deferred because of known legacy server issues.
+- External Alpha distribution is blocked until Google activates the developer account and upload signing is completed.
+
+## Public five-station audit summary
+
+A conservative read-only audit confirmed that all five public sites expose the same major listener modules: account, Favorites, Private Messages, forums, request history, chat log, member list, library/requests, queue/played, played history, album pages, stats, Top 100, contact, listening help, news, and membership/donation areas. Station-specific secondary modules differ (for example SST soundtrack features, 1980s games/awards, Death.FM RIP membership). Native support must continue to follow verified capability and protocol evidence rather than the presence of a web link alone.
