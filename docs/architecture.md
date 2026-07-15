@@ -38,6 +38,19 @@ The selected Player, Chat, Queue, or More destination is immutable `MainUiState`
 
 The phone shell uses bottom navigation below 600 dp. Wider layouts use a navigation rail and content pane. Chat, Favorites, Queue, and authenticated listener activity remain controlled by verified station capability flags and repository state.
 
+## Secondary station content
+
+`StationPage` and `StationPageKind` are immutable domain models attached to each catalogued station. A dedicated
+`supportsSecondaryContent` capability controls whether the native More directory is shown; unsupported stations
+render an explicit unavailable state. Compose emits the selected page upward and never opens a browser directly.
+
+`MainActivity` is the Android boundary that launches an Android Custom Tab only after
+`StationPageTrustPolicy` confirms the page is an exact entry for the selected station, uses HTTPS, has no embedded
+credentials or fragment, uses the default HTTPS port, and resolves to the same canonical station host. The browser
+owns its cookies and page lifecycle: protected app sessions are never copied, pages are not fetched or parsed by
+the app, and there is no polling, caching, or automatic form submission. Death.FM exposes no secondary pages while
+its configured HTTPS origin fails modern TLS. See `docs/m16-secondary-content-research.md`.
+
 ## Queue and history
 
 `QueueRepository` is station-scoped and exposes immutable unavailable, loading, ready, and error state. `MainViewModel` observes it only while Queue is selected, switches the flow when `StationId` changes, and cancels observation when leaving Queue. Compose only renders the resulting state or emits a refresh action upward.

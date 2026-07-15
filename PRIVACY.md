@@ -13,6 +13,7 @@ Last updated: July 14, 2026.
 - **Chat history:** Chat messages are kept in memory for the current app session and are not persisted by the app.
 - **Favorite tracks:** Favorite lists are loaded only after station sign-in, kept in memory, and cleared from the interface when the user signs out. They are not written to app storage.
 - **Request activity and membership:** Where verified for a station, the app can load the signed-in member's recent request summaries, station-reported request readiness, and explicit membership indicator. These values are kept in memory, cleared from the interface on sign-out, and are not written to app storage.
+- **External station pages:** Selected public station pages open only after an explicit tap in an Android browser Custom Tab. The app passes an allowlisted same-station HTTPS address but does not copy its protected station session into the browser. Browser cookies, history, and retention are controlled by the selected browser and station independently of this app.
 
 The application does not include advertising, analytics, crash-reporting, tracking SDKs, or a developer-operated data server. Station operators and network providers may independently retain normal server or network logs; those systems are outside this application's control.
 

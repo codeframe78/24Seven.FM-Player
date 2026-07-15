@@ -4,8 +4,8 @@ Updated July 14, 2026 after adopting explicit certification milestones for all f
 
 ## Planning model
 
-- M1–M15 are complete and retain their existing evidence and published commits.
-- M16–M17 complete the remaining shared product capabilities once, using immutable Compose state, repository contracts, capability flags, and station-isolated protected sessions.
+- M1–M16 are complete and retain their existing evidence and published commits.
+- M17 is the remaining shared capability, using immutable Compose state, repository contracts, capability flags, and station-isolated protected sessions once its external blocker clears.
 - M18–M22 certify the shared implementation against each station. They are hardening and evidence gates, not station-specific application forks.
 - M23–M24 are the final distribution and publication gates.
 - Private Messages remains numbered as M17 but deferred pending legacy server repair and verified production limits.
@@ -23,23 +23,23 @@ This classification supplements the required XS–XXL T-shirt size, rationale, e
 
 ## Current milestone
 
-### M16 — Secondary community/content access
+### M18 — StreamingSoundtracks.com certification
 
 - Task Complexity Level: 2 — Feature Logic & API Integration
-- Size: M
+- Size: S
 - Estimated elapsed time: 2–4 hours
 - Usage intensity: Medium
 - Confidence: Medium
-- Outcome: add a concise capability-aware native directory for selected verified public station modules, opening browser-appropriate destinations in Android Custom Tabs without introducing a WebView.
-- Expected layers: route inventory and trust policy, immutable route presentation models, station capability mapping, lifecycle-safe Custom Tab launch actions, accessible Compose UI, tests, documentation, and wired-device smoke tests.
-- Dependencies: verified public HTTPS station routes, existing More navigation, and Android activity launch handling.
-- Principal risk: deciding which legacy modules provide enough listener value and stable routing to expose without recreating low-value web navigation natively.
-- Completion gate: only allowlisted same-station HTTPS routes are reachable; unsupported modules remain absent or explicit; existing native destinations are not duplicated; no WebView is introduced; tests and available device verification pass; documentation and publication are complete.
+- Outcome: certify the complete shared app against StreamingSoundtracks.com with representative ordinary-member/VIP evidence and explicit capability results.
+- Expected layers: evidence reconciliation, live read-only and least-privileged workflow checks, station capability audit, targeted fixes/tests only where defects are proven, documentation, and wired-device smoke tests.
+- Dependencies: existing SST protected sessions or a user-completed CAPTCHA sign-in, public Queue/History, and the already-authorized harmless request/chat workflows.
+- Principal risk: privileged/VIP evidence can mask ordinary-member restrictions, while authentication refresh may require user CAPTCHA interaction.
+- Completion gate: playback/fallback, metadata/artwork, 30-row Queue/History, account isolation, chat, Favorites, requests/messages, request activity/membership, and secondary pages are either directly certified or recorded as explicit unavailable/interaction-blocked states; validators, device verification, documentation, and publication pass.
 - Status: preflight is next; implementation has not started.
 
 ## Latest completed milestone
 
-M15 Request history, cooldown, and membership completed July 14, 2026 in `b19d5fe`. A memory-only station-scoped repository presents the verified SST last-ten history, explicit VIP/RIP membership evidence, and request readiness/wait minutes without polling or mutation. Other stations remain unavailable until certification. Unit tests, lint, debug assembly/install, and 19/19 wired Razr instrumentation tests pass. See [m15-validation.md](m15-validation.md).
+M16 Secondary community/content access completed July 14, 2026 in `90a7f98`. A native capability-aware directory opens only exact catalogued same-station HTTPS pages in Android Custom Tabs, keeps browser/app sessions separate, and leaves Death.FM explicit unavailable while its HTTPS origin fails modern TLS. Unit tests, lint, debug install, a physical Custom Tab round trip, and 21/21 wired Razr instrumentation tests pass. See [m16-validation.md](m16-validation.md).
 
 ## Shared feature milestones
 

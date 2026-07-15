@@ -27,7 +27,8 @@ Do not distribute the development debug APK as the public Alpha. Its machine-loc
 6. Check Queue and recently played content.
 7. If using a test account, verify sign in, session restoration, Chat, and Favorites. On SST, open More and refresh Request activity to verify recent requests, readiness, and the explicit membership indicator. Confirm eligible Favorites show a green `Request Now`; recently played or queued tracks show a red `Track Recently Played` and cannot be selected.
 8. Submit an eligible favorite or catalog track only through the explicit confirmation while respecting station cooldowns.
-9. Press Back twice and verify the exit confirmation. Choose **Keep listening** unless intentionally stopping playback.
+9. In More, open one verified **More from…** card. Confirm it opens in a browser tab and Back returns to the app. Browser sign-in is intentionally separate from the protected app session.
+10. Press Back twice and verify the exit confirmation. Choose **Keep listening** unless intentionally stopping playback.
 
 ## Suggested configuration coverage
 
@@ -54,6 +55,7 @@ Never include passwords, security-code answers or images, cookies, session value
 ## Known Alpha boundaries
 
 - M17 Private Messages is deferred because of underlying website/server issues.
+- Death.FM secondary browser pages are unavailable until its HTTPS origin supports modern TLS.
 - Sleep timer, Cast/audio-output selection, and diagnostics are not implemented.
 - Station accounts are currently station-specific.
 - Public station interfaces can change independently of the app.

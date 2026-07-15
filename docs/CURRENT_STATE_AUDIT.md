@@ -1,12 +1,12 @@
 # Current state audit
 
-Updated July 14, 2026 on `agent/initial-android-scaffold` after M15 implementation commit `b19d5fe`, with all existing tracked and untracked work preserved.
+Updated July 14, 2026 on `agent/initial-android-scaffold` after M16 implementation commit `90a7f98`, with all existing tracked and untracked work preserved.
 
 ## Repository and environment
 
 - Expected and configured remote: `https://github.com/codeframe78/24Seven.FM-Player.git` for fetch and push.
 - Active branch: `agent/initial-android-scaffold`.
-- Latest implementation commit: `b19d5fe` (`Add authenticated listener request activity`), published with the accompanying M15 documentation checkpoint.
+- Latest implementation commit: `90a7f98` (`Add trusted secondary station pages`), published with the accompanying M16 documentation checkpoint.
 - One Android application module, `:app`; application ID `com.codeframe78.twentyfourseven.player`.
 - Kotlin 2.2.21, AGP 8.13.2, JDK 17, Compose BOM 2026.06.00, Media3 1.10.1, minSdk 26, targetSdk 35, compileSdk 36.
 - The current environment has unrestricted filesystem access, network access, no sandbox, and approval mode `never`.
@@ -45,6 +45,7 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 | M13 | Five-station Accounts dashboard, expiration state, pairwise session isolation, `m13-validation.md` | Complete and pushed |
 | M14 | Device-local fixed/last startup station, safe restoration, explicit local-data UI, `m14-validation.md` | Complete and pushed |
 | M15 | SST last-ten request history, cooldown/readiness, explicit membership, `m15-*` | Complete and pushed |
+| M16 | Capability-aware native directory and exact same-station HTTPS Custom Tabs, `m16-*` | Complete and pushed |
 | M23 (prepared early) | Alpha version/privacy/signing guardrails plus Favorites integration | Preserved for refresh after M15–M22; Play account approved, with signing and Console setup still pending |
 
 ## Existing screens and navigation
@@ -53,7 +54,7 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 - Favorites: authenticated server-favorite list with filter and request entry point.
 - Chat: native station chat read/post surface.
 - Queue: upcoming queue and recently played lists with artwork, requester, and message fields where supplied.
-- More: capability summary, five-station independent Accounts dashboard, SST listener activity, device preferences, privacy notice, and request search/suggestions/album tracks.
+- More: capability summary, five-station independent Accounts dashboard, SST listener activity, device preferences, privacy notice, request search/suggestions/album tracks, and a capability-aware directory of trusted station pages.
 - A persistent mini-player remains present away from Player; compact layouts use bottom navigation and wider layouts use a rail.
 
 ## Current data sources and persistence
@@ -66,9 +67,9 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 
 ## Tests and latest baseline
 
-- 118 `@Test` declarations currently cover parsers, repositories, station definitions, session isolation primitives, startup preference restoration, listener activity, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
-- Latest full local evidence: debug compile, debug unit tests, lint, debug install, and 19/19 wired Android 16 Razr instrumentation tests pass.
-- M15's full validation and physical-device evidence are recorded in `m15-validation.md`.
+- 126 `@Test` declarations currently cover parsers, repositories, station definitions, session isolation primitives, startup preference restoration, listener activity, station-page trust policy, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
+- Latest full local evidence: debug compile, debug unit tests, lint, debug install, and 21/21 wired Android 16 Razr instrumentation tests pass.
+- M16's full validation and physical-device evidence are recorded in `m16-validation.md`.
 
 ## Known defects and technical debt
 
@@ -77,8 +78,9 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 - Sleep timer and local track favorites are not implemented. Request history/membership is currently enabled only for SST; the other stations await certification evidence.
 - Live authentication differences across 1980s.FM, Adagio.FM, Death.FM, and Entranced.FM still need representative user-entered account/CAPTCHA verification during their certification milestones.
 - M17 Private Messages is deliberately deferred because of known legacy server issues.
+- Death.FM's configured HTTPS website currently fails modern TLS negotiation, so M16 secondary browser pages remain explicitly unavailable for that station rather than downgrading to HTTP.
 - Google approved the Play developer account on July 14, 2026. External Alpha distribution remains sequenced after M15–M22 and still requires Play App Signing setup, a securely held upload key, final release validation, and explicit publication authorization.
 
 ## Public five-station audit summary
 
-A conservative read-only audit confirmed that all five public sites expose the same major listener modules: account, Favorites, Private Messages, forums, request history, chat log, member list, library/requests, queue/played, played history, album pages, stats, Top 100, contact, listening help, news, and membership/donation areas. Station-specific secondary modules differ (for example SST soundtrack features, 1980s games/awards, Death.FM RIP membership). Native support must continue to follow verified capability and protocol evidence rather than the presence of a web link alone.
+A conservative read-only audit confirmed common major listener modules across the station family, but only StreamingSoundtracks.com, 1980s.FM, Adagio.FM, and Entranced.FM had modern HTTPS pages that could be safely verified for M16. Their exact public website, forums, members, statistics, Top 100, contact, and membership routes are allowlisted; SST additionally exposes its soundtrack module, while 1980s.FM exposes games and awards. Death.FM remains unavailable until its HTTPS service is repaired. Native support continues to follow verified capability and protocol evidence rather than the presence of a legacy link alone.

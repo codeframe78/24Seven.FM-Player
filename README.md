@@ -14,9 +14,9 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 
 ## Alpha status
 
-Milestones M1–M15 are complete on the development branch. M16 Secondary content access is next. Shared feature work continues through M17, each station receives an explicit M18–M22 certification milestone, and Alpha distribution/publication remain last at M23–M24.
+Milestones M1–M16 are complete on the development branch. M17 Private Messages remains deferred for legacy server repair, so M18 StreamingSoundtracks.com certification is the next active milestone. The remaining stations follow in M19–M22, with Alpha distribution/publication last at M23–M24.
 
-The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, device-local startup/last-station preferences, live metadata and artwork, queue/history, an independent five-station account dashboard with Android-protected sessions, chat, song requests, signed-in favorite-track browsing, and a verified SST request-history/cooldown/membership surface. Request availability is conservatively revalidated against fresh station and Queue data before submission. Unit tests, lint, debug assembly, 19/19 wired Razr tests, and physical Razr inspection are green.
+The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, device-local startup/last-station preferences, live metadata and artwork, queue/history, an independent five-station account dashboard with Android-protected sessions, chat, song requests, signed-in favorite-track browsing, a verified SST request-history/cooldown/membership surface, and a trusted browser directory for selected public station content. Request availability is conservatively revalidated against fresh station and Queue data before submission. Unit tests, lint, debug assembly/install, 21/21 wired Razr tests, and physical Razr inspection are green.
 
 ## Project Roadmap
 
@@ -46,7 +46,7 @@ This is the single milestone sequence for the project. Detailed completion gates
 | M13 Independent Accounts UX | L | 4–8 hours | ✅ Complete ([`9ef1f1c`](https://github.com/codeframe78/24Seven.FM-Player/commit/9ef1f1c)) | Five separately visible account states with pairwise session/logout/expiration isolation |
 | M14 Local personalization | M | 2–4 hours | ✅ Complete ([`81c2c4e`](https://github.com/codeframe78/24Seven.FM-Player/commit/81c2c4e)) | Persist default/last station and clearly distinguish local preferences from station-owned data |
 | M15 Request history and membership | L | 4–8 hours | ✅ Complete ([`b19d5fe`](https://github.com/codeframe78/24Seven.FM-Player/commit/b19d5fe)) | Memory-only SST last-ten history, cooldown/readiness, and explicit membership with conservative unknown states |
-| M16 Secondary content access | M | 2–4 hours | 🚧 Current; preflight next | Capability-aware native or Custom Tab access to selected verified public modules |
+| M16 Secondary content access | M | 2–4 hours | ✅ Complete ([`90a7f98`](https://github.com/codeframe78/24Seven.FM-Player/commit/90a7f98)) | Allowlisted same-station HTTPS Custom Tabs for selected public modules; Death.FM safely unavailable pending TLS repair |
 | M17 Private Messages | L provisional | 4–8 hours after server repair | 🧊 Deferred | Native station-isolated inbox, read, compose, reply, refresh, and explicit user-initiated send |
 
 ### Phase 3 — Station certification
@@ -55,7 +55,7 @@ These milestones harden and certify the shared app against each station; they do
 
 | Milestone | Size | Estimate | Status | Certification emphasis |
 | --- | --- | --- | --- | --- |
-| M18 StreamingSoundtracks.com | S | 2–4 hours | ⏳ Planned | VIP/non-admin behavior, 30-row Queue, request messages, Favorites, chat, and authenticated workflows |
+| M18 StreamingSoundtracks.com | S | 2–4 hours | 🚧 Current; preflight next | VIP/non-admin behavior, 30-row Queue, request messages, Favorites, chat, and authenticated workflows |
 | M19 1980s.FM | M | 4–7 hours | ⏳ Planned | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
 | M20 Adagio.FM | M | 4–7 hours | ⏳ Planned | Classical metadata presentation, independent account/session behavior, requests, Favorites, chat, and fallback |
 | M21 Death.FM | L | 6–10 hours | ⏳ Planned | Compact Queue feed, sparse metadata/artwork, RIP membership behavior, requests, chat, and fallback |
@@ -76,7 +76,7 @@ The app is fully native and uses immutable Compose UI state, repository boundari
 
 ## Screenshots
 
-These captures are from the physical Razr. Most use live StreamingSoundtracks.com data, so track and chat content will naturally change over time; the M15 request-activity capture intentionally shows the safe signed-out state after a fresh debug install. The Player and Queue captures show the M11 Alpha shell; Chat and Requests retain their already-working native M8–M10 content presentation.
+These captures are from the physical Razr. Most use live StreamingSoundtracks.com data, so track and chat content will naturally change over time; the M15 request-activity capture intentionally shows the safe signed-out state after a fresh debug install. The Player and Queue captures show the M11 Alpha shell; Chat and Requests retain their already-working native M8–M10 content presentation, and the M16 capture shows the trusted browser directory within the same shell.
 
 <table>
   <tr>
@@ -97,7 +97,7 @@ These captures are from the physical Razr. Most use live StreamingSoundtracks.co
   </tr>
   <tr>
     <td align="center"><img src="docs/screenshots/m15-request-activity.png" alt="Native SST request activity card in its explicit signed-out state" width="300"><br><strong>Request history, cooldown, and membership</strong></td>
-    <td></td>
+    <td align="center"><img src="docs/screenshots/m16-secondary-content.png" alt="Native SST secondary-content directory with same-station browser cards and persistent player navigation" width="300"><br><strong>Trusted secondary station content</strong></td>
   </tr>
 </table>
 

@@ -27,7 +27,10 @@ All relative HTTPS paths below are resolved independently against one of these f
 | SST only | Listener request history | `/modules.php?name=Your_Requests` | Bounded ISO-8859-1 HTML | SST session | More destination/manual refresh only; memory-only; up to 10 rows | Sign-in-specific or generic load error | Administrator-authorized; M15 implemented and live researched |
 | SST only | Request cooldown/readiness | Page-discovered exact `/modules/VIP_Subscribe/vip_req_timer.php` | Bounded HTML | SST session | At most once per explicit listener-activity refresh | Unknown when trusted evidence is absent | M15 implemented; representative VIP evidence verified |
 | SST only | Membership badge | Page-discovered same-origin forum profile with bounded numeric member identifier | Bounded HTML | SST session | At most once per explicit listener-activity refresh | Unknown when profile or explicit badge is absent | M15 implemented; VIP evidence verified; rank ignored |
-| All five | Public secondary modules | Account, PM, forums, members, queue, history, news and station-specific module links | Legacy HTML | Mixed | No native polling configured | Open only through a future documented native/Custom Tab policy | Audited; mostly planned/deferred |
+| SST, 1980s, Adagio, Entranced | Trusted public station pages | Exact catalogued HTTPS root plus verified `Forums`, `Members_List`, `Stats`, `Top100`, `Contact_Us`, and `VIP_Subscribe` module URLs | Station-owned legacy HTML in Android Custom Tabs | Browser-managed; app session is not copied | Explicit native-card tap only; no app polling or caching | Reject non-catalogued, cross-origin, non-HTTPS, credential-bearing, fragment-bearing, or non-default-port URLs before launch | M16 implemented and physically verified |
+| SST only | Soundtrack secondary page | Exact catalogued `/modules.php?name=STM` URL | Station-owned legacy HTML in Android Custom Tab | Browser-managed | Explicit tap only | Same M16 trust policy | M16 implemented |
+| 1980s.FM only | Games and awards pages | Exact catalogued `/modules.php?name=Games` and `80s_Awards` URLs | Station-owned legacy HTML in Android Custom Tabs | Browser-managed | Explicit tap only | Same M16 trust policy | M16 implemented |
+| Death.FM | Public secondary modules | No trusted page is exposed while the configured HTTPS origin fails modern TLS | N/A | N/A | No traffic | Explicit unavailable state; never downgrade to HTTP or guess another host | M16 safely unavailable pending server repair |
 
 ## Caching and safety policy
 
@@ -36,3 +39,4 @@ All relative HTTPS paths below are resolved independently against one of these f
 - Public queue polling must remain at or below once per 60 seconds per selected station. Chat reads must remain at or below once per 30 seconds.
 - M12 fails closed when queue or fresh eligibility cannot be established before a request; it never infers `Request Now` solely from stale display state.
 - M15 performs no polling or mutations. It allows only exact same-origin SST history/timer/profile reads, caps history at ten, and reports unknown rather than inferring membership or cooldown.
+- M16 opens only immutable catalog entries after an explicit tap. It performs no native page fetch, polling, caching, form submission, cookie transfer, or session bridging; the selected browser owns any browser session and privacy behavior.

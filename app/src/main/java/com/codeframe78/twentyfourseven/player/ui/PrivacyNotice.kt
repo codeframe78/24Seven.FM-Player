@@ -58,6 +58,7 @@ private fun PrivacyNoticeDialog(onDismiss: () -> Unit) {
                 Text("The app connects directly to the selected 24Seven.FM station for live audio, artwork, public Queue/History, catalog, and Chat data.")
                 Text("Credentials are sent only when you explicitly sign in. Passwords and security-code answers are not saved. Successful station sessions and display identity are encrypted locally with Android Keystore and are removed by Sign out, clearing app data, or uninstalling.")
                 Text("Where verified, recent request summaries, station-reported request readiness, membership indicators, and favorite-track lists are loaded for the signed-in station account. They remain in memory and are cleared from the interface on Sign out.")
+                Text("Selected public station pages open only after you tap them in a secure browser tab. The app passes an allowlisted station address but does not copy its protected session into the browser. Browser cookies and history are managed separately by your browser.")
                 Text("Chat posts, song requests, and optional request messages are sent only after explicit actions. Chat history and pending request text are transient. The app contains no ads, analytics, tracking SDK, crash reporting, or developer-operated backend.")
                 Text("Station operators and network providers may retain their normal server or network logs independently of this application.")
                 Text("Permissions", style = MaterialTheme.typography.titleSmall)
