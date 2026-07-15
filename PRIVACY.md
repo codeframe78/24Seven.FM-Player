@@ -37,4 +37,4 @@ Protected station sessions remain on the device until Sign out, app-data clearin
 
 This is pre-release software. Testers should use a non-administrator station account where practical and should not include credentials, private messages, session values, or security-code images in bug reports.
 
-The application is maintained by the community contributors to the `codeframe78/24Seven.FM-Player` project. Privacy questions and reports can be submitted through [the project's GitHub issue channel](https://github.com/codeframe78/24Seven.FM-Player/issues) without sensitive account information.
+The application is maintained by the community contributors to the `codeframe78/24Seven.FM-Player` project. Privacy questions can be sent to [24sevenplayer@jamesjennison.net](mailto:24sevenplayer@jamesjennison.net). Reports can also be submitted through [the project's GitHub issue channel](https://github.com/codeframe78/24Seven.FM-Player/issues) without sensitive account information.

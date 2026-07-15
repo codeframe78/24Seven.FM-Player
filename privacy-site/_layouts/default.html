@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="{{ site.description | escape }}">
+    <title>{{ page.title | default: site.title | escape }} · 24Seven.FM Player</title>
+    <link rel="stylesheet" href="{{ '/assets/privacy.css' | relative_url }}">
+  </head>
+  <body>
+    <header class="site-header">
+      <p class="brand">24Seven.FM Player</p>
+      <p class="tagline">Unofficial, non-commercial native Android application</p>
+    </header>
+    <main id="main-content">
+      {{ content }}
+    </main>
+    <footer>
+      <p><a href="https://github.com/codeframe78/24Seven.FM-Player">Project source and issue tracker</a></p>
+    </footer>
+  </body>
+</html>
