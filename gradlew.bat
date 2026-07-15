@@ -24,7 +24,7 @@
 @rem ##########################################################################
 
 @rem Set local scope for the variables with windows NT shell
-if "%OS%"=="Windows_NT" setlocal
+if "%OS%"=="Windows_NT" setlocal EnableDelayedExpansion
 
 set DIRNAME=%~dp0
 if "%DIRNAME%"=="" set DIRNAME=.
@@ -34,6 +34,18 @@ set APP_HOME=%DIRNAME%
 
 @rem Resolve any "." and ".." in APP_HOME to make it shorter.
 for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
+
+@rem Android Studio and Codex can remain open while the user-level Android SDK
+@rem variables are changed. Ensure every wrapper invocation still exposes the
+@rem project SDK to Gradle and its child processes in that situation.
+if not defined ANDROID_HOME if defined ANDROID_SDK_ROOT set "ANDROID_HOME=%ANDROID_SDK_ROOT%"
+if not defined ANDROID_HOME if exist "%APP_HOME%\local.properties" (
+    for /f "tokens=1,* delims==" %%a in ('findstr /b /c:"sdk.dir=" "%APP_HOME%\local.properties"') do set "ANDROID_HOME=%%b"
+    set "ANDROID_HOME=!ANDROID_HOME:\:=:!"
+    set "ANDROID_HOME=!ANDROID_HOME:\\=\!"
+)
+if not defined ANDROID_HOME if exist "%LOCALAPPDATA%\Android\Sdk" set "ANDROID_HOME=%LOCALAPPDATA%\Android\Sdk"
+if not defined ANDROID_SDK_ROOT if defined ANDROID_HOME set "ANDROID_SDK_ROOT=%ANDROID_HOME%"
 
 @rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
 set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m"
