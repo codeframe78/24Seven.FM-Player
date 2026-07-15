@@ -4,7 +4,7 @@ Updated July 14, 2026. The five account systems are independent even where their
 
 | Station | Login discovery | Registration | Password recovery | Account management | Logout | Form/session behavior | Native suitability and limitations |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| StreamingSoundtracks.com (`sst`) | HTTPS root supplies the current same-origin login form and alphanumeric CAPTCHA | `/modules.php?name=Your_Account&op=new_user` | Public account flow; exact recovery route not yet separately verified | `/modules.php?name=Your_Account` and `op=edituser` | `op=logout` | `username`, transient password, `gfx_check`, station challenge token; station cookies; same-origin redirects; encrypted restored session | Native login implemented; M15 models explicit VIP/standard status, last-ten requests, and cooldown evidence without polling |
+| StreamingSoundtracks.com (`sst`) | HTTPS root supplies the current same-origin login form and alphanumeric CAPTCHA | `/modules.php?name=Your_Account&op=new_user` | Public account flow; exact recovery route not yet separately verified | `/modules.php?name=Your_Account` and `op=edituser` | `op=logout` | `username`, transient password, `gfx_check`, station challenge token; station cookies; same-origin redirects; encrypted restored session | M18 certified: least-privileged native sign-in/restore/logout plus separately bounded VIP request-message and listener-activity evidence |
 | 1980s.FM (`1980s`) | Independent 1980s.FM root/form/CAPTCHA | Same station-relative registration module | Exact recovery route not yet separately verified | Same station-relative account/edit module | Same station-relative logout | Separate station ID, expected host, cookie manager entry, encrypted storage key, and auth state | Native adapter implemented; requires live account verification independent of SST |
 | Adagio.FM (`adagio`) | Independent Adagio.FM root/form/CAPTCHA | Same station-relative registration module | Exact recovery route not yet separately verified | Same station-relative account/edit module | Same station-relative logout | Fully station-scoped session and host validation | Native adapter implemented; requires independent live account verification |
 | Death.FM (`death`) | Independent Death.FM root/form/CAPTCHA | Same station-relative registration module | Exact recovery route not yet separately verified | Same station-relative account/edit module | Same station-relative logout | Fully station-scoped session and host validation | Native adapter implemented; membership branding differs (`RIP`) and is not yet modeled |
@@ -35,9 +35,20 @@ Updated July 14, 2026. The five account systems are independent even where their
 - Unit tests cover trusted discovery, cross-origin rejection, expired authentication, VIP/RIP/standard/unknown states, cooldown parsing, station-scoped refresh, and sign-out clearing.
 - All 19 connected instrumentation tests pass on the wired Motorola Razr 2023 running Android 16; the fresh install physically rendered the explicit signed-out listener-activity state.
 
+## M18 StreamingSoundtracks.com certification
+
+- Existing least-privileged native sign-in, protected restart restoration, logout, Chat post, catalog request, and
+  account-gated UI evidence was reconciled with the separate VIP request-message and listener-activity evidence.
+- A fresh install remained correctly signed out; Favorites and request activity exposed explicit sign-in boundaries
+  rather than leaking cached account data.
+- Full unit/lint validation and 21/21 wired Android 16 Razr instrumentation tests passed. A silent physical smoke
+  test reconfirmed public playback, metadata/artwork, Queue, Chat, and all five navigation targets.
+- A fresh standard-tier production listener-activity refresh remains CAPTCHA-interaction-blocked and is recorded as
+  such; the app does not infer VIP status or cooldown behavior from that missing evidence.
+
 ## Current gaps
 
 - Registration, recovery, and account-management actions are not yet native destinations or documented Custom Tab actions.
 - Membership and request cooldown are enabled only for SST; 1980s.FM, Adagio.FM, Death.FM RIP, and Entranced.FM require independent authenticated evidence before their certification milestones enable the capability.
-- Live sign-in and restored-session behavior still require representative accounts and user-entered security challenges during M18–M22 station certification; no credentials or challenge answers belong in test fixtures.
+- Live sign-in and restored-session behavior still require representative accounts and user-entered security challenges during M19–M22 station certification; no credentials or challenge answers belong in test fixtures.
 - Required future security coverage: representative live listener-activity refresh for every station that is enabled during certification.

@@ -40,3 +40,4 @@ All relative HTTPS paths below are resolved independently against one of these f
 - M12 fails closed when queue or fresh eligibility cannot be established before a request; it never infers `Request Now` solely from stale display state.
 - M15 performs no polling or mutations. It allows only exact same-origin SST history/timer/profile reads, caps history at ten, and reports unknown rather than inferring membership or cooldown.
 - M16 opens only immutable catalog entries after an explicit tap. It performs no native page fetch, polling, caching, form submission, cookie transfer, or session bridging; the selected browser owns any browser session and privacy behavior.
+- M18 certified the existing SST inventory without adding or changing an endpoint, stream address, request limit, polling interval, mutation, or session rule.

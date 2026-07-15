@@ -14,7 +14,7 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 
 ## Alpha status
 
-Milestones M1–M16 are complete on the development branch. M17 Private Messages remains deferred for legacy server repair, so M18 StreamingSoundtracks.com certification is the next active milestone. The remaining stations follow in M19–M22, with Alpha distribution/publication last at M23–M24.
+Milestones M1–M16 and M18 are complete on the development branch. M17 Private Messages remains deferred for legacy server repair, so M19 1980s.FM certification is the next active milestone. The remaining stations follow in M20–M22, with Alpha distribution/publication last at M23–M24.
 
 The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, device-local startup/last-station preferences, live metadata and artwork, queue/history, an independent five-station account dashboard with Android-protected sessions, chat, song requests, signed-in favorite-track browsing, a verified SST request-history/cooldown/membership surface, and a trusted browser directory for selected public station content. Request availability is conservatively revalidated against fresh station and Queue data before submission. Unit tests, lint, debug assembly/install, 21/21 wired Razr tests, and physical Razr inspection are green.
 
@@ -55,8 +55,8 @@ These milestones harden and certify the shared app against each station; they do
 
 | Milestone | Size | Estimate | Status | Certification emphasis |
 | --- | --- | --- | --- | --- |
-| M18 StreamingSoundtracks.com | S | 2–4 hours | 🚧 Current; preflight next | VIP/non-admin behavior, 30-row Queue, request messages, Favorites, chat, and authenticated workflows |
-| M19 1980s.FM | M | 4–7 hours | ⏳ Planned | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
+| M18 StreamingSoundtracks.com | S | 2–4 hours | ✅ Complete ([evidence](docs/m18-sst-certification.md)) | VIP/non-admin behavior, 30-row Queue, request messages, Favorites, chat, and authenticated workflows |
+| M19 1980s.FM | M | 4–7 hours | 🚧 Current; preflight next | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
 | M20 Adagio.FM | M | 4–7 hours | ⏳ Planned | Classical metadata presentation, independent account/session behavior, requests, Favorites, chat, and fallback |
 | M21 Death.FM | L | 6–10 hours | ⏳ Planned | Compact Queue feed, sparse metadata/artwork, RIP membership behavior, requests, chat, and fallback |
 | M22 Entranced.FM | M | 4–7 hours | ⏳ Planned | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
@@ -76,7 +76,7 @@ The app is fully native and uses immutable Compose UI state, repository boundari
 
 ## Screenshots
 
-These captures are from the physical Razr. Most use live StreamingSoundtracks.com data, so track and chat content will naturally change over time; the M15 request-activity capture intentionally shows the safe signed-out state after a fresh debug install. The Player and Queue captures show the M11 Alpha shell; Chat and Requests retain their already-working native M8–M10 content presentation, and the M16 capture shows the trusted browser directory within the same shell.
+These captures are from the physical Razr. Most use live StreamingSoundtracks.com data, so track and chat content will naturally change over time; the M15 request-activity capture intentionally shows the safe signed-out state after a fresh debug install. The Player and Queue captures show the M11 Alpha shell; Chat and Requests retain their already-working native M8–M10 content presentation, the M16 capture shows the trusted browser directory, and the M18 capture records the certified live SST title/artwork state immediately after playback was paused.
 
 <table>
   <tr>
@@ -98,6 +98,9 @@ These captures are from the physical Razr. Most use live StreamingSoundtracks.co
   <tr>
     <td align="center"><img src="docs/screenshots/m15-request-activity.png" alt="Native SST request activity card in its explicit signed-out state" width="300"><br><strong>Request history, cooldown, and membership</strong></td>
     <td align="center"><img src="docs/screenshots/m16-secondary-content.png" alt="Native SST secondary-content directory with same-station browser cards and persistent player navigation" width="300"><br><strong>Trusted secondary station content</strong></td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2"><img src="docs/screenshots/m18-sst-certification.png" alt="Certified SST Player state with live title, artist, album artwork, station carousel, and all five navigation destinations" width="300"><br><strong>M18 StreamingSoundtracks.com certification</strong></td>
   </tr>
 </table>
 

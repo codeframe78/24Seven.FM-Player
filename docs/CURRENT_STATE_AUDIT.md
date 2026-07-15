@@ -1,6 +1,6 @@
 # Current state audit
 
-Updated July 14, 2026 on `agent/initial-android-scaffold` after M16 implementation commit `90a7f98`, with all existing tracked and untracked work preserved.
+Updated July 14, 2026 on `agent/initial-android-scaffold` after M18 StreamingSoundtracks.com certification, with all existing tracked and untracked work preserved.
 
 ## Repository and environment
 
@@ -46,6 +46,7 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 | M14 | Device-local fixed/last startup station, safe restoration, explicit local-data UI, `m14-validation.md` | Complete and pushed |
 | M15 | SST last-ten request history, cooldown/readiness, explicit membership, `m15-*` | Complete and pushed |
 | M16 | Capability-aware native directory and exact same-station HTTPS Custom Tabs, `m16-*` | Complete and pushed |
+| M18 | SST ordinary/VIP capability reconciliation plus fresh wired playback/public-read proof, `m18-sst-certification.md` | Complete and pushed |
 | M23 (prepared early) | Alpha version/privacy/signing guardrails plus Favorites integration | Preserved for refresh after M15–M22; Play account approved, with signing and Console setup still pending |
 
 ## Existing screens and navigation
@@ -69,14 +70,14 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 
 - 126 `@Test` declarations currently cover parsers, repositories, station definitions, session isolation primitives, startup preference restoration, listener activity, station-page trust policy, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
 - Latest full local evidence: debug compile, debug unit tests, lint, debug install, and 21/21 wired Android 16 Razr instrumentation tests pass.
-- M16's full validation and physical-device evidence are recorded in `m16-validation.md`.
+- M18's station certification and fresh physical-device evidence are recorded in `m18-sst-certification.md`.
 
 ## Known defects and technical debt
 
 - Queue and history models do not preserve stable station track IDs. Safe fallback matching therefore needs title, artist/composer, and album—not title alone.
 - Station origins are repeated across several adapters; consolidation is desirable when it can be done without destabilizing their separate trust policies.
 - Sleep timer and local track favorites are not implemented. Request history/membership is currently enabled only for SST; the other stations await certification evidence.
-- Live authentication differences across 1980s.FM, Adagio.FM, Death.FM, and Entranced.FM still need representative user-entered account/CAPTCHA verification during their certification milestones.
+- Live authentication differences across 1980s.FM, Adagio.FM, Death.FM, and Entranced.FM still need representative user-entered account/CAPTCHA verification during M19–M22.
 - M17 Private Messages is deliberately deferred because of known legacy server issues.
 - Death.FM's configured HTTPS website currently fails modern TLS negotiation, so M16 secondary browser pages remain explicitly unavailable for that station rather than downgrading to HTTP.
 - Google approved the Play developer account on July 14, 2026. External Alpha distribution remains sequenced after M15–M22 and still requires Play App Signing setup, a securely held upload key, final release validation, and explicit publication authorization.

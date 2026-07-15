@@ -2,18 +2,18 @@
 
 ## Resume status — July 14, 2026
 
-- Current milestone: M18 StreamingSoundtracks.com certification (preflight next; M17 remains deferred for server repair).
-- Last completed milestone: M16 Secondary community/content access in `90a7f98`. M11–M15 and early M23/Favorites preparation remain preserved; M23 remains deferred until M18–M22 are complete and M17 is resolved or explicitly scoped.
-- Latest successful validation: debug unit tests, lint, debug install, and 21/21 wired Android 16 Razr instrumentation tests after M16; physical inspection confirmed the SST directory and Chrome Custom Tab round trip.
+- Current milestone: M19 1980s.FM certification (preflight next; M17 remains deferred for server repair).
+- Last completed milestone: M18 StreamingSoundtracks.com certification in `docs/m18-sst-certification.md`. The latest production implementation remains M16 `90a7f98`; M18 required no code or stream change.
+- Latest successful validation: debug unit tests, lint, debug install, and 21/21 wired Android 16 Razr instrumentation tests after M18; a fresh silent smoke test reconfirmed SST playback, metadata/artwork, Queue, Chat, Favorites gating, and all five navigation targets.
 - Architecture: one native Compose app module; immutable state/actions; station-scoped repository contracts; one Media3 service-owned player/session; Android Keystore-backed per-station sessions.
 - Decisions: queued and recently played tracks share visible red `Track Recently Played`; reasons remain distinct internally. Available tracks use green `Request Now`. Other restrictions retain accurate separate labels. Revalidation must fail closed before mutation.
 - Known blockers: Queue rows lack stable track IDs; M17 Private Messages remains deferred for server fixes; Death.FM's configured HTTPS origin currently fails modern TLS. The Play developer account is approved; signing/configuration work remains intentionally sequenced at M23–M24.
 - Roadmap model: M13–M17 shared features, M18–M22 individual station certification, and M23–M24 distribution/publication. Certification milestones harden the shared app and must not create station-specific forks.
-- Next concrete task: present the M18 Task Complexity Level plus T-shirt preflight, then reconcile SST's existing evidence and certify each shared capability with ordinary-member/VIP distinctions and no unnecessary mutations.
-- Likely next files: certification evidence/matrices, targeted parser/repository/UI tests only for proven defects, and SST device-validation records; working shared implementations should remain untouched when evidence already proves them.
+- Next concrete task: present the M19 Task Complexity Level plus T-shirt preflight, then establish independent 1980s.FM evidence without inheriting SST account, membership, or request assumptions.
+- Likely next files: 1980s.FM certification evidence/matrices and targeted parser/repository/UI tests only for proven station differences; working shared implementations should remain untouched when evidence already proves them.
 - Branch: `agent/initial-android-scaffold`.
 - Latest implementation commit: `90a7f98`.
-- Latest successfully pushed implementation commit: `90a7f98` on `origin/agent/initial-android-scaffold`; the branch is published through the accompanying M16 documentation checkpoint.
+- Latest successfully pushed implementation commit: `90a7f98` on `origin/agent/initial-android-scaffold`; the branch is published through the M18 certification checkpoint.
 - Required planning documents: `CURRENT_STATE_AUDIT.md`, `NETWORK_FEATURE_MATRIX.md`, `ENDPOINT_INVENTORY.md`, `AUTHENTICATION_MATRIX.md`, and `IMPLEMENTATION_PLAN.md`.
 
 ## Mission and repository
@@ -268,8 +268,8 @@ last-ten request table, a same-origin VIP request timer, and a profile-scoped VI
 rank. The parser bounds rows and text, rejects cross-origin/unrecognized discovery links, and reports missing evidence
 as unknown. Only SST is enabled; the other four stations remain unverified until M19–M22. No mutation or polling was
 introduced. Unit tests, lint, debug install, and all 19 wired Android 16 Razr instrumentation tests pass. The physical
-fresh-install screenshot shows the explicit signed-out card; authenticated production refresh requires a user-entered
-CAPTCHA and remains a certification check. See `docs/m15-request-activity-research.md`, `docs/m15-validation.md`, and
+fresh-install screenshot shows the explicit signed-out card; a fresh standard-tier production refresh requires a
+user-entered CAPTCHA and is recorded as an M18 interaction limit rather than being guessed. See `docs/m15-request-activity-research.md`, `docs/m15-validation.md`, and
 `docs/screenshots/m15-request-activity.png`.
 
 M16 Secondary community/content access is complete in `90a7f98`. Immutable station-page models and a
@@ -283,6 +283,16 @@ its configured HTTPS origin currently fails modern TLS. Unit tests, lint, debug 
 instrumentation tests, and a physical Chrome Custom Tab/Back round trip pass. See
 `docs/m16-secondary-content-research.md`, `docs/m16-validation.md`, and
 `docs/screenshots/m16-secondary-content.png`.
+
+M18 StreamingSoundtracks.com certification is complete in `docs/m18-sst-certification.md`. The gate reconciles the
+existing least-privileged native sign-in/restore/logout, Chat, request, and Favorites evidence with the separate VIP
+request-message and listener-activity evidence. A fresh wired Android 16 Razr run silently reached live SST playback
+with a current title, artist, same-station cover, AAC/128 kbps, and all five navigation destinations; public Queue and
+Chat loaded without error, Favorites retained its signed-out boundary, and no fatal exception occurred. Playback was
+paused and the original media volume restored. The full unit suite, lint, debug install, and 21/21 instrumentation
+tests pass. No production mutation, stream change, or station-specific fork was introduced. Native Private Messages
+remain explicitly outside M18 under the M17 server-repair deferral. See
+`docs/screenshots/m18-sst-certification.png`.
 
 ## Station stream evidence
 

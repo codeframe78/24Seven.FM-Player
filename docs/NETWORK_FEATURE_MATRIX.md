@@ -1,6 +1,6 @@
 # 24seven.FM network feature matrix
 
-Audited July 14, 2026. `Implemented` means present in native code; `verified` distinguishes live evidence from structural similarity. Every account/session remains station-specific.
+Audited July 14, 2026. `Implemented` means present in native code; `verified` distinguishes live evidence from structural similarity. Every account/session remains station-specific. StreamingSoundtracks.com completed its current-Alpha certification in M18; Private Messages remain separately deferred as M17.
 
 | Feature | StreamingSoundtracks.com | 1980s.FM | Adagio.FM | Death.FM | Entranced.FM | Native possible | Auth required | VIP required | Structured endpoint | Browser fallback | Status | Notes/blockers |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

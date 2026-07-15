@@ -4,7 +4,7 @@ Updated July 14, 2026 after adopting explicit certification milestones for all f
 
 ## Planning model
 
-- M1–M16 are complete and retain their existing evidence and published commits.
+- M1–M16 and M18 are complete and retain their existing evidence and published checkpoints.
 - M17 is the remaining shared capability, using immutable Compose state, repository contracts, capability flags, and station-isolated protected sessions once its external blocker clears.
 - M18–M22 certify the shared implementation against each station. They are hardening and evidence gates, not station-specific application forks.
 - M23–M24 are the final distribution and publication gates.
@@ -23,23 +23,23 @@ This classification supplements the required XS–XXL T-shirt size, rationale, e
 
 ## Current milestone
 
-### M18 — StreamingSoundtracks.com certification
+### M19 — 1980s.FM certification
 
 - Task Complexity Level: 2 — Feature Logic & API Integration
-- Size: S
-- Estimated elapsed time: 2–4 hours
-- Usage intensity: Medium
-- Confidence: Medium
-- Outcome: certify the complete shared app against StreamingSoundtracks.com with representative ordinary-member/VIP evidence and explicit capability results.
-- Expected layers: evidence reconciliation, live read-only and least-privileged workflow checks, station capability audit, targeted fixes/tests only where defects are proven, documentation, and wired-device smoke tests.
-- Dependencies: existing SST protected sessions or a user-completed CAPTCHA sign-in, public Queue/History, and the already-authorized harmless request/chat workflows.
-- Principal risk: privileged/VIP evidence can mask ordinary-member restrictions, while authentication refresh may require user CAPTCHA interaction.
-- Completion gate: playback/fallback, metadata/artwork, 30-row Queue/History, account isolation, chat, Favorites, requests/messages, request activity/membership, and secondary pages are either directly certified or recorded as explicit unavailable/interaction-blocked states; validators, device verification, documentation, and publication pass.
+- Size: M
+- Estimated elapsed time: 4–7 hours
+- Usage intensity: High
+- Confidence: Medium-Low
+- Outcome: establish independent 1980s.FM evidence for every shared Alpha capability without inheriting SST account, membership, or request behavior.
+- Expected layers: public protocol and physical playback/metadata checks, exact capability audit, independent account/session evidence where interaction is available, targeted parser/repository/UI fixes only for proven differences, validation, and publication.
+- Dependencies: the existing verified stream/Queue/chat interfaces and, for authenticated checks, a representative 1980s.FM account plus user-entered CAPTCHA.
+- Principal risk: no representative 1980s.FM protected session is currently available, and its membership/request rules may differ from SST despite similar legacy pages.
+- Completion gate: playback/fallback, metadata/artwork, Queue/History, account isolation, chat, Favorites, requests, membership/request-activity support, secondary pages, and explicit unavailable states are independently evidenced; validators, wired-device verification, documentation, and publication pass.
 - Status: preflight is next; implementation has not started.
 
 ## Latest completed milestone
 
-M16 Secondary community/content access completed July 14, 2026 in `90a7f98`. A native capability-aware directory opens only exact catalogued same-station HTTPS pages in Android Custom Tabs, keeps browser/app sessions separate, and leaves Death.FM explicit unavailable while its HTTPS origin fails modern TLS. Unit tests, lint, debug install, a physical Custom Tab round trip, and 21/21 wired Razr instrumentation tests pass. See [m16-validation.md](m16-validation.md).
+M18 StreamingSoundtracks.com certification completed July 14, 2026 without a production-code or stream-address change. Existing ordinary-member and VIP live evidence was reconciled with fresh silent playback, artwork, Queue, Chat, Favorites-gate, navigation, and signed-out checks on the wired Razr. Unit tests, lint, debug install, and 21/21 wired instrumentation tests pass. Private Messages remain explicitly excluded under the M17 server-repair deferral. See [m18-sst-certification.md](m18-sst-certification.md).
 
 ## Shared feature milestones
 
@@ -71,7 +71,7 @@ The certification program would be XL if treated as one unit, so it is split int
 6. Add or update parser, repository, ViewModel, Compose, accessibility, and isolation tests for station-specific evidence.
 7. Run focused and broad validators, perform a wired Razr smoke test, update matrices/handoff, commit, push, and confirm the remote branch.
 
-Unblocked M18–M22 work may proceed while M17 is deferred, but a station cannot receive final certification until every in-scope capability passes or the user explicitly changes Alpha scope.
+Unblocked M19–M22 work may proceed while M17 is deferred, but a station cannot receive final certification until every in-scope capability passes or the user explicitly changes Alpha scope.
 
 ## Distribution milestones
 
