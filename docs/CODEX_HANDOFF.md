@@ -2,17 +2,17 @@
 
 ## Resume status — July 14, 2026
 
-- Current milestone: M13 Queue-aware request availability (implementation and validation complete; commit/push confirmation next).
-- Last completed and pushed milestone: M10 Request attribution/messages. M11 is complete locally; M12 is locally prepared but externally blocked by Play Console activation.
+- Current milestone: M14 Independent Accounts UX and isolation tests (preflight ready; implementation not started).
+- Last completed and pushed milestone: M13 Queue-aware request availability in `4735f13`. M11 and the prepared M12/Favorites work were preserved and published in the same checkpoint; M12 remains externally blocked by Play Console activation.
 - Latest successful validation: full debug unit suite, lint, debug assembly, focused Compose test, and 13/13 API 35 instrumentation tests after M13; physical Razr Favorites inspection also passed.
 - Architecture: one native Compose app module; immutable state/actions; station-scoped repository contracts; one Media3 service-owned player/session; Android Keystore-backed per-station sessions.
 - Decisions: queued and recently played tracks share visible red `Track Recently Played`; reasons remain distinct internally. Available tracks use green `Request Now`. Other restrictions retain accurate separate labels. Revalidation must fail closed before mutation.
 - Known blockers: Queue rows lack stable track IDs; Play developer activation blocks external Alpha; Private Messages remain deferred for server fixes.
-- Next concrete task: review M13 diff/secrets, publish the protected milestone checkpoint, confirm the remote commit, then present M14 preflight before new application work.
-- Likely next files: domain request/queue/favorite models, queue/request repositories, `MainViewModel`, Favorites/request composables, parser/repository/UI tests.
+- Next concrete task: begin M14 only after presenting its preflight, then add an aggregate five-station Accounts surface and pairwise session/logout/expiration isolation coverage without changing station-scoped protected storage.
+- Likely next files: authentication/session domain models and repository contracts, `MainViewModel`, account composables, authentication repository/ViewModel/UI tests, and authentication documentation.
 - Branch: `agent/initial-android-scaffold`.
-- Latest local commit: `36d832a`.
-- Latest successfully pushed commit: `36d832a` on `origin/agent/initial-android-scaffold`.
+- Latest implementation commit: `4735f13`.
+- Latest successfully pushed implementation commit: `4735f13` on `origin/agent/initial-android-scaffold`.
 - Required planning documents: `CURRENT_STATE_AUDIT.md`, `NETWORK_FEATURE_MATRIX.md`, `ENDPOINT_INVENTORY.md`, `AUTHENTICATION_MATRIX.md`, and `IMPLEMENTATION_PLAN.md`.
 
 ## Mission and repository
@@ -231,16 +231,16 @@ An API 35 instrumentation test connects through the real `MediaSessionService`, 
 
 The current Windows SDK includes compile platforms 35, 36, and 36.1 plus Google APIs x86_64 emulator images for API 35 and API 36. A temporary API-35 audio-focus helper compiled successfully after Platform 35 was installed; it was uninstalled and deleted after testing.
 
-M11 Adaptive Alpha UI is complete in the current uncommitted worktree. It preserves the M1–M10 architecture and
+M11 Adaptive Alpha UI is complete and published in `4735f13`. It preserves the M1–M10 architecture and
 behavior while adding the selected 24Seven.FM launcher/fallback artwork, centralized system light/dark and per-station
 palettes, a responsive compact/two-pane Player, wrapped previous/next station controls, an unobstructed five-station
 carousel, an updated persistent mini-player, accessible connection-state copy, multi-size previews, and a double-Back
 exit confirmation that stops playback only after explicit confirmation. Chat, Queue, account, and Requests retain their
 existing contracts and routes. Unit tests, lint, debug assembly, and all 11 Razr instrumentation tests pass. See
-`docs/m11-ui-preservation-plan.md` and `docs/m11-validation.md`. Per the M11 request, do not commit or push these changes
-unless the user gives new publishing authorization.
+`docs/m11-ui-preservation-plan.md` and `docs/m11-validation.md`. The original no-publish restriction was later
+superseded by explicit milestone publishing authorization.
 
-M12 Alpha distribution readiness is locally prepared at version `0.1.0-alpha01` / version code 2. Privacy disclosure,
+M12 Alpha distribution readiness is prepared and published at version `0.1.0-alpha01` / version code 2. Privacy disclosure,
 native privacy-notice access, tester instructions, release notes, permission review, Play upload-signing guardrails,
 unsigned release APK/AAB builds, debug-signature verification, an in-place debug upgrade from version code 1 to 2,
 and all 12 Razr tests are complete. Google Play internal/closed testing with Play App Signing is selected; external
@@ -249,12 +249,12 @@ never commit signing files, passwords, aliases, or local signing-property paths.
 `docs/alpha-testing.md`, `docs/play-console-checklist.md`, `docs/releases/0.1.0-alpha01.md`, and
 `docs/m12-alpha-readiness.md`.
 
-The current uncommitted Alpha worktree also adds native authenticated Favorites browsing for all five stations. The
+The published Alpha branch also adds native authenticated Favorites browsing for all five stations. The
 adapter discovers the signed-in member's numeric Favorites-list identifier from each station's own authenticated
 Favorites page; no username or member ID is hard-coded. Lists are loaded only when the user opens Favorites or taps
 Refresh, remain memory-only, and are cleared from the interface on sign-out. Requestable rows expose a green stoplight
-and `Available to request` text, while unavailable rows expose a red stoplight, `Unavailable to request` text, and the
-station's cooldown or queue explanation when supplied. Eligible selections reuse the existing explicit request-review
+and `Request Now`, while currently queued and recently played rows expose a red stoplight and `Track Recently Played`;
+other restrictions retain accurate separate labels. Eligible selections reuse the existing explicit request-review
 dialog and one-shot request path. SST live validation loaded all 1,500 tracks for the signed-in account on the API 35
 Razr; no request was submitted during this validation. Unit tests, affected-module lint, debug assembly, and all 13 API
 35 emulator instrumentation tests pass. See `README.md`, `PRIVACY.md`, `docs/alpha-testing.md`, and

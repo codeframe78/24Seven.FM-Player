@@ -14,7 +14,7 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 
 ## Current progress
 
-M1 through M11 are complete. M12 Alpha distribution readiness is prepared locally and is waiting for Play Console activation and the final upload-signing ceremony. M13 Queue-aware request availability is implemented and validated, with publication confirmation remaining. The Alpha has a responsive, dark-first Now Playing dashboard, a system-aware light theme, a persistent modern mini-player, centralized station identities, and an adaptive compact/expanded presentation without changing the service-owned Media3 playback path. Signed-in members can browse and filter their own favorite tracks on all five stations. Available tracks use green `Request Now`; recently played and currently queued tracks use red `Track Recently Played` while remaining distinct internally. Requests revalidate Queue and fresh album eligibility before the one-shot mutation. Unit tests, lint, debug assembly, 13/13 API 35 emulator tests, and physical Razr inspection are green.
+M1 through M11 and M13 are complete and published on the development branch. M12 Alpha distribution readiness is prepared and published but is waiting for Play Console activation and the final upload-signing ceremony. The Alpha has a responsive, dark-first Now Playing dashboard, a system-aware light theme, a persistent modern mini-player, centralized station identities, and an adaptive compact/expanded presentation without changing the service-owned Media3 playback path. Signed-in members can browse and filter their own favorite tracks on all five stations. Available tracks use green `Request Now`; recently played and currently queued tracks use red `Track Recently Played` while remaining distinct internally. Requests revalidate Queue and fresh album eligibility before the one-shot mutation. Unit tests, lint, debug assembly, 13/13 API 35 emulator tests, and physical Razr inspection are green.
 
 | Milestone | Status | Delivered |
 | --- | --- | --- |
@@ -30,7 +30,7 @@ M1 through M11 are complete. M12 Alpha distribution readiness is prepared locall
 | M10 | Complete | Requester identity/message display, random and least-played suggestions, and the exact 80-character StreamingSoundtracks.com message form using the station-generated message-record ID; verified end to end on a VIP request |
 | M11 | Complete | Adaptive Alpha interface, 24Seven.FM launcher/fallback artwork, five-station carousel and wrapped station controls, responsive full/mini players, system light/dark themes, accessible connection states, and double-Back exit confirmation |
 | M12 | Waiting for Play Console | `0.1.0-alpha01` / version code 2, native/privacy documentation, Play upload-signing guardrails, tester and Console guides, unsigned release verification, debug upgrade smoke test, five-station favorite-track browsing, and 13 passing API 35 emulator tests |
-| M13 | Validation complete; publishing | Queue-aware request availability, exact accessible status labels, station-scoped matching, stale-data safety, and pre-submission revalidation |
+| M13 | Complete | Queue-aware request availability, exact accessible status labels, station-scoped matching, stale-data safety, and pre-submission revalidation |
 
 ## Project Roadmap
 
@@ -50,21 +50,21 @@ Detailed scope, estimates, dependencies, and risks are maintained in [the implem
 | M8 Chat | ✅ Complete | 2026-07-13 | [`f99635d`](https://github.com/codeframe78/24Seven.FM-Player/commit/f99635d) | Native memory-only station chat |
 | M9 Song requests | ✅ Complete | 2026-07-13 | [`e748f27`](https://github.com/codeframe78/24Seven.FM-Player/commit/e748f27) | Native search, confirmation, and one-shot submission |
 | M10 Request attribution/messages | ✅ Complete | 2026-07-14 | [`73a0d89`](https://github.com/codeframe78/24Seven.FM-Player/commit/73a0d89) | Queue attribution and verified SST request messages |
-| M11 Adaptive Alpha UI | ✅ Complete locally | 2026-07-14 | Unpublished protected worktree | Responsive branded UI, previews, accessibility, and exit flow |
+| M11 Adaptive Alpha UI | ✅ Complete | 2026-07-14 | [`4735f13`](https://github.com/codeframe78/24Seven.FM-Player/commit/4735f13) | Responsive branded UI, previews, accessibility, and exit flow |
+| M13 Queue-aware request availability | ✅ Complete | 2026-07-14 | [`4735f13`](https://github.com/codeframe78/24Seven.FM-Player/commit/4735f13) | Conservative station-scoped availability, accessible exact labels, and fresh pre-submit checks |
 
 ### Current Milestone
 
 | Milestone | Size | Status | Objective | Estimate | Usage | Blockers |
 | --- | --- | --- | --- | --- | --- | --- |
-| M13 Queue-aware request availability | L | 🚧 Publishing | Green `Request Now`; red `Track Recently Played` for recent or queued tracks; safe station-scoped revalidation | 5–7 hours most likely | High | Implementation/validation complete; commit and remote confirmation remain |
+| M14 Independent Accounts UX | L | ⏳ Preflight ready; not started | Show all five independent account states and strengthen pairwise isolation coverage | 4–8 hours | High | Live verification depends on station-specific test accounts and challenge flows |
 
-M12 Alpha Test Distribution Readiness is ⛔ blocked only at its external publication boundary: Google must activate the developer account before final upload signing and Play internal/closed testing. Its local implementation is protected and validated.
+M12 Alpha Test Distribution Readiness is ⛔ blocked only at its external publication boundary: Google must activate the developer account before final upload signing and Play internal/closed testing. Its implementation is published on this branch and validated.
 
 ### Upcoming Milestones
 
 | Milestone | Size | Estimate | Objective | Dependencies | Status |
 | --- | --- | --- | --- | --- | --- |
-| M14 Independent Accounts UX | L | 4–8 hours | Five separately visible account states and expanded isolation tests | Existing station-scoped sessions | ⏳ Planned |
 | M15 Local personalization | M | 2–4 hours | Default/last station and clearly local favorites/preferences | Persistence design | ⏳ Planned |
 | M16 Request history/membership | L | 4–8 hours | Station-specific history, cooldown, VIP/RIP state | Further verified account evidence | ⏳ Planned |
 | M17 Secondary content access | M | 2–4 hours | Capability-aware Custom Tab routes for selected public modules | Product prioritization | ⏳ Planned |
