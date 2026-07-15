@@ -25,13 +25,29 @@ current M23 distribution-readiness gate.
 
 - Version advanced to `0.1.0-alpha01` / version code 2.
 - Privacy notice, Alpha tester guide, release notes, and known limitations documented.
-- Required permissions reviewed: Internet, network-state awareness, foreground media playback, and Android 13+ notification access only. Network-state access is contributed by the existing media/network dependency manifest.
+- Required permissions reviewed: Internet, network-state awareness, foreground media playback, wake lock for uninterrupted screen-off playback, and Android 13+ notification access. Network-state and wake-lock access are contributed by the existing media/network stack. The build-generated app-specific dynamic-receiver permission is signature-protected and grants no user-data access.
 - Application ID, minimum/target SDK, verified streams, network security, dependencies, and completed M1–M22 behavior remain unchanged.
 - Debug and release candidates are built and inspected without committing APKs or signing material.
 - Debug unit tests, affected-module lint, debug APK, unsigned release APK, and unsigned release AAB builds pass.
-- All 21 connected instrumentation tests pass on the Android 16 Razr, including native privacy-notice reachability and accessible Favorites availability indicators/request confirmation.
+- The earlier 21-test connected suite passes on the Android 16 Razr. The expanded API 35 emulator suite passes 24/24,
+  adding compact navigation, runtime compact-to-medium resizing with destination preservation, and 1.5× font-scale
+  reachability coverage.
+- Debug unit tests, affected-module lint, debug assembly, and debug Android-test compilation pass after the modern-device
+  additions.
 - The Razr upgraded in place from version code 1 / `0.1.0` to the debug-signed version code 2 / `0.1.0-alpha01`, and the native Player launched with its expected accessibility tree.
 - Signature inspection confirms the debug APK has only the standard local Android Debug identity; the release APK and AAB remain unsigned as intended.
+- A release AAB builds successfully without signing inputs and is correctly rejected by the signing validator as unsigned. The audited candidate was 17,304,660 bytes with SHA-256 `9C7128A422BCE81351A40FFCE239F941CD584C62D3993209AFC0CB35F8A4D1D8`; this hash is evidence for that local unsigned build only and will change after signing or source changes.
+- The release dependency graph contains no advertising, analytics, Crashlytics, App Center, or Sentry SDK.
+- Google Play's current target-level requirement accepts new mobile apps targeting API 35 or higher, so the unchanged target SDK 35 is compliant as checked July 15, 2026.
+- The project-specific provisional Data Safety worksheet is recorded in `docs/m23-data-safety.md`; its final answers remain gated on the active Play Console form and station transmission/retention confirmation.
+- The activated Play Console was inspected read-only on July 15: it is a newly activated personal account with no existing apps. The intended public name `24Seven.FM Player` fits the 30-character limit, and Console reports `com.codeframe78.twentyfourseven.player` as available.
+- The Play Console app was created on July 15 as an English (United States), App, Free listing with the intended package. The owner explicitly accepted the Developer Program Policies, Play App Signing Terms, and US export declaration; automatic installer protection was disabled to preserve approved sideload testing.
+- Console confirms the account-specific production gate: publish a closed-test release, keep at least 12 testers opted in continuously for at least 14 days, then apply for production access.
+- The policy-conscious default store copy, category/contact proposal, asset inventory, and accessibility-text draft are recorded in `docs/play-store-listing.md`.
+- Play-ready icon, feature graphic, four phone screenshots, medium/expanded tablet screenshots, and an expanded
+  landscape capture are present under `docs/play-store-assets/` and satisfy their required pixel dimensions.
+- The modern-device compatibility matrix in `docs/m23-device-compatibility.md` records compact phone, medium tablet,
+  expanded tablet, landscape/freeform, API 35 emulator, and API 36 Razr evidence. Display overrides were restored.
 - Authenticated Favorites browsing is available for all five stations, discovers the current member's station-specific list identifier without hard-coding it, keeps list data in memory only, and reuses the existing explicit one-shot request confirmation.
 
 ## Signing boundary
@@ -48,7 +64,8 @@ Signing files and secrets must never be committed. Gradle should receive their p
 
 ## Remaining completion work
 
-- Google approved the Play developer account on July 14, 2026. Create the app and accept Play App Signing during M23.
+- Google approved the personal Play developer account on July 14, 2026; the app and initial legal/signing declarations are now established in Console.
+- Because this is a newly activated personal account, plan for a closed test with at least 12 testers continuously opted in for 14 days before applying for production access. Internal testing itself has no access requirement.
 - Create and securely back up the separate upload key outside the repository.
 - Produce and verify the signed release APK or AAB.
 - Record SHA-256 and signing-certificate fingerprints in the private release record or distribution service.

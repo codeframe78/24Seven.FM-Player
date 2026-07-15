@@ -3,11 +3,13 @@ package com.codeframe78.twentyfourseven.player.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -19,6 +21,7 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.codeframe78.twentyfourseven.player.domain.Station
 import com.codeframe78.twentyfourseven.player.domain.StationId
@@ -113,6 +116,87 @@ class RadioAppTest {
         }
 
         composeRule.onNodeWithTag("tablet_navigation_rail").assertExists()
+    }
+
+    @Test
+    fun compactWidthUsesBottomNavigation() {
+        composeRule.setContent {
+            MaterialTheme {
+                Box(Modifier.requiredSize(430.dp, 900.dp)) {
+                    RadioApp(
+                        state = sampleState(),
+                        onSelectStation = {},
+                        onSelectDestination = {},
+                        onPlay = {},
+                        onPause = {},
+                        onStop = {},
+                        onRefreshQueue = {},
+                    )
+                }
+            }
+        }
+
+        composeRule.onNodeWithTag("phone_navigation_bar").assertExists()
+        composeRule.onNodeWithTag("tablet_navigation_rail").assertDoesNotExist()
+    }
+
+    @Test
+    fun navigationAdaptsAcrossWidthChangesWithoutLosingDestination() {
+        var containerWidth by mutableStateOf(430.dp)
+        val queueState = sampleState().copy(destination = MainDestination.Queue)
+
+        composeRule.setContent {
+            MaterialTheme {
+                Box(Modifier.requiredSize(containerWidth, 900.dp)) {
+                    RadioApp(
+                        state = queueState,
+                        onSelectStation = {},
+                        onSelectDestination = {},
+                        onPlay = {},
+                        onPause = {},
+                        onStop = {},
+                        onRefreshQueue = {},
+                    )
+                }
+            }
+        }
+
+        composeRule.onNodeWithTag("phone_navigation_bar").assertExists()
+        composeRule.onNodeWithText("No supported queue or history source has been verified for this station yet.")
+            .assertIsDisplayed()
+
+        composeRule.runOnIdle { containerWidth = 720.dp }
+
+        composeRule.onNodeWithTag("phone_navigation_bar").assertDoesNotExist()
+        composeRule.onNodeWithTag("tablet_navigation_rail").assertExists()
+        composeRule.onNodeWithText("No supported queue or history source has been verified for this station yet.")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun largeFontCompactPlayerKeepsPrimaryControlReachable() {
+        composeRule.setContent {
+            val density = LocalDensity.current
+            CompositionLocalProvider(
+                LocalDensity provides Density(density.density, fontScale = 1.5f),
+            ) {
+                MaterialTheme {
+                    Box(Modifier.requiredSize(430.dp, 760.dp)) {
+                        RadioApp(
+                            state = sampleState(),
+                            onSelectStation = {},
+                            onSelectDestination = {},
+                            onPlay = {},
+                            onPause = {},
+                            onStop = {},
+                            onRefreshQueue = {},
+                        )
+                    }
+                }
+            }
+        }
+
+        composeRule.onNodeWithContentDescription("Play live radio").performScrollTo().assertIsDisplayed()
     }
 
     @Test

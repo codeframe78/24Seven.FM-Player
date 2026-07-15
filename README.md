@@ -14,9 +14,9 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 
 ## Alpha status
 
-Milestones M1–M16 and M18–M22 are complete on the development branch. M17 Private Messages remains deferred for legacy server repair. All five station-certification gates now pass; Alpha distribution readiness and publication remain at M23–M24.
+Milestones M1–M16 and M18–M22 are complete on the development branch. M17 Private Messages remains deferred for legacy server repair. All five station-certification gates now pass; M23 Alpha distribution readiness is in progress and publication remains at M24.
 
-The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, device-local startup/last-station preferences, live metadata and artwork, queue/history, an independent five-station account dashboard with Android-protected sessions, chat, song requests, signed-in favorite-track browsing, a verified SST request-history/cooldown/membership surface, and a trusted browser directory for selected public station content. Request availability is conservatively revalidated against fresh station and Queue data before submission. All 110 unit tests, lint, debug assembly/install, 21/21 wireless Razr tests (131 total tests), Windows validation, and physical Razr inspection are green.
+The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, device-local startup/last-station preferences, live metadata and artwork, queue/history, an independent five-station account dashboard with Android-protected sessions, chat, song requests, signed-in favorite-track browsing, a verified SST request-history/cooldown/membership surface, and a trusted browser directory for selected public station content. Request availability is conservatively revalidated against fresh station and Queue data before submission. All 110 unit tests, lint, debug assembly/install, 24/24 API 35 emulator tests (134 total automated tests), the earlier 21/21 physical Razr suite, Windows validation, and physical Razr inspection are green. The adaptive device contract and evidence are recorded in [the M23 compatibility matrix](docs/m23-device-compatibility.md).
 
 ## Project Roadmap
 
@@ -67,10 +67,10 @@ Each station gate covers playback and fallback, metadata/artwork, Queue/history,
 
 | Milestone | Size | Estimate | Status | Outcome |
 | --- | --- | --- | --- | --- |
-| M23 Alpha distribution readiness | M | 1–2 focused days | ▶️ Next | Refresh and finalize privacy, signing, tester, bundle, and Play-readiness work after M15–M22 |
+| M23 Alpha distribution readiness | M | 1–2 focused days | 🚧 In progress | Privacy/data-safety drafts, Play assets, modern-device matrix, tests, and release checks are green; upload-key custody, public privacy hosting, reviewer credentials, tester setup, and signed-bundle validation remain |
 | M24 Alpha publication | M | 1–3 hours after Console setup | ⏳ Planned | Verify the signed Play bundle and publish the authorized internal/closed test release |
 
-Early M23 preparation is preserved on this branch and is now ready to be refreshed against the completed feature and station-certification work. The Google Play developer account was approved on July 14, 2026; remaining release dependencies are app/Play App Signing setup, secure upload-key custody, final validation, and explicit publication authorization.
+M23 is active on this branch. The Google Play developer account and app record are established, Play App Signing is selected, Play-ready graphics and device screenshots are prepared, and compact/medium/expanded Android layouts are validated. Remaining dependencies are secure upload-key custody, a stable public privacy URL, reviewer/tester setup, signed-bundle validation, and explicit publication authorization.
 
 The app is fully native and uses immutable Compose UI state, repository boundaries, and station capability flags. It includes play, pause, stop, live metadata and artwork, a persistent mini-player, signed-in favorite-track browsing/filtering, capability-aware screens, native loading/error/empty states, and Android Keystore-backed account sessions. Remote data stays bounded to the documented station interfaces and their approved refresh rules.
 
@@ -118,6 +118,10 @@ These captures are from the physical Razr. Most use live station data, so track 
   <tr>
     <td align="center"><img src="docs/screenshots/m22-entranced-certification.png" alt="Entranced.FM Player with live title, artist, same-station artwork, selected station card, and playback controls" width="300"><br><strong>M22 Entranced.FM Player evidence</strong></td>
     <td align="center"><img src="docs/screenshots/m22-entranced-authenticated.png" alt="Independent Entranced.FM account signed in as MorG while 1980s.FM, Adagio.FM, and Death.FM remain signed out" width="300"><br><strong>M22 verified independent Entranced.FM login</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/play-store-assets/screenshots/phone-player-live-playing.png" alt="Compact physical Razr Player with live Entranced.FM artwork, metadata, playback controls, and bottom navigation" width="300"><br><strong>M23 compact Android evidence</strong></td>
+    <td align="center"><img src="docs/play-store-assets/screenshots/tablet-landscape-player.png" alt="Expanded landscape Player with navigation rail, two-pane now-playing content, controls, and all five station cards" width="400"><br><strong>M23 expanded landscape evidence</strong></td>
   </tr>
 </table>
 
