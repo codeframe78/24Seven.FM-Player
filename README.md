@@ -14,7 +14,7 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 
 ## Alpha status
 
-Milestones M1–M11 and M13 are complete and published on the development branch. M12 Alpha distribution readiness is prepared and published but is waiting for Play Console activation and the final upload-signing ceremony. M14 Independent Accounts UX is next and has not started.
+Milestones M1–M12 are complete and published on the development branch. M13 Independent Accounts UX is next and has not started. Alpha distribution and Play publication are intentionally deferred to M17–M18, after the remaining feature milestones.
 
 The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, live metadata and artwork, queue/history, station-scoped authentication, chat, song requests, and signed-in favorite-track browsing. Request availability is conservatively revalidated against fresh station and Queue data before submission. Unit tests, lint, debug assembly, 13/13 API 35 emulator tests, and physical Razr inspection are green.
 
@@ -37,23 +37,24 @@ Detailed scope, estimates, dependencies, and risks are maintained in [the implem
 | M9 Song requests | ✅ Complete | 2026-07-13 | [`e748f27`](https://github.com/codeframe78/24Seven.FM-Player/commit/e748f27) | Native search, confirmation, and one-shot submission |
 | M10 Request attribution/messages | ✅ Complete | 2026-07-14 | [`73a0d89`](https://github.com/codeframe78/24Seven.FM-Player/commit/73a0d89) | Queue attribution and verified SST request messages |
 | M11 Adaptive Alpha UI | ✅ Complete | 2026-07-14 | [`4735f13`](https://github.com/codeframe78/24Seven.FM-Player/commit/4735f13) | Responsive branded UI, previews, accessibility, and exit flow |
-| M13 Queue-aware request availability | ✅ Complete | 2026-07-14 | [`4735f13`](https://github.com/codeframe78/24Seven.FM-Player/commit/4735f13) | Conservative station-scoped availability, accessible exact labels, and fresh pre-submit checks |
+| M12 Queue-aware request availability | ✅ Complete | 2026-07-14 | [`4735f13`](https://github.com/codeframe78/24Seven.FM-Player/commit/4735f13) | Conservative station-scoped availability, accessible exact labels, and fresh pre-submit checks |
 
 ### Current Milestone
 
 | Milestone | Size | Status | Objective | Estimate | Usage | Blockers |
 | --- | --- | --- | --- | --- | --- | --- |
-| M14 Independent Accounts UX | L | ⏳ Preflight ready; not started | Show all five independent account states and strengthen pairwise isolation coverage | 4–8 hours | High | Live verification depends on station-specific test accounts and challenge flows |
+| M13 Independent Accounts UX | L | ⏳ Preflight ready; not started | Show all five independent account states and strengthen pairwise isolation coverage | 4–8 hours | High | Live verification depends on station-specific test accounts and challenge flows |
 
-M12 Alpha Test Distribution Readiness is ⛔ blocked only at its external publication boundary: Google must activate the developer account before final upload signing and Play internal/closed testing. Its implementation is published on this branch and validated.
+Early Alpha distribution preparation is preserved on this branch, but M17 will not be considered active or complete until M13–M16 are finished. Google Play activation remains an external dependency for the final M17–M18 release work.
 
 ### Upcoming Milestones
 
 | Milestone | Size | Estimate | Objective | Dependencies | Status |
 | --- | --- | --- | --- | --- | --- |
-| M15 Local personalization | M | 2–4 hours | Default/last station and clearly local favorites/preferences | Persistence design | ⏳ Planned |
-| M16 Request history/membership | L | 4–8 hours | Station-specific history, cooldown, VIP/RIP state | Further verified account evidence | ⏳ Planned |
-| M17 Secondary content access | M | 2–4 hours | Capability-aware Custom Tab routes for selected public modules | Product prioritization | ⏳ Planned |
+| M14 Local personalization | M | 2–4 hours | Default/last station and clearly local favorites/preferences | Persistence design | ⏳ Planned |
+| M15 Request history/membership | L | 4–8 hours | Station-specific history, cooldown, VIP/RIP state | Further verified account evidence | ⏳ Planned |
+| M16 Secondary content access | M | 2–4 hours | Capability-aware Custom Tab routes for selected public modules | Product prioritization | ⏳ Planned |
+| M17 Alpha distribution readiness | M | 1–2 focused days | Refresh and finalize privacy, signing, tester, bundle, and Play-readiness work after feature completion | M13–M16 complete and Play activation | ⏸ Deferred |
 | M18 Alpha publication | M | 1–3 hours after activation | Signed Play bundle and internal/closed test release | Play activation and explicit release approval | ⛔ Blocked |
 | Private Messages | L provisional | 4–8 hours after server repair | Native station-isolated inbox and compose/reply | Legacy server fixes | 🧊 Deferred |
 
@@ -82,7 +83,7 @@ Audio stream addresses come from station-provided playlists and remain subject t
 
 Planned follow-up work includes a native Private Messages experience after its authorization and behavior are settled. See [docs/future-scope.md](docs/future-scope.md).
 
-Alpha testers and distributors should read [the privacy notice](PRIVACY.md), [Alpha testing guide](docs/alpha-testing.md), [release notes](docs/releases/0.1.0-alpha01.md), [Play Console checklist](docs/play-console-checklist.md), and [M12 signing handoff](docs/m12-alpha-readiness.md). Development debug APKs are not intended for external distribution.
+Alpha testers and distributors should read [the privacy notice](PRIVACY.md), [Alpha testing guide](docs/alpha-testing.md), [release notes](docs/releases/0.1.0-alpha01.md), [Play Console checklist](docs/play-console-checklist.md), and [M17 signing handoff](docs/m17-alpha-readiness.md). Development debug APKs are not intended for external distribution.
 
 ## Building
 

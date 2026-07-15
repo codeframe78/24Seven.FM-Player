@@ -18,7 +18,7 @@ All relative HTTPS paths below are resolved independently against one of these f
 | All five | Chat post-form discovery | Station root plus server form at `/modules/ClearChat/block-files/input.php` | HTML form | Station session | User initiated | No mutation without validated form/session | Administrator-authorized; implemented |
 | All five | Chat post | Validated ClearChat form action | Form POST | Station session | Explicit user action; one confirmation read | No automatic repost | Administrator-authorized; implemented |
 | All five | Request search | `/modules.php?name=Requests` with station search parameters | Bounded HTML | No | User initiated; no polling | Clear loading/error/empty state | Administrator-authorized; implemented |
-| All five | Album/request eligibility | `/modules.php?name=Album&asin=<validated-id>` | Bounded HTML | No for browse | User initiated and re-read immediately before mutation | Reject untrusted/malformed actions or changed eligibility before submission | Implemented with M13 queue-aware resolver |
+| All five | Album/request eligibility | `/modules.php?name=Album&asin=<validated-id>` | Bounded HTML | No for browse | User initiated and re-read immediately before mutation | Reject untrusted/malformed actions or changed eligibility before submission | Implemented with M12 queue-aware resolver |
 | All five | Random suggestions | `/modules.php?name=Requests` with verified `random` or `randomleast` parameter | Bounded HTML | No for browse | User initiated only | Empty/error state | Implemented |
 | All five | Song request mutation | `/modules.php?name=Req&asin=<validated-id>&songID=<validated-id>` | HTML/redirect | Station session | Explicit confirmation; never automatically retried | Indeterminate results direct user to Queue | Administrator-authorized; implemented |
 | SST only | Optional request message | Server-returned same-origin `/modules.php?name=Album&action=submitmessage...` form | Form POST | SST session | Only after explicit accepted request; 80 chars | Message failure never repeats song request | Administrator-authorized and verified |
@@ -31,4 +31,4 @@ All relative HTTPS paths below are resolved independently against one of these f
 - Queue, chat, request catalog, and Favorites data are memory-only today. Queue retains its last ready state when a later refresh fails.
 - Artwork URL acceptance is restricted to the selected station host. Authentication, request, chat, and Favorites actions require same-origin validation.
 - Public queue polling must remain at or below once per 60 seconds per selected station. Chat reads must remain at or below once per 30 seconds.
-- M13 fails closed when queue or fresh eligibility cannot be established before a request; it never infers `Request Now` solely from stale display state.
+- M12 fails closed when queue or fresh eligibility cannot be established before a request; it never infers `Request Now` solely from stale display state.

@@ -1,18 +1,18 @@
 # Implementation plan
 
-Updated July 14, 2026 after completing and publishing M13. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
+Updated July 14, 2026 after renumbering the roadmap so Alpha distribution follows the remaining feature milestones. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
 
 ## Milestone state
 
 - M1–M10 retain their existing names, evidence, and completed/pushed status.
 - M11 Adaptive Alpha UI is complete and published in `4735f13`.
-- M12 Alpha Test Distribution Readiness is prepared and published. External completion is blocked by Play Console activation and final upload signing; it also contains the completed Favorites enhancement.
-- M13 Queue-aware request availability is complete, validated, and published in `4735f13`.
-- M14 is the next milestone and has not started.
+- M12 Queue-aware request availability is complete, validated, and published in `4735f13`.
+- M13 is the next milestone and has not started.
+- Early M17 Alpha Test Distribution Readiness artifacts are preserved and published, but the milestone is deferred until M13–M16 are complete. External completion also depends on Play Console activation and final upload signing.
 
 ## Current milestone
 
-### M14 — Independent Accounts UX and isolation tests
+### M13 — Independent Accounts UX and isolation tests
 
 - Size: L
 - Estimated elapsed time: best case 4–5 hours; most likely 5–7 hours; high-risk 8+ hours
@@ -29,9 +29,10 @@ Updated July 14, 2026 after completing and publishing M13. Estimates are active 
 
 | Milestone | Size | Estimate | Usage | Objective | Dependencies/status |
 | --- | --- | --- | --- | --- | --- |
-| M15 Local personalization and station preferences | M | 2–4 hours | Medium | Persist default/last station and clearly labeled local favorites without merging server collections | Storage design; planned |
-| M16 Request history, cooldown, and membership state | L | 4–8 hours | High | Add station-scoped request history and accurate cooldown/VIP/RIP labels where verified | Further endpoint/account evidence; planned |
-| M17 Secondary community/content access | M | 2–4 hours | Medium | Add safe capability-aware Custom Tab routes for selected public content without a WebView replacement | Product prioritization of modules; planned |
+| M14 Local personalization and station preferences | M | 2–4 hours | Medium | Persist default/last station and clearly labeled local favorites without merging server collections | Storage design; planned |
+| M15 Request history, cooldown, and membership state | L | 4–8 hours | High | Add station-scoped request history and accurate cooldown/VIP/RIP labels where verified | Further endpoint/account evidence; planned |
+| M16 Secondary community/content access | M | 2–4 hours | Medium | Add safe capability-aware Custom Tab routes for selected public content without a WebView replacement | Product prioritization of modules; planned |
+| M17 Alpha Test Distribution Readiness | M | 1–2 focused days | Medium | Refresh and finalize privacy, signing, tester, bundle, and Play-readiness work after feature completion | Early artifacts preserved; deferred until M13–M16 complete and Play activation |
 | M18 Alpha publication completion | M | 1–3 hours after activation | Medium | Create/verify signed Play bundle and internal/closed test release | Google developer account activation and explicit release authorization; blocked |
 | Private Messages | L (provisional) | 4–8 hours after server fix | High | Native inbox/read/compose/reply using station-isolated sessions | Website server issues; deferred |
 

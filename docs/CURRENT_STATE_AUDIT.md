@@ -13,7 +13,7 @@ Audited July 14, 2026 on `agent/initial-android-scaffold` at `36d832a`, with all
 
 ## Protected uncommitted work
 
-The working tree contains the complete M11 adaptive UI, locally prepared M12 Alpha distribution work, and authenticated five-station Favorites browsing. It includes modified and untracked Kotlin, tests, artwork, screenshots, release/privacy documentation, and signing-validation scripts. This work predates the current queue-status milestone and must not be reset, restored, cleaned, or silently mixed with unrelated changes.
+At the time of this audit, the working tree contained the complete M11 adaptive UI, early M17 Alpha distribution preparation, and authenticated five-station Favorites browsing. It included modified and untracked Kotlin, tests, artwork, screenshots, release/privacy documentation, and signing-validation scripts. This work predated the M12 queue-status milestone and was preserved intact.
 
 ## Architecture
 
@@ -41,7 +41,7 @@ The working tree contains the complete M11 adaptive UI, locally prepared M12 Alp
 | M9 | Native catalog search and explicit one-shot requests, `m9-*` | Complete and pushed |
 | M10 | Request attribution/messages and random suggestions, `m10-*` | Complete and pushed |
 | M11 | Adaptive UI, theme, logo, previews, double-Back exit, `m11-*` | Complete locally; protected and not yet pushed |
-| M12 | Alpha version/privacy/signing guardrails plus Favorites integration | Locally prepared; external distribution blocked on Play Console activation |
+| M17 (prepared early) | Alpha version/privacy/signing guardrails plus Favorites integration | Preserved for refresh after M13–M16; external distribution also depends on Play Console activation |
 
 ## Existing screens and navigation
 
@@ -64,7 +64,7 @@ The working tree contains the complete M11 adaptive UI, locally prepared M12 Alp
 
 - 85 `@Test` declarations currently cover parsers, repositories, station definitions, session isolation primitives, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
 - Latest full local evidence: debug compile, debug unit tests, lint, and debug assembly pass; 13/13 API 35 instrumentation tests pass.
-- A new baseline will be recorded before the M13 application-code edit and repeated at the milestone gate.
+- A new baseline will be recorded before the M12 application-code edit and repeated at the milestone gate.
 
 ## Known defects and technical debt
 
@@ -74,7 +74,7 @@ The working tree contains the complete M11 adaptive UI, locally prepared M12 Alp
 - `MainViewModel` observes Queue only on the Queue destination, so Favorites and Requests cannot react immediately to queue changes.
 - Request confirmation does not refresh queue membership or re-read current track eligibility immediately before mutation.
 - Request results, Favorites, queue, and history have separate sources of truth without a request-status resolver.
-- Station origins are repeated across several adapters; consolidation is desirable but not required for M13.
+- Station origins are repeated across several adapters; consolidation is desirable but not required for M12.
 - The selected/default station is not durably persisted. Sleep timer, local favorites, request history, membership status, and consolidated Accounts UI are not implemented.
 - Private Messages are deliberately deferred because of known legacy server issues.
 - External Alpha distribution is blocked until Google activates the developer account and upload signing is completed.

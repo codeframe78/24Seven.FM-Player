@@ -1,4 +1,4 @@
-# M13 Queue-aware request availability validation
+# M12 Queue-aware request availability validation
 
 Validated July 14, 2026 on `agent/initial-android-scaffold`.
 
