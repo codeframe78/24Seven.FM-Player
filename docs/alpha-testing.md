@@ -55,7 +55,7 @@ Never include passwords, security-code answers or images, cookies, session value
 ## Known Alpha boundaries
 
 - M17 Private Messages is deferred because of underlying website/server issues.
-- M19–M21 representative authenticated account evidence remains pending; public and wired-device gates have passed.
+- M20–M22 representative authenticated account evidence remains pending; M19 1980s.FM is complete.
 - Sleep timer, Cast/audio-output selection, and diagnostics are not implemented.
 - Station accounts are currently station-specific.
 - Public station interfaces can change independently of the app.

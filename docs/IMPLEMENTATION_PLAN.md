@@ -7,6 +7,7 @@ Updated July 15, 2026 during the Death.FM certification gate. Estimates are acti
 - M1–M16 and M18 are complete and retain their existing evidence and published checkpoints.
 - M17 is the remaining shared capability, using immutable Compose state, repository contracts, capability flags, and station-isolated protected sessions once its external blocker clears.
 - M18–M22 certify the shared implementation against each station. They are hardening and evidence gates, not station-specific application forks.
+- Each station's representative native login, protected restoration, isolation, authenticated surface, and logout flow is now a hard completion gate. Public/device evidence may be gathered early but does not advance the active station order.
 - M23–M24 are the final distribution and publication gates.
 - Private Messages remains numbered as M17 but deferred pending legacy server repair and verified production limits.
 - Early M23 readiness artifacts are preserved, but they must be refreshed after M15–M22. The Play developer account is approved; Play App Signing/app setup, final upload signing, and explicit publication authorization remain dependencies.
@@ -23,27 +24,27 @@ This classification supplements the required XS–XXL T-shirt size, rationale, e
 
 ## Current milestone
 
-### M21 — Death.FM certification
+### M20 — Adagio.FM authenticated completion gate
 
 - Task Complexity Level: 2 — Feature Logic & API Integration
-- Size: L
-- Estimated elapsed time: 6–10 hours
+- Size: M overall; approximately 1–3 active hours remain after the account/CAPTCHA is available
+- Estimated elapsed time: 4–7 hours overall
 - Usage intensity: High
 - Confidence: Medium-Low
-- Outcome: establish independent Death.FM evidence for every shared Alpha capability, preserve its compact Queue and sparse metadata behavior, and model RIP membership routes without inheriting other-station account or membership rules.
-- Expected layers: public protocol and physical playback/metadata checks, exact capability audit, independent account/session evidence where interaction is available, targeted repository/UI fixes only for proven differences, validation, and publication.
-- Dependencies: the existing verified stream/compact Queue/chat interfaces and, for authenticated checks, a representative Death.FM account plus user-entered CAPTCHA.
-- Principal risk: no representative Death.FM protected session is currently available, and its RIP membership/request rules may differ despite similar legacy pages.
+- Outcome: close the already-passing Adagio.FM public/device milestone with independent native sign-in, protected restoration, station isolation, authenticated Favorites/Chat/request behavior, and station-only logout without inheriting SST or 1980s rules.
+- Expected layers: user-entered sign-in/CAPTCHA, protected process-restart restoration, independent station selection, signed-in surface checks without unnecessary mutations, explicit logout, evidence reconciliation, and publication.
+- Dependencies: the existing verified Adagio playback/metadata/Queue/chat interfaces plus a representative Adagio.FM account and user-entered CAPTCHA.
+- Principal risk: account availability and undocumented Adagio membership/request behavior after sign-in.
 - Completion gate: playback/fallback, metadata/artwork, Queue/History, account isolation, chat, Favorites, requests, membership/request-activity support, secondary pages, and explicit unavailable states are independently evidenced; validators, wired-device verification, documentation, and publication pass.
-- Status: in progress. Public playback and relay reachability, sparse metadata/artwork, compact Queue/History,
-  Chat, request browsing, sign-in challenge loading, capability boundaries, and the reverified RIP membership Custom
-  Tab route pass. Representative authenticated account evidence remains required; see
-  [m21-death-certification.md](m21-death-certification.md). M19 and M20 retain their equivalent public/device passes
-  while their separate representative account gates wait. M22 is the next unblocked public/device certification gate.
+- Status: interaction-ready. M19 is complete after representative MorG sign-in/restore/isolation/Favorites/Chat/
+  request/logout evidence. M20's public playback, metadata/artwork, Queue/History, Chat, request browsing, native login
+  challenge, capability boundaries, and trusted pages already pass; only its hard authenticated gate remains. See
+  [m20-adagio-certification.md](m20-adagio-certification.md). M21 follows only after M20 closes; in-progress M22
+  metadata hardening remains preserved but will not be advanced out of order.
 
 ## Latest completed milestone
 
-M18 StreamingSoundtracks.com certification completed July 14, 2026 without a production-code or stream-address change. Existing ordinary-member and VIP live evidence was reconciled with fresh silent playback, artwork, Queue, Chat, Favorites-gate, navigation, and signed-out checks on the wired Razr. Unit tests, lint, debug install, and 21/21 wired instrumentation tests pass. Private Messages remain explicitly excluded under the M17 server-repair deferral. See [m18-sst-certification.md](m18-sst-certification.md).
+M19 1980s.FM certification completed July 15, 2026 after its existing public/device pass was closed with a representative MorG session. Native sign-in, Android-protected process-restart restoration, station isolation, authenticated empty Favorites loading, Chat composer availability, green request eligibility, explicit station-only logout, and persistent signed-out state after another restart all pass. No credential, CAPTCHA, session value, Chat post, or song request was retained or submitted. See [m19-1980s-certification.md](m19-1980s-certification.md).
 
 ## Shared feature milestones
 

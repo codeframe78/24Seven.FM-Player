@@ -1,14 +1,14 @@
-# M19 1980s.FM certification — in progress
+# M19 1980s.FM certification — complete
 
-Public and wired-device certification work was performed July 14–15, 2026 on
-`agent/initial-android-scaffold`. M19 is not complete until its representative authenticated gate is resolved.
+Public, device, and representative authenticated certification was performed July 14–15, 2026 on
+`agent/initial-android-scaffold`.
 
 ## Task assessment
 
 - Task Complexity Level: 2 — Feature Logic & API Integration
 - T-shirt size: M
 - Estimated active duration: 4–7 hours
-- Primary confidence variable: availability of a representative 1980s.FM account and user-entered CAPTCHA
+- Primary confidence variable: resolved with a representative non-administrative account and user-entered CAPTCHA
 
 ## Completed public and device evidence
 
@@ -21,13 +21,33 @@ Public and wired-device certification work was performed July 14–15, 2026 on
 | Public Chat | Native 1980s Chat loaded without error and showed the correct signed-out posting boundary; the shared 30-second/memory-only behavior remains intact | Pass |
 | Favorites boundary | Native Favorites is reachable and shows the station-qualified sign-in requirement without leaking another station's data | Pass |
 | Request browsing | The native least-played suggestion returned album-track content and retained the signed-out submission boundary; no request was submitted | Pass |
-| Authentication challenge | Native username/password fields, same-station CAPTCHA image, alphanumeric security-code field, sign-in action, and new-code action loaded without an error | Pass for read-only challenge; authenticated gate remains |
+| Authentication challenge | Native username/password fields, same-station CAPTCHA image, alphanumeric security-code field, sign-in action, and new-code action loaded without an error | Pass |
 | Capability differences | Request messages and listener activity remain explicit `Not verified`; they do not inherit SST-only capability flags | Pass |
 | Secondary pages | The trusted directory exposes the common pages plus 1980s Games and Awards; Games opened in a Chrome Custom Tab and Back returned to the native app | Pass |
 | Navigation/accessibility | Player, Favorites, Chat, Queue, and More remain present with station-qualified semantics and the persistent mini-player on secondary destinations | Pass |
 
-No production Chat post, song request, form submission, account mutation, or membership action was performed.
-No credentials, CAPTCHA value, session material, private response, participant content, or captured HTML was stored.
+No production Chat post, song request, profile change, membership action, or request mutation was performed. The only
+account mutation was the explicit station-only logout required to verify session clearing. No credentials, CAPTCHA
+value, cookie/session material, private response, participant content, or captured HTML was stored.
+
+## Representative authenticated evidence
+
+The user entered the credentials and alphanumeric CAPTCHA directly in the app. The resulting session was inspected
+only through native state and behavior:
+
+| Authentication behavior | Evidence | Result |
+| --- | --- | --- |
+| Successful sign-in | The account dashboard reported `1980s.FM account status: Signed in` and `Signed in as MorG`; no login error appeared | Pass |
+| Protected restoration | A forced process stop changed the app PID; after relaunch the 1980s.FM session restored as MorG with no Android Keystore/decryption error | Pass |
+| Station isolation | Entranced.FM Favorites remained signed out while the independent 1980s.FM account was signed in; no other visible account became authenticated | Pass |
+| Favorites | With 1980s.FM selected, the signed-out gate disappeared and the authenticated filter loaded; the server returned a valid empty list for this account | Pass |
+| Authenticated Chat | Public messages loaded with an enabled message field and Send action; no message was posted | Pass |
+| Request eligibility | Least-played browsing returned *Torch* and one green requestable track with `Request Now`; no request was submitted | Pass |
+| Capability restraint | Request messages and listener activity remained `Not verified`; no SST-only capability was inferred from authentication | Pass |
+| Station-only logout | `Sign out of 1980s` cleared the account immediately; another process restart still showed `Load 1980s sign in`, MorG was absent, and other visible signed-in count remained zero | Pass |
+
+Natural server-side expiration was not destructively induced. The shared expiration classifier remains covered by
+automated repository/ViewModel tests, while the live gate proves successful restoration and explicit logout.
 
 ## Focused hardening
 
@@ -46,17 +66,15 @@ observed. The screenshot records the live title and artwork after playback was p
 
 ![1980s.FM Player evidence on the wired Razr](screenshots/m19-1980s-certification.png)
 
-## Remaining authenticated gate
+The authenticated account capture contains the public username only and no credentials, CAPTCHA, or session value:
 
-A representative 1980s.FM account and user-entered alphanumeric CAPTCHA are still required to prove, independently
-of SST:
+![1980s.FM independent signed-in account on the Razr](screenshots/m19-1980s-authenticated.png)
 
-1. native sign-in, protected process-restart restoration, expiration classification, and station-only logout;
-2. the signed-in member's own Favorites discovery and memory-only loading;
-3. authenticated Chat composer and one harmless post only if a new post is necessary and explicitly appropriate;
-4. request eligibility/cooldown behavior and one explicit user-approved request only if prior station evidence is
-   insufficient;
-5. whether 1980s.FM exposes reliable membership, personal request activity, or optional request-message behavior.
+## Certification limits
 
-Until that gate is resolved, M19 remains in progress and the three unverified capabilities stay disabled rather
-than being inferred from StreamingSoundtracks.com or from similar public navigation.
+- No harmless Chat post or song request was needed to prove that authenticated actions became available, so no
+  production content mutation was performed.
+- 1980s.FM membership, personal request activity, and optional request-message behavior remain unavailable because
+  reliable station-specific sources were not exposed by this ordinary account. They are explicit capability limits,
+  not an incomplete authentication gate.
+- M17 Private Messages remains outside M19 under the separate server-repair deferral.

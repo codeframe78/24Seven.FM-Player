@@ -1,6 +1,6 @@
 # Current state audit
 
-Updated July 15, 2026 on `agent/initial-android-scaffold` during M21 Death.FM certification, with all existing tracked and untracked work preserved.
+Updated July 15, 2026 on `agent/initial-android-scaffold` after completing the M19 1980s.FM authenticated gate, with all existing tracked and untracked work preserved.
 
 ## Repository and environment
 
@@ -70,15 +70,15 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 
 - 129 `@Test` declarations currently cover parsers, repositories, station definitions and certification contracts, session isolation primitives, startup preference restoration, listener activity, station-page trust policy, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
 - Latest full local evidence: debug compile, all 108 debug unit tests, lint, Windows validation, wireless debug install, and 21/21 Android 16 Razr instrumentation tests pass after the M21 public/device gate (129 tests total).
-- M18's completed certification and the current M19–M21 physical-device checkpoints are recorded in their station evidence documents.
+- M18 and M19 are complete; the current M20–M21 public/device checkpoints are recorded in their station evidence documents.
 
 ## Known defects and technical debt
 
 - Queue and history models do not preserve stable station track IDs. Safe fallback matching therefore needs title, artist/composer, and album—not title alone.
 - Station origins are repeated across several adapters; consolidation is desirable when it can be done without destabilizing their separate trust policies.
 - Sleep timer and local track favorites are not implemented. Request history/membership is currently enabled only for SST; the other stations await certification evidence.
-- Live authentication differences across 1980s.FM, Adagio.FM, Death.FM, and Entranced.FM still need representative user-entered account/CAPTCHA verification during M19–M22.
-- M19's 1980s.FM public/device gate passes, including its native login challenge, but no representative station account is available yet for protected restoration/logout, Favorites, authenticated Chat/requests, or membership/request-activity determination.
+- Live authentication differences across Adagio.FM, Death.FM, and Entranced.FM still need representative user-entered account/CAPTCHA verification during M20–M22.
+- M19 1980s.FM certification is complete. A representative MorG session proved native sign-in, Android-protected process-restart restoration, cross-station isolation, authenticated empty Favorites loading, Chat composer availability, green request eligibility, explicit station-only logout, and persistent signed-out state after another restart. No credentials, CAPTCHA, or session material was retained.
 - M20's Adagio.FM public/device gate passes, including classical metadata/artwork, both live relay probes, Queue/History, Chat, Favorites/request boundaries, native login challenge, and trusted Forums; representative authenticated evidence remains pending.
 - M21's Death.FM public/device gate passes, including live sparse metadata/artwork, both live relay probes, compact Queue/History, Chat, Favorites/request boundaries, native login challenge, and trusted RIP membership route; representative authenticated evidence remains pending.
 - M17 Private Messages is deliberately deferred because of known legacy server issues.

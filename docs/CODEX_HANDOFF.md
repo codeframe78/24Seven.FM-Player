@@ -2,18 +2,18 @@
 
 ## Resume status — July 15, 2026
 
-- Current milestone: M21 Death.FM certification (public/device gate passed; representative account evidence pending; M19/M20 equivalent account gates also wait; M17 remains deferred for server repair).
+- Current milestone: M20 Adagio.FM authenticated completion gate. M19 is complete; M21 awaits its representative account, M22 public/device work is preserved, and M17 remains deferred for server repair.
 - Last completed milestone: M18 StreamingSoundtracks.com certification in `docs/m18-sst-certification.md`. The latest production implementation remains M16 `90a7f98`; M18 required no code or stream change.
 - Latest successful validation: debug compile, all 108 debug unit tests, lint, Windows validation, wireless debug install, and 21/21 Android 16 Razr instrumentation tests after the M21 public/device gate (129 tests total); fresh physical Death.FM checks also reconfirmed playback, sparse metadata/artwork, compact Queue/History, Chat, Favorites/request gating, login challenge, RIP pages, and all five navigation targets.
 - Architecture: one native Compose app module; immutable state/actions; station-scoped repository contracts; one Media3 service-owned player/session; Android Keystore-backed per-station sessions.
 - Decisions: queued and recently played tracks share visible red `Track Recently Played`; reasons remain distinct internally. Available tracks use green `Request Now`. Other restrictions retain accurate separate labels. Revalidation must fail closed before mutation.
-- Known blockers: Queue rows lack stable track IDs; M17 Private Messages remains deferred for server fixes; representative authenticated accounts are still needed to close M19–M21. The Play developer account is approved; signing/configuration work remains intentionally sequenced at M23–M24.
+- Known blockers: Queue rows lack stable track IDs; M17 Private Messages remains deferred for server fixes; representative authenticated accounts are still needed to close M20–M22. The Play developer account is approved; signing/configuration work remains intentionally sequenced at M23–M24.
 - Roadmap model: M13–M17 shared features, M18–M22 individual station certification, and M23–M24 distribution/publication. Certification milestones harden the shared app and must not create station-specific forks.
-- Next concrete task: continue M22 Entranced.FM public/wired-device certification without inheriting other-station assumptions; obtain representative 1980s.FM, Adagio.FM, or Death.FM user-entered sign-in evidence when available.
-- Likely next files: Entranced.FM certification evidence plus targeted repository/parser tests only for proven station differences; retain the M19–M21 capability tests and public/device records while their account gates wait.
+- Next concrete task: load the Adagio.FM native sign-in challenge and obtain user-entered representative credentials/CAPTCHA, then verify restoration, isolation, authenticated Favorites/Chat/request access, and station-only logout before returning to M21.
+- Likely next files: M20 authenticated certification evidence and roadmap matrices; preserve the separate in-progress M22 ICY metadata hardening until the M20/M21 login gates close.
 - Branch: `agent/initial-android-scaffold`.
 - Latest implementation commit: `90a7f98`.
-- Latest production implementation is `67e6d7a`; the focused M21 Death.FM public/device evidence is ready for publication on `agent/initial-android-scaffold`.
+- Latest production implementation/evidence checkpoints are `67e6d7a` and `5a4bdb7`. M19 authentication completion is an evidence-only checkpoint and does not change production code or stream configuration.
 - Required planning documents: `CURRENT_STATE_AUDIT.md`, `NETWORK_FEATURE_MATRIX.md`, `ENDPOINT_INVENTORY.md`, `AUTHENTICATION_MATRIX.md`, and `IMPLEMENTATION_PLAN.md`.
 
 ## Mission and repository
@@ -295,15 +295,15 @@ tests pass. No production mutation, stream change, or station-specific fork was 
 remain explicitly outside M18 under the M17 server-repair deferral. See
 `docs/screenshots/m18-sst-certification.png`.
 
-M19 1980s.FM certification is in progress. Its unchanged primary relay reached live playback on the wired Razr with
-a current structured title, artist, same-station cover, and no fatal exception; M2 retains the controlled source-
-fallback proof. The public extended Queue endpoint returned HTTP 200 with separate Queue/Played tables, native Chat
-and Favorites showed correct signed-out boundaries, a least-played suggestion returned catalog content without a
-mutation, and the native username/password/CAPTCHA/security-code form loaded. Games opened in a Chrome Custom Tab
-and Back returned to the app. A focused test now prevents 1980s.FM from inheriting SST-only request-message or
-listener-activity flags. Final certification still needs a representative 1980s.FM account for protected sign-in,
-restore/logout, Favorites, authenticated Chat/requests, and membership/request-activity determination. See
-`docs/m19-1980s-certification.md` and `docs/screenshots/m19-1980s-certification.png`.
+M19 1980s.FM certification is complete. The public/device evidence retains live primary/fallback playback,
+structured metadata/artwork, extended Queue/History, Chat, requests, and trusted Games/Awards routes. The user then
+entered a representative MorG login and CAPTCHA directly in the app. The independent 1980s session restored after a
+forced process restart without Keystore errors; Entranced Favorites remained signed out until 1980s was selected;
+authenticated Favorites loaded a valid empty list; Chat exposed its composer; and least-played browsing exposed one
+green `Request Now` track without mutation. Explicit `Sign out of 1980s` cleared only that station and remained
+cleared after another restart. Request messages and listener activity stay `Not verified`. See
+`docs/m19-1980s-certification.md`, `docs/screenshots/m19-1980s-certification.png`, and
+`docs/screenshots/m19-1980s-authenticated.png`.
 
 M20 Adagio.FM certification is in progress. The unchanged primary relay reached live playback on the wired Razr,
 and both station-supplied relays delivered live audio bytes. A fresh classical ICY sample rendered the composer plus
