@@ -34,4 +34,26 @@ class AndroidKeystoreAuthSessionStoreTest {
         store.clear(stationId)
         assertTrue(store.load(stationId, "streamingsoundtracks.com").isEmpty())
     }
+
+    @Test
+    fun clearingOneEncryptedStationSessionPreservesAnother() {
+        val store = AndroidKeystoreAuthSessionStore(ApplicationProvider.getApplicationContext())
+        val first = StationId("keystore-isolation-first")
+        val second = StationId("keystore-isolation-second")
+        store.clear(first)
+        store.clear(second)
+        try {
+            store.save(first, "first.example", listOf(HttpCookie("session", "first-value")), "First listener")
+            store.save(second, "second.example", listOf(HttpCookie("session", "second-value")), "Second listener")
+
+            store.clear(first)
+
+            assertTrue(store.load(first, "first.example").isEmpty())
+            assertEquals("second-value", store.load(second, "second.example").single().value)
+            assertEquals("Second listener", store.loadDisplayName(second))
+        } finally {
+            store.clear(first)
+            store.clear(second)
+        }
+    }
 }

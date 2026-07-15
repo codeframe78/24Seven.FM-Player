@@ -30,10 +30,19 @@ class NetworkAuthRepository internal constructor(
 
     override suspend fun restoreSession(stationId: StationId): Unit = lock(stationId).withLock {
         if (state(stationId).value.status != AuthStatus.Unavailable) return@withLock
-        remote.restoredDisplayName(stationId)?.let { displayName ->
-            state(stationId).value = AuthState(stationId, AuthStatus.SignedIn, displayName = displayName)
+        when (val restored = remote.restoredSession(stationId)) {
+            RestoredAuthSession.None -> Unit
+            RestoredAuthSession.Expired -> state(stationId).value = AuthState(
+                stationId = stationId,
+                status = AuthStatus.Expired,
+                errorMessage = "Your saved station session expired. Sign in again.",
+            )
+            is RestoredAuthSession.SignedIn -> state(stationId).value = AuthState(
+                stationId,
+                AuthStatus.SignedIn,
+                displayName = restored.displayName,
+            )
         }
-        Unit
     }
 
     override suspend fun refreshChallenge(stationId: StationId) = lock(stationId).withLock {

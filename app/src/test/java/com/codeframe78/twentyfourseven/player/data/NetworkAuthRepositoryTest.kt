@@ -59,13 +59,18 @@ class NetworkAuthRepositoryTest {
 
         repository.signOut(stationId)
 
-        assertEquals(1, remote.signOutCalls)
+        assertEquals(listOf(stationId), remote.signedOutStations)
         assertEquals(AuthStatus.SignedOut, repository.observeAuth(stationId).first().status)
     }
 
     @Test
     fun `stored identity restores signed-in state without credentials`() = runTest {
-        val repository = NetworkAuthRepository(FakeAuthRemoteDataSource(challenge, restoredName = "Listener"))
+        val repository = NetworkAuthRepository(
+            FakeAuthRemoteDataSource(
+                challenge,
+                restoredSessions = mapOf(stationId to RestoredAuthSession.SignedIn("Listener")),
+            ),
+        )
 
         repository.restoreSession(stationId)
 
@@ -74,13 +79,59 @@ class NetworkAuthRepositoryTest {
         assertEquals("Listener", state.displayName)
     }
 
+    @Test
+    fun `expired restored session is explicit and isolated from another station`() = runTest {
+        val adagio = StationId("adagio")
+        val repository = NetworkAuthRepository(
+            FakeAuthRemoteDataSource(
+                challenge,
+                restoredSessions = mapOf(
+                    stationId to RestoredAuthSession.Expired,
+                    adagio to RestoredAuthSession.SignedIn("Adagio listener"),
+                ),
+            ),
+        )
+
+        repository.restoreSession(stationId)
+        repository.restoreSession(adagio)
+
+        val expired = repository.observeAuth(stationId).first()
+        val signedIn = repository.observeAuth(adagio).first()
+        assertEquals(AuthStatus.Expired, expired.status)
+        assertEquals("Your saved station session expired. Sign in again.", expired.errorMessage)
+        assertEquals(AuthStatus.SignedIn, signedIn.status)
+        assertEquals("Adagio listener", signedIn.displayName)
+    }
+
+    @Test
+    fun `signing out one station preserves another restored station`() = runTest {
+        val adagio = StationId("adagio")
+        val remote = FakeAuthRemoteDataSource(
+            challenge,
+            restoredSessions = mapOf(
+                stationId to RestoredAuthSession.SignedIn("SST listener"),
+                adagio to RestoredAuthSession.SignedIn("Adagio listener"),
+            ),
+        )
+        val repository = NetworkAuthRepository(remote)
+        repository.restoreSession(stationId)
+        repository.restoreSession(adagio)
+
+        repository.signOut(stationId)
+
+        assertEquals(AuthStatus.SignedOut, repository.observeAuth(stationId).first().status)
+        assertEquals(AuthStatus.SignedIn, repository.observeAuth(adagio).first().status)
+        assertEquals("Adagio listener", repository.observeAuth(adagio).first().displayName)
+        assertEquals(listOf(stationId), remote.signedOutStations)
+    }
+
     private class FakeAuthRemoteDataSource(
         private val challenge: LoginChallenge,
         private val failSignIn: Boolean = false,
-        private val restoredName: String? = null,
+        private val restoredSessions: Map<StationId, RestoredAuthSession> = emptyMap(),
     ) : AuthRemoteDataSource {
         var challengeCalls = 0
-        var signOutCalls = 0
+        val signedOutStations = mutableListOf<StationId>()
         var persistCalls = 0
         var submittedInputs: List<String>? = null
 
@@ -105,10 +156,11 @@ class NetworkAuthRepositoryTest {
         }
 
         override suspend fun signOut(stationId: StationId) {
-            signOutCalls++
+            signedOutStations += stationId
         }
 
-        override suspend fun restoredDisplayName(stationId: StationId): String? = restoredName
+        override suspend fun restoredSession(stationId: StationId): RestoredAuthSession =
+            restoredSessions[stationId] ?: RestoredAuthSession.None
 
         override fun persistSession(stationId: StationId, displayName: String) {
             persistCalls++

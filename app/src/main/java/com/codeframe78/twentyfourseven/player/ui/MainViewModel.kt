@@ -48,10 +48,16 @@ data class MainUiState(
     val nowPlaying: NowPlayingState = NowPlayingState(),
     val queue: QueueState? = null,
     val auth: AuthState? = null,
+    val accounts: List<StationAccountUiState> = emptyList(),
     val chat: ChatState? = null,
     val requests: SongRequestState? = null,
     val favorites: FavoriteTracksState? = null,
     val destination: MainDestination = MainDestination.Player,
+)
+
+data class StationAccountUiState(
+    val station: Station,
+    val auth: AuthState,
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -79,8 +85,25 @@ class MainViewModel(
             }
         }
 
-    private val selectedAuth = stations.observeSelectedStation()
-        .flatMapLatest { station -> auth.observeAuth(station.id) }
+    private val accounts = stations.observeStations()
+        .flatMapLatest { all ->
+            if (all.isEmpty()) {
+                flowOf(emptyList())
+            } else {
+                combine(all.map { station -> auth.observeAuth(station.id) }) { states ->
+                    all.mapIndexed { index, station -> StationAccountUiState(station, states[index]) }
+                }
+            }
+        }
+
+    private val selectedAuth = combine(
+        stations.observeSelectedStation(),
+        accounts,
+    ) { selected, accountStates ->
+        accountStates.firstOrNull { it.station.id == selected.id }?.auth ?: AuthState(selected.id)
+    }
+
+    private val authContent = combine(selectedAuth, accounts, ::AuthContent)
 
     private val selectedChat = combine(
         stations.observeSelectedStation(),
@@ -114,7 +137,7 @@ class MainViewModel(
     private val stationContent = combine(
         nowPlaying.observeNowPlaying(),
         selectedQueue,
-        selectedAuth,
+        authContent,
         selectedChat,
         requestContent,
         ::StationContent,
@@ -129,7 +152,7 @@ class MainViewModel(
     ) { all, selected, playbackState, content, selectedDestination ->
         val selectedQueueState = content.queue.takeIf { it.stationId == selected.id }
             ?: QueueState(selected.id)
-        val selectedAuthState = content.auth.takeIf { it.stationId == selected.id }
+        val selectedAuthState = content.auth.selected.takeIf { it.stationId == selected.id }
         val resolvedRequests = content.requestContent.requests
             .takeIf { it.stationId == selected.id }
             ?.resolveAvailability(selected.id, selectedQueueState, selectedAuthState?.status == AuthStatus.SignedIn)
@@ -144,6 +167,7 @@ class MainViewModel(
                 ?: NowPlayingState(stationId = selected.id),
             queue = selectedQueueState,
             auth = selectedAuthState,
+            accounts = content.auth.accounts,
             chat = content.chat.takeIf { it.stationId == selected.id },
             requests = resolvedRequests,
             favorites = resolvedFavorites,
@@ -157,7 +181,9 @@ class MainViewModel(
             stations.observeSelectedStation().collect(playback::selectStation)
         }
         viewModelScope.launch {
-            stations.observeSelectedStation().collect { station -> auth.restoreSession(station.id) }
+            stations.observeStations().collect { all ->
+                all.forEach { station -> auth.restoreSession(station.id) }
+            }
         }
     }
 
@@ -181,8 +207,8 @@ class MainViewModel(
         queue.refresh(stations.observeSelectedStation().first().id)
     }
 
-    fun refreshAuth() = viewModelScope.launch {
-        auth.refreshChallenge(stations.observeSelectedStation().first().id)
+    fun refreshAuth(stationId: StationId) = viewModelScope.launch {
+        auth.refreshChallenge(stationId)
     }
 
     fun refreshChat() = viewModelScope.launch {
@@ -197,12 +223,11 @@ class MainViewModel(
         chat.sendMessage(stations.observeSelectedStation().first().id, message)
     }
 
-    fun signIn(username: String, password: String, securityCode: String) = viewModelScope.launch {
-        auth.signIn(stations.observeSelectedStation().first().id, username, password, securityCode)
+    fun signIn(stationId: StationId, username: String, password: String, securityCode: String) = viewModelScope.launch {
+        auth.signIn(stationId, username, password, securityCode)
     }
 
-    fun signOut() = viewModelScope.launch {
-        val stationId = stations.observeSelectedStation().first().id
+    fun signOut(stationId: StationId) = viewModelScope.launch {
         auth.signOut(stationId)
         favorites.clear(stationId)
     }
@@ -256,9 +281,14 @@ class MainViewModel(
 private data class StationContent(
     val nowPlaying: NowPlayingState,
     val queue: QueueState,
-    val auth: AuthState,
+    val auth: AuthContent,
     val chat: ChatState,
     val requestContent: RequestContent,
+)
+
+private data class AuthContent(
+    val selected: AuthState,
+    val accounts: List<StationAccountUiState>,
 )
 
 private data class RequestContent(

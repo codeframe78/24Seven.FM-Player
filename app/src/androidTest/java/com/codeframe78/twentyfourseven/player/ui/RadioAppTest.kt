@@ -291,7 +291,75 @@ class RadioAppTest {
         composeRule.onNodeWithText("Username").assertExists()
         composeRule.onNodeWithText("Password").assertExists()
         composeRule.onNodeWithText("Security code").assertExists()
-        composeRule.onNodeWithText("Sign in").assertExists()
+        composeRule.onNodeWithText("Sign in to SST").assertExists()
+    }
+
+    @Test
+    fun stationAccountsExposeFiveIndependentStatusesAndTargetActions() {
+        val refreshed = mutableListOf<StationId>()
+        val signedOut = mutableListOf<StationId>()
+        val signedIn = mutableListOf<StationId>()
+        val stations = listOf(
+            accountStation("sst", "StreamingSoundtracks.com", "SST"),
+            accountStation("1980s", "1980s.FM", "80s"),
+            accountStation("adagio", "Adagio.FM", "Adagio"),
+            accountStation("death", "Death.FM", "Death"),
+            accountStation("entranced", "Entranced.FM", "Entranced"),
+        )
+        val accounts = stations.map { accountStation ->
+            val auth = when (accountStation.id.value) {
+                "sst" -> AuthState(accountStation.id, AuthStatus.SignedIn, displayName = "Listener")
+                "adagio" -> AuthState(accountStation.id, AuthStatus.Expired, errorMessage = "Session expired")
+                "entranced" -> AuthState(
+                    accountStation.id,
+                    AuthStatus.SignedOut,
+                    challengeImageUrl = "https://entranced.fm/security-code.png",
+                )
+                else -> AuthState(accountStation.id)
+            }
+            StationAccountUiState(accountStation, auth)
+        }
+
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(
+                        destination = MainDestination.More,
+                        stations = stations,
+                        selectedStation = stations.first(),
+                        auth = accounts.first().auth,
+                        accounts = accounts,
+                    ),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                    onRefreshAuth = { refreshed += it },
+                    onSignIn = { stationId, _, _, _ -> signedIn += stationId },
+                    onSignOut = { signedOut += it },
+                )
+            }
+        }
+
+        composeRule.onAllNodesWithTag("account_card_sst").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("account_card_1980s").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("account_card_adagio").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("account_card_death").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("account_card_entranced").assertCountEquals(1)
+        composeRule.onNodeWithContentDescription("StreamingSoundtracks.com account status: Signed in").assertExists()
+        composeRule.onNodeWithContentDescription("Adagio.FM account status: Expired").assertExists()
+
+        composeRule.onNodeWithTag("account_sign_out_sst").performScrollTo().performClick()
+        composeRule.onNodeWithTag("account_sign_in_again_adagio").performScrollTo().performClick()
+        composeRule.onNodeWithTag("account_sign_in_entranced").performScrollTo().performClick()
+
+        composeRule.runOnIdle {
+            assertEquals(listOf(StationId("sst")), signedOut)
+            assertEquals(listOf(StationId("adagio")), refreshed)
+            assertEquals(listOf(StationId("entranced")), signedIn)
+        }
     }
 
     @Test
@@ -491,6 +559,15 @@ class RadioAppTest {
     private fun sampleState() = MainUiState(
         stations = listOf(station),
         selectedStation = station,
+    )
+
+    private fun accountStation(id: String, name: String, shortName: String) = Station(
+        id = StationId(id),
+        name = name,
+        shortName = shortName,
+        description = "$name live radio",
+        websiteUrl = "https://$id.example/",
+        capabilities = StationCapabilities(supportsAuthentication = true),
     )
 
     private companion object {

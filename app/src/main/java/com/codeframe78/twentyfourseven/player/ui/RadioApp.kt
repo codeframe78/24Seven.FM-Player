@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
@@ -64,6 +65,8 @@ import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -83,6 +86,7 @@ import com.codeframe78.twentyfourseven.player.domain.RequestSuggestionMode
 import com.codeframe78.twentyfourseven.player.domain.SongRequestLoadStatus
 import coil3.compose.AsyncImage
 import com.codeframe78.twentyfourseven.player.R
+import com.codeframe78.twentyfourseven.player.ui.theme.stationPalette
 
 private val navigationItems = listOf(
     NavigationItem(MainDestination.Player, "Player", Icons.Default.Radio),
@@ -110,9 +114,9 @@ internal fun RadioApp(
     onRefreshFavorites: () -> Unit = {},
     onRefreshChat: () -> Unit = {},
     onSendChatMessage: (String) -> Unit = {},
-    onRefreshAuth: () -> Unit = {},
-    onSignIn: (String, String, String) -> Unit = { _, _, _ -> },
-    onSignOut: () -> Unit = {},
+    onRefreshAuth: (StationId) -> Unit = {},
+    onSignIn: (StationId, String, String, String) -> Unit = { _, _, _, _ -> },
+    onSignOut: (StationId) -> Unit = {},
     onSearchRequests: (String, RequestSearchField) -> Unit = { _, _ -> },
     onSuggestRequest: (RequestSuggestionMode) -> Unit = {},
     onOpenRequestAlbum: (String) -> Unit = {},
@@ -143,9 +147,9 @@ private fun PhoneShell(
     onRefreshFavorites: () -> Unit,
     onRefreshChat: () -> Unit,
     onSendChatMessage: (String) -> Unit,
-    onRefreshAuth: () -> Unit,
-    onSignIn: (String, String, String) -> Unit,
-    onSignOut: () -> Unit,
+    onRefreshAuth: (StationId) -> Unit,
+    onSignIn: (StationId, String, String, String) -> Unit,
+    onSignOut: (StationId) -> Unit,
     onSearchRequests: (String, RequestSearchField) -> Unit,
     onSuggestRequest: (RequestSuggestionMode) -> Unit,
     onOpenRequestAlbum: (String) -> Unit,
@@ -191,9 +195,9 @@ private fun TabletShell(
     onRefreshFavorites: () -> Unit,
     onRefreshChat: () -> Unit,
     onSendChatMessage: (String) -> Unit,
-    onRefreshAuth: () -> Unit,
-    onSignIn: (String, String, String) -> Unit,
-    onSignOut: () -> Unit,
+    onRefreshAuth: (StationId) -> Unit,
+    onSignIn: (StationId, String, String, String) -> Unit,
+    onSignOut: (StationId) -> Unit,
     onSearchRequests: (String, RequestSearchField) -> Unit,
     onSuggestRequest: (RequestSuggestionMode) -> Unit,
     onOpenRequestAlbum: (String) -> Unit,
@@ -280,9 +284,9 @@ private fun DestinationContent(
     onRefreshFavorites: () -> Unit,
     onRefreshChat: () -> Unit,
     onSendChatMessage: (String) -> Unit,
-    onRefreshAuth: () -> Unit,
-    onSignIn: (String, String, String) -> Unit,
-    onSignOut: () -> Unit,
+    onRefreshAuth: (StationId) -> Unit,
+    onSignIn: (StationId, String, String, String) -> Unit,
+    onSignOut: (StationId) -> Unit,
     onSearchRequests: (String, RequestSearchField) -> Unit,
     onSuggestRequest: (RequestSuggestionMode) -> Unit,
     onOpenRequestAlbum: (String) -> Unit,
@@ -670,9 +674,9 @@ private fun FeatureScreen(title: String, description: String, icon: ImageVector,
 private fun MoreScreen(
     state: MainUiState,
     padding: PaddingValues,
-    onRefreshAuth: () -> Unit,
-    onSignIn: (String, String, String) -> Unit,
-    onSignOut: () -> Unit,
+    onRefreshAuth: (StationId) -> Unit,
+    onSignIn: (StationId, String, String, String) -> Unit,
+    onSignOut: (StationId) -> Unit,
     onSearchRequests: (String, RequestSearchField) -> Unit,
     onSuggestRequest: (RequestSuggestionMode) -> Unit,
     onOpenRequestAlbum: (String) -> Unit,
@@ -709,41 +713,162 @@ private fun MoreScreen(
 @Composable
 private fun AccountSection(
     state: MainUiState,
-    onRefresh: () -> Unit,
-    onSignIn: (String, String, String) -> Unit,
-    onSignOut: () -> Unit,
+    onRefresh: (StationId) -> Unit,
+    onSignIn: (StationId, String, String, String) -> Unit,
+    onSignOut: (StationId) -> Unit,
 ) {
-    val auth = state.auth
-    var username by remember(state.selectedStation?.id) { mutableStateOf("") }
-    var password by remember(state.selectedStation?.id) { mutableStateOf("") }
-    var securityCode by remember(state.selectedStation?.id) { mutableStateOf("") }
-    Text("Account", style = MaterialTheme.typography.titleMedium)
-    Card(Modifier.fillMaxWidth()) {
+    val accountStates = state.accounts.ifEmpty {
+        state.selectedStation?.let { selected ->
+            listOf(StationAccountUiState(selected, state.auth ?: com.codeframe78.twentyfourseven.player.domain.AuthState(selected.id)))
+        }.orEmpty()
+    }
+    Text("Station accounts", style = MaterialTheme.typography.titleMedium)
+    Text(
+        "Each station has an independent account and protected session. Signing out of one station does not sign you out of another.",
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        if (maxWidth >= 720.dp) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                accountStates.chunked(2).forEach { rowAccounts ->
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        rowAccounts.forEach { account ->
+                            AccountCard(
+                                account = account,
+                                isSelectedStation = account.station.id == state.selectedStation?.id,
+                                onRefresh = onRefresh,
+                                onSignIn = onSignIn,
+                                onSignOut = onSignOut,
+                                modifier = Modifier.weight(1f),
+                            )
+                        }
+                        if (rowAccounts.size == 1) Spacer(Modifier.weight(1f))
+                    }
+                }
+            }
+        } else {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                accountStates.forEach { account ->
+                    AccountCard(
+                        account = account,
+                        isSelectedStation = account.station.id == state.selectedStation?.id,
+                        onRefresh = onRefresh,
+                        onSignIn = onSignIn,
+                        onSignOut = onSignOut,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AccountCard(
+    account: StationAccountUiState,
+    isSelectedStation: Boolean,
+    onRefresh: (StationId) -> Unit,
+    onSignIn: (StationId, String, String, String) -> Unit,
+    onSignOut: (StationId) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val station = account.station
+    val auth = account.auth
+    val palette = stationPalette(station.id)
+    var username by remember(station.id) { mutableStateOf("") }
+    var password by remember(station.id) { mutableStateOf("") }
+    var securityCode by remember(station.id) { mutableStateOf("") }
+    Card(modifier.fillMaxWidth().testTag("account_card_${station.id.value}")) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            when (auth?.status ?: AuthStatus.Unavailable) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    Modifier
+                        .size(12.dp)
+                        .clip(CircleShape)
+                        .background(palette.accent)
+                        .semantics { contentDescription = "${station.name} station marker" },
+                )
+                Spacer(Modifier.width(10.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(station.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                    if (isSelectedStation) {
+                        Text(
+                            "Current playback station",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+                AccountStatusBadge(station.name, station.id, auth.status)
+            }
+            if (!station.capabilities.supportsAuthentication) {
+                Text("Account sign in is unavailable for this station.")
+                return@Column
+            }
+            when (auth.status) {
                 AuthStatus.SignedIn -> {
-                    Text("Signed in as ${auth?.displayName.orEmpty()}", fontWeight = FontWeight.Medium)
-                    Button(onClick = onSignOut) { Text("Sign out") }
+                    Text("Signed in as ${auth.displayName.orEmpty()}", fontWeight = FontWeight.Medium)
+                    Button(
+                        onClick = { onSignOut(station.id) },
+                        modifier = Modifier.testTag("account_sign_out_${station.id.value}"),
+                    ) { Text("Sign out of ${station.shortName}") }
                 }
                 AuthStatus.LoadingChallenge, AuthStatus.SigningIn -> {
-                    CircularProgressIndicator()
-                    Text(if (auth?.status == AuthStatus.SigningIn) "Signing in…" else "Loading secure sign in…")
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        CircularProgressIndicator(Modifier.size(28.dp))
+                        Spacer(Modifier.width(12.dp))
+                        Text(if (auth.status == AuthStatus.SigningIn) "Signing in…" else "Loading secure sign in…")
+                    }
                 }
-                AuthStatus.Unavailable -> Button(onClick = onRefresh) { Text("Load sign in") }
-                AuthStatus.SignedOut, AuthStatus.Error -> {
-                    auth?.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-                    OutlinedTextField(username, { username = it }, label = { Text("Username") }, singleLine = true)
-                    OutlinedTextField(
-                        password,
-                        { password = it },
-                        label = { Text("Password") },
-                        singleLine = true,
-                        visualTransformation = PasswordVisualTransformation(),
+                AuthStatus.Unavailable -> {
+                    Text("Not signed in", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Button(
+                        onClick = { onRefresh(station.id) },
+                        modifier = Modifier.testTag("account_load_sign_in_${station.id.value}"),
+                    ) { Text("Load ${station.shortName} sign in") }
+                }
+                AuthStatus.Expired -> {
+                    Text(
+                        auth.errorMessage ?: "Your saved station session expired. Sign in again.",
+                        color = MaterialTheme.colorScheme.error,
                     )
-                    auth?.challengeImageUrl?.let { url ->
+                    Button(
+                        onClick = { onRefresh(station.id) },
+                        modifier = Modifier.testTag("account_sign_in_again_${station.id.value}"),
+                    ) { Text("Sign in to ${station.shortName} again") }
+                }
+                AuthStatus.SignedOut, AuthStatus.Error -> {
+                    auth.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                    if (auth.challengeImageUrl == null) {
+                        Button(
+                            onClick = { onRefresh(station.id) },
+                            modifier = Modifier.testTag("account_retry_sign_in_${station.id.value}"),
+                        ) { Text("Try loading ${station.shortName} sign in") }
+                    } else {
+                        OutlinedTextField(
+                            username,
+                            { username = it },
+                            label = { Text("Username") },
+                            singleLine = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("account_username_${station.id.value}")
+                                .semantics { contentDescription = "Username for ${station.name}" },
+                        )
+                        OutlinedTextField(
+                            password,
+                            { password = it },
+                            label = { Text("Password") },
+                            singleLine = true,
+                            visualTransformation = PasswordVisualTransformation(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("account_password_${station.id.value}")
+                                .semantics { contentDescription = "Password for ${station.name}" },
+                        )
                         AsyncImage(
-                            model = url,
-                            contentDescription = "Security code image",
+                            model = auth.challengeImageUrl,
+                            contentDescription = "${station.name} security code image",
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -752,24 +877,58 @@ private fun AccountSection(
                                 .background(Color.White)
                                 .padding(12.dp),
                         )
-                    }
-                    OutlinedTextField(
-                        securityCode,
-                        { securityCode = it.filter(Char::isLetterOrDigit) },
-                        label = { Text("Security code") },
-                        singleLine = true,
-                    )
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Button(onClick = {
-                            onSignIn(username, password, securityCode)
-                            password = ""
-                            securityCode = ""
-                        }) { Text("Sign in") }
-                        TextButton(onClick = onRefresh) { Text("New code") }
+                        OutlinedTextField(
+                            securityCode,
+                            { securityCode = it.filter(Char::isLetterOrDigit) },
+                            label = { Text("Security code") },
+                            singleLine = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("account_security_code_${station.id.value}")
+                                .semantics { contentDescription = "Security code for ${station.name}" },
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Button(
+                                onClick = {
+                                    onSignIn(station.id, username, password, securityCode)
+                                    password = ""
+                                    securityCode = ""
+                                },
+                                modifier = Modifier.testTag("account_sign_in_${station.id.value}"),
+                            ) { Text("Sign in to ${station.shortName}") }
+                            TextButton(onClick = { onRefresh(station.id) }) { Text("New code") }
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun AccountStatusBadge(stationName: String, stationId: StationId, status: AuthStatus) {
+    val (label, color) = when (status) {
+        AuthStatus.SignedIn -> "Signed in" to MaterialTheme.colorScheme.primary
+        AuthStatus.LoadingChallenge -> "Loading" to MaterialTheme.colorScheme.secondary
+        AuthStatus.SigningIn -> "Signing in" to MaterialTheme.colorScheme.secondary
+        AuthStatus.Expired -> "Expired" to MaterialTheme.colorScheme.error
+        AuthStatus.Error -> "Attention" to MaterialTheme.colorScheme.error
+        AuthStatus.SignedOut, AuthStatus.Unavailable -> "Signed out" to MaterialTheme.colorScheme.onSurfaceVariant
+    }
+    Surface(
+        shape = RoundedCornerShape(50),
+        color = color.copy(alpha = 0.14f),
+        contentColor = color,
+        modifier = Modifier
+            .testTag("account_status_${stationId.value}")
+            .semantics { contentDescription = "$stationName account status: $label" },
+    ) {
+        Text(
+            label,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.SemiBold,
+        )
     }
 }
 

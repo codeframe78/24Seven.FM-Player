@@ -14,6 +14,12 @@ import java.util.concurrent.ConcurrentHashMap
 
 internal data class AuthenticatedPage(val html: String, val finalUrl: String)
 
+internal sealed interface RestoredAuthSession {
+    data object None : RestoredAuthSession
+    data object Expired : RestoredAuthSession
+    data class SignedIn(val displayName: String) : RestoredAuthSession
+}
+
 internal interface AuthRemoteDataSource {
     suspend fun fetchChallenge(stationId: StationId): LoginChallenge
     suspend fun signIn(
@@ -23,7 +29,7 @@ internal interface AuthRemoteDataSource {
         password: String,
         securityCode: String,
     ): AuthenticatedPage
-    suspend fun restoredDisplayName(stationId: StationId): String?
+    suspend fun restoredSession(stationId: StationId): RestoredAuthSession
     fun persistSession(stationId: StationId, displayName: String)
     suspend fun signOut(stationId: StationId)
 }
@@ -73,18 +79,21 @@ internal class StationAuthRemoteDataSource(
         }
     }
 
-    override suspend fun restoredDisplayName(stationId: StationId): String? = withContext(Dispatchers.IO) {
-        if (cookieManager(stationId).cookieStore.cookies.isEmpty()) return@withContext null
-        val displayName = sessionStore.loadDisplayName(stationId) ?: return@withContext null
+    override suspend fun restoredSession(stationId: StationId): RestoredAuthSession = withContext(Dispatchers.IO) {
+        if (cookieManager(stationId).cookieStore.cookies.isEmpty()) return@withContext RestoredAuthSession.None
+        val displayName = sessionStore.loadDisplayName(stationId) ?: return@withContext RestoredAuthSession.None
         val origin = origin(stationId)
         val page = runCatching { request(stationId, URI(origin), method = "GET") }
-            .getOrNull() ?: return@withContext displayName
+            .getOrNull() ?: return@withContext RestoredAuthSession.SignedIn(displayName)
         runCatching { resultParser.parseSignedInDisplayName(page.html, origin, displayName) }
-            .getOrElse {
+            .fold(
+                onSuccess = RestoredAuthSession::SignedIn,
+                onFailure = {
                 cookieManagers.remove(stationId)
                 sessionStore.clear(stationId)
-                null
-            }
+                    RestoredAuthSession.Expired
+                },
+            )
     }
 
     override fun persistSession(stationId: StationId, displayName: String) {

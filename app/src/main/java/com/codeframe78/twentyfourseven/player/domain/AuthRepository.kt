@@ -2,7 +2,7 @@ package com.codeframe78.twentyfourseven.player.domain
 
 import kotlinx.coroutines.flow.Flow
 
-enum class AuthStatus { Unavailable, LoadingChallenge, SignedOut, SigningIn, SignedIn, Error }
+enum class AuthStatus { Unavailable, LoadingChallenge, SignedOut, SigningIn, SignedIn, Expired, Error }
 
 data class AuthState(
     val stationId: StationId,

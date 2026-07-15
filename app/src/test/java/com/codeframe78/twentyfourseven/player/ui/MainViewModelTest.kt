@@ -7,6 +7,9 @@ import com.codeframe78.twentyfourseven.player.data.UnavailableSongRequestReposit
 import com.codeframe78.twentyfourseven.player.data.UnavailableFavoriteTracksRepository
 import com.codeframe78.twentyfourseven.player.domain.ChatRepository
 import com.codeframe78.twentyfourseven.player.domain.ChatState
+import com.codeframe78.twentyfourseven.player.domain.AuthRepository
+import com.codeframe78.twentyfourseven.player.domain.AuthState
+import com.codeframe78.twentyfourseven.player.domain.AuthStatus
 import com.codeframe78.twentyfourseven.player.domain.PlaybackController
 import com.codeframe78.twentyfourseven.player.domain.PlaybackState
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingRepository
@@ -140,6 +143,83 @@ class MainViewModelTest {
         advanceUntilIdle()
 
         assertEquals(MainDestination.Chat, viewModel.uiState.value.destination)
+    }
+
+    @Test
+    fun `all station accounts restore and remain independently visible`() = runTest(dispatcher) {
+        val auth = FakeAuthRepository()
+        val viewModel = MainViewModel(
+            BootstrapStationRepository(),
+            FakePlaybackController(),
+            FakeNowPlayingRepository(),
+            FakeQueueRepository(),
+            auth,
+            UnavailableChatRepository(),
+            UnavailableSongRequestRepository(),
+            UnavailableFavoriteTracksRepository(),
+        )
+        backgroundScope.launch { viewModel.uiState.collect() }
+        advanceUntilIdle()
+
+        assertEquals(
+            listOf("sst", "1980s", "adagio", "death", "entranced"),
+            viewModel.uiState.value.accounts.map { it.station.id.value },
+        )
+        assertEquals(
+            setOf("sst", "1980s", "adagio", "death", "entranced"),
+            auth.restoredStations.map { it.value }.toSet(),
+        )
+
+        auth.emit(AuthState(StationId("sst"), AuthStatus.SignedIn, displayName = "SST listener"))
+        auth.emit(AuthState(StationId("adagio"), AuthStatus.Expired, errorMessage = "Expired"))
+        advanceUntilIdle()
+
+        assertEquals(AuthStatus.SignedIn, viewModel.uiState.value.auth?.status)
+        assertEquals(
+            AuthStatus.Expired,
+            viewModel.uiState.value.accounts.first { it.station.id == StationId("adagio") }.auth.status,
+        )
+
+        viewModel.selectStation(StationId("adagio"))
+        advanceUntilIdle()
+        assertEquals(AuthStatus.Expired, viewModel.uiState.value.auth?.status)
+        assertEquals(
+            AuthStatus.SignedIn,
+            viewModel.uiState.value.accounts.first { it.station.id == StationId("sst") }.auth.status,
+        )
+    }
+
+    @Test
+    fun `account actions target explicit station without changing another session`() = runTest(dispatcher) {
+        val auth = FakeAuthRepository().apply {
+            emit(AuthState(StationId("sst"), AuthStatus.SignedIn, displayName = "SST listener"))
+            emit(AuthState(StationId("adagio"), AuthStatus.SignedIn, displayName = "Adagio listener"))
+        }
+        val viewModel = MainViewModel(
+            BootstrapStationRepository(),
+            FakePlaybackController(),
+            FakeNowPlayingRepository(),
+            FakeQueueRepository(),
+            auth,
+            UnavailableChatRepository(),
+            UnavailableSongRequestRepository(),
+            UnavailableFavoriteTracksRepository(),
+        )
+        backgroundScope.launch { viewModel.uiState.collect() }
+        advanceUntilIdle()
+
+        viewModel.refreshAuth(StationId("death"))
+        viewModel.signIn(StationId("entranced"), "Listener", "transient", "A1B2C3")
+        viewModel.signOut(StationId("sst"))
+        advanceUntilIdle()
+
+        assertEquals(listOf(StationId("death")), auth.refreshedStations)
+        assertEquals(listOf(StationId("entranced")), auth.signedInStations)
+        assertEquals(listOf(StationId("sst")), auth.signedOutStations)
+        assertEquals(
+            AuthStatus.SignedIn,
+            viewModel.uiState.value.accounts.first { it.station.id == StationId("adagio") }.auth.status,
+        )
     }
 
     @Test
@@ -290,6 +370,47 @@ class MainViewModelTest {
         val state = MutableStateFlow(NowPlayingState())
 
         override fun observeNowPlaying() = state
+    }
+
+    private class FakeAuthRepository : AuthRepository {
+        private val states = mutableMapOf<StationId, MutableStateFlow<AuthState>>()
+        val restoredStations = mutableListOf<StationId>()
+        val refreshedStations = mutableListOf<StationId>()
+        val signedInStations = mutableListOf<StationId>()
+        val signedOutStations = mutableListOf<StationId>()
+
+        override fun observeAuth(stationId: StationId): Flow<AuthState> = state(stationId)
+
+        override suspend fun restoreSession(stationId: StationId) {
+            restoredStations += stationId
+        }
+
+        override suspend fun refreshChallenge(stationId: StationId) {
+            refreshedStations += stationId
+        }
+
+        override suspend fun signIn(
+            stationId: StationId,
+            username: String,
+            password: String,
+            securityCode: String,
+        ) {
+            signedInStations += stationId
+            state(stationId).value = AuthState(stationId, AuthStatus.SignedIn, displayName = username)
+        }
+
+        override suspend fun signOut(stationId: StationId) {
+            signedOutStations += stationId
+            state(stationId).value = AuthState(stationId)
+        }
+
+        fun emit(auth: AuthState) {
+            state(auth.stationId).value = auth
+        }
+
+        private fun state(stationId: StationId) = states.getOrPut(stationId) {
+            MutableStateFlow(AuthState(stationId))
+        }
     }
 
     private class FakePlaybackController : PlaybackController {
