@@ -142,12 +142,13 @@ required_packages=(
     libvirt-clients
     libvirt-daemon-system
     nodejs
-    npm
     openjdk-17-jdk
     openssh-client
     python3
     python3-venv
-    qemu-kvm
+    # Ubuntu 26.04 exposes qemu-kvm only as a virtual package. This explicit
+    # provider also exists on older supported Ubuntu releases.
+    qemu-system-x86
     rsync
     shellcheck
     unzip
@@ -156,6 +157,13 @@ required_packages=(
     zip
 )
 sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y "${required_packages[@]}"
+
+# NodeSource bundles npm with nodejs, while Ubuntu's native nodejs package may
+# keep npm separate. Request npm only when the selected nodejs provider did not
+# install it, avoiding a NodeSource package conflict.
+if ! command -v npm >/dev/null; then
+    sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y npm
+fi
 
 # Google still documents these compatibility libraries for 64-bit Ubuntu. Some
 # newer Ubuntu releases rename or retire individual packages, so install every
