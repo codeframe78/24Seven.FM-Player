@@ -23,10 +23,21 @@ The Google Play developer account was approved on July 14, 2026. Use this during
 7. Add a feedback email or URL and a tester email list in Console. Do not commit tester identities.
 8. Complete the store listing and App content declarations needed by the selected track.
 
+### App-content declarations completed July 15, 2026
+
+The following objective declarations are saved in Play Console and awaiting the normal Publishing overview review step:
+
+- **Ads:** No. The release dependency graph and implemented behavior contain no advertising SDK or advertising surface.
+- **Government apps:** No. The app is an independent community project and is not developed by or on behalf of a government.
+- **Financial features:** None. The app provides no listed financial feature.
+- **Health:** None. The app provides no health feature; Console reported that no regional health documentation is currently required.
+
+These saved declarations have not been sent for review. The remaining App content forms require owner-provided or policy-sensitive inputs and must not be guessed: reviewer credentials/instructions, public privacy-policy URL, intended target audience, content-rating contact email, Data Safety confirmation, and public store contact details.
+
 ## App-content details to review
 
 - **App access:** Public playback, Queue, and History do not require login. Authentication, Chat posting, and requests do. If Play requests reviewer access, provide a least-privileged non-administrator station account only through Play Console's protected reviewer instructions.
-- **Ads:** The app contains no advertising SDK or advertising behavior.
+- **Ads:** Completed as **No** on July 15, 2026; the app contains no advertising SDK or advertising behavior.
 - **Data safety:** Internal-only testing is currently exempt, but closed/open/production releases require an accurate declaration. Use `docs/m23-data-safety.md` as the project worksheet rather than answering from memory. Account credentials are submitted directly to the selected station, station sessions are encrypted locally, chat history is memory-only, and the app has no analytics or developer backend.
 - **Privacy policy:** Play policy requires an active public, non-geofenced web URL for the privacy policy. Host `PRIVACY.md` as a stable web page before submitting the app. The same policy is available as native text under More in the app.
 - **Account deletion:** The app does not create station accounts; it only signs into pre-existing station accounts and can remove the local session with Sign out. Confirm the appropriate Console declaration when completing App content.

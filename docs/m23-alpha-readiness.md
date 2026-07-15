@@ -42,6 +42,7 @@ current M23 distribution-readiness gate.
 - The project-specific provisional Data Safety worksheet is recorded in `docs/m23-data-safety.md`; its final answers remain gated on the active Play Console form and station transmission/retention confirmation.
 - The activated Play Console was inspected read-only on July 15: it is a newly activated personal account with no existing apps. The intended public name `24Seven.FM Player` fits the 30-character limit, and Console reports `com.codeframe78.twentyfourseven.player` as available.
 - The Play Console app was created on July 15 as an English (United States), App, Free listing with the intended package. The owner explicitly accepted the Developer Program Policies, Play App Signing Terms, and US export declaration; automatic installer protection was disabled to preserve approved sideload testing.
+- Play Console App content now records the four evidence-backed objective declarations: no ads, not a government app, no financial features, and no health features. The changes are saved in Publishing overview but have not been sent for review.
 - Console confirms the account-specific production gate: publish a closed-test release, keep at least 12 testers opted in continuously for at least 14 days, then apply for production access.
 - The policy-conscious default store copy, category/contact proposal, asset inventory, and accessibility-text draft are recorded in `docs/play-store-listing.md`.
 - Play-ready icon, feature graphic, four phone screenshots, medium/expanded tablet screenshots, and an expanded
@@ -71,4 +72,5 @@ Signing files and secrets must never be committed. Gradle should receive their p
 - Record SHA-256 and signing-certificate fingerprints in the private release record or distribution service.
 - Install the signed candidate on a clean test device and verify a same-key version-code update.
 - Host `PRIVACY.md` at a stable public web URL before submitting the app in Play Console.
+- Complete the owner-input Console forms: intended target audience, content-rating and public contact email, least-privileged reviewer credentials/instructions, and the final Data Safety answers.
 - Publish only after explicit authorization.
