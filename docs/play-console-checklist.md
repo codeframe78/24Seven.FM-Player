@@ -11,17 +11,22 @@ The Google Play developer account was approved on July 14, 2026. Use this during
 - Privacy notice, Alpha testing guide, release notes, permission review, and device validation are complete.
 - Gradle accepts Play upload signing only from four `TWENTYFOURSEVEN_UPLOAD_*` environment variables. Supplying a partial set fails configuration.
 - `scripts/validate-play-bundle.ps1` builds the release AAB, requires a real signature, and prints its SHA-256 without revealing signing inputs.
+- `scripts/initialize-play-upload-key.ps1` creates the separate upload key outside Git and stores its credentials in a Windows-current-user DPAPI envelope. It refuses to overwrite either artifact.
+- `scripts/validate-protected-play-bundle.ps1` decrypts that envelope only in memory, supplies process-scoped Gradle inputs, restores the previous process environment, verifies the JAR signature and exact signer certificate, and can optionally build the signed release APK with `-BuildApk`.
 
 ## Play Console setup
 
 1. **Complete:** Play app created as `24Seven.FM Player`, package `com.codeframe78.twentyfourseven.player`, default language English (United States), classification App, and Free pricing.
 2. **Complete:** Automatic installer protection disabled so approved local/open-source builds are not redirected to Google Play.
 3. **Complete:** Initial Play App Signing Terms accepted. Prefer the default Google-generated app-signing key at first release; retain only the separate upload key under project-controlled secure backup.
-4. Create the upload key outside this repository and load its path/password/alias through process-scoped environment variables or protected CI secrets.
-5. Run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-play-bundle.ps1` and upload the verified AAB.
-6. Start with Internal testing. It supports up to 100 testers and uses a private opt-in/share link rather than public search discovery.
-7. Add a feedback email or URL and a tester email list in Console. Do not commit tester identities.
-8. Complete the store listing and App content declarations needed by the selected track.
+4. **Complete locally:** A separate 4096-bit RSA upload key was created outside the repository. Its generated password and metadata are stored only in a current-user DPAPI envelope; no plaintext signing environment is persisted.
+5. **Complete locally:** `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-protected-play-bundle.ps1 -BuildApk` built the signed APK/AAB, verified the AAB signature, and confirmed that the bundle signer matches the configured upload certificate.
+6. Back up the upload keystore and a recoverable copy of its credentials to an owner-controlled location separate from this PC before uploading. The DPAPI envelope alone is not a machine-loss backup.
+7. Upload the verified AAB, then start with Internal testing. It supports up to 100 testers and uses a private opt-in/share link rather than public search discovery.
+8. Add a feedback email or URL and a tester email list in Console. Do not commit tester identities.
+9. Complete the store listing and App content declarations needed by the selected track.
+
+The validated July 15 candidate AAB has SHA-256 `5D8CB6FEA4455DF2745FF97248721CC2C9DE585F85E1F7F03585FDE5FE66C5FE`; its upload-certificate SHA-256 is `F6E8E81271964FFC3F8A0D548B49B4DB93AEFC48CCB74B8744512670F4279E3F`. The AAB hash changes whenever the candidate changes; the certificate fingerprint is the identity to compare with Play Console.
 
 ### App-content declarations completed July 15, 2026
 

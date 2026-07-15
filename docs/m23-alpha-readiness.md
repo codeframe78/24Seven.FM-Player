@@ -35,8 +35,11 @@ current M23 distribution-readiness gate.
 - Debug unit tests, affected-module lint, debug assembly, and debug Android-test compilation pass after the modern-device
   additions.
 - The Razr upgraded in place from version code 1 / `0.1.0` to the debug-signed version code 2 / `0.1.0-alpha01`, and the native Player launched with its expected accessibility tree.
-- Signature inspection confirms the debug APK has only the standard local Android Debug identity; the release APK and AAB remain unsigned as intended.
-- A release AAB builds successfully without signing inputs and is correctly rejected by the signing validator as unsigned. The audited candidate was 17,304,660 bytes with SHA-256 `9C7128A422BCE81351A40FFCE239F941CD584C62D3993209AFC0CB35F8A4D1D8`; this hash is evidence for that local unsigned build only and will change after signing or source changes.
+- Before upload signing was configured, signature inspection confirmed the debug APK had only the standard local Android Debug identity and the release outputs were unsigned as intended.
+- The unsigned release baseline built successfully without signing inputs and was correctly rejected by the signing validator. That historical artifact was 17,304,660 bytes with SHA-256 `9C7128A422BCE81351A40FFCE239F941CD584C62D3993209AFC0CB35F8A4D1D8`; it has since been replaced by the signed candidate below.
+- A separate 4096-bit RSA Play upload key now exists outside Git. Its generated credentials are held in a current-user Windows DPAPI envelope, are injected only into a child build process, and are cleared afterward. The initializer is atomic and refuses to replace an existing identity.
+- The signed `0.1.0-alpha01` AAB validates with SHA-256 `5D8CB6FEA4455DF2745FF97248721CC2C9DE585F85E1F7F03585FDE5FE66C5FE`; its signer exactly matches upload-certificate SHA-256 `F6E8E81271964FFC3F8A0D548B49B4DB93AEFC48CCB74B8744512670F4279E3F`.
+- The signed release APK was installed cleanly on the API 35 emulator, cold-launched as version code 2, exposed the expected adaptive Player semantics, and reached `Playing live` on StreamingSoundtracks with the Pause action available. The emulator was restored to the debug build afterward; the wirelessly connected Razr and its sessions were not modified.
 - The release dependency graph contains no advertising, analytics, Crashlytics, App Center, or Sentry SDK.
 - Google Play's current target-level requirement accepts new mobile apps targeting API 35 or higher, so the unchanged target SDK 35 is compliant as checked July 15, 2026.
 - The project-specific provisional Data Safety worksheet is recorded in `docs/m23-data-safety.md`; its final answers remain gated on the active Play Console form and station transmission/retention confirmation.
@@ -67,10 +70,9 @@ Signing files and secrets must never be committed. Gradle should receive their p
 
 - Google approved the personal Play developer account on July 14, 2026; the app and initial legal/signing declarations are now established in Console.
 - Because this is a newly activated personal account, plan for a closed test with at least 12 testers continuously opted in for 14 days before applying for production access. Internal testing itself has no access requirement.
-- Create and securely back up the separate upload key outside the repository.
-- Produce and verify the signed release APK or AAB.
-- Record SHA-256 and signing-certificate fingerprints in the private release record or distribution service.
-- Install the signed candidate on a clean test device and verify a same-key version-code update.
+- Back up the upload keystore and recoverable credentials to an owner-controlled location separate from this PC; the local DPAPI envelope is not sufficient for machine-loss recovery.
+- Upload the verified signed AAB to Play and confirm that Console reports the expected upload-certificate fingerprint.
+- Verify Play-delivered installation on the physical Razr and a same-key Play update after a subsequent version code exists.
 - Host `PRIVACY.md` at a stable public web URL before submitting the app in Play Console.
 - Complete the owner-input Console forms: intended target audience, content-rating and public contact email, least-privileged reviewer credentials/instructions, and the final Data Safety answers.
 - Publish only after explicit authorization.
