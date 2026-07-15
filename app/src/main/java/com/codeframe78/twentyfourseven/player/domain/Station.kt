@@ -11,6 +11,27 @@ data class StationCapabilities(
     val supportsListenerActivity: Boolean = false,
     val supportsQueue: Boolean = false,
     val supportsHistory: Boolean = false,
+    val supportsSecondaryContent: Boolean = false,
+)
+
+enum class StationPageKind {
+    Website,
+    Forums,
+    Members,
+    Statistics,
+    TopTracks,
+    Contact,
+    Membership,
+    SoundtrackOfTheMonth,
+    Games,
+    Awards,
+}
+
+data class StationPage(
+    val kind: StationPageKind,
+    val title: String,
+    val description: String,
+    val url: String,
 )
 
 data class StreamVariant(
@@ -31,4 +52,5 @@ data class Station(
     val websiteUrl: String,
     val streams: List<StreamVariant> = emptyList(),
     val capabilities: StationCapabilities = StationCapabilities(),
+    val secondaryPages: List<StationPage> = emptyList(),
 )

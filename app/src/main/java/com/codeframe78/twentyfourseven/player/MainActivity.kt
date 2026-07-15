@@ -1,6 +1,7 @@
 package com.codeframe78.twentyfourseven.player
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.AlertDialog
@@ -24,6 +26,7 @@ import com.codeframe78.twentyfourseven.player.ui.DoubleBackExitGate
 import com.codeframe78.twentyfourseven.player.ui.MainViewModel
 import com.codeframe78.twentyfourseven.player.ui.RadioApp
 import com.codeframe78.twentyfourseven.player.ui.theme.TwentyFourSevenTheme
+import com.codeframe78.twentyfourseven.player.domain.StationPageTrustPolicy
 
 class MainActivity : ComponentActivity() {
     private val notificationPermissionLauncher = registerForActivityResult(
@@ -93,6 +96,23 @@ class MainActivity : ComponentActivity() {
                     onConfirmRequest = viewModel::confirmSongRequest,
                     onUseLastStationAtStartup = viewModel::useLastStationAtStartup,
                     onSetStartupStation = viewModel::setStartupStation,
+                    onOpenStationPage = { page ->
+                        val trustedUrl = StationPageTrustPolicy.trustedUrl(state.selectedStation, page)
+                        if (trustedUrl == null) {
+                            Toast.makeText(this@MainActivity, "This station page is not available.", Toast.LENGTH_SHORT).show()
+                        } else {
+                            try {
+                                CustomTabsIntent.Builder()
+                                    .setShowTitle(true)
+                                    .build()
+                                    .launchUrl(this@MainActivity, android.net.Uri.parse(trustedUrl))
+                            } catch (_: ActivityNotFoundException) {
+                                Toast.makeText(this@MainActivity, "No browser is available on this device.", Toast.LENGTH_SHORT).show()
+                            } catch (_: SecurityException) {
+                                Toast.makeText(this@MainActivity, "The browser could not open this station page.", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    },
                 )
                 if (showExitConfirmation) {
                     AlertDialog(

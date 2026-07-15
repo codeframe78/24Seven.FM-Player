@@ -4,6 +4,8 @@ import com.codeframe78.twentyfourseven.player.domain.StationId
 import com.codeframe78.twentyfourseven.player.domain.StreamFormat
 import com.codeframe78.twentyfourseven.player.domain.LocalStationPreferences
 import com.codeframe78.twentyfourseven.player.domain.StartupStationMode
+import com.codeframe78.twentyfourseven.player.domain.StationPageKind
+import com.codeframe78.twentyfourseven.player.domain.StationPageTrustPolicy
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -98,6 +100,32 @@ class BootstrapStationRepositoryTest {
         assertEquals(
             listOf("sst"),
             stations.filter { it.capabilities.supportsRequestMessages }.map { it.id.value },
+        )
+    }
+
+    @Test
+    fun `verified secondary pages are capability scoped and trusted`() = runTest {
+        val stations = repository.observeStations().first()
+
+        assertEquals(
+            listOf("sst", "1980s", "adagio", "entranced"),
+            stations.filter { it.capabilities.supportsSecondaryContent }.map { it.id.value },
+        )
+        stations.filter { it.capabilities.supportsSecondaryContent }.forEach { station ->
+            assertEquals(
+                true,
+                station.secondaryPages.all { StationPageTrustPolicy.trustedUrl(station, it) == it.url },
+            )
+        }
+        val death = stations.single { it.id == StationId("death") }
+        assertEquals(0, death.secondaryPages.size)
+        assertEquals(
+            listOf(StationPageKind.Games, StationPageKind.Awards),
+            stations.single { it.id == StationId("1980s") }.secondaryPages.takeLast(2).map { it.kind },
+        )
+        assertEquals(
+            StationPageKind.SoundtrackOfTheMonth,
+            stations.single { it.id == StationId("sst") }.secondaryPages.last().kind,
         )
     }
 }

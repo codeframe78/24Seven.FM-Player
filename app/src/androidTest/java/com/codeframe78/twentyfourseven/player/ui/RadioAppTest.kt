@@ -30,6 +30,8 @@ import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.QueueState
 import com.codeframe78.twentyfourseven.player.domain.QueueTrack
 import com.codeframe78.twentyfourseven.player.domain.StationCapabilities
+import com.codeframe78.twentyfourseven.player.domain.StationPage
+import com.codeframe78.twentyfourseven.player.domain.StationPageKind
 import com.codeframe78.twentyfourseven.player.domain.StreamVariant
 import com.codeframe78.twentyfourseven.player.domain.AuthState
 import com.codeframe78.twentyfourseven.player.domain.AuthStatus
@@ -400,7 +402,7 @@ class RadioAppTest {
         }
 
         composeRule.onNodeWithText("Device preferences").assertIsDisplayed()
-        composeRule.onNodeWithText("Always start with Adagio.FM").assertIsDisplayed()
+        composeRule.onNodeWithText("Always start with Adagio.FM").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithText(
             "These settings stay on this Android device. They do not change station accounts, server Favorites, or membership settings.",
         ).assertIsDisplayed()
@@ -486,6 +488,65 @@ class RadioAppTest {
         composeRule.onNodeWithText("Read privacy notice").performScrollTo().performClick()
         composeRule.onNodeWithText("Data handled by the Alpha").assertIsDisplayed()
         composeRule.onNodeWithText("Close").assertIsDisplayed()
+    }
+
+    @Test
+    fun verifiedSecondaryContentIsReachableAndEmitsTheSelectedPage() {
+        val opened = mutableListOf<StationPage>()
+        val forums = StationPage(
+            StationPageKind.Forums,
+            "Forums",
+            "Community discussions",
+            "https://streamingsoundtracks.com/modules.php?name=Forums",
+        )
+        val contentStation = station.copy(
+            capabilities = StationCapabilities(supportsSecondaryContent = true),
+            secondaryPages = listOf(forums),
+        )
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(
+                        destination = MainDestination.More,
+                        stations = listOf(contentStation),
+                        selectedStation = contentStation,
+                    ),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                    onOpenStationPage = { opened += it },
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("secondary_content_directory").assertExists()
+        composeRule.onNodeWithContentDescription(
+            "Open Forums for StreamingSoundtracks.com in browser",
+        ).performScrollTo().assertIsDisplayed().performClick()
+        composeRule.runOnIdle { assertEquals(listOf(forums), opened) }
+    }
+
+    @Test
+    fun unverifiedSecondaryContentShowsAnExplicitUnavailableState() {
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(destination = MainDestination.More),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("secondary_content_unavailable").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText("No secure secondary pages are verified for this station yet.").assertIsDisplayed()
     }
 
     @Test

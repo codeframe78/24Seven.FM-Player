@@ -24,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.QueueMusic
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreHoriz
@@ -83,6 +84,7 @@ import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.QueueTrack
 import com.codeframe78.twentyfourseven.player.domain.StationCapabilities
 import com.codeframe78.twentyfourseven.player.domain.StationId
+import com.codeframe78.twentyfourseven.player.domain.StationPage
 import com.codeframe78.twentyfourseven.player.domain.RequestSearchField
 import com.codeframe78.twentyfourseven.player.domain.RequestSuggestionMode
 import com.codeframe78.twentyfourseven.player.domain.RequestReadiness
@@ -131,12 +133,13 @@ internal fun RadioApp(
     onConfirmRequest: (String) -> Unit = {},
     onUseLastStationAtStartup: () -> Unit = {},
     onSetStartupStation: (StationId) -> Unit = {},
+    onOpenStationPage: (StationPage) -> Unit = {},
 ) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
         if (maxWidth >= 600.dp) {
-            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation)
+            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage)
         } else {
-            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation)
+            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage)
         }
     }
 }
@@ -167,6 +170,7 @@ private fun PhoneShell(
     onConfirmRequest: (String) -> Unit,
     onUseLastStationAtStartup: () -> Unit,
     onSetStartupStation: (StationId) -> Unit,
+    onOpenStationPage: (StationPage) -> Unit,
 ) {
     Scaffold(
         topBar = { StationTopBar(state, onSelectDestination) },
@@ -188,7 +192,7 @@ private fun PhoneShell(
             }
         },
     ) { padding ->
-        DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation)
+        DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage)
     }
 }
 
@@ -218,6 +222,7 @@ private fun TabletShell(
     onConfirmRequest: (String) -> Unit,
     onUseLastStationAtStartup: () -> Unit,
     onSetStartupStation: (StationId) -> Unit,
+    onOpenStationPage: (StationPage) -> Unit,
 ) {
     Row(Modifier.fillMaxSize()) {
         NavigationRail(Modifier.fillMaxHeight().testTag("tablet_navigation_rail")) {
@@ -241,7 +246,7 @@ private fun TabletShell(
                 }
             },
         ) { padding ->
-            DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation)
+            DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage)
         }
     }
 }
@@ -310,6 +315,7 @@ private fun DestinationContent(
     onConfirmRequest: (String) -> Unit,
     onUseLastStationAtStartup: () -> Unit,
     onSetStartupStation: (StationId) -> Unit,
+    onOpenStationPage: (StationPage) -> Unit,
 ) {
     when (state.destination) {
         MainDestination.Player -> AdaptivePlayerScreen(state, padding, onSelectStation, onPlay, onPause, onStop)
@@ -324,7 +330,7 @@ private fun DestinationContent(
         )
         MainDestination.Chat -> ChatScreen(state, padding, onRefreshChat, onSendChatMessage)
         MainDestination.Queue -> QueueScreen(state, padding, onRefreshQueue)
-        MainDestination.More -> MoreScreen(state, padding, onRefreshAuth, onSignIn, onSignOut, onRefreshListenerActivity, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation)
+        MainDestination.More -> MoreScreen(state, padding, onRefreshAuth, onSignIn, onSignOut, onRefreshListenerActivity, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage)
     }
 }
 
@@ -702,6 +708,7 @@ private fun MoreScreen(
     onConfirmRequest: (String) -> Unit,
     onUseLastStationAtStartup: () -> Unit,
     onSetStartupStation: (StationId) -> Unit,
+    onOpenStationPage: (StationPage) -> Unit,
 ) {
     Column(
         Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(24.dp),
@@ -722,12 +729,69 @@ private fun MoreScreen(
         AccountSection(state, onRefreshAuth, onSignIn, onSignOut)
         ListenerActivitySection(state, onRefreshListenerActivity)
         SongRequestSection(state, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest)
+        SecondaryContentSection(state, onOpenStationPage)
         PrivacySection()
         Text(
             "Features remain unavailable until their station-specific sources and behavior are verified.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+    }
+}
+
+@Composable
+private fun SecondaryContentSection(
+    state: MainUiState,
+    onOpenStationPage: (StationPage) -> Unit,
+) {
+    val station = state.selectedStation ?: return
+    Text("More from ${station.shortName}", style = MaterialTheme.typography.titleMedium)
+    Text(
+        "Selected public station pages open in a secure browser tab. Browser sign-in is separate from the app's protected station session.",
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+    if (!station.capabilities.supportsSecondaryContent || station.secondaryPages.isEmpty()) {
+        Card(Modifier.fillMaxWidth().testTag("secondary_content_unavailable")) {
+            Text(
+                "No secure secondary pages are verified for this station yet.",
+                modifier = Modifier.padding(16.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        return
+    }
+    Column(
+        Modifier.fillMaxWidth().testTag("secondary_content_directory"),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        station.secondaryPages.forEach { page ->
+            Card(
+                onClick = { onOpenStationPage(page) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("secondary_content_${page.kind.name.lowercase()}")
+                    .semantics {
+                        contentDescription = "Open ${page.title} for ${station.name} in browser"
+                    },
+            ) {
+                Row(
+                    Modifier.fillMaxWidth().padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(page.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            page.description,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    Spacer(Modifier.width(12.dp))
+                    Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
+                }
+            }
+        }
     }
 }
 
@@ -1276,6 +1340,7 @@ private fun CapabilityCard(capabilities: StationCapabilities) {
             CapabilityRow("History", capabilities.supportsHistory)
             CapabilityRow("Requests", capabilities.supportsRequests)
             CapabilityRow("Request messages", capabilities.supportsRequestMessages)
+            CapabilityRow("Secondary station pages", capabilities.supportsSecondaryContent)
         }
     }
 }
