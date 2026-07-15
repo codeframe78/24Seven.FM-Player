@@ -1,19 +1,19 @@
 # Windows development handoff
 
-## Resume status — July 14, 2026
+## Resume status — July 15, 2026
 
-- Current milestone: M19 1980s.FM certification (public/device gate passed; representative account evidence pending; M17 remains deferred for server repair).
+- Current milestone: M20 Adagio.FM certification (public/device gate passed; representative account evidence pending; M19's equivalent account gate also waits; M17 remains deferred for server repair).
 - Last completed milestone: M18 StreamingSoundtracks.com certification in `docs/m18-sst-certification.md`. The latest production implementation remains M16 `90a7f98`; M18 required no code or stream change.
-- Latest successful validation: debug unit tests, lint, debug install, and 21/21 wired Android 16 Razr instrumentation tests after M18; a fresh silent smoke test reconfirmed SST playback, metadata/artwork, Queue, Chat, Favorites gating, and all five navigation targets.
+- Latest successful validation: debug compile, all 107 debug unit tests, lint, debug install, and 21/21 wired Android 16 Razr instrumentation tests after the M20 public/device gate (128 tests total); a fresh silent Adagio smoke test also reconfirmed playback, classical metadata/artwork, Queue, Chat, Favorites/request gating, and all five navigation targets.
 - Architecture: one native Compose app module; immutable state/actions; station-scoped repository contracts; one Media3 service-owned player/session; Android Keystore-backed per-station sessions.
 - Decisions: queued and recently played tracks share visible red `Track Recently Played`; reasons remain distinct internally. Available tracks use green `Request Now`. Other restrictions retain accurate separate labels. Revalidation must fail closed before mutation.
 - Known blockers: Queue rows lack stable track IDs; M17 Private Messages remains deferred for server fixes; Death.FM's configured HTTPS origin currently fails modern TLS. The Play developer account is approved; signing/configuration work remains intentionally sequenced at M23–M24.
 - Roadmap model: M13–M17 shared features, M18–M22 individual station certification, and M23–M24 distribution/publication. Certification milestones harden the shared app and must not create station-specific forks.
-- Next concrete task: obtain representative 1980s.FM user-entered sign-in evidence when available; meanwhile continue the non-authenticated M20 Adagio.FM gate without inheriting 1980s/SST assumptions.
-- Likely next files: Adagio certification evidence plus targeted parser/repository/UI tests only for proven station differences; retain the M19 capability test and public/device record while its account gate waits.
+- Next concrete task: obtain representative 1980s.FM or Adagio.FM user-entered sign-in evidence when available; meanwhile continue the non-authenticated M21 Death.FM gate without inheriting other-station assumptions.
+- Likely next files: Death.FM certification evidence plus targeted compact-feed/membership/parser tests only for proven station differences; retain the M19/M20 capability tests and public/device records while their account gates wait.
 - Branch: `agent/initial-android-scaffold`.
 - Latest implementation commit: `90a7f98`.
-- Latest successfully pushed implementation commit: `90a7f98` on `origin/agent/initial-android-scaffold`; the branch is published through the M18 certification checkpoint.
+- Latest production implementation remains `90a7f98`; certification evidence is published through the M20 public/device checkpoint on `origin/agent/initial-android-scaffold`.
 - Required planning documents: `CURRENT_STATE_AUDIT.md`, `NETWORK_FEATURE_MATRIX.md`, `ENDPOINT_INVENTORY.md`, `AUTHENTICATION_MATRIX.md`, and `IMPLEMENTATION_PLAN.md`.
 
 ## Mission and repository
@@ -303,6 +303,17 @@ and Back returned to the app. A focused test now prevents 1980s.FM from inheriti
 listener-activity flags. Final certification still needs a representative 1980s.FM account for protected sign-in,
 restore/logout, Favorites, authenticated Chat/requests, and membership/request-activity determination. See
 `docs/m19-1980s-certification.md` and `docs/screenshots/m19-1980s-certification.png`.
+
+M20 Adagio.FM certification is in progress. The unchanged primary relay reached live playback on the wired Razr,
+and both station-supplied relays delivered live audio bytes. A fresh classical ICY sample rendered the composer plus
+complete work/ensemble title and same-station artwork without changing the raw metadata contract. The bounded public
+Queue/Played feed returned HTTP 200, native Chat loaded, Favorites and request submission retained their signed-out
+boundaries, a least-played suggestion returned album/track content without mutation, and the native alphanumeric
+CAPTCHA challenge loaded. Forums opened at `adagio.fm` in a Chrome Custom Tab and Back returned. A focused contract
+test prevents Adagio from inheriting SST-only request-message or listener-activity flags. Final certification still
+needs a representative Adagio account for protected sign-in, restore/logout, Favorites, authenticated Chat/requests,
+and membership/request-activity determination; see `docs/m20-adagio-certification.md` and
+`docs/screenshots/m20-adagio-certification.png`.
 
 ## Station stream evidence
 

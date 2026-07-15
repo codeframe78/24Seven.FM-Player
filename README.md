@@ -14,9 +14,9 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 
 ## Alpha status
 
-Milestones M1–M16 and M18 are complete on the development branch. M17 Private Messages remains deferred for legacy server repair, so M19 1980s.FM certification is the next active milestone. The remaining stations follow in M20–M22, with Alpha distribution/publication last at M23–M24.
+Milestones M1–M16 and M18 are complete on the development branch. M17 Private Messages remains deferred for legacy server repair. M19 1980s.FM and M20 Adagio.FM have passed their public/wired-device gates and await representative account evidence; M21 Death.FM is the next unblocked certification milestone. Entranced.FM follows at M22, with Alpha distribution/publication last at M23–M24.
 
-The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, device-local startup/last-station preferences, live metadata and artwork, queue/history, an independent five-station account dashboard with Android-protected sessions, chat, song requests, signed-in favorite-track browsing, a verified SST request-history/cooldown/membership surface, and a trusted browser directory for selected public station content. Request availability is conservatively revalidated against fresh station and Queue data before submission. Unit tests, lint, debug assembly/install, 21/21 wired Razr tests, and physical Razr inspection are green.
+The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, device-local startup/last-station preferences, live metadata and artwork, queue/history, an independent five-station account dashboard with Android-protected sessions, chat, song requests, signed-in favorite-track browsing, a verified SST request-history/cooldown/membership surface, and a trusted browser directory for selected public station content. Request availability is conservatively revalidated against fresh station and Queue data before submission. All 107 unit tests, lint, debug assembly/install, 21/21 wired Razr tests (128 total tests), and physical Razr inspection are green.
 
 ## Project Roadmap
 
@@ -56,9 +56,9 @@ These milestones harden and certify the shared app against each station; they do
 | Milestone | Size | Estimate | Status | Certification emphasis |
 | --- | --- | --- | --- | --- |
 | M18 StreamingSoundtracks.com | S | 2–4 hours | ✅ Complete ([evidence](docs/m18-sst-certification.md)) | VIP/non-admin behavior, 30-row Queue, request messages, Favorites, chat, and authenticated workflows |
-| M19 1980s.FM | M | 4–7 hours | 🚧 Current; public/device pass, account evidence pending ([evidence](docs/m19-1980s-certification.md)) | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
-| M20 Adagio.FM | M | 4–7 hours | ⏳ Planned | Classical metadata presentation, independent account/session behavior, requests, Favorites, chat, and fallback |
-| M21 Death.FM | L | 6–10 hours | ⏳ Planned | Compact Queue feed, sparse metadata/artwork, RIP membership behavior, requests, chat, and fallback |
+| M19 1980s.FM | M | 4–7 hours | 🚧 Public/device pass; account evidence pending ([evidence](docs/m19-1980s-certification.md)) | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
+| M20 Adagio.FM | M | 4–7 hours | 🚧 Public/device pass; account evidence pending ([evidence](docs/m20-adagio-certification.md)) | Classical metadata presentation, independent account/session behavior, requests, Favorites, chat, and fallback |
+| M21 Death.FM | L | 6–10 hours | ▶️ Next unblocked | Compact Queue feed, sparse metadata/artwork, RIP membership behavior, requests, chat, and fallback |
 | M22 Entranced.FM | M | 4–7 hours | ⏳ Planned | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
 
 Each station gate covers playback and fallback, metadata/artwork, Queue/history, authentication, chat, Favorites, requests, membership differences, Private Messages when available, wired-device smoke testing, documentation, tests, and remote publication. Unblocked certification work may proceed while M17 is deferred, but final station completion requires every in-scope capability to pass or an explicit scope decision.
