@@ -1,6 +1,6 @@
 # Implementation plan
 
-Updated July 15, 2026 during the Adagio.FM certification gate. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
+Updated July 15, 2026 during the Death.FM certification gate. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
 
 ## Planning model
 
@@ -23,23 +23,23 @@ This classification supplements the required XS–XXL T-shirt size, rationale, e
 
 ## Current milestone
 
-### M20 — Adagio.FM certification
+### M21 — Death.FM certification
 
 - Task Complexity Level: 2 — Feature Logic & API Integration
-- Size: M
-- Estimated elapsed time: 4–7 hours
+- Size: L
+- Estimated elapsed time: 6–10 hours
 - Usage intensity: High
 - Confidence: Medium-Low
-- Outcome: establish independent Adagio.FM evidence for every shared Alpha capability, including truthful classical metadata presentation, without inheriting SST or 1980s.FM account, membership, or request behavior.
-- Expected layers: public protocol and physical playback/metadata checks, exact capability audit, independent account/session evidence where interaction is available, targeted parser/repository/UI fixes only for proven differences, validation, and publication.
-- Dependencies: the existing verified stream/Queue/chat interfaces and, for authenticated checks, a representative Adagio.FM account plus user-entered CAPTCHA.
-- Principal risk: no representative Adagio.FM protected session is currently available, and its membership/request rules may differ despite similar legacy pages.
+- Outcome: establish independent Death.FM evidence for every shared Alpha capability, preserve its compact Queue and sparse metadata behavior, and model RIP membership routes without inheriting other-station account or membership rules.
+- Expected layers: public protocol and physical playback/metadata checks, exact capability audit, independent account/session evidence where interaction is available, targeted repository/UI fixes only for proven differences, validation, and publication.
+- Dependencies: the existing verified stream/compact Queue/chat interfaces and, for authenticated checks, a representative Death.FM account plus user-entered CAPTCHA.
+- Principal risk: no representative Death.FM protected session is currently available, and its RIP membership/request rules may differ despite similar legacy pages.
 - Completion gate: playback/fallback, metadata/artwork, Queue/History, account isolation, chat, Favorites, requests, membership/request-activity support, secondary pages, and explicit unavailable states are independently evidenced; validators, wired-device verification, documentation, and publication pass.
-- Status: in progress. Public playback and relay reachability, classical metadata/artwork, Queue/History, Chat,
-  request browsing, sign-in challenge loading, capability boundaries, and a Forums Custom Tab round trip pass.
-  Representative authenticated account evidence remains required; see
-  [m20-adagio-certification.md](m20-adagio-certification.md). M19's equivalent public/device pass remains preserved
-  while its separate representative account gate waits.
+- Status: in progress. Public playback and relay reachability, sparse metadata/artwork, compact Queue/History,
+  Chat, request browsing, sign-in challenge loading, capability boundaries, and the reverified RIP membership Custom
+  Tab route pass. Representative authenticated account evidence remains required; see
+  [m21-death-certification.md](m21-death-certification.md). M19 and M20 retain their equivalent public/device passes
+  while their separate representative account gates wait. M22 is the next unblocked public/device certification gate.
 
 ## Latest completed milestone
 

@@ -14,9 +14,9 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 
 ## Alpha status
 
-Milestones M1–M16 and M18 are complete on the development branch. M17 Private Messages remains deferred for legacy server repair. M19 1980s.FM and M20 Adagio.FM have passed their public/wired-device gates and await representative account evidence; M21 Death.FM is the next unblocked certification milestone. Entranced.FM follows at M22, with Alpha distribution/publication last at M23–M24.
+Milestones M1–M16 and M18 are complete on the development branch. M17 Private Messages remains deferred for legacy server repair. M19 1980s.FM, M20 Adagio.FM, and M21 Death.FM have passed their public/wired-device gates and await representative account evidence. Entranced.FM is the next unblocked certification milestone at M22, with Alpha distribution/publication last at M23–M24.
 
-The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, device-local startup/last-station preferences, live metadata and artwork, queue/history, an independent five-station account dashboard with Android-protected sessions, chat, song requests, signed-in favorite-track browsing, a verified SST request-history/cooldown/membership surface, and a trusted browser directory for selected public station content. Request availability is conservatively revalidated against fresh station and Queue data before submission. All 107 unit tests, lint, debug assembly/install, 21/21 wired Razr tests (128 total tests), and physical Razr inspection are green.
+The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, device-local startup/last-station preferences, live metadata and artwork, queue/history, an independent five-station account dashboard with Android-protected sessions, chat, song requests, signed-in favorite-track browsing, a verified SST request-history/cooldown/membership surface, and a trusted browser directory for selected public station content. Request availability is conservatively revalidated against fresh station and Queue data before submission. All 108 unit tests, lint, debug assembly/install, 21/21 wired Razr tests (129 total tests), and physical Razr inspection are green.
 
 ## Project Roadmap
 
@@ -46,7 +46,7 @@ This is the single milestone sequence for the project. Detailed completion gates
 | M13 Independent Accounts UX | L | 4–8 hours | ✅ Complete ([`9ef1f1c`](https://github.com/codeframe78/24Seven.FM-Player/commit/9ef1f1c)) | Five separately visible account states with pairwise session/logout/expiration isolation |
 | M14 Local personalization | M | 2–4 hours | ✅ Complete ([`81c2c4e`](https://github.com/codeframe78/24Seven.FM-Player/commit/81c2c4e)) | Persist default/last station and clearly distinguish local preferences from station-owned data |
 | M15 Request history and membership | L | 4–8 hours | ✅ Complete ([`b19d5fe`](https://github.com/codeframe78/24Seven.FM-Player/commit/b19d5fe)) | Memory-only SST last-ten history, cooldown/readiness, and explicit membership with conservative unknown states |
-| M16 Secondary content access | M | 2–4 hours | ✅ Complete ([`90a7f98`](https://github.com/codeframe78/24Seven.FM-Player/commit/90a7f98)) | Allowlisted same-station HTTPS Custom Tabs for selected public modules; Death.FM safely unavailable pending TLS repair |
+| M16 Secondary content access | M | 2–4 hours | ✅ Complete ([`90a7f98`](https://github.com/codeframe78/24Seven.FM-Player/commit/90a7f98)) | Allowlisted same-station HTTPS Custom Tabs for selected public modules; the original Death.FM TLS boundary was safely deferred and later reverified in M21 |
 | M17 Private Messages | L provisional | 4–8 hours after server repair | 🧊 Deferred | Native station-isolated inbox, read, compose, reply, refresh, and explicit user-initiated send |
 
 ### Phase 3 — Station certification
@@ -58,8 +58,8 @@ These milestones harden and certify the shared app against each station; they do
 | M18 StreamingSoundtracks.com | S | 2–4 hours | ✅ Complete ([evidence](docs/m18-sst-certification.md)) | VIP/non-admin behavior, 30-row Queue, request messages, Favorites, chat, and authenticated workflows |
 | M19 1980s.FM | M | 4–7 hours | 🚧 Public/device pass; account evidence pending ([evidence](docs/m19-1980s-certification.md)) | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
 | M20 Adagio.FM | M | 4–7 hours | 🚧 Public/device pass; account evidence pending ([evidence](docs/m20-adagio-certification.md)) | Classical metadata presentation, independent account/session behavior, requests, Favorites, chat, and fallback |
-| M21 Death.FM | L | 6–10 hours | ▶️ Next unblocked | Compact Queue feed, sparse metadata/artwork, RIP membership behavior, requests, chat, and fallback |
-| M22 Entranced.FM | M | 4–7 hours | ⏳ Planned | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
+| M21 Death.FM | L | 6–10 hours | 🚧 Public/device pass; account evidence pending ([evidence](docs/m21-death-certification.md)) | Compact Queue feed, sparse metadata/artwork, RIP membership behavior, requests, chat, and fallback |
+| M22 Entranced.FM | M | 4–7 hours | ▶️ Next unblocked | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
 
 Each station gate covers playback and fallback, metadata/artwork, Queue/history, authentication, chat, Favorites, requests, membership differences, Private Messages when available, wired-device smoke testing, documentation, tests, and remote publication. Unblocked certification work may proceed while M17 is deferred, but final station completion requires every in-scope capability to pass or an explicit scope decision.
 
@@ -76,7 +76,7 @@ The app is fully native and uses immutable Compose UI state, repository boundari
 
 ## Screenshots
 
-These captures are from the physical Razr. Most use live StreamingSoundtracks.com data, so track and chat content will naturally change over time; the M15 request-activity capture intentionally shows the safe signed-out state after a fresh debug install. The Player and Queue captures show the M11 Alpha shell; Chat and Requests retain their already-working native M8–M10 content presentation, the M16 capture shows the trusted browser directory, and the M18 capture records the certified live SST title/artwork state immediately after playback was paused.
+These captures are from the physical Razr. Most use live station data, so track and chat content will naturally change over time; the M15 request-activity capture intentionally shows the safe signed-out state after a fresh debug install. The Player and Queue captures show the M11 Alpha shell; Chat and Requests retain their already-working native M8–M10 content presentation. The M16 capture shows the original trusted browser directory, while the M18 and M21 captures record certified live SST and Death.FM states.
 
 <table>
   <tr>
@@ -101,6 +101,10 @@ These captures are from the physical Razr. Most use live StreamingSoundtracks.co
   </tr>
   <tr>
     <td align="center" colspan="2"><img src="docs/screenshots/m18-sst-certification.png" alt="Certified SST Player state with live title, artist, album artwork, station carousel, and all five navigation destinations" width="300"><br><strong>M18 StreamingSoundtracks.com certification</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/m21-death-certification.png" alt="Death.FM Player with live title, artist, station artwork, station carousel, and playback controls" width="300"><br><strong>M21 Death.FM Player evidence</strong></td>
+    <td align="center"><img src="docs/screenshots/m21-death-rip-pages.png" alt="Death.FM trusted station-page directory including RIP membership" width="300"><br><strong>Death.FM trusted pages and RIP membership</strong></td>
   </tr>
 </table>
 

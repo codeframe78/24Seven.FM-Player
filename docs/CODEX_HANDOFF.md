@@ -2,18 +2,18 @@
 
 ## Resume status — July 15, 2026
 
-- Current milestone: M20 Adagio.FM certification (public/device gate passed; representative account evidence pending; M19's equivalent account gate also waits; M17 remains deferred for server repair).
+- Current milestone: M21 Death.FM certification (public/device gate passed; representative account evidence pending; M19/M20 equivalent account gates also wait; M17 remains deferred for server repair).
 - Last completed milestone: M18 StreamingSoundtracks.com certification in `docs/m18-sst-certification.md`. The latest production implementation remains M16 `90a7f98`; M18 required no code or stream change.
-- Latest successful validation: debug compile, all 107 debug unit tests, lint, debug install, and 21/21 wired Android 16 Razr instrumentation tests after the M20 public/device gate (128 tests total); a fresh silent Adagio smoke test also reconfirmed playback, classical metadata/artwork, Queue, Chat, Favorites/request gating, and all five navigation targets.
+- Latest successful validation: debug compile, all 108 debug unit tests, lint, Windows validation, wireless debug install, and 21/21 Android 16 Razr instrumentation tests after the M21 public/device gate (129 tests total); fresh physical Death.FM checks also reconfirmed playback, sparse metadata/artwork, compact Queue/History, Chat, Favorites/request gating, login challenge, RIP pages, and all five navigation targets.
 - Architecture: one native Compose app module; immutable state/actions; station-scoped repository contracts; one Media3 service-owned player/session; Android Keystore-backed per-station sessions.
 - Decisions: queued and recently played tracks share visible red `Track Recently Played`; reasons remain distinct internally. Available tracks use green `Request Now`. Other restrictions retain accurate separate labels. Revalidation must fail closed before mutation.
-- Known blockers: Queue rows lack stable track IDs; M17 Private Messages remains deferred for server fixes; Death.FM's configured HTTPS origin currently fails modern TLS. The Play developer account is approved; signing/configuration work remains intentionally sequenced at M23–M24.
+- Known blockers: Queue rows lack stable track IDs; M17 Private Messages remains deferred for server fixes; representative authenticated accounts are still needed to close M19–M21. The Play developer account is approved; signing/configuration work remains intentionally sequenced at M23–M24.
 - Roadmap model: M13–M17 shared features, M18–M22 individual station certification, and M23–M24 distribution/publication. Certification milestones harden the shared app and must not create station-specific forks.
-- Next concrete task: obtain representative 1980s.FM or Adagio.FM user-entered sign-in evidence when available; meanwhile continue the non-authenticated M21 Death.FM gate without inheriting other-station assumptions.
-- Likely next files: Death.FM certification evidence plus targeted compact-feed/membership/parser tests only for proven station differences; retain the M19/M20 capability tests and public/device records while their account gates wait.
+- Next concrete task: continue M22 Entranced.FM public/wired-device certification without inheriting other-station assumptions; obtain representative 1980s.FM, Adagio.FM, or Death.FM user-entered sign-in evidence when available.
+- Likely next files: Entranced.FM certification evidence plus targeted repository/parser tests only for proven station differences; retain the M19–M21 capability tests and public/device records while their account gates wait.
 - Branch: `agent/initial-android-scaffold`.
 - Latest implementation commit: `90a7f98`.
-- Latest production implementation remains `90a7f98`; certification evidence is published through the M20 public/device checkpoint on `origin/agent/initial-android-scaffold`.
+- Latest production implementation is `67e6d7a`; the focused M21 Death.FM public/device evidence is ready for publication on `agent/initial-android-scaffold`.
 - Required planning documents: `CURRENT_STATE_AUDIT.md`, `NETWORK_FEATURE_MATRIX.md`, `ENDPOINT_INVENTORY.md`, `AUTHENTICATION_MATRIX.md`, and `IMPLEMENTATION_PLAN.md`.
 
 ## Mission and repository
@@ -266,7 +266,7 @@ M15 Request history, cooldown, and membership is complete in `b19d5fe`. The stat
 in memory, and clears a station's state on sign-out. Representative authenticated SST evidence supplies the exact
 last-ten request table, a same-origin VIP request timer, and a profile-scoped VIP badge separately from administrator
 rank. The parser bounds rows and text, rejects cross-origin/unrecognized discovery links, and reports missing evidence
-as unknown. Only SST is enabled; the other four stations remain unverified until M19–M22. No mutation or polling was
+as unknown. Only SST is enabled; the other four stations remain unverified until their M19–M22 authenticated gates. No mutation or polling was
 introduced. Unit tests, lint, debug install, and all 19 wired Android 16 Razr instrumentation tests pass. The physical
 fresh-install screenshot shows the explicit signed-out card; a fresh standard-tier production refresh requires a
 user-entered CAPTCHA and is recorded as an M18 interaction limit rather than being guessed. See `docs/m15-request-activity-research.md`, `docs/m15-validation.md`, and
@@ -278,8 +278,9 @@ request tools. SST, 1980s.FM, Adagio.FM, and Entranced.FM expose exact observed 
 Top 100, contact, and membership routes, with verified SST/1980s extras. `StationPageTrustPolicy` accepts only an
 exact catalog member on the selected station's HTTPS origin and rejects unlisted, cross-origin, cleartext,
 credential-bearing, fragment-bearing, malformed, and nonstandard-port targets. Android Custom Tabs use independent
-browser sessions; no WebView, polling, parsing, or mutation was added. Death.FM remains explicit unavailable because
-its configured HTTPS origin currently fails modern TLS. Unit tests, lint, debug install, all 21 wired Android 16 Razr
+browser sessions; no WebView, polling, parsing, or mutation was added. Death.FM was explicitly unavailable at M16
+because its configured HTTPS origin failed modern TLS; M21 later reverified and enabled its exact HTTPS routes under
+the same trust policy. Unit tests, lint, debug install, all 21 wired Android 16 Razr
 instrumentation tests, and a physical Chrome Custom Tab/Back round trip pass. See
 `docs/m16-secondary-content-research.md`, `docs/m16-validation.md`, and
 `docs/screenshots/m16-secondary-content.png`.

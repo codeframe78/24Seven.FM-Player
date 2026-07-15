@@ -48,8 +48,10 @@ render an explicit unavailable state. Compose emits the selected page upward and
 `StationPageTrustPolicy` confirms the page is an exact entry for the selected station, uses HTTPS, has no embedded
 credentials or fragment, uses the default HTTPS port, and resolves to the same canonical station host. The browser
 owns its cookies and page lifecycle: protected app sessions are never copied, pages are not fetched or parsed by
-the app, and there is no polling, caching, or automatic form submission. Death.FM exposes no secondary pages while
-its configured HTTPS origin fails modern TLS. See `docs/m16-secondary-content-research.md`.
+the app, and there is no polling, caching, or automatic form submission. Death.FM uses the same trust boundary but
+its independently verified membership card targets the station-specific `RIP_Subscribe` route rather than the
+other stations' `VIP_Subscribe` route. See `docs/m16-secondary-content-research.md` and
+`docs/m21-death-certification.md`.
 
 ## Queue and history
 

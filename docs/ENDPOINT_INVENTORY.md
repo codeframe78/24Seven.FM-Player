@@ -30,7 +30,7 @@ All relative HTTPS paths below are resolved independently against one of these f
 | SST, 1980s, Adagio, Entranced | Trusted public station pages | Exact catalogued HTTPS root plus verified `Forums`, `Members_List`, `Stats`, `Top100`, `Contact_Us`, and `VIP_Subscribe` module URLs | Station-owned legacy HTML in Android Custom Tabs | Browser-managed; app session is not copied | Explicit native-card tap only; no app polling or caching | Reject non-catalogued, cross-origin, non-HTTPS, credential-bearing, fragment-bearing, or non-default-port URLs before launch | M16 implemented and physically verified |
 | SST only | Soundtrack secondary page | Exact catalogued `/modules.php?name=STM` URL | Station-owned legacy HTML in Android Custom Tab | Browser-managed | Explicit tap only | Same M16 trust policy | M16 implemented |
 | 1980s.FM only | Games and awards pages | Exact catalogued `/modules.php?name=Games` and `80s_Awards` URLs | Station-owned legacy HTML in Android Custom Tabs | Browser-managed | Explicit tap only | Same M16 trust policy | M16 implemented |
-| Death.FM | Public secondary modules | No trusted page is exposed while the configured HTTPS origin fails modern TLS | N/A | N/A | No traffic | Explicit unavailable state; never downgrade to HTTP or guess another host | M16 safely unavailable pending server repair |
+| Death.FM | Public secondary modules | Exact catalogued `/`, `Forums`, `Members_List`, `Stats`, `Top100`, `Contact_Us`, and `RIP_Subscribe` HTTPS URLs | Station-owned legacy HTML in Android Custom Tabs | Browser-managed | Explicit tap only | Same M16 exact-entry, same-origin HTTPS trust policy | M21 reverified after HTTPS repair; implemented |
 
 ## Caching and safety policy
 

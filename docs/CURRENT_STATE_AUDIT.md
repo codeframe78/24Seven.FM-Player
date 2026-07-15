@@ -1,6 +1,6 @@
 # Current state audit
 
-Updated July 15, 2026 on `agent/initial-android-scaffold` during M20 Adagio.FM certification, with all existing tracked and untracked work preserved.
+Updated July 15, 2026 on `agent/initial-android-scaffold` during M21 Death.FM certification, with all existing tracked and untracked work preserved.
 
 ## Repository and environment
 
@@ -68,9 +68,9 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 
 ## Tests and latest baseline
 
-- 128 `@Test` declarations currently cover parsers, repositories, station definitions and certification contracts, session isolation primitives, startup preference restoration, listener activity, station-page trust policy, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
-- Latest full local evidence: debug compile, all 107 debug unit tests, lint, debug install, and 21/21 wired Android 16 Razr instrumentation tests pass after the M20 public/device gate (128 tests total).
-- M18's completed certification and the current M19/M20 physical-device checkpoints are recorded in their station evidence documents.
+- 129 `@Test` declarations currently cover parsers, repositories, station definitions and certification contracts, session isolation primitives, startup preference restoration, listener activity, station-page trust policy, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
+- Latest full local evidence: debug compile, all 108 debug unit tests, lint, Windows validation, wireless debug install, and 21/21 Android 16 Razr instrumentation tests pass after the M21 public/device gate (129 tests total).
+- M18's completed certification and the current M19–M21 physical-device checkpoints are recorded in their station evidence documents.
 
 ## Known defects and technical debt
 
@@ -80,10 +80,11 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 - Live authentication differences across 1980s.FM, Adagio.FM, Death.FM, and Entranced.FM still need representative user-entered account/CAPTCHA verification during M19–M22.
 - M19's 1980s.FM public/device gate passes, including its native login challenge, but no representative station account is available yet for protected restoration/logout, Favorites, authenticated Chat/requests, or membership/request-activity determination.
 - M20's Adagio.FM public/device gate passes, including classical metadata/artwork, both live relay probes, Queue/History, Chat, Favorites/request boundaries, native login challenge, and trusted Forums; representative authenticated evidence remains pending.
+- M21's Death.FM public/device gate passes, including live sparse metadata/artwork, both live relay probes, compact Queue/History, Chat, Favorites/request boundaries, native login challenge, and trusted RIP membership route; representative authenticated evidence remains pending.
 - M17 Private Messages is deliberately deferred because of known legacy server issues.
-- Death.FM's configured HTTPS website currently fails modern TLS negotiation, so M16 secondary browser pages remain explicitly unavailable for that station rather than downgrading to HTTP.
+- Death.FM's configured HTTPS website recovered during M21. Its exact common routes plus station-specific RIP membership route were independently reverified and enabled under the unchanged same-origin HTTPS trust policy.
 - Google approved the Play developer account on July 14, 2026. External Alpha distribution remains sequenced after M15–M22 and still requires Play App Signing setup, a securely held upload key, final release validation, and explicit publication authorization.
 
 ## Public five-station audit summary
 
-A conservative read-only audit confirmed common major listener modules across the station family, but only StreamingSoundtracks.com, 1980s.FM, Adagio.FM, and Entranced.FM had modern HTTPS pages that could be safely verified for M16. Their exact public website, forums, members, statistics, Top 100, contact, and membership routes are allowlisted; SST additionally exposes its soundtrack module, while 1980s.FM exposes games and awards. Death.FM remains unavailable until its HTTPS service is repaired. Native support continues to follow verified capability and protocol evidence rather than the presence of a legacy link alone.
+A conservative read-only audit confirmed common major listener modules across the station family. M16 verified StreamingSoundtracks.com, 1980s.FM, Adagio.FM, and Entranced.FM; M21 later reverified Death.FM after its HTTPS service recovered. Exact public website, forums, members, statistics, Top 100, contact, and membership routes are allowlisted for all five; SST additionally exposes its soundtrack module, 1980s.FM exposes games and awards, and Death.FM uses RIP membership. Native support continues to follow verified capability and protocol evidence rather than the presence of a legacy link alone.
