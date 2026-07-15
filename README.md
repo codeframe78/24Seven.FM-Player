@@ -14,9 +14,9 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 
 ## Alpha status
 
-Milestones M1–M16 and M18–M21 are complete on the development branch. M17 Private Messages remains deferred for legacy server repair. M22 Entranced.FM public/device work is preserved and is next for representative account evidence. Alpha distribution/publication remains last at M23–M24.
+Milestones M1–M16 and M18–M22 are complete on the development branch. M17 Private Messages remains deferred for legacy server repair. All five station-certification gates now pass; Alpha distribution readiness and publication remain at M23–M24.
 
-The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, device-local startup/last-station preferences, live metadata and artwork, queue/history, an independent five-station account dashboard with Android-protected sessions, chat, song requests, signed-in favorite-track browsing, a verified SST request-history/cooldown/membership surface, and a trusted browser directory for selected public station content. Request availability is conservatively revalidated against fresh station and Queue data before submission. All 108 unit tests, lint, debug assembly/install, 21/21 wired Razr tests (129 total tests), and physical Razr inspection are green.
+The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, device-local startup/last-station preferences, live metadata and artwork, queue/history, an independent five-station account dashboard with Android-protected sessions, chat, song requests, signed-in favorite-track browsing, a verified SST request-history/cooldown/membership surface, and a trusted browser directory for selected public station content. Request availability is conservatively revalidated against fresh station and Queue data before submission. All 110 unit tests, lint, debug assembly/install, 21/21 wireless Razr tests (131 total tests), Windows validation, and physical Razr inspection are green.
 
 ## Project Roadmap
 
@@ -59,7 +59,7 @@ These milestones harden and certify the shared app against each station; they do
 | M19 1980s.FM | M | 4–7 hours | ✅ Complete ([evidence](docs/m19-1980s-certification.md)) | Independent sign-in/restore/logout, authenticated Favorites/Chat/requests, station rules, metadata, Queue, and fallback |
 | M20 Adagio.FM | M | 4–7 hours | ✅ Complete ([evidence](docs/m20-adagio-certification.md)) | Classical metadata presentation, independent sign-in/restore/logout, authenticated Favorites/Chat/requests, Queue, and fallback |
 | M21 Death.FM | L | 6–10 hours | ✅ Complete ([evidence](docs/m21-death-certification.md)) | Compact Queue feed, sparse metadata/artwork, independent sign-in/restore/logout, authenticated Favorites/Chat/requests, RIP boundaries, and fallback |
-| M22 Entranced.FM | M | 4–7 hours | 🚧 Public/device pass; account evidence pending | Independent account/session behavior, station rules, requests, Favorites, chat, metadata, and fallback |
+| M22 Entranced.FM | M | 4–7 hours | ✅ Complete ([evidence](docs/m22-entranced-certification.md)) | Independent sign-in/restore/logout, authenticated Favorites/Chat/requests, extended Queue, fallback, and legacy ICY punctuation hardening |
 
 Each station gate covers playback and fallback, metadata/artwork, Queue/history, authentication, chat, Favorites, requests, membership differences, Private Messages when available, physical-device smoke testing, documentation, tests, and remote publication. Unblocked certification work may proceed while M17 is deferred, but final station completion requires every in-scope capability to pass or an explicit scope decision.
 
@@ -67,16 +67,16 @@ Each station gate covers playback and fallback, metadata/artwork, Queue/history,
 
 | Milestone | Size | Estimate | Status | Outcome |
 | --- | --- | --- | --- | --- |
-| M23 Alpha distribution readiness | M | 1–2 focused days | ⏸ Deferred | Refresh and finalize privacy, signing, tester, bundle, and Play-readiness work after M15–M22 |
+| M23 Alpha distribution readiness | M | 1–2 focused days | ▶️ Next | Refresh and finalize privacy, signing, tester, bundle, and Play-readiness work after M15–M22 |
 | M24 Alpha publication | M | 1–3 hours after Console setup | ⏳ Planned | Verify the signed Play bundle and publish the authorized internal/closed test release |
 
-Early M23 preparation is preserved on this branch, but it will be refreshed only after feature and station certification work. The Google Play developer account was approved on July 14, 2026; remaining release dependencies are app/Play App Signing setup, secure upload-key custody, final validation, and explicit publication authorization.
+Early M23 preparation is preserved on this branch and is now ready to be refreshed against the completed feature and station-certification work. The Google Play developer account was approved on July 14, 2026; remaining release dependencies are app/Play App Signing setup, secure upload-key custody, final validation, and explicit publication authorization.
 
 The app is fully native and uses immutable Compose UI state, repository boundaries, and station capability flags. It includes play, pause, stop, live metadata and artwork, a persistent mini-player, signed-in favorite-track browsing/filtering, capability-aware screens, native loading/error/empty states, and Android Keystore-backed account sessions. Remote data stays bounded to the documented station interfaces and their approved refresh rules.
 
 ## Screenshots
 
-These captures are from the physical Razr. Most use live station data, so track and chat content will naturally change over time; the M15 request-activity capture intentionally shows the safe signed-out state after a fresh debug install. The Player and Queue captures show the M11 Alpha shell; Chat and Requests retain their already-working native M8–M10 content presentation. The M16 capture shows the original trusted browser directory, while M18–M21 include station-certification evidence.
+These captures are from the physical Razr. Most use live station data, so track and chat content will naturally change over time; the M15 request-activity capture intentionally shows the safe signed-out state after a fresh debug install. The Player and Queue captures show the M11 Alpha shell; Chat and Requests retain their already-working native M8–M10 content presentation. The M16 capture shows the original trusted browser directory, while M18–M22 include station-certification evidence.
 
 <table>
   <tr>
@@ -114,6 +114,10 @@ These captures are from the physical Razr. Most use live station data, so track 
   </tr>
   <tr>
     <td align="center" colspan="2"><img src="docs/screenshots/m21-death-authenticated.png" alt="Independent Death.FM account signed in as Morgue while other visible station accounts remain signed out" width="300"><br><strong>M21 verified independent Death.FM login</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/m22-entranced-certification.png" alt="Entranced.FM Player with live title, artist, same-station artwork, selected station card, and playback controls" width="300"><br><strong>M22 Entranced.FM Player evidence</strong></td>
+    <td align="center"><img src="docs/screenshots/m22-entranced-authenticated.png" alt="Independent Entranced.FM account signed in as MorG while 1980s.FM, Adagio.FM, and Death.FM remain signed out" width="300"><br><strong>M22 verified independent Entranced.FM login</strong></td>
   </tr>
 </table>
 

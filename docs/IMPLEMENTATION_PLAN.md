@@ -1,6 +1,6 @@
 # Implementation plan
 
-Updated July 15, 2026 after completing the Death.FM authenticated certification gate. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
+Updated July 15, 2026 after completing all five station-certification gates. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
 
 ## Planning model
 
@@ -24,27 +24,23 @@ This classification supplements the required XS–XXL T-shirt size, rationale, e
 
 ## Current milestone
 
-### M22 — Entranced.FM authenticated completion and final station gate
+### M23 — Alpha Test Distribution Readiness
 
 - Task Complexity Level: 2 — Feature Logic & API Integration
-- Size: M overall; approximately 1–3 active hours remain after the account/CAPTCHA is available
-- Estimated elapsed time: 4–7 hours overall
-- Usage intensity: High
-- Confidence: Medium-Low
-- Outcome: close the already-passing Entranced.FM public/device milestone with independent native sign-in, protected restoration, station isolation, authenticated Favorites/Chat/request behavior, corrected legacy ICY punctuation, and station-only logout without inheriting other stations' rules.
-- Expected layers: user-entered sign-in/CAPTCHA, protected process-restart restoration, independent station selection, signed-in surface checks without unnecessary mutations, explicit logout, evidence reconciliation, and publication.
-- Dependencies: the existing verified Entranced.FM playback/metadata/extended-Queue/chat interfaces plus a representative Entranced.FM account and user-entered CAPTCHA.
-- Principal risk: account availability, undocumented Entranced membership/request behavior, and live metadata variability needed to reconfirm the punctuation boundary on-device.
-- Completion gate: playback/fallback, metadata/artwork, Queue/History, account isolation, chat, Favorites, requests, membership/request-activity support, secondary pages, and explicit unavailable states are independently evidenced; validators, physical-device verification, documentation, and publication pass.
-- Status: interaction-ready. M21 is complete after representative Morgue sign-in/restore/isolation/Favorites/Chat/
-  request/logout evidence. M22's public playback, metadata/artwork, extended Queue/History, Chat, request browsing,
-  capability boundaries, trusted pages, and focused legacy-punctuation unit evidence already pass; only its hard
-  authenticated gate and final reconciliation remain. The in-progress M22 implementation and tests are preserved
-  unstaged until this gate closes.
+- Size: M
+- Estimated elapsed time: 1–2 focused days
+- Usage intensity: Medium
+- Confidence: Medium
+- Outcome: refresh and finish Alpha privacy, versioning, signing guardrails, tester guidance, Play Console declarations, release artifact checks, and reproducible bundle validation after all feature and station work.
+- Expected layers: release configuration, secure local signing handoff, privacy/data-safety reconciliation, bundle and APK inspection, Play checklist, tester documentation, and final repository/Discord evidence.
+- Dependencies: approved Google Play developer account, selection/custody of the upload signing identity, Play App Signing setup, final app listing/configuration, and explicit authorization before any publication action.
+- Principal risk: securely coordinating the upload key and Play Console declarations without committing secrets or creating an incompatible signing lineage.
+- Completion gate: version/release configuration, privacy and tester materials, signing guardrails, reproducible release bundle validation, dependency/license review, final physical smoke test, documentation, focused commits, and remote publication evidence all pass; no store release is submitted during M23.
+- Status: ready. M18–M22 and all five representative station login gates are complete. Early M23 materials remain preserved and must now be reconciled against the completed Alpha implementation. M17 Private Messages remains explicitly deferred for server repair.
 
 ## Latest completed milestone
 
-M21 Death.FM certification completed July 15, 2026 after its existing public/device pass was closed with a representative Morgue session. Native sign-in, Android-protected process-restart restoration, station isolation, authenticated empty Favorites loading, Chat composer availability, green request eligibility, explicit station-only logout, and persistent signed-out state after another restart all pass. No credential, CAPTCHA, session value, Chat post, or song request was retained or submitted. RIP membership remains a separately trusted browser route; request messages, listener activity, and native membership remain explicitly unverified. See [m21-death-certification.md](m21-death-certification.md).
+M22 Entranced.FM certification completed July 15, 2026 after its public/device and representative authenticated gates passed. Native sign-in, Android-protected process-restart restoration, station isolation, authenticated empty Favorites loading, Chat composer availability, green request eligibility, explicit station-only logout, and persistent signed-out state after another restart all pass. A narrowly scoped ICY boundary correction maps defined Windows-1252 punctuation without transcoding valid Unicode; 110 unit tests, lint, Windows validation, 21 connected tests, standalone install, and live Media3 playback pass. No credential, CAPTCHA, session value, Chat post, or song request was retained or submitted. See [m22-entranced-certification.md](m22-entranced-certification.md).
 
 ## Shared feature milestones
 
@@ -52,7 +48,7 @@ M21 Death.FM certification completed July 15, 2026 after its existing public/dev
 | --- | --- | --- | --- | --- | --- |
 | M17 Private Messages | L (provisional) | 4–8 hours after server repair | High | Add native station-isolated inbox/read/compose/reply/refresh and explicit user-initiated send over existing protected sessions | Website repair, production limits, and consistent authenticated forms |
 
-Each shared milestone includes repository/ViewModel/UI work as applicable, lifecycle-safe state, accessibility semantics, focused tests, affected-module validation, wired Razr inspection, documentation, a focused commit, push, and remote confirmation.
+Each shared milestone includes repository/ViewModel/UI work as applicable, lifecycle-safe state, accessibility semantics, focused tests, affected-module validation, physical Razr inspection, documentation, a focused commit, push, and remote confirmation.
 
 ## Station certification milestones
 
@@ -76,7 +72,7 @@ The certification program would be XL if treated as one unit, so it is split int
 6. Add or update parser, repository, ViewModel, Compose, accessibility, and isolation tests for station-specific evidence.
 7. Run focused and broad validators, perform a physical Razr smoke test, update matrices/handoff, commit, push, and confirm the remote branch.
 
-Unblocked M19–M22 work may proceed while M17 is deferred, but a station cannot receive final certification until every in-scope capability passes or the user explicitly changes Alpha scope.
+M18–M22 are complete while M17 remains deferred; every in-scope station capability now has passing evidence or an explicit certified unavailable/unverified boundary.
 
 ## Distribution milestones
 

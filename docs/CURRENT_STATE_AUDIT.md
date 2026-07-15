@@ -1,6 +1,6 @@
 # Current state audit
 
-Updated July 15, 2026 on `agent/initial-android-scaffold` after completing the M21 Death.FM authenticated gate, with all existing tracked and untracked work preserved.
+Updated July 15, 2026 on `agent/initial-android-scaffold` after completing the M22 Entranced.FM certification and all five station gates, with all existing tracked and untracked work preserved.
 
 ## Repository and environment
 
@@ -47,7 +47,7 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 | M15 | SST last-ten request history, cooldown/readiness, explicit membership, `m15-*` | Complete and pushed |
 | M16 | Capability-aware native directory and exact same-station HTTPS Custom Tabs, `m16-*` | Complete and pushed |
 | M18 | SST ordinary/VIP capability reconciliation plus fresh wired playback/public-read proof, `m18-sst-certification.md` | Complete and pushed |
-| M23 (prepared early) | Alpha version/privacy/signing guardrails plus Favorites integration | Preserved for refresh after M15–M22; Play account approved, with signing and Console setup still pending |
+| M23 (active) | Alpha version/privacy/signing guardrails plus Favorites integration | Preserved preparation is now being refreshed; Play account approved, with signing and Console setup still pending |
 
 ## Existing screens and navigation
 
@@ -68,19 +68,20 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 
 ## Tests and latest baseline
 
-- 129 `@Test` declarations currently cover parsers, repositories, station definitions and certification contracts, session isolation primitives, startup preference restoration, listener activity, station-page trust policy, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
-- Latest full local evidence: debug compile, all 108 debug unit tests, lint, Windows validation, wireless debug install, and 21/21 Android 16 Razr instrumentation tests pass after the M21 public/device gate (129 tests total).
-- M18–M21 are complete; M22 public/device work remains preserved pending its authenticated gate.
+- 131 `@Test` declarations currently cover parsers, repositories, station definitions and certification contracts, session isolation primitives, startup preference restoration, listener activity, station-page trust policy, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
+- Latest full local evidence: debug compile, all 110 debug unit tests, lint, Windows validation, standalone install, and 21/21 Android 16 Razr instrumentation tests pass after the M22 final station gate (131 tests total).
+- M18–M22 are complete; all five stations passed representative authentication and physical-device certification.
 
 ## Known defects and technical debt
 
 - Queue and history models do not preserve stable station track IDs. Safe fallback matching therefore needs title, artist/composer, and album—not title alone.
 - Station origins are repeated across several adapters; consolidation is desirable when it can be done without destabilizing their separate trust policies.
 - Sleep timer and local track favorites are not implemented. Request history/membership is currently enabled only for SST; the other stations await certification evidence.
-- Live authentication differences for Entranced.FM still need representative user-entered account/CAPTCHA verification during M22.
+- Live authentication differences across all five stations have representative user-entered account/CAPTCHA evidence; natural production session expiry remains intentionally unforced.
 - M19 1980s.FM certification is complete. A representative MorG session proved native sign-in, Android-protected process-restart restoration, cross-station isolation, authenticated empty Favorites loading, Chat composer availability, green request eligibility, explicit station-only logout, and persistent signed-out state after another restart. No credentials, CAPTCHA, or session material was retained.
 - M20 Adagio.FM certification is complete. A representative MorG session proved native sign-in, Android-protected process-restart restoration, cross-station isolation, authenticated empty Favorites loading, Chat composer availability, green request eligibility, explicit station-only logout, and persistent signed-out state after another restart. Request messages, listener activity, and membership remain explicitly unverified rather than inferred.
 - M21 Death.FM certification is complete. A representative Morgue session proved native sign-in, Android-protected process-restart restoration, cross-station isolation, authenticated empty Favorites loading, Chat composer availability, green request eligibility, explicit station-only logout, and persistent signed-out state after another restart. RIP membership remains a separately trusted browser route; native membership, request activity, and request messages remain explicitly unverified.
+- M22 Entranced.FM certification is complete. A representative MorG session proved native sign-in, Android-protected process-restart restoration, cross-station isolation, authenticated empty Favorites loading, Chat composer availability, green request eligibility, explicit station-only logout, and persistent signed-out state after another restart. A narrowly scoped ICY boundary fix maps defined Windows-1252 C1 punctuation without altering valid Unicode; live installed playback showed no replacement/control glyph.
 - M17 Private Messages is deliberately deferred because of known legacy server issues.
 - Death.FM's configured HTTPS website recovered during M21. Its exact common routes plus station-specific RIP membership route were independently reverified and enabled under the unchanged same-origin HTTPS trust policy.
 - Google approved the Play developer account on July 14, 2026. External Alpha distribution remains sequenced after M15–M22 and still requires Play App Signing setup, a securely held upload key, final release validation, and explicit publication authorization.

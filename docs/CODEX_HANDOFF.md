@@ -2,18 +2,18 @@
 
 ## Resume status — July 15, 2026
 
-- Current milestone: M22 Entranced.FM authenticated completion and final station gate. M19–M21 are complete, and M17 remains deferred for server repair.
-- Last completed milestone: M21 Death.FM certification in `docs/m21-death-certification.md`. Its authenticated completion required evidence and documentation only; the latest production implementation remains the M21 public checkpoint `67e6d7a`.
-- Latest successful validation: debug compile, all 108 debug unit tests, lint, Windows validation, wireless debug install, and 21/21 Android 16 Razr instrumentation tests after the M21 public/device gate (129 tests total); fresh physical Death.FM checks also reconfirmed playback, sparse metadata/artwork, compact Queue/History, Chat, Favorites/request gating, login challenge, RIP pages, and all five navigation targets.
+- Current milestone: M23 Alpha Test Distribution Readiness. M18–M22 and all five station gates are complete; M17 remains deferred for server repair.
+- Last completed milestone: M22 Entranced.FM certification in `docs/m22-entranced-certification.md`, with focused implementation commit `ec5fb20`.
+- Latest successful validation: debug/release compile, all 110 unit tests, lint, Windows validation, standalone wireless debug install, and 21/21 Android 16 Razr instrumentation tests after the M22 final station gate (131 tests total); live Entranced playback also reconfirmed Media3 `PLAYING`, artwork/metadata, AAC/128 kbps, corrected punctuation boundaries, and restored device settings.
 - Architecture: one native Compose app module; immutable state/actions; station-scoped repository contracts; one Media3 service-owned player/session; Android Keystore-backed per-station sessions.
 - Decisions: queued and recently played tracks share visible red `Track Recently Played`; reasons remain distinct internally. Available tracks use green `Request Now`. Other restrictions retain accurate separate labels. Revalidation must fail closed before mutation.
-- Known blockers: Queue rows lack stable track IDs; M17 Private Messages remains deferred for server fixes; a representative authenticated account is still needed to close M22. The Play developer account is approved; signing/configuration work remains intentionally sequenced at M23–M24.
+- Known blockers: Queue rows lack stable track IDs; M17 Private Messages remains deferred for server fixes. The Play developer account is approved; M23 still requires secure upload-key custody, Play App Signing/app configuration, final declarations, and release-artifact validation.
 - Roadmap model: M13–M17 shared features, M18–M22 individual station certification, and M23–M24 distribution/publication. Certification milestones harden the shared app and must not create station-specific forks.
-- Next concrete task: load the Entranced.FM native sign-in challenge and obtain user-entered representative credentials/CAPTCHA, then verify restoration, isolation, authenticated Favorites/Chat/request access, station-only logout, and final ICY punctuation behavior.
-- Likely next files: finish the preserved M22 ICY hardening/tests, authenticated certification evidence, and roadmap matrices after the login gate closes.
+- Next concrete task: reconcile the preserved M23 release/privacy/signing materials against the completed M18–M22 implementation, then validate a reproducible unsigned or securely local-signed release bundle without committing secrets.
+- Likely next files: `docs/m23-alpha-readiness.md`, release/privacy/tester documentation, version/release configuration, Play checklist, and local-only signing handoff artifacts.
 - Branch: `agent/initial-android-scaffold`.
-- Latest implementation commit: `67e6d7a`.
-- Latest production implementation/evidence checkpoints are `67e6d7a` and `5a4bdb7`. M19–M21 authentication completions are evidence-only checkpoints and do not change production code or stream configuration.
+- Latest implementation commit: `ec5fb20`.
+- Latest production implementation/evidence checkpoints are `ec5fb20` and the pending M22 certification documentation commit. No stream URL or trust-policy expansion was introduced by M22.
 - Required planning documents: `CURRENT_STATE_AUDIT.md`, `NETWORK_FEATURE_MATRIX.md`, `ENDPOINT_INVENTORY.md`, `AUTHENTICATION_MATRIX.md`, and `IMPLEMENTATION_PLAN.md`.
 
 ## Mission and repository
@@ -244,11 +244,11 @@ superseded by explicit milestone publishing authorization.
 Early M23 Alpha distribution preparation is preserved and published at version `0.1.0-alpha01` / version code 2. Privacy disclosure,
 native privacy-notice access, tester instructions, release notes, permission review, Play upload-signing guardrails,
 unsigned release APK/AAB builds, debug-signature verification, an in-place debug upgrade from version code 1 to 2,
-and all 12 Razr tests are complete. Google Play internal/closed testing with Play App Signing is selected; Google
-approved the developer account on July 14, 2026, while app/signing setup remains sequenced after feature work. Never distribute the machine-local debug APK, and
+and the latest 21 Razr tests are complete. Google Play internal/closed testing with Play App Signing is selected; Google
+approved the developer account on July 14, 2026, and app/signing setup is now the active M23 work. Never distribute the machine-local debug APK, and
 never commit signing files, passwords, aliases, or local signing-property paths. See `PRIVACY.md`,
 `docs/alpha-testing.md`, `docs/play-console-checklist.md`, `docs/releases/0.1.0-alpha01.md`, and
-`docs/m23-alpha-readiness.md`. M23 remains deferred until M15–M22 are complete, at which point these artifacts must be refreshed and revalidated.
+`docs/m23-alpha-readiness.md`. M15–M22 are complete, so these artifacts are now being refreshed and revalidated.
 
 The published Alpha branch also adds native authenticated Favorites browsing for all five stations. The
 adapter discovers the signed-in member's numeric Favorites-list identifier from each station's own authenticated
@@ -266,8 +266,8 @@ M15 Request history, cooldown, and membership is complete in `b19d5fe`. The stat
 in memory, and clears a station's state on sign-out. Representative authenticated SST evidence supplies the exact
 last-ten request table, a same-origin VIP request timer, and a profile-scoped VIP badge separately from administrator
 rank. The parser bounds rows and text, rejects cross-origin/unrecognized discovery links, and reports missing evidence
-as unknown. Only SST is enabled; completed M19–M21 certification did not expose a reliable equivalent for 1980s.FM,
-Adagio.FM, or Death.FM, and Entranced.FM awaits M22 evidence. No mutation or polling was
+as unknown. Only SST is enabled; completed M19–M22 certification did not expose a reliable equivalent for 1980s.FM,
+Adagio.FM, Death.FM, or Entranced.FM. No mutation or polling was
 introduced. Unit tests, lint, debug install, and all 19 wired Android 16 Razr instrumentation tests pass. The physical
 fresh-install screenshot shows the explicit signed-out card; a fresh standard-tier production refresh requires a
 user-entered CAPTCHA and is recorded as an M18 interaction limit rather than being guessed. See `docs/m15-request-activity-research.md`, `docs/m15-validation.md`, and
@@ -328,6 +328,17 @@ through station-only logout across another restart. RIP membership remains separ
 request messages, listener activity, and native membership remain explicitly unverified. See
 `docs/m21-death-certification.md`, `docs/screenshots/m21-death-certification.png`,
 `docs/screenshots/m21-death-rip-pages.png`, and `docs/screenshots/m21-death-authenticated.png`.
+
+M22 Entranced.FM certification is complete. Both unchanged station relays delivered live `audio/aacp` bytes at
+128 kbps; the extended Queue/History, Chat, request browsing, artwork interface, exact seven trusted pages, and
+station capability contract pass. A representative MorG session signed in natively, restored after a forced process
+restart without Keystore errors, remained isolated from the other stations, loaded authenticated empty Favorites,
+exposed the Chat composer and one green requestable least-played track without mutation, and cleared through
+station-only logout across another restart. The playback boundary now maps only defined Windows-1252 C1 punctuation
+from legacy ICY titles and preserves valid Unicode; focused tests and live installed playback show no replacement or
+control glyph. Request messages, listener activity, and native membership remain explicitly unverified. See
+`docs/m22-entranced-certification.md`, `docs/screenshots/m22-entranced-certification.png`, and
+`docs/screenshots/m22-entranced-authenticated.png`.
 
 ## Station stream evidence
 

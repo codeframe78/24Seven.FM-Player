@@ -55,7 +55,7 @@ Never include passwords, security-code answers or images, cookies, session value
 ## Known Alpha boundaries
 
 - M17 Private Messages is deferred because of underlying website/server issues.
-- M22 representative authenticated account evidence remains pending; M19 1980s.FM, M20 Adagio.FM, and M21 Death.FM are complete.
+- Representative authenticated certification is complete for all five stations; natural server-side session expiry was not forcibly induced.
 - Sleep timer, Cast/audio-output selection, and diagnostics are not implemented.
 - Station accounts are currently station-specific.
 - Public station interfaces can change independently of the app.
