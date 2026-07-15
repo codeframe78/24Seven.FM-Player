@@ -1,6 +1,7 @@
 package com.codeframe78.twentyfourseven.player.ui
 
 import com.codeframe78.twentyfourseven.player.data.BootstrapStationRepository
+import com.codeframe78.twentyfourseven.player.data.InMemoryStationPreferencesRepository
 import com.codeframe78.twentyfourseven.player.data.UnavailableAuthRepository
 import com.codeframe78.twentyfourseven.player.data.UnavailableChatRepository
 import com.codeframe78.twentyfourseven.player.data.UnavailableSongRequestRepository
@@ -26,6 +27,8 @@ import com.codeframe78.twentyfourseven.player.domain.RequestableTrack
 import com.codeframe78.twentyfourseven.player.domain.TrackRequestStatus
 import com.codeframe78.twentyfourseven.player.domain.Station
 import com.codeframe78.twentyfourseven.player.domain.StationId
+import com.codeframe78.twentyfourseven.player.domain.LocalStationPreferences
+import com.codeframe78.twentyfourseven.player.domain.StartupStationMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -143,6 +146,65 @@ class MainViewModelTest {
         advanceUntilIdle()
 
         assertEquals(MainDestination.Chat, viewModel.uiState.value.destination)
+    }
+
+    @Test
+    fun `startup preference actions update immutable state without switching playback`() = runTest(dispatcher) {
+        val preferences = InMemoryStationPreferencesRepository()
+        val playback = FakePlaybackController()
+        val viewModel = MainViewModel(
+            BootstrapStationRepository(preferences),
+            playback,
+            FakeNowPlayingRepository(),
+            FakeQueueRepository(),
+            UnavailableAuthRepository(),
+            UnavailableChatRepository(),
+            UnavailableSongRequestRepository(),
+            UnavailableFavoriteTracksRepository(),
+        )
+        backgroundScope.launch { viewModel.uiState.collect() }
+        advanceUntilIdle()
+
+        viewModel.setStartupStation(StationId("death"))
+        advanceUntilIdle()
+
+        assertEquals(StartupStationMode.Fixed, viewModel.uiState.value.stationPreferences.startupMode)
+        assertEquals(StationId("death"), viewModel.uiState.value.stationPreferences.defaultStationId)
+        assertEquals(StationId("sst"), viewModel.uiState.value.selectedStation?.id)
+        assertEquals(listOf(StationId("sst")), playback.selectedStations)
+
+        viewModel.selectStation(StationId("adagio"))
+        viewModel.useLastStationAtStartup()
+        advanceUntilIdle()
+
+        assertEquals(StartupStationMode.LastSelected, viewModel.uiState.value.stationPreferences.startupMode)
+        assertEquals(StationId("adagio"), viewModel.uiState.value.stationPreferences.lastStationId)
+        assertEquals(null, viewModel.uiState.value.stationPreferences.defaultStationId)
+    }
+
+    @Test
+    fun `fixed startup station is the first and only station delivered to playback`() = runTest(dispatcher) {
+        val preferences = InMemoryStationPreferencesRepository(
+            LocalStationPreferences(
+                startupMode = StartupStationMode.Fixed,
+                defaultStationId = StationId("death"),
+            ),
+        )
+        val playback = FakePlaybackController()
+
+        MainViewModel(
+            BootstrapStationRepository(preferences),
+            playback,
+            FakeNowPlayingRepository(),
+            FakeQueueRepository(),
+            UnavailableAuthRepository(),
+            UnavailableChatRepository(),
+            UnavailableSongRequestRepository(),
+            UnavailableFavoriteTracksRepository(),
+        )
+        advanceUntilIdle()
+
+        assertEquals(listOf(StationId("death")), playback.selectedStations)
     }
 
     @Test
@@ -419,9 +481,11 @@ class MainViewModelTest {
         var playCalls = 0
         var pauseCalls = 0
         var stopCalls = 0
+        val selectedStations = mutableListOf<StationId>()
 
         override fun selectStation(station: Station) {
             selectedStation = station
+            selectedStations += station.id
         }
 
         override fun play() {

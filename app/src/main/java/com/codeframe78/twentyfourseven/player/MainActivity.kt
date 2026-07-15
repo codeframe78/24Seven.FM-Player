@@ -89,6 +89,8 @@ class MainActivity : ComponentActivity() {
                     onPrepareFavoriteRequest = viewModel::prepareFavoriteRequest,
                     onCancelRequest = viewModel::cancelSongRequest,
                     onConfirmRequest = viewModel::confirmSongRequest,
+                    onUseLastStationAtStartup = viewModel::useLastStationAtStartup,
+                    onSetStartupStation = viewModel::setStartupStation,
                 )
                 if (showExitConfirmation) {
                     AlertDialog(

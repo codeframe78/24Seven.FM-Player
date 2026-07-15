@@ -2,6 +2,8 @@ package com.codeframe78.twentyfourseven.player.data
 
 import com.codeframe78.twentyfourseven.player.domain.StationId
 import com.codeframe78.twentyfourseven.player.domain.StreamFormat
+import com.codeframe78.twentyfourseven.player.domain.LocalStationPreferences
+import com.codeframe78.twentyfourseven.player.domain.StartupStationMode
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -35,6 +37,54 @@ class BootstrapStationRepositoryTest {
             assertEquals(listOf(StreamFormat.Aac, StreamFormat.Aac), station.streams.map { it.format })
             assertEquals(listOf(128, 128), station.streams.map { it.bitrateKbps })
         }
+    }
+
+    @Test
+    fun `fixed startup station is selected before the repository emits`() = runTest {
+        val preferences = InMemoryStationPreferencesRepository(
+            LocalStationPreferences(
+                startupMode = StartupStationMode.Fixed,
+                defaultStationId = StationId("death"),
+                lastStationId = StationId("adagio"),
+            ),
+        )
+
+        val selected = BootstrapStationRepository(preferences).observeSelectedStation().first()
+
+        assertEquals(StationId("death"), selected.id)
+    }
+
+    @Test
+    fun `last selected startup falls back across removed or corrupt station ids`() = runTest {
+        val preferences = InMemoryStationPreferencesRepository(
+            LocalStationPreferences(
+                startupMode = StartupStationMode.Fixed,
+                defaultStationId = StationId("removed-station"),
+                lastStationId = StationId("entranced"),
+            ),
+        )
+
+        val selected = BootstrapStationRepository(preferences).observeSelectedStation().first()
+
+        assertEquals(StationId("entranced"), selected.id)
+    }
+
+    @Test
+    fun `selection and startup actions persist only valid station ids`() = runTest {
+        val preferences = InMemoryStationPreferencesRepository()
+        val repository = BootstrapStationRepository(preferences)
+
+        repository.selectStation(StationId("adagio"))
+        repository.setStartupStation(StationId("death"))
+        repository.selectStation(StationId("unknown"))
+
+        assertEquals(StationId("adagio"), preferences.current.lastStationId)
+        assertEquals(StartupStationMode.Fixed, preferences.current.startupMode)
+        assertEquals(StationId("death"), preferences.current.defaultStationId)
+
+        repository.useLastStationAtStartup()
+        assertEquals(StartupStationMode.LastSelected, preferences.current.startupMode)
+        assertEquals(null, preferences.current.defaultStationId)
     }
 
     @Test

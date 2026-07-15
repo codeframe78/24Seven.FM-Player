@@ -28,6 +28,7 @@ import com.codeframe78.twentyfourseven.player.domain.FavoriteTracksState
 import com.codeframe78.twentyfourseven.player.domain.TrackRequestAvailability
 import com.codeframe78.twentyfourseven.player.domain.TrackRequestAvailabilityResolver
 import com.codeframe78.twentyfourseven.player.domain.TrackRequestStatus
+import com.codeframe78.twentyfourseven.player.domain.LocalStationPreferences
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -52,6 +53,7 @@ data class MainUiState(
     val chat: ChatState? = null,
     val requests: SongRequestState? = null,
     val favorites: FavoriteTracksState? = null,
+    val stationPreferences: LocalStationPreferences = LocalStationPreferences(),
     val destination: MainDestination = MainDestination.Player,
 )
 
@@ -72,6 +74,13 @@ class MainViewModel(
     private val favorites: FavoriteTracksRepository,
 ) : ViewModel() {
     private val destination = MutableStateFlow(MainDestination.Player)
+
+    private val stationSelection = combine(
+        stations.observeStations(),
+        stations.observeSelectedStation(),
+        stations.observeStationPreferences(),
+        ::StationSelectionContent,
+    )
 
     private val selectedQueue = combine(
         stations.observeSelectedStation(),
@@ -144,12 +153,12 @@ class MainViewModel(
     )
 
     val uiState: StateFlow<MainUiState> = combine(
-        stations.observeStations(),
-        stations.observeSelectedStation(),
+        stationSelection,
         playback.state,
         stationContent,
         destination,
-    ) { all, selected, playbackState, content, selectedDestination ->
+    ) { selection, playbackState, content, selectedDestination ->
+        val selected = selection.selected
         val selectedQueueState = content.queue.takeIf { it.stationId == selected.id }
             ?: QueueState(selected.id)
         val selectedAuthState = content.auth.selected.takeIf { it.stationId == selected.id }
@@ -160,7 +169,7 @@ class MainViewModel(
             .takeIf { it.stationId == selected.id }
             ?.resolveAvailability(selected.id, selectedQueueState)
         MainUiState(
-            stations = all,
+            stations = selection.all,
             selectedStation = selected,
             playback = playbackState,
             nowPlaying = content.nowPlaying.takeIf { it.stationId == selected.id }
@@ -171,6 +180,7 @@ class MainViewModel(
             chat = content.chat.takeIf { it.stationId == selected.id },
             requests = resolvedRequests,
             favorites = resolvedFavorites,
+            stationPreferences = selection.preferences,
             destination = selectedDestination,
         )
     }
@@ -188,6 +198,8 @@ class MainViewModel(
     }
 
     fun selectStation(id: StationId) = viewModelScope.launch { stations.selectStation(id) }
+    fun useLastStationAtStartup() = viewModelScope.launch { stations.useLastStationAtStartup() }
+    fun setStartupStation(id: StationId) = viewModelScope.launch { stations.setStartupStation(id) }
     fun play() = playback.play()
     fun pause() = playback.pause()
     fun stop() = playback.stop()
@@ -284,6 +296,12 @@ private data class StationContent(
     val auth: AuthContent,
     val chat: ChatState,
     val requestContent: RequestContent,
+)
+
+private data class StationSelectionContent(
+    val all: List<Station>,
+    val selected: Station,
+    val preferences: LocalStationPreferences,
 )
 
 private data class AuthContent(

@@ -44,6 +44,8 @@ import com.codeframe78.twentyfourseven.player.domain.FavoriteTracksLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.FavoriteTracksState
 import com.codeframe78.twentyfourseven.player.domain.TrackRequestAvailability
 import com.codeframe78.twentyfourseven.player.domain.TrackRequestStatus
+import com.codeframe78.twentyfourseven.player.domain.LocalStationPreferences
+import com.codeframe78.twentyfourseven.player.domain.StartupStationMode
 import org.junit.Rule
 import org.junit.Test
 import org.junit.Assert.assertEquals
@@ -359,6 +361,50 @@ class RadioAppTest {
             assertEquals(listOf(StationId("sst")), signedOut)
             assertEquals(listOf(StationId("adagio")), refreshed)
             assertEquals(listOf(StationId("entranced")), signedIn)
+        }
+    }
+
+    @Test
+    fun deviceStartupPreferenceIsDistinctAndEmitsExplicitActions() {
+        val useLastCalls = mutableListOf<Unit>()
+        val fixedStations = mutableListOf<StationId>()
+        val adagio = accountStation("adagio", "Adagio.FM", "Adagio")
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(
+                        destination = MainDestination.More,
+                        stations = listOf(station, adagio),
+                        selectedStation = adagio,
+                        stationPreferences = LocalStationPreferences(
+                            startupMode = StartupStationMode.Fixed,
+                            defaultStationId = adagio.id,
+                            lastStationId = station.id,
+                        ),
+                    ),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                    onUseLastStationAtStartup = { useLastCalls += Unit },
+                    onSetStartupStation = { fixedStations += it },
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("Device preferences").assertIsDisplayed()
+        composeRule.onNodeWithText("Always start with Adagio.FM").assertIsDisplayed()
+        composeRule.onNodeWithText(
+            "These settings stay on this Android device. They do not change station accounts, server Favorites, or membership settings.",
+        ).assertIsDisplayed()
+        composeRule.onNodeWithTag("startup_use_last_station").performScrollTo().performClick()
+        composeRule.onNodeWithTag("startup_use_current_station").performScrollTo().performClick()
+
+        composeRule.runOnIdle {
+            assertEquals(1, useLastCalls.size)
+            assertEquals(listOf(StationId("adagio")), fixedStations)
         }
     }
 

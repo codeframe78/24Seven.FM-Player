@@ -84,6 +84,7 @@ import com.codeframe78.twentyfourseven.player.domain.StationId
 import com.codeframe78.twentyfourseven.player.domain.RequestSearchField
 import com.codeframe78.twentyfourseven.player.domain.RequestSuggestionMode
 import com.codeframe78.twentyfourseven.player.domain.SongRequestLoadStatus
+import com.codeframe78.twentyfourseven.player.domain.StartupStationMode
 import coil3.compose.AsyncImage
 import com.codeframe78.twentyfourseven.player.R
 import com.codeframe78.twentyfourseven.player.ui.theme.stationPalette
@@ -124,12 +125,14 @@ internal fun RadioApp(
     onPrepareFavoriteRequest: (FavoriteTrack) -> Unit = {},
     onCancelRequest: () -> Unit = {},
     onConfirmRequest: (String) -> Unit = {},
+    onUseLastStationAtStartup: () -> Unit = {},
+    onSetStartupStation: (StationId) -> Unit = {},
 ) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
         if (maxWidth >= 600.dp) {
-            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest)
+            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation)
         } else {
-            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest)
+            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation)
         }
     }
 }
@@ -157,6 +160,8 @@ private fun PhoneShell(
     onPrepareFavoriteRequest: (FavoriteTrack) -> Unit,
     onCancelRequest: () -> Unit,
     onConfirmRequest: (String) -> Unit,
+    onUseLastStationAtStartup: () -> Unit,
+    onSetStartupStation: (StationId) -> Unit,
 ) {
     Scaffold(
         topBar = { StationTopBar(state, onSelectDestination) },
@@ -178,7 +183,7 @@ private fun PhoneShell(
             }
         },
     ) { padding ->
-        DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest)
+        DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation)
     }
 }
 
@@ -205,6 +210,8 @@ private fun TabletShell(
     onPrepareFavoriteRequest: (FavoriteTrack) -> Unit,
     onCancelRequest: () -> Unit,
     onConfirmRequest: (String) -> Unit,
+    onUseLastStationAtStartup: () -> Unit,
+    onSetStartupStation: (StationId) -> Unit,
 ) {
     Row(Modifier.fillMaxSize()) {
         NavigationRail(Modifier.fillMaxHeight().testTag("tablet_navigation_rail")) {
@@ -228,7 +235,7 @@ private fun TabletShell(
                 }
             },
         ) { padding ->
-            DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest)
+            DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation)
         }
     }
 }
@@ -294,6 +301,8 @@ private fun DestinationContent(
     onPrepareFavoriteRequest: (FavoriteTrack) -> Unit,
     onCancelRequest: () -> Unit,
     onConfirmRequest: (String) -> Unit,
+    onUseLastStationAtStartup: () -> Unit,
+    onSetStartupStation: (StationId) -> Unit,
 ) {
     when (state.destination) {
         MainDestination.Player -> AdaptivePlayerScreen(state, padding, onSelectStation, onPlay, onPause, onStop)
@@ -308,7 +317,7 @@ private fun DestinationContent(
         )
         MainDestination.Chat -> ChatScreen(state, padding, onRefreshChat, onSendChatMessage)
         MainDestination.Queue -> QueueScreen(state, padding, onRefreshQueue)
-        MainDestination.More -> MoreScreen(state, padding, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest)
+        MainDestination.More -> MoreScreen(state, padding, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation)
     }
 }
 
@@ -683,6 +692,8 @@ private fun MoreScreen(
     onPrepareRequest: (String) -> Unit,
     onCancelRequest: () -> Unit,
     onConfirmRequest: (String) -> Unit,
+    onUseLastStationAtStartup: () -> Unit,
+    onSetStartupStation: (StationId) -> Unit,
 ) {
     Column(
         Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(24.dp),
@@ -699,6 +710,7 @@ private fun MoreScreen(
         Text(state.selectedStation?.description.orEmpty(), style = MaterialTheme.typography.bodyLarge)
         Text("Feature availability", style = MaterialTheme.typography.titleMedium)
         CapabilityCard(state.selectedStation?.capabilities ?: StationCapabilities())
+        DevicePreferencesSection(state, onUseLastStationAtStartup, onSetStartupStation)
         AccountSection(state, onRefreshAuth, onSignIn, onSignOut)
         SongRequestSection(state, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest)
         PrivacySection()
@@ -707,6 +719,52 @@ private fun MoreScreen(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+    }
+}
+
+@Composable
+private fun DevicePreferencesSection(
+    state: MainUiState,
+    onUseLastStationAtStartup: () -> Unit,
+    onSetStartupStation: (StationId) -> Unit,
+) {
+    val preferences = state.stationPreferences
+    val fixedStation = state.stations.firstOrNull { it.id == preferences.defaultStationId }
+    val lastStation = state.stations.firstOrNull { it.id == preferences.lastStationId }
+    val summary = when (preferences.startupMode) {
+        StartupStationMode.LastSelected -> lastStation?.let { "Resume last station: ${it.name}" }
+            ?: "Resume the last station selected on this device"
+        StartupStationMode.Fixed -> fixedStation?.let { "Always start with ${it.name}" }
+            ?: "Saved startup station is unavailable; using the safe catalog fallback"
+    }
+
+    Text("Device preferences", style = MaterialTheme.typography.titleMedium)
+    Card(Modifier.fillMaxWidth().testTag("device_station_preferences")) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text(
+                "These settings stay on this Android device. They do not change station accounts, server Favorites, or membership settings.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                summary,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.semantics { contentDescription = "Startup station preference: $summary" },
+            )
+            Button(
+                onClick = onUseLastStationAtStartup,
+                modifier = Modifier.testTag("startup_use_last_station"),
+            ) { Text("Resume last station") }
+            Button(
+                onClick = { state.selectedStation?.id?.let(onSetStartupStation) },
+                enabled = state.selectedStation != null,
+                modifier = Modifier.testTag("startup_use_current_station"),
+            ) { Text("Use current station at startup") }
+            Text(
+                "Choose a station on Player first if you want a different fixed startup station.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 
