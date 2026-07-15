@@ -12,25 +12,11 @@ The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It
 - Death.FM
 - Entranced.FM
 
-## Current progress
+## Alpha status
 
-M1 through M11 and M13 are complete and published on the development branch. M12 Alpha distribution readiness is prepared and published but is waiting for Play Console activation and the final upload-signing ceremony. The Alpha has a responsive, dark-first Now Playing dashboard, a system-aware light theme, a persistent modern mini-player, centralized station identities, and an adaptive compact/expanded presentation without changing the service-owned Media3 playback path. Signed-in members can browse and filter their own favorite tracks on all five stations. Available tracks use green `Request Now`; recently played and currently queued tracks use red `Track Recently Played` while remaining distinct internally. Requests revalidate Queue and fresh album eligibility before the one-shot mutation. Unit tests, lint, debug assembly, 13/13 API 35 emulator tests, and physical Razr inspection are green.
+Milestones M1–M11 and M13 are complete and published on the development branch. M12 Alpha distribution readiness is prepared and published but is waiting for Play Console activation and the final upload-signing ceremony. M14 Independent Accounts UX is next and has not started.
 
-| Milestone | Status | Delivered |
-| --- | --- | --- |
-| M1 | Complete | Buildable native Android baseline, Gradle wrapper, CI, and Windows setup validation |
-| M2 | Complete | Verified playback for all five stations, atomic switching, and one-step stream fallback |
-| M3 | Complete | Media3 background playback, notification/lock-screen controls, audio focus, and route-change handling |
-| M4 | Complete | Live ICY titles plus station-hosted current-track artwork in Compose and MediaSession metadata |
-| M5 | Complete | Native Player, Chat, Queue, and More destinations; persistent mini-player; adaptive phone/tablet navigation |
-| M6 | Complete | Live Queue and History with artwork and a shared 60-second limit; up to 30 rows on extended station interfaces and 10 on Death.FM's compact feed |
-| M7 | Complete | Native station-scoped authentication, alphanumeric security challenge, and Android-protected session restoration |
-| M8 | Complete | Native station chat reading and protected-session posting, with memory-only history and a 30-second read limit |
-| M9 | Complete | Native catalog search, album/eligibility browsing, explicit confirmation, and one-shot song requests with no automatic retries |
-| M10 | Complete | Requester identity/message display, random and least-played suggestions, and the exact 80-character StreamingSoundtracks.com message form using the station-generated message-record ID; verified end to end on a VIP request |
-| M11 | Complete | Adaptive Alpha interface, 24Seven.FM launcher/fallback artwork, five-station carousel and wrapped station controls, responsive full/mini players, system light/dark themes, accessible connection states, and double-Back exit confirmation |
-| M12 | Waiting for Play Console | `0.1.0-alpha01` / version code 2, native/privacy documentation, Play upload-signing guardrails, tester and Console guides, unsigned release verification, debug upgrade smoke test, five-station favorite-track browsing, and 13 passing API 35 emulator tests |
-| M13 | Complete | Queue-aware request availability, exact accessible status labels, station-scoped matching, stale-data safety, and pre-submission revalidation |
+The current Alpha provides a responsive native player, service-owned Media3 playback, five-station navigation, live metadata and artwork, queue/history, station-scoped authentication, chat, song requests, and signed-in favorite-track browsing. Request availability is conservatively revalidated against fresh station and Queue data before submission. Unit tests, lint, debug assembly, 13/13 API 35 emulator tests, and physical Razr inspection are green.
 
 ## Project Roadmap
 
