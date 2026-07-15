@@ -108,7 +108,7 @@ class BootstrapStationRepositoryTest {
         val stations = repository.observeStations().first()
 
         assertEquals(
-            listOf("sst", "1980s", "adagio", "entranced"),
+            listOf("sst", "1980s", "adagio", "death", "entranced"),
             stations.filter { it.capabilities.supportsSecondaryContent }.map { it.id.value },
         )
         stations.filter { it.capabilities.supportsSecondaryContent }.forEach { station ->
@@ -117,8 +117,6 @@ class BootstrapStationRepositoryTest {
                 station.secondaryPages.all { StationPageTrustPolicy.trustedUrl(station, it) == it.url },
             )
         }
-        val death = stations.single { it.id == StationId("death") }
-        assertEquals(0, death.secondaryPages.size)
         assertEquals(
             listOf(StationPageKind.Games, StationPageKind.Awards),
             stations.single { it.id == StationId("1980s") }.secondaryPages.takeLast(2).map { it.kind },
@@ -193,6 +191,42 @@ class BootstrapStationRepositoryTest {
             ),
             station.secondaryPages.map { it.kind },
         )
+        assertEquals(
+            true,
+            station.secondaryPages.all { StationPageTrustPolicy.trustedUrl(station, it) == it.url },
+        )
+    }
+
+    @Test
+    fun `death certification contract uses verified RIP pages without SST only capabilities`() = runTest {
+        val station = repository.observeStations().first().single { it.id == StationId("death") }
+
+        with(station.capabilities) {
+            assertEquals(true, supportsAuthentication)
+            assertEquals(true, supportsChat)
+            assertEquals(true, supportsFavorites)
+            assertEquals(true, supportsQueue)
+            assertEquals(true, supportsHistory)
+            assertEquals(true, supportsRequests)
+            assertEquals(true, supportsSecondaryContent)
+            assertEquals(false, supportsRequestMessages)
+            assertEquals(false, supportsListenerActivity)
+        }
+        assertEquals("https://death.fm/", station.websiteUrl)
+        assertEquals(
+            listOf(
+                StationPageKind.Website,
+                StationPageKind.Forums,
+                StationPageKind.Members,
+                StationPageKind.Statistics,
+                StationPageKind.TopTracks,
+                StationPageKind.Contact,
+                StationPageKind.Membership,
+            ),
+            station.secondaryPages.map { it.kind },
+        )
+        assertEquals("RIP membership", station.secondaryPages.last().title)
+        assertEquals("https://death.fm/modules.php?name=RIP_Subscribe", station.secondaryPages.last().url)
         assertEquals(
             true,
             station.secondaryPages.all { StationPageTrustPolicy.trustedUrl(station, it) == it.url },

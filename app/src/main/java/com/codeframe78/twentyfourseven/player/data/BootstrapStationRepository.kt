@@ -68,7 +68,9 @@ class BootstrapStationRepository(
             shortName = "Death",
             description = "Extreme metal",
             domain = "death.fm",
-            capabilities = queueCapabilities,
+            capabilities = queueCapabilities.copy(supportsSecondaryContent = true),
+            membershipTitle = "RIP membership",
+            membershipModule = "RIP_Subscribe",
         ),
         station(
             id = "entranced",
@@ -133,6 +135,8 @@ class BootstrapStationRepository(
             websiteDomain: String = domain,
             capabilities: StationCapabilities,
             extraPages: List<StationPage> = emptyList(),
+            membershipTitle: String = "VIP membership",
+            membershipModule: String = "VIP_Subscribe",
         ) = Station(
             id = StationId(id),
             name = name,
@@ -141,17 +145,21 @@ class BootstrapStationRepository(
             websiteUrl = "https://$websiteDomain/",
             streams = streams(domain),
             capabilities = capabilities,
-            secondaryPages = if (capabilities.supportsSecondaryContent) secondaryPages(domain) + extraPages else emptyList(),
+            secondaryPages = if (capabilities.supportsSecondaryContent) {
+                secondaryPages(domain, membershipTitle, membershipModule) + extraPages
+            } else {
+                emptyList()
+            },
         )
 
-        fun secondaryPages(domain: String) = listOf(
+        fun secondaryPages(domain: String, membershipTitle: String, membershipModule: String) = listOf(
             StationPage(StationPageKind.Website, "Station website", "News and station announcements", "https://$domain/"),
             page(domain, StationPageKind.Forums, "Forums", "Community discussions", "Forums"),
             page(domain, StationPageKind.Members, "Members", "Public member directory", "Members_List"),
             page(domain, StationPageKind.Statistics, "Station statistics", "Public station listening statistics", "Stats"),
             page(domain, StationPageKind.TopTracks, "Top 100", "The station's most-played tracks", "Top100"),
             page(domain, StationPageKind.Contact, "Contact", "Contact the station team", "Contact_Us"),
-            page(domain, StationPageKind.Membership, "VIP membership", "Station membership information", "VIP_Subscribe"),
+            page(domain, StationPageKind.Membership, membershipTitle, "Station membership information", membershipModule),
         )
 
         fun page(
