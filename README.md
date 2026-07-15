@@ -141,6 +141,19 @@ From PowerShell, validate the project with:
 .\gradlew.bat testDebugUnitTest lintDebug assembleRelease
 ```
 
+For an Ubuntu Codex CLI and Android Studio workstation, install the pinned
+project toolchain, both API 35/API 36 emulators, and persistent `ANDROID_HOME`
+configuration with:
+
+```bash
+bash scripts/bootstrap-ubuntu.sh --accept-licenses
+```
+
+The script also installs the ChatGPT Codex CLI. Authenticate afterward with
+`codex login`, or use `codex login --device-auth` on a headless host. See the
+[Ubuntu development setup](docs/ubuntu-cli-setup.md) for installed components,
+options, security boundaries, and verification commands.
+
 If the repository is inside a OneDrive-synced directory and Gradle stalls on file operations, direct app build outputs to a local directory before running Gradle:
 
 ```powershell
