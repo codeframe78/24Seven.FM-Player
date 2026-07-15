@@ -39,10 +39,11 @@ Public listening does not require an account. The app contains no ads, analytics
 - Category: Music & Audio
 - Suggested tags: Radio, Music & Audio, Music streaming (only if offered by Console)
 - Suggested website: `https://github.com/codeframe78/24Seven.FM-Player`
+- Public support email: `24sevenplayer@jamesjennison.net`
 - Phone number: omit unless the product owner wants it public
 - External marketing: off during Alpha to avoid promotion outside the controlled testing audience
 
-The public support email and final website must be confirmed by the product owner before saving Store settings.
+The owner confirmed the public support email on July 15, 2026. Console now records the email and Music & Audio category; the optional website and tags remain unsaved.
 
 ## Graphic inventory
 

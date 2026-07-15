@@ -22,7 +22,7 @@ The Google Play developer account was approved on July 14, 2026. Use this during
 3. **Complete:** Initial Play App Signing Terms accepted. Prefer the default Google-generated app-signing key at first release; retain only the separate upload key under project-controlled secure backup.
 4. **Complete locally:** A separate 4096-bit RSA upload key was created outside the repository. Its generated password and metadata are stored only in a current-user DPAPI envelope; no plaintext signing environment is persisted.
 5. **Complete locally:** `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-protected-play-bundle.ps1 -BuildApk` built the signed APK/AAB, verified the AAB signature, and confirmed that the bundle signer matches the configured upload certificate.
-6. Export and verify the encrypted recovery package to an owner-controlled location separate from this PC before uploading. The recovery workflow is tested, but the owner must choose the destination and enter a passphrase interactively; the local DPAPI envelope alone is not a machine-loss backup.
+6. **Complete:** the encrypted recovery package was exported to an owner-controlled off-PC volume and independently verified with the owner-held passphrase. Its encrypted-package SHA-256 is `361E6A85452DBF9ACDC816F554569E3B7DBA0F98B60C30DB255E54C2644C4D1C`; the passphrase is stored separately and is not in Git.
 7. Upload the verified AAB, then start with Internal testing. It supports up to 100 testers and uses a private opt-in/share link rather than public search discovery.
 8. Add a feedback email or URL and a tester email list in Console. Do not commit tester identities.
 9. Complete the store listing and App content declarations needed by the selected track.
@@ -47,23 +47,25 @@ Replace `E:\Backups` with the selected external drive or encrypted synced folder
 
 ### App-content declarations completed July 15, 2026
 
-The following objective declarations are saved in Play Console and awaiting the normal Publishing overview review step:
+The following objective declarations and listing settings are saved in Play Console and awaiting the normal Publishing overview review step:
 
 - **Ads:** No. The release dependency graph and implemented behavior contain no advertising SDK or advertising surface.
 - **Government apps:** No. The app is an independent community project and is not developed by or on behalf of a government.
 - **Financial features:** None. The app provides no listed financial feature.
 - **Health:** None. The app provides no health feature; Console reported that no regional health documentation is currently required.
+- **Privacy policy:** `https://codeframe78.github.io/24Seven.FM-Player/`; the HTTPS page is public and returns the canonical `PRIVACY.md` content.
+- **Store contact/category:** public support email `24sevenplayer@jamesjennison.net`; category **Music & Audio**.
 
-These saved declarations have not been sent for review. The remaining App content forms require owner-provided or policy-sensitive inputs and must not be guessed: reviewer credentials/instructions, public privacy-policy URL, intended target audience, content-rating contact email, Data Safety confirmation, and public store contact details.
+These saved declarations have not been sent for review. The remaining App content forms require owner-provided or policy-sensitive inputs and must not be guessed: reviewer credentials/instructions for restricted station features, a policy-compatible target audience, content-rating answers, and final Data Safety confirmation.
 
 ## App-content details to review
 
-- **App access:** Public playback, Queue, and History do not require login. Authentication, Chat posting, and requests do. If Play requests reviewer access, provide a least-privileged non-administrator station account only through Play Console's protected reviewer instructions.
+- **App access:** Public playback, Queue, and History do not require login. Authentication, Chat posting, Favorites, and requests do. Console requires reusable sign-in details that give reviewers full access and will not unlock Target audience until this declaration is complete. Because accounts are station-specific, provide least-privileged non-administrator reviewer details for every station needed to exercise the restricted features, only through Play Console's protected reviewer form. Do not place them in Git or chat.
 - **Ads:** Completed as **No** on July 15, 2026; the app contains no advertising SDK or advertising behavior.
 - **Data safety:** Internal-only testing is currently exempt, but closed/open/production releases require an accurate declaration. Use `docs/m23-data-safety.md` as the project worksheet rather than answering from memory. Account credentials are submitted directly to the selected station, station sessions are encrypted locally, chat history is memory-only, and the app has no analytics or developer backend.
-- **Privacy policy:** Play policy requires an active public, non-geofenced web URL for the privacy policy. Host `PRIVACY.md` as a stable web page before submitting the app. The same policy is available as native text under More in the app.
+- **Privacy policy:** Completed on July 15, 2026. The active public HTTPS page is `https://codeframe78.github.io/24Seven.FM-Player/`; the same canonical policy remains available as native text under More in the app.
 - **Account deletion:** The app does not create station accounts; it only signs into pre-existing station accounts and can remove the local session with Sign out. Confirm the appropriate Console declaration when completing App content.
-- **Target audience/content rating:** Complete these from the actual intended audience and station content; do not infer a child-directed audience.
+- **Target audience/content rating:** The owner expressed an all-ages availability goal, but Play says age groups should be selected only when the app was actually designed for each group. Selecting any child age group invokes the Families Policy. The current authenticated freeform chat does not yet implement a neutral age screen, child online-safety reminder before freeform exchange, adult controls, or other child-directed safeguards. Do not select under-13 bands until that product-scope decision and compliance work are complete; availability to families is not the same declaration as a child target audience.
 
 ## Release progression
 
@@ -78,3 +80,5 @@ Official references:
 - [Testing requirements for new personal accounts](https://support.google.com/googleplay/android-developer/answer/14151465)
 - [Target API level requirements](https://support.google.com/googleplay/android-developer/answer/11926878)
 - [Play App Signing](https://support.google.com/googleplay/android-developer/answer/9842756)
+- [Manage target audience and app content](https://support.google.com/googleplay/android-developer/answer/9867159)
+- [Google Play Families policies](https://support.google.com/googleplay/android-developer/answer/9893335)
