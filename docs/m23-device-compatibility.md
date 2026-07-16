@@ -44,6 +44,17 @@ not a list of hard-coded device models.
 All display and font overrides were temporary. The Razr retained its physical 1080×2640 display and 420dpi density;
 the final API 35 Tablet normal-settings regression used font scale 1.0 and its default 320dpi density.
 
+### Network-loss and restoration evidence
+
+| Device | Sequence | Result |
+| --- | --- | --- |
+| API 35 phone AVD | Start live playback → disable the active emulator interface → wait through bounded Media3/fallback failure → restore the interface | The compact Player moved from `Playing live` through buffering/fallback to `No network · playback will resume automatically`, retained a Pause action, and returned to `Playing live` without another tap. |
+| API 35 Pixel Tablet | Start live playback → disable both emulator interfaces → confirm no route → restore the simulated mobile network | The expanded Player followed the same terminal waiting and one-shot automatic recovery path. The post-recovery state retained live metadata, artwork, controls, station selection, and navigation. |
+
+The implementation observes only the app's validated default-network capability. It does not poll, request a specific
+transport, retry continuously, or treat ordinary online station errors as device-network loss. Pause, Stop, and station
+changes cancel a pending recovery.
+
 ## Automated coverage
 
 - Compact width selects the bottom navigation and excludes the rail.
@@ -53,15 +64,15 @@ the final API 35 Tablet normal-settings regression used font scale 1.0 and its d
 - 2× font scale with an enlarged display keeps compact and medium navigation, playback actions, station descriptions,
   and account identity/status content reachable.
 - Folded portrait keeps playback controls and the complete station carousel visible without scrolling.
-- The current 39-test connected suite passes on the API 35 Pixel Tablet at both maximum tested accessibility settings
-  and restored normal settings. The previous complete 36-test current-head suite passes on API 26, API 36, the API 35
+- The current 40-test connected suite passes on the API 35 Pixel Tablet at restored normal settings; the prior 39-test
+  suite passes at maximum tested accessibility settings. The previous complete 36-test current-head suite passes on API 26, API 36, the API 35
   16 KB runtime, Pixel Fold open, and Pixel Tablet native landscape. The current More-menu preference and legal-disclosure paths also pass after
   live transitions to the Fold half-open and closed/outer-display states, and the disclosure path passes after rotating
   the Tablet to portrait.
 - A generated 1,500-track Favorites list remains browsable and supports stable play-state sorting; the preserved full
   MorG list remained responsive during physical Razr inspection.
 - Existing previews cover compact playing, phone landscape, expanded buffering, long metadata, missing artwork,
-  reconnecting/error states, light mode, and large type.
+  fallback reconnection, offline automatic recovery, errors, light mode, and large type.
 - Earlier full posture suites remain recorded above. The July 16 current-head pass adds the packaged open-source notice,
   backup/privacy hardening state, and all M23.2 UGC safety paths to the 36-test baseline. It also corrects a test-only
   viewport assumption so the Device preferences disclosure is scrolled into view before asserting visibility.
@@ -69,6 +80,8 @@ the final API 35 Tablet normal-settings regression used font scale 1.0 and its d
   two-Back flow reaches the expected exit dialog.
 - Automated semantics verify descriptive click targets for all five navigation items even when enlarged text requires
   labels to yield their limited navigation-bar space. A spoken TalkBack traversal remains a physical-device Alpha check.
+- Three recovery-policy tests cover offline one-shot recovery, online server-error suppression, and pause/cancel intent;
+  a connected Compose test verifies the waiting explanation and available Pause action.
 
 ## Foldable and OEM boundary
 

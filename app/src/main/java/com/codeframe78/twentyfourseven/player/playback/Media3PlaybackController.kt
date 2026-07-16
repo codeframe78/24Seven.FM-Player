@@ -2,6 +2,9 @@ package com.codeframe78.twentyfourseven.player.playback
 
 import android.content.ComponentName
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -20,6 +23,9 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class Media3PlaybackController(context: Context) : PlaybackController {
     private val appContext = context.applicationContext
+    private val mainExecutor = ContextCompat.getMainExecutor(appContext)
+    private val connectivityManager = appContext.getSystemService(ConnectivityManager::class.java)
+    private val networkRecovery = NetworkPlaybackRecovery(connectivityManager.hasValidatedDefaultNetwork())
     private val stateFlow = MutableStateFlow(PlaybackState())
     private val controllerFuture = MediaController.Builder(
         appContext,
@@ -30,22 +36,39 @@ class Media3PlaybackController(context: Context) : PlaybackController {
     private var selectedStation: Station? = null
     private var playRequested = false
 
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
+            dispatchNetworkState(networkCapabilities.hasValidatedInternet())
+        }
+
+        override fun onLost(network: Network) {
+            dispatchNetworkState(false)
+        }
+    }
+
     override val state: StateFlow<PlaybackState> = stateFlow.asStateFlow()
 
     private val listener = object : Player.Listener {
         override fun onPlaybackStateChanged(playbackState: Int) = updateState()
-        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) = updateState()
+        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+            maybeRetryAfterNetworkRestored()
+            updateState()
+        }
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) = updateState()
 
         override fun onPlayerError(error: PlaybackException) {
+            val waitingForNetwork = networkRecovery.onPlaybackError(
+                shouldResume = playRequested && (controller?.playWhenReady != false),
+            )
             stateFlow.value = stateFlow.value.copy(
-                status = PlaybackStatus.Error,
+                status = if (waitingForNetwork) PlaybackStatus.WaitingForNetwork else PlaybackStatus.Error,
                 errorMessage = error.message,
             )
         }
     }
 
     init {
+        connectivityManager.registerDefaultNetworkCallback(networkCallback)
         controllerFuture.addListener(
             {
                 runCatching { controllerFuture.get() }
@@ -62,12 +85,13 @@ class Media3PlaybackController(context: Context) : PlaybackController {
                         )
                     }
             },
-            ContextCompat.getMainExecutor(appContext),
+            mainExecutor,
         )
     }
 
     override fun selectStation(station: Station) {
         if (selectedStation?.id == station.id) return
+        networkRecovery.cancel()
         selectedStation = station
         stateFlow.value = PlaybackState(stationId = station.id)
         if (controller != null) setStationMediaItems(station)
@@ -88,12 +112,14 @@ class Media3PlaybackController(context: Context) : PlaybackController {
 
     override fun pause() {
         playRequested = false
+        networkRecovery.cancel()
         controller?.pause()
         updateState()
     }
 
     override fun stop() {
         playRequested = false
+        networkRecovery.cancel()
         controller?.stop()
         updateState()
     }
@@ -141,6 +167,7 @@ class Media3PlaybackController(context: Context) : PlaybackController {
         }
 
         val status = when {
+            connected.playerError != null && networkRecovery.isWaitingForNetwork -> PlaybackStatus.WaitingForNetwork
             connected.playerError != null -> PlaybackStatus.Error
             connected.playbackState == Player.STATE_BUFFERING && connected.currentMediaItemIndex > 0 -> PlaybackStatus.Retrying
             connected.playbackState == Player.STATE_BUFFERING -> PlaybackStatus.Buffering
@@ -155,4 +182,40 @@ class Media3PlaybackController(context: Context) : PlaybackController {
             errorMessage = connected.playerError?.message,
         )
     }
+
+    private fun dispatchNetworkState(isUsable: Boolean) {
+        mainExecutor.execute {
+            val shouldRetry = networkRecovery.onNetworkStateChanged(isUsable)
+            val connected = controller
+            if (!isUsable && connected?.playerError != null) {
+                networkRecovery.onPlaybackError(
+                    shouldResume = playRequested && connected.playWhenReady,
+                )
+            }
+            if (shouldRetry) maybeRetryAfterNetworkRestored()
+            updateState()
+        }
+    }
+
+    private fun maybeRetryAfterNetworkRestored() {
+        if (!networkRecovery.isNetworkUsable || !networkRecovery.isWaitingForNetwork || !playRequested) return
+        val connected = controller ?: return
+        if (!connected.playWhenReady) return
+        networkRecovery.markRetryStarted()
+        stateFlow.value = stateFlow.value.copy(
+            status = PlaybackStatus.Connecting,
+            errorMessage = null,
+        )
+        connected.prepare()
+        connected.play()
+    }
 }
+
+private fun ConnectivityManager.hasValidatedDefaultNetwork(): Boolean = activeNetwork
+    ?.let(::getNetworkCapabilities)
+    ?.hasValidatedInternet()
+    ?: false
+
+private fun NetworkCapabilities.hasValidatedInternet(): Boolean =
+    hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+        hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)

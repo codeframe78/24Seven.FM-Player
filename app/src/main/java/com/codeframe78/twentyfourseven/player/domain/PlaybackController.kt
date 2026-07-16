@@ -9,6 +9,7 @@ enum class PlaybackStatus {
     Playing,
     Paused,
     Retrying,
+    WaitingForNetwork,
     Error,
 }
 

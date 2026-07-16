@@ -31,6 +31,10 @@ private fun ExpandedBufferingPreview() = PlayerPreview(PlaybackStatus.Buffering)
 @Composable
 private fun MissingArtworkPreview() = PlayerPreview(PlaybackStatus.Retrying, displayTitle = null)
 
+@Preview(name = "Offline · automatic recovery", widthDp = 390, heightDp = 844, showBackground = true)
+@Composable
+private fun OfflineRecoveryPreview() = PlayerPreview(PlaybackStatus.WaitingForNetwork)
+
 @Preview(name = "Long metadata · large type", widthDp = 430, heightDp = 930, fontScale = 1.5f, showBackground = true)
 @Composable
 private fun LongMetadataPreview() = PlayerPreview(

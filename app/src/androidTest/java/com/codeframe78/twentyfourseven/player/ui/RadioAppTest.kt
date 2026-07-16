@@ -468,6 +468,33 @@ class RadioAppTest {
     }
 
     @Test
+    fun networkLossExplainsAutomaticRecoveryAndKeepsPauseAvailable() {
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(
+                        selectedStation = station.copy(
+                            streams = listOf(StreamVariant("https://example.invalid/live", "Test", 0)),
+                        ),
+                        playback = PlaybackState(station.id, PlaybackStatus.WaitingForNetwork),
+                    ),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("No network · playback will resume automatically")
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Pause live radio").assertIsDisplayed().assertHasClickAction()
+    }
+
+    @Test
     fun readyQueueRendersUpcomingAndHistoryNatively() {
         composeRule.setContent {
             MaterialTheme {

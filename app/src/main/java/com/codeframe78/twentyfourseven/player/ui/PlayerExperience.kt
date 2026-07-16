@@ -517,6 +517,7 @@ private val PlaybackStatus.isActive: Boolean
         PlaybackStatus.Buffering,
         PlaybackStatus.Playing,
         PlaybackStatus.Retrying,
+        PlaybackStatus.WaitingForNetwork,
     )
 
 private val PlaybackStatus.accessibleName: String
@@ -527,6 +528,7 @@ private val PlaybackStatus.accessibleName: String
         PlaybackStatus.Playing -> "Playing"
         PlaybackStatus.Paused -> "Paused"
         PlaybackStatus.Retrying -> "Reconnecting with fallback"
+        PlaybackStatus.WaitingForNetwork -> "Waiting for network"
         PlaybackStatus.Error -> "Playback error"
     }
 
@@ -538,5 +540,6 @@ private val PlaybackStatus.userMessage: String
         PlaybackStatus.Playing -> "Playing live"
         PlaybackStatus.Paused -> "Playback paused"
         PlaybackStatus.Retrying -> "Primary stream unavailable · trying fallback"
+        PlaybackStatus.WaitingForNetwork -> "No network · playback will resume automatically"
         PlaybackStatus.Error -> "Unable to play this station · try again"
     }
