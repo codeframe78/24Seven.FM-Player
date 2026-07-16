@@ -1,0 +1,127 @@
+---
+layout: project
+title: Product testing · 24Seven.FM Player
+description: Run a focused 24Seven.FM Player test session and submit a structured, privacy-safe result to the public project tracker.
+permalink: /project/product-testing/
+section: product-testing
+---
+<section class="page-hero">
+  <div>
+    <p class="eyebrow">Tester workspace</p>
+    <h1>Test the player. Report what happened.</h1>
+    <p class="page-lede">Choose a focused session, record the build and device before you begin, and submit a pass, failure, pass-with-notes, or blocked result. Every useful outcome strengthens the Alpha evidence.</p>
+    <div class="actions">
+      <a class="button primary" href="https://github.com/codeframe78/24Seven.FM-Player/issues/new?template=product-test.yml">Submit a test result</a>
+      <a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/issues?q=is%3Aissue+label%3Atesting-feedback">Browse tester reports</a>
+    </div>
+  </div>
+  <aside class="page-summary" aria-label="Testing workspace summary">
+    <span>Report destination</span>
+    <strong>Public GitHub issue</strong>
+    <dl>
+      <div><dt>Minimum</dt><dd>Android 8</dd></div>
+      <div><dt>Outcomes</dt><dd>4</dd></div>
+      <div><dt>Accounts</dt><dd>Optional</dd></div>
+    </dl>
+  </aside>
+</section>
+
+<nav class="section-jump" aria-label="On this page">
+  <a href="#start">Before testing</a>
+  <a href="#sessions">Choose a session</a>
+  <a href="#coverage">Record evidence</a>
+  <a href="#report">Report a result</a>
+  <a href="#safety">Protect your privacy</a>
+</nav>
+
+<section class="content-section" id="start">
+  <div class="content-intro wide">
+    <p class="eyebrow">Prepare once</p>
+    <h2>Make the result reproducible</h2>
+    <p>Before touching the controls, record the exact build source, app version and version code, device model, Android version, form factor, and connection type. A result without its environment is difficult to compare or repeat.</p>
+  </div>
+  <ol class="process-timeline">
+    <li><span>1</span><div><h3>Use an approved build</h3><p>Install only from the project-approved Play testing track or supplied release channel. Identify local debug or release APKs explicitly; their signatures and behavior can differ from Play delivery.</p></div></li>
+    <li><span>2</span><div><h3>Choose a bounded session</h3><p>Pick one route below. Complete it in order, note the first unexpected result, and avoid changing several device conditions at once.</p></div></li>
+    <li><span>3</span><div><h3>Report success as well as failure</h3><p>A clean pass on a named device and Android version is useful evidence. Select Pass with notes when behavior works but feels confusing, slow, or inconsistent.</p></div></li>
+  </ol>
+</section>
+
+<section class="content-section" id="sessions">
+  <div class="content-intro wide">
+    <p class="eyebrow">Choose one route</p>
+    <h2>Small sessions produce clearer findings</h2>
+    <p>Run the shortest route that covers the behavior you want to evaluate. Repeat on a second station or configuration only after recording the first result.</p>
+  </div>
+  <div class="test-session-grid">
+    <article>
+      <span>10 minutes</span>
+      <h3>Listening smoke test</h3>
+      <ol><li>Launch and select a station.</li><li>Start playback and verify title/artwork.</li><li>Switch stations while playing.</li><li>Background the app and use play/pause.</li><li>Tap the notification body and confirm the existing player task opens.</li><li>Stop playback intentionally.</li></ol>
+    </article>
+    <article>
+      <span>20–30 minutes</span>
+      <h3>Discovery and member test</h3>
+      <ol><li>Review Queue and History.</li><li>Search by Title, Album, Artist, and Genre.</li><li>Check Library and play-state sorting.</li><li>With an approved test account, inspect Favorites and account restoration.</li><li>Submit a song request only when the test plan explicitly calls for one and the station cooldown permits it.</li></ol>
+    </article>
+    <article>
+      <span>15–25 minutes</span>
+      <h3>Device and resilience test</h3>
+      <ol><li>Rotate or resize the app.</li><li>On a foldable, exercise open, tabletop, closed, and reopened states.</li><li>Increase font and display size.</li><li>Connect and remove a headset or Bluetooth route.</li><li>Interrupt connectivity once, restore it, and verify only one recovery attempt.</li></ol>
+    </article>
+  </div>
+</section>
+
+<section class="content-section" id="coverage">
+  <div class="content-intro wide">
+    <p class="eyebrow">Evidence contract</p>
+    <h2>Record the observation, not a conclusion</h2>
+    <p>Use exact visible text and state changes. “Playback failed” is less useful than the selected station, displayed state, time to failure, whether audio continued, and what happened after one retry.</p>
+  </div>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Product testing evidence matrix">
+    <table class="device-table">
+      <thead><tr><th>Area</th><th>Record</th><th>Pass boundary</th></tr></thead>
+      <tbody>
+        <tr><th>Playback</th><td>Station, visible state, audio, title/artwork, primary or fallback indication</td><td>One logical stream; controls and visible state agree</td></tr>
+        <tr><th>Background media</th><td>Notification controls, notification-body navigation, lock/headset behavior</td><td>Controls affect the existing player and reopen the existing task</td></tr>
+        <tr><th>Station data</th><td>Queue, History, search mode/query, sorting, missing or stale fields</td><td>Only station-provided values appear; unavailable data stays explicit</td></tr>
+        <tr><th>Account</th><td>Station, signed-in/out state, restoration, logout isolation</td><td>Only the selected station session changes</td></tr>
+        <tr><th>Adaptive UI</th><td>Window size, orientation, hinge state, font/display scale, clipped control</td><td>Primary controls remain visible, readable, and operable</td></tr>
+        <tr><th>Recovery</th><td>Connection before/after, displayed error, automatic attempt count, manual action</td><td>One bounded recovery after validated connectivity returns</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="content-section" id="report">
+  <div class="content-intro wide">
+    <p class="eyebrow">Structured intake</p>
+    <h2>Submit one result per behavior</h2>
+    <p>The public form captures environment, station, outcome, affected areas, expected and actual behavior, repeatability, reproduction steps, and redacted evidence. Separate unrelated findings so each can be verified and closed independently.</p>
+  </div>
+  <div class="detail-grid three severity-grid">
+    <article><span>Critical</span><h3>Safety or data exposure</h3><p>Credential/session exposure, unintended private content, destructive account behavior, or a repeatable crash that prevents use. Stop testing and report immediately without attaching the sensitive material.</p></article>
+    <article><span>High / Medium</span><h3>Core function failure</h3><p>Playback, navigation, account isolation, requests, community safeguards, or an adaptive layout cannot complete its intended job. Record exact steps and repeatability.</p></article>
+    <article><span>Low / Note</span><h3>Usability or polish</h3><p>The task completes, but wording, spacing, latency, feedback, or consistency should improve. Select Pass with notes when the expected result still occurred.</p></article>
+  </div>
+  <div class="actions">
+    <a class="button primary" href="https://github.com/codeframe78/24Seven.FM-Player/issues/new?template=product-test.yml">Open structured result form</a>
+    <a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/alpha-testing.md">Read the complete tester guide</a>
+  </div>
+</section>
+
+<section class="content-section" id="safety">
+  <div class="roadmap-callout tester-safety-callout">
+    <div><p class="eyebrow">Public report</p><h2>Redact before submitting</h2></div>
+    <div>
+      <p>GitHub issues are public. Never include passwords, security answers or CAPTCHA images, cookies, session values, email addresses, private messages, abuse-report content, signing material, private endpoints, full network captures, or screenshots containing personal information.</p>
+      <p>Do not repeatedly submit song requests while investigating an indeterminate response; inspect Queue first. Do not send moderation test reports unless the administrator has explicitly authorized that exact test.</p>
+      <ul class="inline-requirements"><li>Public metadata only</li><li>One finding per issue</li><li>Redacted screenshots</li><li>No account secrets</li><li>No private conversations</li><li>No raw traffic captures</li></ul>
+    </div>
+  </div>
+</section>
+
+<section class="cta" aria-labelledby="submit-result-title">
+  <div><p class="eyebrow">Finished a session?</p><h2 id="submit-result-title">Record the result while it is fresh.</h2><p>Passes establish coverage. Failures establish work. Blocked tests identify missing access or setup without being mistaken for product defects.</p></div>
+  <div class="actions"><a class="button primary" href="https://github.com/codeframe78/24Seven.FM-Player/issues/new?template=product-test.yml">Submit result</a></div>
+</section>

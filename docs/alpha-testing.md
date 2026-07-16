@@ -46,6 +46,8 @@ Do not distribute the development debug APK as the public Alpha. Its machine-loc
 
 ## Reporting a problem
 
+Use the public [product-testing workspace](https://codeframe78.github.io/24Seven.FM-Player/project/product-testing/) to choose a test session and open the structured GitHub result form. The same form accepts passes, failures, passes with notes, and blocked tests so successful coverage is recorded alongside defects.
+
 Include:
 
 - app version and version code from Android app information;

@@ -733,6 +733,35 @@ figcaption span { color: var(--muted); font-size: 0.88rem; }
 .document-list span { color: var(--muted); font-size: 0.88rem; }
 .station-docs strong { color: var(--accent); }
 
+.test-session-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.test-session-grid article {
+  padding: 1.6rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: linear-gradient(145deg, rgba(103, 230, 209, 0.07), rgba(210, 156, 255, 0.025));
+}
+
+.test-session-grid article > span,
+.severity-grid article > span {
+  display: inline-block;
+  margin-bottom: 2rem;
+  color: var(--cyan);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.test-session-grid ol { margin: 1.25rem 0 0; padding-left: 1.35rem; color: var(--muted); }
+.test-session-grid li + li { margin-top: 0.65rem; }
+.severity-grid article > span { color: var(--accent); }
+.tester-safety-callout { border-color: rgba(255, 203, 107, 0.42); background: linear-gradient(120deg, rgba(255, 203, 107, 0.09), rgba(210, 156, 255, 0.045)); }
+
 @media (max-width: 1100px) {
   .project-header { flex-wrap: wrap; padding-block: 1rem; }
   .project-header nav { order: 3; width: 100%; padding-top: 0.8rem; border-top: 1px solid var(--border); }
@@ -754,6 +783,7 @@ figcaption span { color: var(--muted); font-size: 0.88rem; }
   .page-hero { grid-template-columns: 1fr; align-items: start; }
   .page-summary { width: min(100%, 26rem); }
   .detail-grid.three,
+  .test-session-grid,
   .principle-grid,
   .source-map,
   .evidence-grid,
@@ -775,6 +805,7 @@ figcaption span { color: var(--muted); font-size: 0.88rem; }
   .feature-grid, .roadmap-grid { grid-template-columns: 1fr; }
   .portal-grid,
   .resource-grid,
+  .test-session-grid,
   .detail-grid.two,
   .detail-grid.three,
   .principle-grid,

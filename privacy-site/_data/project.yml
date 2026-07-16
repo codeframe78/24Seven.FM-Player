@@ -11,6 +11,9 @@ navigation:
   - section: testing
     label: Testing
     path: /project/testing/
+  - section: product-testing
+    label: Test the Player
+    path: /project/product-testing/
   - section: roadmap
     label: Roadmap
     path: /project/roadmap/
