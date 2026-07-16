@@ -1,12 +1,12 @@
 # M23.1 current-head release-candidate audit
 
-Date: July 15, 2026
+Date: July 16, 2026
 
 Status: local, non-secret audit complete; protected signing and Play-delivered installation remain open
 
 ## Outcome
 
-The current release source builds cleanly without signing inputs and has the expected production identity, permissions,
+Commit `3e80007` builds cleanly without signing inputs and has the expected production identity, permissions,
 Media3 service declaration, dependency set, license notices, backup exclusions, and 16 KB packaging. The generated AAB
 and APK are intentionally unsigned local inspection artifacts. They are not tester candidates and must not be uploaded
 or distributed.
@@ -40,11 +40,12 @@ session state and local safety preferences, is excluded.
 
 | Artifact | Size | SHA-256 | Signing state |
 | --- | ---: | --- | --- |
-| `app-release.aab` | 17,482,047 bytes | `78a8531fd098a6a6ce6e31a3bd6ec11376d532ab49aeb9e8b6f5ebfc6f8d8ffa` | Intentionally unsigned |
-| `app-release-unsigned.apk` | 17,967,922 bytes | `d7c8cdebbbaf076602fe2328bbe88ddb0c8bc55237c545c1b5b2cb39b5c0d519` | Intentionally unsigned |
+| `app-release.aab` | 17,486,467 bytes | `12dc0e1ac94ed05c89c0bdf6a24951dfe5a08dc92f232e8230bec088179276bb` | Intentionally unsigned |
+| `app-release-unsigned.apk` | 17,967,922 bytes | `93dc7ca9adb62ea08f7911e039242b3927764591539a9a5fa48a287eccaaec71` | Intentionally unsigned |
 
-`jarsigner -verify` rejected the AAB as unsigned, which is the expected result when the four
-`TWENTYFOURSEVEN_UPLOAD_*` values are absent. These hashes identify only this local audit snapshot; the final protected
+`jarsigner -verify -strict -verbose -certs` explicitly classified the AAB as unsigned, which is the expected result when
+the four `TWENTYFOURSEVEN_UPLOAD_*` values are absent. The textual classification is authoritative because `jarsigner`
+can return exit code 0 for an unsigned JAR. These hashes identify only this local audit snapshot; the final protected
 build will have its own hash.
 
 ## 16 KB packaging
@@ -74,12 +75,12 @@ licenses**. The upstream jsoup license and OkHttp Public Suffix List notice are 
 ## Verification
 
 - `:app:compileDebugKotlin` and `:app:compileDebugAndroidTestKotlin` — passed.
-- `:app:testDebugUnitTest` — 126/126 passed.
+- `:app:testDebugUnitTest` — 127/127 passed.
 - Focused `openSourceLicensesArePackagedAndReachableFromMore` on the API 35 Pixel Tablet — passed after final changes.
 - `:app:lintDebug` — passed with 0 errors and 27 non-blocking warnings; the new resource-access and backup-rule
   warnings were resolved.
-- `:app:bundleRelease` and release lint-vital — passed.
-- `:app:assembleRelease` — passed.
+- Combined `:app:bundleRelease :app:assembleRelease` and release lint-vital — passed from commit `3e80007` after the
+  Favorites request-result and expanded sorting changes.
 - Release APK 16 KB ZIP alignment — passed.
 - AAB resource inspection — packaged license notice and both backup-rule resources present.
 - Merged release manifest inspection — identity, target, permissions, launcher, backup, and service declarations passed.
