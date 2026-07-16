@@ -183,4 +183,7 @@ $env:TWENTYFOURSEVEN_ANDROID_BUILD_DIR="$env:TEMP\24seven-android-build"
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) before contributing.
 
-For migration to another Windows development machine, follow [docs/CODEX_HANDOFF.md](docs/CODEX_HANDOFF.md) and run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-windows.ps1` after cloning.
+For migration to another Windows development machine, clone the repository, install JDK 17 plus Android SDK Platform
+36 and Build Tools 36.1.0, then run
+`powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-windows.ps1`. The current Ubuntu workflow
+is documented in the [Ubuntu development setup](docs/ubuntu-cli-setup.md).
