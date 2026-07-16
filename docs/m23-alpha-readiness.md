@@ -61,6 +61,10 @@ as already complete.
 - Google Play accepts target API 35 on July 15, 2026 but requires API 36 for new apps and updates beginning August 31, 2026. M23.3 therefore migrates before the closed-test/update window instead of treating API 35 as the final Alpha target.
 - The project-specific provisional Data Safety worksheet is recorded in `docs/m23-data-safety.md`; it includes the M23.2 age/Terms/block preferences and transient abuse-report fields. Final answers remain gated on the active Play Console form and station retention confirmation.
 - The non-secret M23.4 declaration packet now contains copy-ready media-playback foreground-service text, an exact demonstration shot list, reviewer navigation instructions, content-rating evidence boundaries, and owner-only fields. The draft store listing was corrected to remove unimplemented sleep timer, shortcuts, sharing, appearance preferences, and diagnostics.
+- A credential-free M23.4 media-playback video rehearsal passed frame inspection on the API 35 Pixel Tablet: start,
+  buffering/playback, Home, expanded media notification, notification-body return, pause, resume, and stop are visible.
+  It remains an uncommitted debug-build rehearsal; the final hosted video must use the protected signed candidate after
+  M23.1 and M23.5 close.
 - The non-secret `m23-owner-response-packet.md` now provides exact report-receipt choices, a rights/stream/distribution
   authorization request, a station-retention table, reviewer-account confirmation, and the evidence required before
   Private Messaging research can resume. No private response, credential, or rights evidence is committed.

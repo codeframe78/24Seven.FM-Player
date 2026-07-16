@@ -53,6 +53,16 @@ Host the final video at a stable reviewer-accessible URL that requires no accoun
 only in Play Console or the private release record. The foreground-service declaration video is separate from an
 optional public store-listing preview video.
 
+**Local rehearsal evidence — July 15, 2026**
+
+A credential-free rehearsal was captured on the API 35 Pixel Tablet emulator and inspected as a 25.8-second,
+2560×1600 H.264 recording. Key frames show the initial Player, buffering, active playback, Home, the expanded media
+notification, a notification-body tap returning to the same Player task, pause, resume, and stop/not-connected state.
+No credentials or Chat content appear. The recording remains a transient local draft and is not committed or hosted.
+It is not the final reviewer video because its notification identifies the debug build and its live station artwork
+can change. Repeat the same sequence using the protected signed candidate after M23.1 and M23.5 are resolved, inspect
+the final frames, and then host only that final copy at the reviewer-accessible URL.
+
 ## App access and reviewer instructions
 
 Google requires sign-in details to remain active, reusable, valid regardless of reviewer location, and written in
