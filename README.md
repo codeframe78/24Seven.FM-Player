@@ -65,7 +65,7 @@ The sequence number is the order in which Git history and milestone evidence sho
 | 21 | 2026-07-15 | M22 Entranced.FM certification | [`1e20eea`](https://github.com/codeframe78/24Seven.FM-Player/commit/1e20eea) | Extended Queue, legacy ICY punctuation, and authenticated workflows certified |
 | 22 | 2026-07-15 | M23.3 Android 16 / API 36 readiness | [`44632f1`](https://github.com/codeframe78/24Seven.FM-Player/commit/44632f1) | Target API 36 migration and device regression coverage |
 | 23 | 2026-07-15 | M23.7 Adaptive launcher/store polish | [`924a38c`](https://github.com/codeframe78/24Seven.FM-Player/commit/924a38c) | Legacy, adaptive, and monochrome launcher resources validated |
-| 24 | 2026-07-16 | M24 Sleep Timer | [Validation](docs/m24-sleep-timer-validation.md) | Service-owned presets/custom countdown, restoration, system state, and deterministic expiry |
+| 24 | 2026-07-16 | M24 Sleep Timer | [`b713783`](https://github.com/codeframe78/24Seven.FM-Player/commit/b713783) | Service-owned presets/custom countdown, restoration, system state, and deterministic expiry ([validation](docs/m24-sleep-timer-validation.md)) |
 
 ### Deferred milestone
 

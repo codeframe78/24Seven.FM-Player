@@ -2,6 +2,7 @@
 
 Date: July 16, 2026
 Status: Complete
+Implementation commit: `b713783`
 
 ## Outcome
 

@@ -166,6 +166,7 @@ milestones:
     id: M24
     name: Sleep Timer
     date: 2026-07-16
+    commit: b713783
     evidence: docs/m24-sleep-timer-validation.md
     outcome: Service-owned presets/custom countdown, restoration, system state, and deterministic expiry.
 
