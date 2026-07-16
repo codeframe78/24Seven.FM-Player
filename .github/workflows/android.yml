@@ -45,6 +45,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           DISCORD_THREAD_ID: ${{ vars.DISCORD_THREAD_ID }}
+          DISCORD_PROJECT_UPDATE: ${{ vars.DISCORD_PROJECT_UPDATE }}
           BUILD_RESULT: ${{ needs.build.result }}
           REPOSITORY: ${{ github.repository }}
           BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -61,14 +62,22 @@ jobs:
             exit 0
           fi
 
-          message=$(printf '**24Seven.FM Android CI: %s**\nRepository: `%s`\nBranch: `%s`\nTriggered by: `%s`\nRun: %s' \
-            "${BUILD_RESULT}" "${REPOSITORY}" "${BRANCH_NAME}" "${ACTOR}" "${RUN_URL}")
+          post_to_discord() {
+            jq --null-input --arg content "$1" \
+              '{content: $content, allowed_mentions: {parse: []}}' \
+              | curl --fail-with-body --silent --show-error --retry 3 --retry-all-errors \
+                  --header 'Content-Type: application/json' \
+                  --data-binary @- \
+                  --url-query 'wait=true' \
+                  --url-query "thread_id=${DISCORD_THREAD_ID}" \
+                  --output /dev/null \
+                  "${DISCORD_WEBHOOK_URL}"
+          }
 
-          jq --null-input --arg content "${message}" '{content: $content}' \
-            | curl --fail-with-body --silent --show-error --retry 3 --retry-all-errors \
-                --header 'Content-Type: application/json' \
-                --data-binary @- \
-                --url-query 'wait=true' \
-                --url-query "thread_id=${DISCORD_THREAD_ID}" \
-                --output /dev/null \
-                "${DISCORD_WEBHOOK_URL}"
+          ci_message=$(printf '**24Seven.FM Android CI: %s**\nRepository: `%s`\nBranch: `%s`\nTriggered by: `%s`\nRun: %s' \
+            "${BUILD_RESULT}" "${REPOSITORY}" "${BRANCH_NAME}" "${ACTOR}" "${RUN_URL}")
+          post_to_discord "${ci_message}"
+
+          if [[ -n "${DISCORD_PROJECT_UPDATE}" ]]; then
+            post_to_discord "${DISCORD_PROJECT_UPDATE}"
+          fi
