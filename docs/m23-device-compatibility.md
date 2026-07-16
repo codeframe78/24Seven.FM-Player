@@ -23,6 +23,7 @@ not a list of hard-coded device models.
 | API 35 Pixel 7 emulator resized as a 7-inch class window | 720×1280dp portrait | `tablet-7-player2.png` | Navigation rail replaces bottom navigation; Player controls and station cards remain visible. |
 | API 35 Pixel 7 emulator resized as a 10-inch class window | 960×1707dp portrait | `tablet-10-player.png` | Expanded two-pane Player and navigation rail render without stretching the compact layout. |
 | API 35 Pixel 7 emulator, expanded landscape/freeform | 1707×960dp landscape | `tablet-landscape-player.png` | Two-pane Player, navigation rail, controls, and all five station cards are simultaneously reachable. |
+| API 35 Pixel Fold emulator, folded portrait | Compact folded window | Focused connected UI test and live emulator inspection | Playback controls and the complete five-station carousel remain visible without initial scrolling. |
 
 All display overrides were temporary. The Razr returned to its physical 1080×2640 display and 420dpi density; the
 emulator returned to 1080×2400 and 420dpi after capture.
@@ -34,6 +35,9 @@ emulator returned to 1080×2400 and 420dpi after capture.
 - A live width change from compact to medium preserves the active Queue destination.
 - Short-wide layout keeps playback controls scroll-reachable.
 - 1.5× font scale keeps the compact Player's primary action reachable.
+- Folded portrait keeps playback controls and the complete station carousel visible without scrolling.
+- A generated 1,500-track Favorites list remains browsable and supports stable play-state sorting; the preserved full
+  MorG list remained responsive during physical Razr inspection.
 - Existing previews cover compact playing, phone landscape, expanded buffering, long metadata, missing artwork,
   reconnecting/error states, light mode, and large type.
 - The API 35 connected suite passes 24/24 tests, including compact/medium navigation selection, live width-change state
@@ -41,10 +45,11 @@ emulator returned to 1080×2400 and 420dpi after capture.
 
 ## Foldable and OEM boundary
 
-The Razr validates the app on current foldable hardware in its normal main-display state. The layout responds to the
-available window and naturally leaves the center gutter between expanded Player panes, but a mechanically changed
-half-open/tabletop posture was not available during this unattended pass. Hinge-posture inspection remains an Alpha
-test item; it is not represented as independently certified here.
+The Razr validates the app on current foldable hardware in its normal main-display state, and the API 35 Pixel Fold
+emulator validates the compact folded window. The layout responds to the available window and naturally leaves the
+center gutter between expanded Player panes, but a mechanically changed physical half-open/tabletop posture was not
+available during this pass. Physical hinge-posture inspection remains an Alpha test item; it is not represented as
+independently certified here.
 
 No application can guarantee behavior on every future OEM configuration. For Alpha, "all modern Android devices"
 means the supported API range and adaptive window classes above are release requirements, regressions in those classes

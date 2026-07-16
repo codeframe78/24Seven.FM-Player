@@ -64,8 +64,23 @@ current M23 distribution-readiness gate.
 - Trusted HTTPS chat emoticons under each station's verified ClearChat smiley path render inline without permitting
   cross-origin images; bounded alt text remains the plain-text and accessibility fallback. Submitted phpBB emoticon
   codes are normalized only for the post-send visible-message confirmation.
-- The M23 refinement passes debug Kotlin compilation, all 111 debug unit tests, debug lint, and Android-test Kotlin
-  compilation. Updated Chat and More screenshots are preserved with the change.
+- The earlier Chat/More refinement checkpoint passed debug Kotlin compilation, all 111 debug unit tests, debug lint,
+  and Android-test Kotlin compilation. Updated Chat and More screenshots are preserved with that change; the later
+  post-fix count and validation are recorded below.
+- The Android media notification now carries an immutable activity `PendingIntent`; tapping anywhere outside the
+  play/pause action reopens the existing one-activity player task instead of creating a second playback process.
+- A focused API 35 Pixel Fold test verifies that folded portrait shows playback controls and the complete five-station
+  carousel without scrolling. The physical Razr remains the OEM/foldable hardware baseline in its normal main-display
+  state; a mechanically half-open posture remains an Alpha test item.
+- Station-library searches now preserve the selected Title, Album, Artist, or Genre field through native navigation,
+  and Library/Favorites expose stable station-order and play-state sorting.
+- Favorite availability resolution is indexed across the complete result set. A generated 1,500-track render/sort test
+  passed, and the preserved full MorG Favorites list loaded and switched sorting on the physical Razr without an ANR.
+- The post-fix suite contains 117 unit-test methods. GitHub Android CI passed unit tests, lint, and debug assembly after
+  the changes; focused folded-layout, notification-navigation, multi-field search, and full-list checks also passed.
+- M17 browser investigation reached Inbox and Sent Box, found a suspect New Message selection path, and reproduced a
+  profile-originated MorgHubby send that appeared to submit but was absent from the recipient account. The result was
+  reported to the site owner; no native PM endpoint or behavior was guessed.
 
 ## Signing boundary
 

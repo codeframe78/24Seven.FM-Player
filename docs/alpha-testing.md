@@ -26,10 +26,11 @@ Do not distribute the development debug APK as the public Alpha. Its machine-loc
 2. Open the app and grant notification permission when desired.
 3. Confirm all five station cards are visible by horizontal scrolling.
 4. Start one station, verify audio and artwork/title behavior, then switch stations.
-5. Leave the app and verify the media notification and background controls.
+5. Leave the app and verify the media notification and background controls. Tap the notification body outside
+   play/pause and confirm it returns to the existing player task.
 6. Check Queue and recently played content.
-7. If using a test account, verify sign in, session restoration, Chat, and Favorites. On SST, open More and refresh Request activity to verify recent requests, readiness, and the explicit membership indicator. Confirm eligible Favorites show a green `Request Now`; recently played or queued tracks show a red `Track Recently Played` and cannot be selected.
-8. Submit an eligible favorite or catalog track only through the explicit confirmation while respecting station cooldowns.
+7. If using a test account, verify sign in, session restoration, Chat, and Favorites. On SST, open More and refresh Request activity to verify recent requests, readiness, and the explicit membership indicator. Confirm eligible Favorites show a green `Request Now`; recently played or queued tracks show a red `Track Recently Played` and cannot be selected. Switch Favorites between Library order and Play state, including on a large list when available.
+8. Search the station library by Title, Album, Artist, and Genre. Submit an eligible favorite or catalog track only through the explicit confirmation while respecting station cooldowns.
 9. In More, open one verified **More from…** card. Confirm it opens in a browser tab and Back returns to the app. Browser sign-in is intentionally separate from the protected app session.
 10. Press Back twice and verify the exit confirmation. Choose **Keep listening** unless intentionally stopping playback.
 
@@ -57,7 +58,9 @@ Never include passwords, security-code answers or images, cookies, session value
 
 ## Known Alpha boundaries
 
-- M17 Private Messages is deferred because of underlying website/server issues.
+- M17 Private Messages is deferred because of underlying website/server issues. Inbox and Sent Box discovery worked,
+  but New Message selection remains suspect and a profile-originated MorgHubby test was not delivered; the site owner
+  has the reproduced result.
 - Representative authenticated certification is complete for all five stations; natural server-side session expiry was not forcibly induced.
 - Sleep timer, Cast/audio-output selection, and diagnostics are not implemented.
 - Station accounts are currently station-specific.

@@ -1,6 +1,6 @@
 # Implementation plan
 
-Updated July 15, 2026 after completing all five station-certification gates. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
+Updated July 15, 2026 after completing all five station-certification gates and reconciling the latest M23 device, library, Favorites, and notification checkpoint. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
 
 ## Planning model
 
@@ -9,7 +9,7 @@ Updated July 15, 2026 after completing all five station-certification gates. Est
 - M18–M22 certify the shared implementation against each station. They are hardening and evidence gates, not station-specific application forks.
 - Each station's representative native login, protected restoration, isolation, authenticated surface, and logout flow is now a hard completion gate. Public/device evidence may be gathered early but does not advance the active station order.
 - M23–M24 are the final distribution and publication gates.
-- Private Messages remains numbered as M17 but deferred pending legacy server repair and verified production limits.
+- Private Messages remains numbered as M17 but deferred pending legacy server repair and verified production limits. Inbox and Sent Box discovery worked, while New Message selection remained suspect and a profile-originated MorgHubby test appeared to submit without delivery; the site owner has the reproduced result.
 - Early M23 readiness artifacts are preserved, but they must be refreshed after M15–M22. The Play developer account is approved; Play App Signing/app setup, final upload signing, and explicit publication authorization remain dependencies.
 
 ## Task complexity protocol
@@ -36,7 +36,7 @@ This classification supplements the required XS–XXL T-shirt size, rationale, e
 - Dependencies: approved Google Play developer account, selection/custody of the upload signing identity, Play App Signing setup, final app listing/configuration, and explicit authorization before any publication action.
 - Principal risk: securely coordinating the upload key and Play Console declarations without committing secrets or creating an incompatible signing lineage.
 - Completion gate: version/release configuration, privacy and tester materials, signing guardrails, reproducible release bundle validation, dependency/license review, final physical smoke test, documentation, focused commits, and remote publication evidence all pass; no store release is submitted during M23.
-- Status: ready. M18–M22 and all five representative station login gates are complete. Early M23 materials remain preserved and must now be reconciled against the completed Alpha implementation. M17 Private Messages remains explicitly deferred for server repair.
+- Status: in progress. M18–M22 and all five representative station login gates are complete. Release assets/signing, adaptive layouts, notification navigation, multi-field library search, play-state sorting, and responsive 1,500-track Favorites handling are validated. Protected reviewer access, remaining Console declarations, tester setup, and Play-delivered device/update checks still gate completion. M17 Private Messages remains explicitly deferred for server repair.
 
 ## Latest completed milestone
 
@@ -46,7 +46,7 @@ M22 Entranced.FM certification completed July 15, 2026 after its public/device a
 
 | Milestone | Size | Estimate | Usage | Rationale and outcome | Primary confidence variable |
 | --- | --- | --- | --- | --- | --- |
-| M17 Private Messages | L (provisional) | 4–8 hours after server repair | High | Add native station-isolated inbox/read/compose/reply/refresh and explicit user-initiated send over existing protected sessions | Website repair, production limits, and consistent authenticated forms |
+| M17 Private Messages | L (provisional) | 4–8 hours after server repair | High | Add native station-isolated inbox/read/compose/reply/refresh and explicit user-initiated send over existing protected sessions after the reproduced profile-send non-delivery is repaired | Website repair, delivery confirmation, production limits, and consistent authenticated forms |
 
 Each shared milestone includes repository/ViewModel/UI work as applicable, lifecycle-safe state, accessibility semantics, focused tests, affected-module validation, physical Razr inspection, documentation, a focused commit, push, and remote confirmation.
 
