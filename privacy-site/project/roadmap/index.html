@@ -61,7 +61,11 @@ section: roadmap
       <div class="history-order">{{ item.order }}</div>
       <div class="history-date"><time datetime="{{ item.date }}">{{ item.date | date: "%b %-d, %Y" }}</time>{% if item.joint %}<span>Joint checkpoint</span>{% endif %}</div>
       <div class="history-copy"><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.outcome }}</p></div>
+      {% if item.commit %}
       <a class="commit-link" href="https://github.com/codeframe78/24Seven.FM-Player/commit/{{ item.commit }}"><code>{{ item.commit }}</code><span class="sr-only"> commit</span></a>
+      {% else %}
+      <a class="commit-link" href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/{{ item.evidence }}">Validation<span class="sr-only"> evidence</span></a>
+      {% endif %}
     </li>
     {% endfor %}
   </ol>
@@ -77,8 +81,8 @@ section: roadmap
 <section class="content-section" id="next">
   <div class="content-intro wide">
     <p class="eyebrow">Before Alpha publication</p>
-    <h2>Four product milestones, then release</h2>
-    <p>M24–M27 are ordered feature gates ahead of M28. Each milestone must be implemented, validated, documented, and committed before the release candidate can advance.</p>
+    <h2>Sleep Timer complete; three product milestones remain</h2>
+    <p>M24 is complete with service and physical-Razr evidence. M25–M27 remain ordered feature gates ahead of M28, and each must be implemented, validated, documented, and committed before the release candidate can advance.</p>
   </div>
   <div class="workstream-grid">
     {% for item in site.data.project.pre_alpha %}

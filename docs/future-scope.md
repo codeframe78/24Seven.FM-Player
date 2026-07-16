@@ -10,9 +10,9 @@ Signed-in members should be able to use a fully native station-scoped Private Me
 
 When M17 becomes available, new-message events must integrate with the opt-in M27 Community Push Notifications architecture. A notification may identify the station and sender only within the approved minimal payload, must respect blocked users and safety gates, and must deep-link through authentication into the originating Inbox without exposing message text on a lock screen unless the user explicitly chooses a more revealing privacy setting.
 
-## M24 — Sleep Timer
+## Completed M24 — Sleep Timer
 
-Add a service-owned sleep countdown with accessible presets and custom duration, remaining-time state, adjust/cancel actions, and deterministic expiry that stops playback through the existing controller. Define pause, manual stop, station-switch, service-recreation, and device-sleep behavior before implementation; the timer must never create or own a second player.
+The service-owned sleep countdown is complete with accessible presets and custom duration, remaining-time state, adjust/cancel actions, MediaSession/system cancellation state, service-recreation recovery, and deterministic expiry through the existing player. Pause and station switches preserve the deadline; manual Stop cancels it; monotonic elapsed time includes device sleep; inconsistent post-reboot/wall-clock state fails safe. See [M24 validation](m24-sleep-timer-validation.md).
 
 ## M25 — Cast / Audio-Output Selection
 

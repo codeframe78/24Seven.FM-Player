@@ -100,6 +100,8 @@ class MainViewModelTest {
         viewModel.play()
         viewModel.pause()
         viewModel.stop()
+        viewModel.setSleepTimer(30L * 60L * 1_000L)
+        viewModel.cancelSleepTimer()
         viewModel.refreshQueue()
         advanceUntilIdle()
 
@@ -107,6 +109,8 @@ class MainViewModelTest {
         assertEquals(1, playback.playCalls)
         assertEquals(1, playback.pauseCalls)
         assertEquals(1, playback.stopCalls)
+        assertEquals(listOf(30L * 60L * 1_000L), playback.sleepTimerDurations)
+        assertEquals(1, playback.cancelSleepTimerCalls)
         assertEquals(StationId("adagio"), queue.refreshedStation)
     }
 
@@ -704,6 +708,8 @@ class MainViewModelTest {
         var playCalls = 0
         var pauseCalls = 0
         var stopCalls = 0
+        val sleepTimerDurations = mutableListOf<Long>()
+        var cancelSleepTimerCalls = 0
         val selectedStations = mutableListOf<StationId>()
 
         override fun selectStation(station: Station) {
@@ -721,6 +727,14 @@ class MainViewModelTest {
 
         override fun stop() {
             stopCalls++
+        }
+
+        override fun setSleepTimer(durationMillis: Long) {
+            sleepTimerDurations += durationMillis
+        }
+
+        override fun cancelSleepTimer() {
+            cancelSleepTimerCalls++
         }
     }
 

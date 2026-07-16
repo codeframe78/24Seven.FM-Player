@@ -5,18 +5,25 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
+import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
+import androidx.media3.session.SessionError
 import androidx.media3.session.SessionToken
+import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionResult
 import com.codeframe78.twentyfourseven.player.domain.PlaybackController
 import com.codeframe78.twentyfourseven.player.domain.PlaybackState
 import com.codeframe78.twentyfourseven.player.domain.PlaybackStatus
+import com.codeframe78.twentyfourseven.player.domain.SleepTimerState
 import com.codeframe78.twentyfourseven.player.domain.Station
 import com.codeframe78.twentyfourseven.player.domain.StationId
+import com.google.common.util.concurrent.Futures
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,10 +34,6 @@ class Media3PlaybackController(context: Context) : PlaybackController {
     private val connectivityManager = appContext.getSystemService(ConnectivityManager::class.java)
     private val networkRecovery = NetworkPlaybackRecovery(connectivityManager.hasValidatedDefaultNetwork())
     private val stateFlow = MutableStateFlow(PlaybackState())
-    private val controllerFuture = MediaController.Builder(
-        appContext,
-        SessionToken(appContext, ComponentName(appContext, RadioPlaybackService::class.java)),
-    ).buildAsync()
 
     private var controller: MediaController? = null
     private var selectedStation: Station? = null
@@ -66,6 +69,31 @@ class Media3PlaybackController(context: Context) : PlaybackController {
             )
         }
     }
+    private val sessionListener = object : MediaController.Listener {
+        override fun onExtrasChanged(controller: MediaController, extras: Bundle) {
+            updateSleepTimerState(extras)
+        }
+
+        @androidx.annotation.OptIn(markerClass = [UnstableApi::class])
+        override fun onCustomCommand(
+            controller: MediaController,
+            command: SessionCommand,
+            args: Bundle,
+        ) = if (command == SleepTimerSessionContract.expiredCommand) {
+            playRequested = false
+            updateSleepTimerState(controller.sessionExtras)
+            updateState()
+            Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+        } else {
+            Futures.immediateFuture(SessionResult(SessionError.ERROR_NOT_SUPPORTED))
+        }
+    }
+    private val controllerFuture = MediaController.Builder(
+        appContext,
+        SessionToken(appContext, ComponentName(appContext, RadioPlaybackService::class.java)),
+    )
+        .setListener(sessionListener)
+        .buildAsync()
 
     init {
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
@@ -76,6 +104,7 @@ class Media3PlaybackController(context: Context) : PlaybackController {
                         controller = connected
                         connected.addListener(listener)
                         selectedStation?.let(::setStationMediaItems)
+                        updateSleepTimerState(connected.sessionExtras)
                         updateState()
                     }
                     .onFailure { error ->
@@ -93,7 +122,11 @@ class Media3PlaybackController(context: Context) : PlaybackController {
         if (selectedStation?.id == station.id) return
         networkRecovery.cancel()
         selectedStation = station
-        stateFlow.value = PlaybackState(stationId = station.id)
+        stateFlow.value = stateFlow.value.copy(
+            stationId = station.id,
+            status = PlaybackStatus.Idle,
+            errorMessage = null,
+        )
         if (controller != null) setStationMediaItems(station)
     }
 
@@ -120,8 +153,22 @@ class Media3PlaybackController(context: Context) : PlaybackController {
     override fun stop() {
         playRequested = false
         networkRecovery.cancel()
+        cancelSleepTimer()
         controller?.stop()
         updateState()
+    }
+
+    override fun setSleepTimer(durationMillis: Long) {
+        val connected = controller ?: return
+        connected.sendCustomCommand(
+            SleepTimerSessionContract.setCommand,
+            SleepTimerSessionContract.setArguments(durationMillis),
+        )
+    }
+
+    override fun cancelSleepTimer() {
+        stateFlow.value = stateFlow.value.copy(sleepTimer = SleepTimerState())
+        controller?.sendCustomCommand(SleepTimerSessionContract.cancelCommand, Bundle.EMPTY)
     }
 
     private fun setStationMediaItems(station: Station) {
@@ -146,7 +193,6 @@ class Media3PlaybackController(context: Context) : PlaybackController {
                     .build()
             }
 
-        connected.stop()
         connected.setMediaItems(mediaItems, 0, 0L)
         if (resumePlayback) {
             connected.prepare()
@@ -159,9 +205,10 @@ class Media3PlaybackController(context: Context) : PlaybackController {
         val connected = controller
         val stationId = selectedStation?.id ?: stateFlow.value.stationId
         if (connected == null) {
-            stateFlow.value = PlaybackState(
+            stateFlow.value = stateFlow.value.copy(
                 stationId = stationId,
                 status = if (playRequested) PlaybackStatus.Connecting else PlaybackStatus.Idle,
+                errorMessage = null,
             )
             return
         }
@@ -176,11 +223,15 @@ class Media3PlaybackController(context: Context) : PlaybackController {
             playRequested -> PlaybackStatus.Connecting
             else -> PlaybackStatus.Idle
         }
-        stateFlow.value = PlaybackState(
+        stateFlow.value = stateFlow.value.copy(
             stationId = stationId,
             status = status,
             errorMessage = connected.playerError?.message,
         )
+    }
+
+    private fun updateSleepTimerState(extras: Bundle) {
+        stateFlow.value = stateFlow.value.copy(sleepTimer = SleepTimerSessionContract.state(extras))
     }
 
     private fun dispatchNetworkState(isUsable: Boolean) {

@@ -276,6 +276,8 @@ class MainViewModel(
     fun play() = playback.play()
     fun pause() = playback.pause()
     fun stop() = playback.stop()
+    fun setSleepTimer(durationMillis: Long) = playback.setSleepTimer(durationMillis)
+    fun cancelSleepTimer() = playback.cancelSleepTimer()
     fun selectDestination(destination: MainDestination) {
         this.destination.value = destination
         if (destination == MainDestination.Favorites) {

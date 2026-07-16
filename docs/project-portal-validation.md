@@ -10,8 +10,8 @@ The GitHub Pages surface now provides a comprehensive, accessible project portal
 - native architecture, source organization, engineering principles, and the milestone workflow;
 - automated, emulator, physical-device, accessibility, network, performance, signing, and CI evidence;
 - a tester-facing product workspace with bounded smoke, member, device, resilience, and adaptive sessions plus a structured public result form for passes, failures, notes, and blocked tests;
-- all 23 achieved checkpoints in verified chronological order;
-- the seven M23 Play-testing workstreams, deferred M17 boundary, M24–M27 pre-Alpha feature gates, and M28 Alpha publication milestone;
+- all 24 achieved checkpoints in verified chronological order, including completed M24 Sleep Timer;
+- the seven M23 Play-testing workstreams, deferred M17 boundary, completed M24, remaining M25–M27 pre-Alpha feature gates, and M28 Alpha publication milestone;
 - a public resource index for architecture, protocol research, station certification, Play readiness, release notes, testing, and contribution.
 
 Repeated navigation and milestone history are generated from `privacy-site/_data/project.yml`. The existing `PRIVACY.md` generation and `/` permalink are unchanged.
