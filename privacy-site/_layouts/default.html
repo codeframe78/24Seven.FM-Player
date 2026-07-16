@@ -9,15 +9,24 @@
     <link rel="stylesheet" href="{{ '/assets/privacy.css' | relative_url }}">
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <header class="site-header">
-      <p class="brand">24Seven.FM Player</p>
-      <p class="tagline">Unofficial, non-commercial native Android application</p>
+      <div>
+        <a class="brand" href="{{ '/project/' | relative_url }}">24Seven.FM Player</a>
+        <p class="tagline">Unofficial, non-commercial native Android application</p>
+      </div>
+      <nav aria-label="Primary navigation">
+        <a href="{{ '/project/' | relative_url }}">Project</a>
+        <a aria-current="page" href="{{ '/' | relative_url }}">Privacy</a>
+        <a href="https://github.com/codeframe78/24Seven.FM-Player">GitHub</a>
+      </nav>
     </header>
     <main id="main-content">
       {{ content }}
     </main>
     <footer>
-      <p><a href="https://github.com/codeframe78/24Seven.FM-Player">Project source and issue tracker</a></p>
+      <p>24Seven.FM Player is an independent community project.</p>
+      <p><a href="{{ '/project/' | relative_url }}">Project site</a> · <a href="https://github.com/codeframe78/24Seven.FM-Player">Source and issue tracker</a></p>
     </footer>
   </body>
 </html>

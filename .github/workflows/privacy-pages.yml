@@ -1,4 +1,4 @@
-name: Privacy Pages
+name: Project Pages
 
 on:
   push:
@@ -6,11 +6,13 @@ on:
     paths:
       - PRIVACY.md
       - privacy-site/**
+      - docs/play-store-assets/**
       - .github/workflows/privacy-pages.yml
   pull_request:
     paths:
       - PRIVACY.md
       - privacy-site/**
+      - docs/play-store-assets/**
       - .github/workflows/privacy-pages.yml
   workflow_dispatch:
 
@@ -20,7 +22,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: privacy-pages
+  group: project-pages
   cancel-in-progress: false
 
 jobs:
@@ -41,7 +43,17 @@ jobs:
             cat PRIVACY.md
           } > privacy-site/index.md
 
-      - name: Build privacy site with Jekyll
+      - name: Prepare project artwork
+        shell: bash
+        run: |
+          mkdir -p privacy-site/assets/project/screenshots
+          cp docs/play-store-assets/app-icon-512.png privacy-site/assets/project/app-icon.png
+          cp docs/play-store-assets/feature-graphic-1024x500.png privacy-site/assets/project/feature-graphic.png
+          cp docs/play-store-assets/screenshots/phone-player-live-playing.png privacy-site/assets/project/screenshots/player.png
+          cp docs/play-store-assets/screenshots/phone-queue-live.png privacy-site/assets/project/screenshots/queue.png
+          cp docs/play-store-assets/screenshots/tablet-landscape-player.png privacy-site/assets/project/screenshots/tablet.png
+
+      - name: Build Pages site with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
           source: ./privacy-site
