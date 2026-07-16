@@ -4,6 +4,8 @@ An unofficial, community-built native Android client for the 24seven.FM internet
 
 The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It does not use a WebView and is not affiliated with or endorsed by 24seven.FM or its stations.
 
+[Project website](https://codeframe78.github.io/24Seven.FM-Player/project/) · [Live build dashboard](https://github.com/users/codeframe78/projects/1) · [Privacy notice](https://codeframe78.github.io/24Seven.FM-Player/)
+
 ## Supported stations
 
 - StreamingSoundtracks.com

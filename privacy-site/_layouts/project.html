@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#090c15">
+    <meta name="description" content="{{ page.description | default: site.description | escape }}">
+    <meta property="og:title" content="24Seven.FM Player">
+    <meta property="og:description" content="A fully native Android player for five 24seven.FM stations.">
+    <meta property="og:image" content="{{ '/assets/project/feature-graphic.png' | absolute_url }}">
+    <meta property="og:type" content="website">
+    <title>{{ page.title | default: site.title | escape }}</title>
+    <link rel="icon" type="image/png" href="{{ '/assets/project/app-icon.png' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/project.css' | relative_url }}">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="project-header">
+      <a class="project-brand" href="{{ '/project/' | relative_url }}" aria-label="24Seven.FM Player home">
+        <img src="{{ '/assets/project/app-icon.png' | relative_url }}" alt="" width="44" height="44">
+        <span>24Seven.FM Player</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a aria-current="page" href="{{ '/project/' | relative_url }}">Project</a>
+        <a href="{{ '/' | relative_url }}">Privacy</a>
+        <a href="https://github.com/codeframe78/24Seven.FM-Player">GitHub</a>
+      </nav>
+    </header>
+    <main id="main-content">
+      {{ content }}
+    </main>
+    <footer class="project-footer">
+      <div>
+        <strong>24Seven.FM Player</strong>
+        <p>An unofficial, non-commercial community project. Not affiliated with or endorsed by 24seven.FM or its stations.</p>
+      </div>
+      <nav aria-label="Footer navigation">
+        <a href="{{ '/' | relative_url }}">Privacy notice</a>
+        <a href="https://github.com/codeframe78/24Seven.FM-Player/issues">Report an app issue</a>
+        <a href="https://github.com/users/codeframe78/projects/1">Build dashboard</a>
+      </nav>
+    </footer>
+  </body>
+</html>
