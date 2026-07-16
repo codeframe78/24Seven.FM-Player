@@ -1,6 +1,6 @@
 # Implementation plan
 
-Updated July 15, 2026 after completing all five station-certification gates and reconciling the latest M23 device, library, Favorites, and notification checkpoint. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
+Updated July 15, 2026 after completing all five station-certification gates and expanding M23 from one oversized distribution task into reviewable Play-testing readiness milestones. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
 
 ## Planning model
 
@@ -8,9 +8,9 @@ Updated July 15, 2026 after completing all five station-certification gates and 
 - M17 is the remaining shared capability, using immutable Compose state, repository contracts, capability flags, and station-isolated protected sessions once its external blocker clears.
 - M18–M22 certify the shared implementation against each station. They are hardening and evidence gates, not station-specific application forks.
 - Each station's representative native login, protected restoration, isolation, authenticated surface, and logout flow is now a hard completion gate. Public/device evidence may be gathered early but does not advance the active station order.
-- M23–M24 are the final distribution and publication gates.
+- M23 is an XL Play-testing readiness program divided into M23.1–M23.7 below; M24 remains the authorized publication gate.
 - Private Messages remains numbered as M17 but deferred pending legacy server repair and verified production limits. Inbox and Sent Box discovery worked, while New Message selection remained suspect and a profile-originated MorgHubby test appeared to submit without delivery; the site owner has the reproduced result.
-- Early M23 readiness artifacts are preserved, but they must be refreshed after M15–M22. The Play developer account is approved; Play App Signing/app setup, final upload signing, and explicit publication authorization remain dependencies.
+- Early M23 readiness artifacts are preserved, but the signed candidate must be refreshed after the latest notification, library, foldable, and Favorites fixes. The Play developer account is approved; current-head signing, UGC compliance, API 36 targeting, Play review declarations, explicit rights evidence, release-device closure, and publication authorization remain dependencies.
 
 ## Task complexity protocol
 
@@ -24,23 +24,35 @@ This classification supplements the required XS–XXL T-shirt size, rationale, e
 
 ## Current milestone
 
-### M23 — Alpha Test Distribution Readiness
+### M23 — Play-Testing Readiness Program
 
 - Task Complexity Level: 2 — Feature Logic & API Integration
-- Size: M
-- Estimated elapsed time: 1–2 focused days
-- Usage intensity: Medium
+- Size: XL as an umbrella, divided into seven S–L sub-milestones
+- Estimated elapsed time: 3–6 focused days plus owner and station-side input
+- Usage intensity: Medium–High across the complete program
 - Confidence: Medium
-- Outcome: refresh and finish Alpha privacy, versioning, signing guardrails, tester guidance, Play Console declarations, release artifact checks, and reproducible bundle validation after all feature and station work.
-- Expected layers: release configuration, secure local signing handoff, privacy/data-safety reconciliation, bundle and APK inspection, Play checklist, tester documentation, and final repository/Discord evidence.
-- Dependencies: approved Google Play developer account, selection/custody of the upload signing identity, Play App Signing setup, final app listing/configuration, and explicit authorization before any publication action.
-- Principal risk: securely coordinating the upload key and Play Console declarations without committing secrets or creating an incompatible signing lineage.
-- Completion gate: version/release configuration, privacy and tester materials, signing guardrails, reproducible release bundle validation, dependency/license review, final physical smoke test, documentation, focused commits, and remote publication evidence all pass; no store release is submitted during M23.
-- Status: in progress. M18–M22 and all five representative station login gates are complete. Release assets/signing, adaptive layouts, notification navigation, multi-field library search, play-state sorting, and responsive 1,500-track Favorites handling are validated. Protected reviewer access, remaining Console declarations, tester setup, and Play-delivered device/update checks still gate completion. M17 Private Messages remains explicitly deferred for server repair.
+- Outcome: retain the completed Alpha preparation while closing every release-artifact, UGC, platform-target, Play-review, rights, device, and store-quality boundary needed for a defensible Google Play test release.
+- Expected layers: release configuration, domain/repository/UI policy work for UGC, Android 16 behavior validation, secure local signing handoff, privacy/data-safety reconciliation, Play declarations, bundle/APK inspection, device testing, tester documentation, and final repository/Discord evidence.
+- Dependencies: approved Google Play developer account, protected upload identity, a real station moderation/report destination or a decision to exclude UGC, written brand/content authorization, reusable reviewer accounts, Play App Signing, and explicit authorization before any publication action.
+- Principal risks: shipping publicly accessible UGC without required moderation controls, missing the August 31, 2026 API 36 deadline, or submitting third-party branding/artwork without review-ready permission evidence.
+- Completion gate: every required M23.1–M23.6 outcome passes; M23.7 is required before a public store listing but may follow tightly controlled internal QA. No store release is submitted during M23.
+- Status: in progress. M23.3 API 36 readiness is complete with 117 unit tests, lint/release bundle validation, 27/27 API 36 connected tests, and a manual cold-launch/two-Back pass. M23.2 UGC compliance is the recommended next milestone and begins with station moderation-destination research rather than an invented backend. M17 Private Messages remains explicitly deferred and is not shipped.
+
+#### M23 sub-milestone plan
+
+| Milestone | Size | Estimate | Usage | Outcome and completion gate | Primary confidence variable |
+| --- | --- | --- | --- | --- | --- |
+| M23.1 Current-head signed release candidate | M | 2–4 hours | Medium | Regenerate the protected signed AAB from exact HEAD; validate signer, version code, 16 KB packaging, merged manifest, dependencies/licenses, Play-delivered install, and reproducible evidence | Access to the protected upload identity and whether version code 2 has already reached Play |
+| M23.2 UGC safety and moderation | L, split before implementation | 6–12 hours after research | High | Research an authorized moderation destination, then require Terms acceptance and provide clearly labeled report-content, report-user, and block-user behavior across public Chat/request attribution; otherwise omit those surfaces from the Play candidate | Station reporting/blocking capabilities and accountable moderation response |
+| M23.3 Android 16 / API 36 readiness | M | 2–4 hours | Medium | **Complete:** target API 36 with predictive Back, edge-to-edge, adaptive UI, connected MediaSession, lint/release, and 27/27 API 36 device coverage; see `m23-api36-readiness.md` | Closed with one corrected viewport-dependent lazy-list test assumption |
+| M23.4 Play review declarations | M | 2–4 hours plus owner input | Medium | Complete reusable reviewer access, media-playback foreground-service description/interruption impact/video, target audience, content rating, privacy reconciliation, and Data Safety | Console wording, CAPTCHA-compatible reviewer access, and station retention answers |
+| M23.5 Brand and content-rights evidence | S | 1–2 hours plus external confirmation | Low locally | Privately retain written permission for app/station names, logos, artwork, streams, screenshots, and Play testing/distribution; record only sanitized evidence in Git | Scope and availability of the rights holder's written authorization |
+| M23.6 Release device matrix and pre-launch report | M | 3–6 hours | Medium | Exercise API 26, API 36, a 16 KB runtime, genuine tablet/foldable configurations, Razr hinge behavior, Play delivery/update, and remediate pre-launch stability/performance/accessibility findings | AVD/Test Lab availability and Play crawler access through station authentication |
+| M23.7 Adaptive launcher/store polish | S | 1–2 hours | Low | Add adaptive and monochrome launcher resources and refresh final screenshots while preserving the selected artwork; required before a public listing, not a blocker for limited internal QA | Quality of derived assets and final release UI stability |
 
 ## Latest completed milestone
 
-M22 Entranced.FM certification completed July 15, 2026 after its public/device and representative authenticated gates passed. Native sign-in, Android-protected process-restart restoration, station isolation, authenticated empty Favorites loading, Chat composer availability, green request eligibility, explicit station-only logout, and persistent signed-out state after another restart all pass. A narrowly scoped ICY boundary correction maps defined Windows-1252 punctuation without transcoding valid Unicode; 110 unit tests, lint, Windows validation, 21 connected tests, standalone install, and live Media3 playback pass. No credential, CAPTCHA, session value, Chat post, or song request was retained or submitted. See [m22-entranced-certification.md](m22-entranced-certification.md).
+M23.3 Android 16 / API 36 readiness completed July 15, 2026. The app now targets API 36 without architecture or visible behavior changes. All 117 unit tests, debug lint, release bundle/lint-vital checks, and 27/27 API 36 connected tests pass. A cold API 36 launch confirmed the installed target and the Compose two-Back exit dialog under Android 16 behavior. The initial connected run exposed and corrected a viewport-dependent Favorites test assumption by scrolling the tagged lazy container to each accessibility node. See [m23-api36-readiness.md](m23-api36-readiness.md).
 
 ## Shared feature milestones
 

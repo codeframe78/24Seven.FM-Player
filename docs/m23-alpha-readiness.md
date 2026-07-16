@@ -1,16 +1,20 @@
 # M23 Alpha Test Distribution readiness
 
-Prepared early on July 14, 2026 and activated July 15 after M15–M22 completed. The remaining items below are the
-current M23 distribution-readiness gate.
+Prepared early on July 14, 2026 and activated July 15 after M15–M22 completed. A July 15 Play-readiness audit expanded
+M23 into the seven reviewable sub-milestones maintained in `README.md` and `docs/IMPLEMENTATION_PLAN.md`. This file
+retains the detailed release/signing evidence and records the additional completion gates without representing them
+as already complete.
 
 ## Estimate
 
 - Task Complexity Level: 2 — Feature Logic & API Integration
-- T-shirt size: M
-- Estimated duration: 1–2 focused days
-- Rationale: the app implementation is stable, but release readiness spans Gradle signing inputs, artifact integrity,
-  privacy/data-safety declarations, Play configuration, tester guidance, and an upgrade-safe signing lineage.
-- Primary confidence variable: selection and custody of the stable release signing identity and distribution channel
+- T-shirt size: XL umbrella divided into M23.1–M23.7 S–L milestones
+- Estimated duration: 3–6 focused days plus owner and station-side input
+- Rationale: the app implementation is stable, but Play readiness now explicitly spans current-head artifact integrity,
+  UGC moderation, API 36 behavior, privacy/data-safety declarations, rights evidence, Play configuration, tester guidance,
+  broad device validation, and an upgrade-safe signing lineage.
+- Primary confidence variables: station moderation capabilities, rights evidence, reusable reviewer access, and protected
+  signing/Play delivery
 
 ## Task breakdown
 
@@ -20,6 +24,12 @@ current M23 distribution-readiness gate.
 4. Build and validate the signed release AAB with `scripts/validate-play-bundle.ps1`.
 5. Create/configure the Play app, accept Play App Signing, supply the public privacy URL and required declarations.
 6. Install or distribute a same-key candidate, run the final physical smoke test, and publish only the readiness evidence.
+7. Resolve public UGC policy requirements through real Terms/report/block/moderation behavior or remove the affected surfaces from the Play candidate.
+8. Target API 36 and validate Android 16 predictive Back, edge-to-edge, adaptive, and background-media behavior.
+9. Complete the Play media-playback foreground-service declaration and demonstration evidence.
+10. Privately retain explicit brand, artwork, stream, screenshot, and Play-distribution authorization.
+11. Close API 26, 16 KB runtime, genuine tablet/foldable, physical hinge, Play pre-launch, and Play-delivery coverage.
+12. Add adaptive/monochrome launcher resources before a public store listing.
 
 ## Completed locally
 
@@ -43,7 +53,7 @@ current M23 distribution-readiness gate.
 - The actual encrypted recovery package is now stored on the owner-selected off-PC volume and independently validated with the owner-held passphrase. The encrypted package SHA-256 is `361E6A85452DBF9ACDC816F554569E3B7DBA0F98B60C30DB255E54C2644C4D1C`; neither its location nor its passphrase is committed.
 - The signed release APK was installed cleanly on the API 35 emulator, cold-launched as version code 2, exposed the expected adaptive Player semantics, and reached `Playing live` on StreamingSoundtracks with the Pause action available. The emulator was restored to the debug build afterward; the wirelessly connected Razr and its sessions were not modified.
 - The release dependency graph contains no advertising, analytics, Crashlytics, App Center, or Sentry SDK.
-- Google Play's current target-level requirement accepts new mobile apps targeting API 35 or higher, so the unchanged target SDK 35 is compliant as checked July 15, 2026.
+- Google Play accepts target API 35 on July 15, 2026 but requires API 36 for new apps and updates beginning August 31, 2026. M23.3 therefore migrates before the closed-test/update window instead of treating API 35 as the final Alpha target.
 - The project-specific provisional Data Safety worksheet is recorded in `docs/m23-data-safety.md`; its final answers remain gated on the active Play Console form and station transmission/retention confirmation.
 - The activated Play Console was inspected read-only on July 15: it is a newly activated personal account with no existing apps. The intended public name `24Seven.FM Player` fits the 30-character limit, and Console reports `com.codeframe78.twentyfourseven.player` as available.
 - The Play Console app was created on July 15 as an English (United States), App, Free listing with the intended package. The owner explicitly accepted the Developer Program Policies, Play App Signing Terms, and US export declaration; automatic installer protection was disabled to preserve approved sideload testing.
@@ -78,6 +88,9 @@ current M23 distribution-readiness gate.
   passed, and the preserved full MorG Favorites list loaded and switched sorting on the physical Razr without an ANR.
 - The post-fix suite contains 117 unit-test methods. GitHub Android CI passed unit tests, lint, and debug assembly after
   the changes; focused folded-layout, notification-navigation, multi-field search, and full-list checks also passed.
+- M23.3 migrated the app to target API 36 without changing the compile or minimum SDK. All 117 unit tests, debug lint,
+  release bundle/lint-vital checks, and 27/27 connected tests pass on the API 36 AVD. A cold launch reported target 36,
+  and two Back actions opened the existing exit dialog with edge-to-edge content intact. See `m23-api36-readiness.md`.
 - M17 browser investigation reached Inbox and Sent Box, found a suspect New Message selection path, and reproduced a
   profile-originated MorgHubby send that appeared to submit but was absent from the recipient account. The result was
   reported to the site owner; no native PM endpoint or behavior was guessed.
@@ -101,4 +114,10 @@ Signing files and secrets must never be committed. Gradle should receive their p
 - Upload the verified signed AAB to Play and confirm that Console reports the expected upload-certificate fingerprint.
 - Verify Play-delivered installation on the physical Razr and a same-key Play update after a subsequent version code exists.
 - Complete the owner-input Console forms: least-privileged reviewer credentials/instructions, save the selected 18+ target audience, content rating, and final Data Safety answers.
+- Complete M23.2 UGC Terms/report/block/moderation work or explicitly remove public UGC surfaces from the Play candidate.
+- **Complete:** API 36 target migration and Android 16 regression pass; see `m23-api36-readiness.md`.
+- Save the media-playback foreground-service declaration with its description, interruption impact, use case, and demonstration video.
+- Privately confirm written rights for the app/station branding, artwork, streams, screenshots, and Play distribution.
+- Close minimum-API, 16 KB runtime, genuine tablet/foldable, physical Razr hinge, and Play pre-launch coverage.
+- Add adaptive/monochrome launcher resources before the public listing phase.
 - Publish only after explicit authorization.

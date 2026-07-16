@@ -118,7 +118,7 @@ The latest successful build validation ran unit tests for debug and release, And
 
 The primary device is a Motorola Razr 2023:
 
-- Android 16 (app target remains API 35)
+- Android 16 (app target is API 36 as of M23.3)
 - device model reported by ADB: `motorola_razr_2023`
 - physical display: 1080 x 2640 at 420 dpi
 
@@ -252,6 +252,8 @@ never commit signing files, passwords, aliases, or local signing-property paths.
 `docs/m23-alpha-readiness.md`. M15–M22 are complete, so these artifacts are now being refreshed and revalidated.
 
 The final upload identity is protected by the current-user DPAPI envelope and an independently verified PBKDF2/AES-256-GCM package on the owner-controlled off-PC volume. GitHub Pages publishes the canonical notice at `https://codeframe78.github.io/24Seven.FM-Player/`; the URL, public support email, Music & Audio category, and four evidence-backed objective declarations are saved in Play Console but have not been sent for review. The owner selected an 18+ target audience; its Console form is blocked by the required reviewer-access declaration. Do not store station reviewer credentials in Git or conversation history, and do not select child audience bands without a separate Families-compliance milestone.
+
+M23 is now divided into M23.1–M23.7 release-artifact, UGC, API 36, Play-review, rights, device, and launcher-quality gates. M23.3 is complete: the app targets API 36; all 117 unit tests, lint/release bundle checks, and 27/27 API 36 connected tests pass; a cold launch and two Back actions reached the existing exit dialog. See `docs/m23-api36-readiness.md`. M23.2 UGC safety/moderation is the recommended next milestone and must not invent a reporting backend or private endpoint.
 
 The published Alpha branch also adds native authenticated Favorites browsing for all five stations. The
 adapter discovers the signed-in member's numeric Favorites-list identifier from each station's own authenticated

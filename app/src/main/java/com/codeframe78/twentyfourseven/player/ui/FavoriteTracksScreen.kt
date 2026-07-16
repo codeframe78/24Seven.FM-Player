@@ -69,7 +69,7 @@ internal fun FavoriteTracksScreen(
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(padding),
+        modifier = Modifier.fillMaxSize().padding(padding).testTag("favorite_tracks_list"),
         contentPadding = PaddingValues(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {

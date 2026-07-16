@@ -6,9 +6,9 @@ Updated July 15, 2026 on `agent/initial-android-scaffold` after completing the M
 
 - Expected and configured remote: `https://github.com/codeframe78/24Seven.FM-Player.git` for fetch and push.
 - Active branch: `agent/initial-android-scaffold`.
-- Latest implementation commit: `90a7f98` (`Add trusted secondary station pages`), published with the accompanying M16 documentation checkpoint.
+- Latest product implementation commit before the M23.3 target migration: `bdb533a` (`Improve library search playback and favorites`).
 - One Android application module, `:app`; application ID `com.codeframe78.twentyfourseven.player`.
-- Kotlin 2.2.21, AGP 8.13.2, JDK 17, Compose BOM 2026.06.00, Media3 1.10.1, minSdk 26, targetSdk 35, compileSdk 36.
+- Kotlin 2.2.21, AGP 8.13.2, JDK 17, Compose BOM 2026.06.00, Media3 1.10.1, minSdk 26, targetSdk 36, compileSdk 36.
 - The current environment has unrestricted filesystem access, network access, no sandbox, and approval mode `never`.
 
 ## Protected uncommitted work
@@ -69,7 +69,7 @@ At the time of this audit, the working tree contained the complete M11 adaptive 
 ## Tests and latest baseline
 
 - 131 `@Test` declarations currently cover parsers, repositories, station definitions and certification contracts, session isolation primitives, startup preference restoration, listener activity, station-page trust policy, playback metadata, ViewModel behavior, Compose navigation/actions, protected storage, and the MediaSession service.
-- Latest full local evidence: debug compile, all 110 debug unit tests, lint, Windows validation, standalone install, and 21/21 Android 16 Razr instrumentation tests pass after the M22 final station gate (131 tests total).
+- Latest full local evidence: target API 36 debug/release compilation, all 117 debug unit tests, lint, an unsigned release bundle, and 27/27 API 36 AVD instrumentation tests pass. The earlier 21/21 Android 16 Razr suite remains the latest physical-device baseline.
 - M18–M22 are complete; all five stations passed representative authentication and physical-device certification.
 
 ## Known defects and technical debt

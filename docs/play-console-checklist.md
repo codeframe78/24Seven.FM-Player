@@ -6,8 +6,8 @@ The Google Play developer account was approved on July 14, 2026. Use this during
 
 - Application ID: `com.codeframe78.twentyfourseven.player`
 - Candidate: `0.1.0-alpha01`, version code 2
-- Target SDK: 35; compile SDK: 36; minimum SDK: 26
-- Current Play target-level check (July 15, 2026): new mobile apps and updates must target API 35 or higher, so this candidate is compliant without a toolchain change.
+- Target SDK: 36; compile SDK: 36; minimum SDK: 26
+- Current Play target-level check (July 15, 2026): target API 35 remains accepted until August 31, 2026, when new mobile apps and updates must target API 36. M23.3 migrated early so the closed-test and update path do not depend on that deadline.
 - Privacy notice, Alpha testing guide, release notes, permission review, and device validation are complete.
 - Gradle accepts Play upload signing only from four `TWENTYFOURSEVEN_UPLOAD_*` environment variables. Supplying a partial set fails configuration.
 - `scripts/validate-play-bundle.ps1` builds the release AAB, requires a real signature, and prints its SHA-256 without revealing signing inputs.

@@ -6,7 +6,7 @@
 - Phones, landscape phones, tablets, foldables, multi-window, and freely resized Android windows are supported through
   responsive layouts. Compact, medium, expanded portrait, and expanded landscape evidence is recorded in
   `docs/m23-device-compatibility.md`. The primary physical validation device is a Motorola Razr 2023 on Android 16;
-  the app target remains API 35.
+  the app targets API 36.
 
 ## Installation and updates
 

@@ -6,7 +6,7 @@ not a list of hard-coded device models.
 
 ## Supported runtime and layout contract
 
-- Android 8.0 / API 26 is the minimum runtime; Android 15 / API 35 is the target; API 36 is the compile level.
+- Android 8.0 / API 26 is the minimum runtime; Android 16 / API 36 is both the target and compile level.
 - Compact windows below 600dp use bottom navigation. Medium and expanded windows use a navigation rail.
 - The Player switches from a vertically scrollable compact layout to a two-pane artwork/details layout at 840dp.
 - Selected station, destination, playback state, and the service-owned media session are not recreated or duplicated
@@ -24,6 +24,7 @@ not a list of hard-coded device models.
 | API 35 Pixel 7 emulator resized as a 10-inch class window | 960×1707dp portrait | `tablet-10-player.png` | Expanded two-pane Player and navigation rail render without stretching the compact layout. |
 | API 35 Pixel 7 emulator, expanded landscape/freeform | 1707×960dp landscape | `tablet-landscape-player.png` | Two-pane Player, navigation rail, controls, and all five station cards are simultaneously reachable. |
 | API 35 Pixel Fold emulator, folded portrait | Compact folded window | Focused connected UI test and live emulator inspection | Playback controls and the complete five-station carousel remain visible without initial scrolling. |
+| API 36 phone AVD targeting API 36 | 411×914dp compact portrait | 27/27 connected tests plus cold-launch/two-Back inspection | Adaptive navigation, Favorites lazy scrolling, MediaSession service, edge-to-edge Player, and the exit dialog pass under Android 16 target behavior. |
 
 All display overrides were temporary. The Razr returned to its physical 1080×2640 display and 420dpi density; the
 emulator returned to 1080×2400 and 420dpi after capture.
@@ -42,6 +43,8 @@ emulator returned to 1080×2400 and 420dpi after capture.
   reconnecting/error states, light mode, and large type.
 - The API 35 connected suite passes 24/24 tests, including compact/medium navigation selection, live width-change state
   preservation, short-wide scrolling, and 1.5× font-scale reachability.
+- The API 36 connected suite passes 27/27 tests after correcting one viewport-dependent lazy-test assumption; the
+  installed candidate reports target API 36 and the cold-launch two-Back flow reaches the expected exit dialog.
 
 ## Foldable and OEM boundary
 

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -21,6 +22,7 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.codeframe78.twentyfourseven.player.domain.Station
@@ -823,6 +825,9 @@ class RadioAppTest {
 
     @Test
     fun favoritesShowAccessibleStoplightsAndReuseRequestConfirmation() {
+        val availableDescription = "Request Now — track is currently available to request"
+        val unavailableDescription = "Track Recently Played — track is not currently available to request"
+        val queuedDescription = "Track Recently Played — track is currently in the station queue and cannot be requested again"
         val prepared = mutableListOf<FavoriteTrack>()
         val availableRequest = RequestableTrack("ALBUM_1", "12345", "Available favorite", "Composer", "3:21", true)
         val available = FavoriteTrack(
@@ -889,14 +894,17 @@ class RadioAppTest {
         }
 
         composeRule.onNodeWithText("Favorites").performClick()
-        composeRule.onNodeWithContentDescription("Request Now — track is currently available to request").assertIsDisplayed()
-        composeRule.onNodeWithContentDescription("Track Recently Played — track is not currently available to request").assertIsDisplayed()
-        composeRule.onNodeWithContentDescription("Track Recently Played — track is currently in the station queue and cannot be requested again").assertIsDisplayed()
+        val favoritesList = composeRule.onNodeWithTag("favorite_tracks_list")
+        composeRule.onNodeWithContentDescription(availableDescription).assertIsDisplayed()
         composeRule.onNodeWithTag("request_status_green").assertIsDisplayed()
-        composeRule.onAllNodesWithTag("request_status_red").assertCountEquals(2)
-        composeRule.onAllNodesWithText("Track Recently Played").assertCountEquals(2)
-        composeRule.onNodeWithText("Last played today; requestable again tomorrow.").assertIsDisplayed()
-        composeRule.onAllNodesWithText("Request Now").assertCountEquals(2)[1].performClick()
+        favoritesList.performScrollToNode(hasContentDescription(unavailableDescription))
+        composeRule.onNodeWithContentDescription(unavailableDescription).assertIsDisplayed()
+        composeRule.onNodeWithText("Last played today; requestable again tomorrow.")
+            .assertIsDisplayed()
+        favoritesList.performScrollToNode(hasContentDescription(queuedDescription))
+        composeRule.onNodeWithContentDescription(queuedDescription).assertIsDisplayed()
+        favoritesList.performScrollToNode(hasContentDescription(availableDescription))
+        composeRule.onAllNodesWithText("Request Now").assertCountEquals(2)[1].performScrollTo().performClick()
         composeRule.onNodeWithText("Request this track?").assertIsDisplayed()
         composeRule.runOnIdle { assertEquals(listOf(available), prepared) }
     }
