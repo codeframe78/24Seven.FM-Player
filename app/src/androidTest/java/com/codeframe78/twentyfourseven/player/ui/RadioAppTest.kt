@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -22,7 +23,10 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.codeframe78.twentyfourseven.player.domain.Station
@@ -95,19 +99,19 @@ class RadioAppTest {
             }
         }
 
-        composeRule.onNodeWithText("Chat").performClick()
+        composeRule.onNodeWithContentDescription("Chat").performClick()
         composeRule.onNodeWithText("No supported chat connection has been verified for this station yet.")
             .assertIsDisplayed()
         composeRule.onNodeWithText("SST").assertIsDisplayed()
 
-        composeRule.onNodeWithText("Queue").performClick()
+        composeRule.onNodeWithContentDescription("Queue").performClick()
         composeRule.onNodeWithText("No supported queue or history source has been verified for this station yet.")
             .assertIsDisplayed()
 
-        composeRule.onNodeWithText("More").performClick()
+        composeRule.onNodeWithContentDescription("More").performClick()
         composeRule.onNodeWithText("Account").assertIsDisplayed()
 
-        composeRule.onNodeWithText("Player").performClick()
+        composeRule.onNodeWithContentDescription("Player").performClick()
         composeRule.onNodeWithText("LIVE • Not connected").assertIsDisplayed()
     }
 
@@ -214,24 +218,136 @@ class RadioAppTest {
     }
 
     @Test
+    fun maximumFontAndDisplayScaleKeepCompactNavigationAndStationDetailsReachable() {
+        composeRule.setContent {
+            val density = LocalDensity.current
+            CompositionLocalProvider(
+                LocalDensity provides Density(density.density, fontScale = 2f),
+            ) {
+                MaterialTheme {
+                    Box(Modifier.requiredSize(343.dp, 762.dp)) {
+                        RadioApp(
+                            state = sampleState(),
+                            onSelectStation = {},
+                            onSelectDestination = {},
+                            onPlay = {},
+                            onPause = {},
+                            onStop = {},
+                            onRefreshQueue = {},
+                        )
+                    }
+                }
+            }
+        }
+
+        listOf("Player", "Favorites", "Chat", "Queue", "More").forEach { destination ->
+            composeRule.onNodeWithContentDescription(destination).assertIsDisplayed().assertHasClickAction()
+        }
+        composeRule.onNodeWithContentDescription("Play live radio").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("station_card_sst").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("station_card_description_sst", useUnmergedTree = true).assertIsDisplayed()
+
+        val cardBounds = composeRule.onNodeWithTag("station_card_sst").fetchSemanticsNode().boundsInRoot
+        val descriptionBounds = composeRule
+            .onNodeWithTag("station_card_description_sst", useUnmergedTree = true)
+            .fetchSemanticsNode()
+            .boundsInRoot
+        assertTrue(descriptionBounds.top >= cardBounds.top)
+        assertTrue(descriptionBounds.bottom <= cardBounds.bottom)
+    }
+
+    @Test
+    fun maximumFontAndDisplayScaleStackAccountIdentityAboveStatus() {
+        composeRule.setContent {
+            val density = LocalDensity.current
+            CompositionLocalProvider(
+                LocalDensity provides Density(density.density, fontScale = 2f),
+            ) {
+                MaterialTheme {
+                    Box(Modifier.requiredSize(343.dp, 762.dp)) {
+                        RadioApp(
+                            state = sampleState().copy(destination = MainDestination.More),
+                            onSelectStation = {},
+                            onSelectDestination = {},
+                            onPlay = {},
+                            onPause = {},
+                            onStop = {},
+                            onRefreshQueue = {},
+                        )
+                    }
+                }
+            }
+        }
+
+        composeRule.onNodeWithTag("account_station_name_sst", useUnmergedTree = true).assertIsDisplayed()
+        composeRule.onNodeWithTag("account_status_sst", useUnmergedTree = true).assertIsDisplayed()
+        val nameBounds = composeRule
+            .onNodeWithTag("account_station_name_sst", useUnmergedTree = true)
+            .fetchSemanticsNode()
+            .boundsInRoot
+        val statusBounds = composeRule
+            .onNodeWithTag("account_status_sst", useUnmergedTree = true)
+            .fetchSemanticsNode()
+            .boundsInRoot
+        assertTrue(nameBounds.bottom <= statusBounds.top)
+    }
+
+    @Test
+    fun maximumFontAndDisplayScaleKeepMediumNavigationAndPlayerReachable() {
+        composeRule.setContent {
+            val density = LocalDensity.current
+            CompositionLocalProvider(
+                LocalDensity provides Density(density.density, fontScale = 2f),
+            ) {
+                MaterialTheme {
+                    Box(Modifier.requiredSize(701.dp, 584.dp)) {
+                        RadioApp(
+                            state = sampleState(),
+                            onSelectStation = {},
+                            onSelectDestination = {},
+                            onPlay = {},
+                            onPause = {},
+                            onStop = {},
+                            onRefreshQueue = {},
+                        )
+                    }
+                }
+            }
+        }
+
+        composeRule.onNodeWithTag("tablet_navigation_rail").assertIsDisplayed()
+        listOf("Player", "Favorites", "Chat", "Queue", "More").forEach { destination ->
+            composeRule.onNodeWithContentDescription(destination).assertIsDisplayed().assertHasClickAction()
+        }
+        composeRule.onNodeWithContentDescription("Play live radio").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("compact_player_scroll").performTouchInput { swipeUp() }
+        composeRule.onNodeWithTag("station_card_description_sst", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
     fun foldedPortraitShowsPlayerControlsAndStationCarouselWithoutScrolling() {
         composeRule.setContent {
-            MaterialTheme {
-                Box(Modifier.requiredSize(412.dp, 731.dp)) {
-                    RadioApp(
-                        state = sampleState().copy(
-                            nowPlaying = NowPlayingState(
-                                station.id,
-                                "James Horner - Legends Of The Fall - The Ludlows (5:35)",
+            val density = LocalDensity.current
+            CompositionLocalProvider(
+                LocalDensity provides Density(density.density, fontScale = 1f),
+            ) {
+                MaterialTheme {
+                    Box(Modifier.requiredSize(412.dp, 731.dp)) {
+                        RadioApp(
+                            state = sampleState().copy(
+                                nowPlaying = NowPlayingState(
+                                    station.id,
+                                    "James Horner - Legends Of The Fall - The Ludlows (5:35)",
+                                ),
                             ),
-                        ),
-                        onSelectStation = {},
-                        onSelectDestination = {},
-                        onPlay = {},
-                        onPause = {},
-                        onStop = {},
-                        onRefreshQueue = {},
-                    )
+                            onSelectStation = {},
+                            onSelectDestination = {},
+                            onPlay = {},
+                            onPause = {},
+                            onStop = {},
+                            onRefreshQueue = {},
+                        )
+                    }
                 }
             }
         }
@@ -268,7 +384,7 @@ class RadioAppTest {
         }
 
         composeRule.onNodeWithContentDescription("Album artwork").assertIsDisplayed()
-        composeRule.onNodeWithText("Chat").performClick()
+        composeRule.onNodeWithContentDescription("Chat").performClick()
         composeRule.onNodeWithContentDescription("Now playing album artwork").assertIsDisplayed()
     }
 
@@ -934,7 +1050,7 @@ class RadioAppTest {
             }
         }
 
-        composeRule.onNodeWithText("Favorites").performClick()
+        composeRule.onNodeWithContentDescription("Favorites").performClick()
         val favoritesList = composeRule.onNodeWithTag("favorite_tracks_list")
         composeRule.onNodeWithContentDescription(availableDescription).assertIsDisplayed()
         composeRule.onNodeWithTag("request_status_green").assertIsDisplayed()
@@ -1009,7 +1125,8 @@ class RadioAppTest {
         }
         composeRule.onNodeWithText("Track Name").performClick()
         composeRule.onNodeWithText("Sort: Track Name").assertIsDisplayed()
-        composeRule.onNodeWithText("Favorite 10").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("favorite_tracks_list").performScrollToIndex(4)
+        composeRule.onNodeWithText("Favorite 10").assertIsDisplayed()
     }
 
     @Test

@@ -32,8 +32,17 @@ not a list of hard-coded device models.
 | API 35 Pixel Tablet emulator, native portrait | 1600×2560 physical display; 800×1280dp | Earlier 34/34 full suite; 1/1 current-head open-source disclosure test; rotation inspection | Medium-width rail layout retains visible artwork, controls, and a horizontally reachable station carousel after rotation; the current legal-disclosure path is also scroll-reachable. |
 | API 36 phone AVD targeting API 36 | 411×914dp compact portrait | 36/36 current-head connected tests plus cold-launch/two-Back inspection | Adaptive navigation, UGC safety, legal disclosures, Favorites lazy scrolling, MediaSession service, edge-to-edge Player, and the exit dialog pass under Android 16 target behavior. |
 
-All display overrides were temporary. The Razr returned to its physical 1080×2640 display and 420dpi density; the
-emulator returned to 1080×2400 and 420dpi after capture.
+### Maximum tested accessibility settings
+
+| Device/posture | Stress profile | Evidence | Result |
+| --- | --- | --- | --- |
+| API 35 phone AVD | 343×762dp effective compact window; Android font scale 2.0; 504dpi display density | Focused accessibility tests; `m23-large-text-player.png`; `m23-large-text-account.png`; live Player, More, Favorites, Queue, and Chat inspection | All five navigation destinations remain distinct and clickable; playback, growing station descriptions, account identity/status, list/error states, and age-gate inputs remain reachable without clipped text. |
+| API 35 Pixel Fold, open inner display | 701×584dp effective medium window; Android font scale 2.0; 504dpi display density | Focused medium-layout test and live inspection | The navigation rail, playback action, scrolling Player, and full station descriptions remain reachable in the short-wide inner-display layout. |
+| API 35 Pixel Fold, closed outer display | 1080×2092 physical outer display; Android font scale 2.0 | Live closed-state inspection | Compact controls, bottom navigation, and growing station cards remain reachable after the genuine fold-state transition. |
+| API 35 Pixel Tablet, native landscape | 1067×667dp effective expanded window; Android font scale 2.0; 384dpi display density | 39/39 connected tests and live Player/More inspection | The complete suite passes at the maximum tested text scale and enlarged display; two-pane controls, station descriptions, navigation semantics, and stacked account headers remain reachable. |
+
+All display and font overrides were temporary. The Razr retained its physical 1080×2640 display and 420dpi density;
+the final API 35 Tablet normal-settings regression used font scale 1.0 and its default 320dpi density.
 
 ## Automated coverage
 
@@ -41,10 +50,12 @@ emulator returned to 1080×2400 and 420dpi after capture.
 - Medium/tablet width selects the rail.
 - A live width change from compact to medium preserves the active Queue destination.
 - Short-wide layout keeps playback controls scroll-reachable.
-- 1.5× font scale keeps the compact Player's primary action reachable.
+- 2× font scale with an enlarged display keeps compact and medium navigation, playback actions, station descriptions,
+  and account identity/status content reachable.
 - Folded portrait keeps playback controls and the complete station carousel visible without scrolling.
-- The complete current-head 36-test connected suite passes on API 26, API 36, the API 35 16 KB runtime, Pixel Fold
-  open, and Pixel Tablet native landscape. The current More-menu preference and legal-disclosure paths also pass after
+- The current 39-test connected suite passes on the API 35 Pixel Tablet at both maximum tested accessibility settings
+  and restored normal settings. The previous complete 36-test current-head suite passes on API 26, API 36, the API 35
+  16 KB runtime, Pixel Fold open, and Pixel Tablet native landscape. The current More-menu preference and legal-disclosure paths also pass after
   live transitions to the Fold half-open and closed/outer-display states, and the disclosure path passes after rotating
   the Tablet to portrait.
 - A generated 1,500-track Favorites list remains browsable and supports stable play-state sorting; the preserved full
@@ -56,6 +67,8 @@ emulator returned to 1080×2400 and 420dpi after capture.
   viewport assumption so the Device preferences disclosure is scrolled into view before asserting visibility.
 - The API 36 connected suite now passes 36/36; the installed candidate reports target API 36 and the earlier cold-launch
   two-Back flow reaches the expected exit dialog.
+- Automated semantics verify descriptive click targets for all five navigation items even when enlarged text requires
+  labels to yield their limited navigation-bar space. A spoken TalkBack traversal remains a physical-device Alpha check.
 
 ## Foldable and OEM boundary
 

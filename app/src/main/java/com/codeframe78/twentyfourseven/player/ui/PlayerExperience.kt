@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -126,6 +127,7 @@ private fun CompactPlayerContent(
         Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
+            .testTag("compact_player_scroll")
             .padding(horizontal = 20.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -378,7 +380,7 @@ private fun StationSelector(
                 border = BorderStroke(if (selected) 2.dp else 1.dp, if (selected) palette.accent else MaterialTheme.colorScheme.outlineVariant),
                 modifier = Modifier
                     .width(152.dp)
-                    .height(86.dp)
+                    .heightIn(min = 86.dp)
                     .semantics {
                         this.selected = selected
                         role = Role.RadioButton
@@ -387,8 +389,8 @@ private fun StationSelector(
                     .testTag("station_card_${station.id.value}"),
             ) {
                 Column(
-                    Modifier.fillMaxSize().padding(14.dp),
-                    verticalArrangement = Arrangement.SpaceBetween,
+                    Modifier.padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     Text(
                         station.shortName,
@@ -403,6 +405,7 @@ private fun StationSelector(
                         style = MaterialTheme.typography.labelSmall,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.testTag("station_card_description_${station.id.value}"),
                     )
                 }
             }

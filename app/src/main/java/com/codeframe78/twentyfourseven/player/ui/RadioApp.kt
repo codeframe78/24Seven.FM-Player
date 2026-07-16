@@ -73,6 +73,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.semantics.contentDescription
@@ -114,9 +115,11 @@ import com.codeframe78.twentyfourseven.player.domain.RequestSuggestionMode
 import com.codeframe78.twentyfourseven.player.domain.RequestReadiness
 import com.codeframe78.twentyfourseven.player.domain.SongRequestLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.StartupStationMode
+import com.codeframe78.twentyfourseven.player.domain.Station
 import coil3.compose.AsyncImage
 import com.codeframe78.twentyfourseven.player.R
 import com.codeframe78.twentyfourseven.player.ui.theme.stationPalette
+import com.codeframe78.twentyfourseven.player.ui.theme.StationPalette
 
 private val navigationItems = listOf(
     NavigationItem(MainDestination.Player, "Player", Icons.Default.Radio),
@@ -222,6 +225,7 @@ private fun PhoneShell(
     communitySafetyActions: CommunitySafetyActions,
     onReviewTerms: () -> Unit,
 ) {
+    val showNavigationLabels = LocalDensity.current.fontScale <= 1.5f
     Scaffold(
         topBar = { StationTopBar(state, onSelectDestination) },
         bottomBar = {
@@ -234,8 +238,19 @@ private fun PhoneShell(
                         NavigationBarItem(
                             selected = state.destination == item.destination,
                             onClick = { onSelectDestination(item.destination) },
-                            icon = { Icon(item.icon, contentDescription = item.label) },
-                            label = { Text(item.label) },
+                            icon = { Icon(item.icon, contentDescription = null) },
+                            label = if (showNavigationLabels) {
+                                {
+                                    Text(
+                                        item.label,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                            } else {
+                                null
+                            },
+                            modifier = Modifier.semantics { contentDescription = item.label },
                         )
                     }
                 }
@@ -276,6 +291,7 @@ private fun TabletShell(
     communitySafetyActions: CommunitySafetyActions,
     onReviewTerms: () -> Unit,
 ) {
+    val showNavigationLabels = LocalDensity.current.fontScale <= 1.5f
     Row(Modifier.fillMaxSize()) {
         NavigationRail(Modifier.fillMaxHeight().testTag("tablet_navigation_rail")) {
             Spacer(Modifier.height(12.dp))
@@ -283,8 +299,19 @@ private fun TabletShell(
                 NavigationRailItem(
                     selected = state.destination == item.destination,
                     onClick = { onSelectDestination(item.destination) },
-                    icon = { Icon(item.icon, contentDescription = item.label) },
-                    label = { Text(item.label) },
+                    icon = { Icon(item.icon, contentDescription = null) },
+                    label = if (showNavigationLabels) {
+                        {
+                            Text(
+                                item.label,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                    } else {
+                        null
+                    },
+                    modifier = Modifier.semantics { contentDescription = item.label },
                 )
             }
         }
@@ -1693,28 +1720,19 @@ private fun AccountCard(
     var username by remember(station.id) { mutableStateOf("") }
     var password by remember(station.id) { mutableStateOf("") }
     var securityCode by remember(station.id) { mutableStateOf("") }
+    val useStackedHeader = LocalDensity.current.fontScale > 1.5f
     Card(modifier.fillMaxWidth().testTag("account_card_${station.id.value}")) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    Modifier
-                        .size(12.dp)
-                        .clip(CircleShape)
-                        .background(palette.accent)
-                        .semantics { contentDescription = "${station.name} station marker" },
-                )
-                Spacer(Modifier.width(10.dp))
-                Column(Modifier.weight(1f)) {
-                    Text(station.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                    if (isSelectedStation) {
-                        Text(
-                            "Current playback station",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
+            if (useStackedHeader) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AccountStationIdentity(station, palette, isSelectedStation, Modifier.fillMaxWidth())
+                    AccountStatusBadge(station.name, station.id, auth.status)
                 }
-                AccountStatusBadge(station.name, station.id, auth.status)
+            } else {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    AccountStationIdentity(station, palette, isSelectedStation, Modifier.weight(1f))
+                    AccountStatusBadge(station.name, station.id, auth.status)
+                }
             }
             if (!station.capabilities.supportsAuthentication) {
                 Text("Account sign in is unavailable for this station.")
@@ -1815,6 +1833,40 @@ private fun AccountCard(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AccountStationIdentity(
+    station: Station,
+    palette: StationPalette,
+    isSelectedStation: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Row(modifier, verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            Modifier
+                .size(12.dp)
+                .clip(CircleShape)
+                .background(palette.accent)
+                .semantics { contentDescription = "${station.name} station marker" },
+        )
+        Spacer(Modifier.width(10.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                station.name,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.testTag("account_station_name_${station.id.value}"),
+            )
+            if (isSelectedStation) {
+                Text(
+                    "Current playback station",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
         }
     }
