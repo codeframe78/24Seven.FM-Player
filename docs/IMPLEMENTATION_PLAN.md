@@ -1,6 +1,6 @@
 # Implementation plan
 
-Updated July 16, 2026 after adding M25 Chat Mention Notifications to the post-Alpha roadmap. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
+Updated July 16, 2026 after inserting M24–M27 feature milestones before the renumbered M28 Alpha publication gate. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
 
 ## Planning model
 
@@ -8,8 +8,9 @@ Updated July 16, 2026 after adding M25 Chat Mention Notifications to the post-Al
 - M17 is the remaining shared capability, using immutable Compose state, repository contracts, capability flags, and station-isolated protected sessions once its external blocker clears.
 - M18–M22 certify the shared implementation against each station. They are hardening and evidence gates, not station-specific application forks.
 - Each station's representative native login, protected restoration, isolation, authenticated surface, and logout flow is now a hard completion gate. Public/device evidence may be gathered early but does not advance the active station order.
-- M23 is an XL Play-testing readiness program divided into M23.1–M23.7 below; M23.3 and M23.7 are complete, and M24 remains the authorized publication gate.
-- M25 is a post-Alpha, discovery-first Chat Mention Notifications milestone. It requires an authorized server-side event source or push relay before implementation; continuous background Chat polling is not an acceptable substitute for push delivery.
+- M23 is an XL Play-testing readiness program divided into M23.1–M23.7 below; M23.3 and M23.7 are complete.
+- M24 Sleep Timer, M25 Cast / Audio-Output Selection, M26 In-App Diagnostics, and M27 Community Push Notifications are required pre-Alpha feature milestones. M28 is the renumbered authorized publication gate.
+- M27 requires an authorized server-side event source or push relay before implementation; continuous background Chat polling is not an acceptable substitute for push delivery. Chat-mention notifications are required before M28. New-Private-Message notifications use the same architecture and become a live completion gate if M17 is repaired and shipped before M28; otherwise they remain capability-gated with deferred M17.
 - Private Messages remains numbered as M17 but deferred pending legacy server repair and verified production limits. Inbox and Sent Box discovery worked, while New Message selection remained suspect and a profile-originated MorgHubby test appeared to submit without delivery; the site owner has the reproduced result.
 - Early M23 readiness artifacts are preserved. M23.1's current audit covers the production manifest, dependency/license inventory, explicit backup exclusions, 16 KB APK/ELF packaging, and a protected Ubuntu build from commit `2086ab9` whose AAB/APK signer matches the registered upload certificate. Version-code eligibility and Play delivery remain open. The Play developer account is approved; UGC reconciliation, Play review declarations, explicit rights evidence, release-device closure, and publication authorization remain dependencies.
 
@@ -103,19 +104,24 @@ The certification program would be XL if treated as one unit, so it is split int
 
 M18–M22 are complete while M17 remains deferred; every in-scope station capability now has passing evidence or an explicit certified unavailable/unverified boundary.
 
+## Pre-Alpha feature milestones
+
+| Milestone | Size | Estimate | Usage | Rationale and outcome | Primary confidence variable |
+| --- | --- | --- | --- | --- | --- |
+| M24 Sleep Timer | M | 3–5 hours | Medium | Add a service-owned countdown with accessible presets/custom duration, visible remaining time, adjust/cancel actions, deterministic expiry, MediaSession/notification consistency, and lifecycle/process behavior that never creates a second player | Exact expiry behavior across pause, station switches, service recreation, device sleep, and manual stop |
+| M25 Cast / Audio-Output Selection | L, discovery-first | 6–12 hours | High | Establish the permitted Android routing architecture, then implement supported Cast and/or dedicated route selection with explicit local/remote handoff, current-route state, disconnect recovery, audio-focus behavior, and capability-aware UI | Whether the five live streams and selected Cast/route stack support authorized, reliable remote playback without exposing private endpoints or adding an incompatible receiver dependency |
+| M26 In-App Diagnostics | M | 4–7 hours | Medium | Add an explicit user-generated diagnostic snapshot covering app/build, device/API, selected station, bounded playback/error category, network and route state, plus redacted copy/share. Never include credentials, cookies, CSRF values, Chat/PM/report bodies, signing data, private endpoints, or raw logs | Final support fields, redaction audit, share target behavior, and privacy/Data Safety classification |
+| M27 Community Push Notifications | L, discovery-first | 6–12 hours after delivery authorization | High | Add opt-in station-scoped push for exact signed-in-name Chat mentions and, when M17 is working, new Private Messages. Require safe identity matching, blocked-user filtering, per-event controls/channels, safety-gated deep links, duplicate suppression, privacy/Data Safety review, and battery/traffic validation | Authorized event source or privacy-compatible relay; identity and delivery semantics across all stations; M17 server repair for live PM alerts |
+
+M25 and M27 must begin with protocol and product research. M25 must not add a Cast or route-control surface until supported Android routing, station stream authorization, handoff behavior, and dependency implications are verified. The existing audio path is direct from Media3 to station-provided HTTP relays; route selection does not make that source encrypted, and an app-operated HTTPS proxy is out of scope without explicit rebroadcast authorization and a separate privacy, bandwidth, and reliability design. The current app has no developer-operated backend and observes Chat only while its screen is selected, so M27 cannot provide reliable push without a newly authorized event path. M27 must not introduce perpetual background polling, expose station sessions to a relay, or claim reliable delivery from periodic work. Any proposed relay must document payload minimization, authentication, retention, deletion, abuse protection, outage behavior, Chat/PM event separation, and Google Play Data Safety impact before architecture is approved.
+
 ## Distribution milestones
 
 | Milestone | Size | Estimate | Usage | Rationale and outcome | Primary confidence variable |
 | --- | --- | --- | --- | --- | --- |
 | M23 Play-Testing Readiness Program | XL umbrella split into M23.1–M23.7 | 3–6 focused days plus external input | Medium–High | Close release-artifact, UGC, API 36, Play-review, rights, device, and launcher-quality gates as separate reviewable workstreams | Owner/station responses and Play delivery results |
-| M24 Alpha publication completion | M | 1–3 hours after Console setup | Medium | Produce and verify the authorized signed Play bundle and internal/closed test release | Signing authorization, tester-track configuration, and release review outcome |
+| M28 Alpha publication completion | M | 1–3 hours after M23–M27 | Medium | Revalidate and publish the explicitly authorized signed bundle to internal/closed testing only after every required readiness and feature gate passes | Signing authorization, feature closure, tester-track configuration, and release review outcome |
 
 M23 is the sole XL umbrella and is already divided into seven reviewable S–L workstreams. Any future phase that exceeds L will likewise be divided before implementation.
 
-## Post-Alpha feature milestones
-
-| Milestone | Size | Estimate | Usage | Rationale and outcome | Primary confidence variable |
-| --- | --- | --- | --- | --- | --- |
-| M25 Chat Mention Notifications | L, discovery-first | 6–12 hours after delivery authorization | High | Add opt-in notifications when an exact signed-in display identity is mentioned in station Chat. Require station scope, safe mention tokenization, blocked-user filtering, per-station controls, a dedicated notification channel, deep linking to the originating Chat, duplicate suppression, privacy/Data Safety review, and battery/traffic validation | Availability and authorization of a server event source, webhook, or privacy-compatible push relay; identity and delivery semantics across all five stations |
-
-M25 must begin with protocol and product research. The current app has no developer-operated backend and observes Chat only while its screen is selected, so reliable mention delivery cannot be implemented as true push without a newly authorized event path. The milestone must not introduce perpetual background polling, expose station sessions to a relay, or claim reliable delivery from periodic work. Any proposed relay must document payload minimization, authentication, retention, deletion, abuse protection, outage behavior, and Google Play Data Safety impact before architecture is approved.
+M28 re-runs every release check affected by M24–M27, including unit/connected coverage, lint, release packaging/signing, privacy and Data Safety declarations, device/pre-launch evidence, reviewer instructions, and Play-delivered installation. The earlier M23 readiness evidence remains the baseline but is not treated as proof for a candidate changed by later feature milestones.

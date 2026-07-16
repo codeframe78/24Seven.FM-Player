@@ -78,7 +78,7 @@ section: overview
     <a href="{{ '/project/features/' | relative_url }}"><span>Product</span><strong>Explore every major Alpha capability</strong><small>Playback, station data, accounts, requests, community, and safeguards</small></a>
     <a href="{{ '/project/development/' | relative_url }}"><span>Engineering</span><strong>See how the native app is built</strong><small>Architecture, repository boundaries, workflow, and source map</small></a>
     <a href="{{ '/project/testing/' | relative_url }}"><span>Quality</span><strong>Read the validation evidence</strong><small>Automated tests, emulator matrix, Razr testing, and release checks</small></a>
-    <a href="{{ '/project/roadmap/' | relative_url }}"><span>Progress</span><strong>Trace the actual development journey</strong><small>23 achieved checkpoints, active M23 gates, M17, and M24</small></a>
+    <a href="{{ '/project/roadmap/' | relative_url }}"><span>Progress</span><strong>Trace the actual development journey</strong><small>23 achieved checkpoints, active M23 gates, deferred M17, and pre-Alpha M24–M28</small></a>
   </div>
 </section>
 
@@ -152,18 +152,15 @@ section: overview
       <h3>M23.2 / M23.4 / M23.5</h3>
       <p>UGC receipt reconciliation, Play declarations, credentials, and rights evidence await administrator input.</p>
     </article>
-    <article class="roadmap-card planned">
-      <p class="status"><span></span>Planned</p>
-      <h3>M24 · Alpha publication</h3>
-      <p>Authorized internal or closed Google Play testing follows completion of the remaining readiness gates.</p>
+    {% for item in site.data.project.pre_alpha %}
+    <article class="roadmap-card {{ item.state }}">
+      <p class="status"><span></span>{{ item.state_label }}</p>
+      <h3>{{ item.id }} · {{ item.name }}</h3>
+      <p>{{ item.summary }}</p>
     </article>
-    <article class="roadmap-card planned">
-      <p class="status"><span></span>Post-Alpha</p>
-      <h3>M25 · Mention notifications</h3>
-      <p>Opt-in station-scoped Chat mention notifications begin with discovery of an authorized true-push delivery path.</p>
-    </article>
+    {% endfor %}
   </div>
-  <p class="roadmap-note">Private Messages (M17) remain deliberately deferred and are not included in the shipping Alpha until the legacy server delivery failure is repaired and verified. M25 is planned after the M24 publication gate and will not replace true push with continuous background Chat polling.</p>
+  <p class="roadmap-note">Private Messages (M17) remain deliberately deferred until the legacy server delivery failure is repaired and verified. M27 includes the notification architecture for new Private Messages, but live PM alerts activate only when M17 works; Chat mention notifications remain a pre-Alpha requirement, and continuous background polling will not be presented as push.</p>
 </section>
 
 <section class="cta" aria-labelledby="cta-title">
