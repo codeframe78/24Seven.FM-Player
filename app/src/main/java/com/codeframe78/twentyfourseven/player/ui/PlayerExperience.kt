@@ -68,6 +68,9 @@ import com.codeframe78.twentyfourseven.player.ui.theme.StationPalette
 import com.codeframe78.twentyfourseven.player.ui.theme.stationPalette
 
 private val ExpandedPlayerBreakpoint = 840.dp
+private val CompactPlayerReservedHeight = 420.dp
+private val MinimumCompactArtworkSize = 140.dp
+private val MaximumCompactArtworkSize = 300.dp
 
 @Composable
 internal fun AdaptivePlayerScreen(
@@ -97,7 +100,13 @@ internal fun AdaptivePlayerScreen(
             ExpandedPlayerContent(state, palette, onSelectStation, onPlay, onPause, onStop)
         } else {
             val availableArtworkWidth = maxWidth - 40.dp
-            val artworkSize = if (availableArtworkWidth < 300.dp) availableArtworkWidth else 300.dp
+            val availableArtworkHeight = (maxHeight - CompactPlayerReservedHeight)
+                .coerceIn(MinimumCompactArtworkSize, MaximumCompactArtworkSize)
+            val artworkSize = minOf(
+                availableArtworkWidth,
+                availableArtworkHeight,
+                MaximumCompactArtworkSize,
+            )
             CompactPlayerContent(state, palette, artworkSize, onSelectStation, onPlay, onPause, onStop)
         }
     }
@@ -119,14 +128,13 @@ private fun CompactPlayerContent(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         NowPlayingArtwork(state, palette, Modifier.size(artworkSize))
         NowPlayingDetails(state, palette)
         PrimaryPlayerControls(state, onSelectStation, onPlay, onPause)
         StationSelector(state, onSelectStation)
         PlaybackDetails(state, onStop)
-        Spacer(Modifier.height(112.dp))
     }
 }
 

@@ -27,6 +27,7 @@ internal sealed interface RequestSubmissionResult {
 
 internal interface SongRequestRemoteDataSource {
     suspend fun search(stationId: StationId, query: String, field: RequestSearchField): List<RequestSearchResult>
+    suspend fun loadArtistAlbums(stationId: StationId, artistName: String): List<RequestSearchResult>
     suspend fun suggest(stationId: StationId, mode: RequestSuggestionMode): RequestAlbum
     suspend fun loadAlbum(stationId: StationId, albumId: String): RequestAlbum
     suspend fun submit(stationId: StationId, track: RequestableTrack, message: String): RequestSubmissionResult
@@ -47,6 +48,18 @@ internal class StationSongRequestRemoteDataSource(
         val origin = origin(stationId)
         val path = "/modules.php?name=Requests&searchfor=1&searchpgstart=1" +
             "&searchby=${encode(field.wireValue)}&searchtext=${encode(query)}&search=Search"
+        parser.parseSearch(request(stationId, URI(origin).resolve(path), authenticated = false).html, origin)
+    }
+
+    override suspend fun loadArtistAlbums(
+        stationId: StationId,
+        artistName: String,
+    ): List<RequestSearchResult> = withContext(Dispatchers.IO) {
+        require(artistName.isNotBlank() && artistName.length <= MAX_ARTIST_NAME_LENGTH) {
+            "Invalid artist name"
+        }
+        val origin = origin(stationId)
+        val path = "/modules.php?name=Requests&postartistsearch=true&artist=${encode(artistName)}"
         parser.parseSearch(request(stationId, URI(origin).resolve(path), authenticated = false).html, origin)
     }
 
@@ -372,6 +385,7 @@ internal class StationSongRequestRemoteDataSource(
         const val READ_TIMEOUT_MILLIS = 60_000
         const val MAX_RESPONSE_CHARACTERS = 1_000_000
         const val MAX_REDIRECTS = 5
+        const val MAX_ARTIST_NAME_LENGTH = 200
         const val MAX_NOTICE_CHARACTERS = 240
         val SAFE_ALBUM_ID = Regex("[A-Za-z0-9_-]{1,64}")
         val NUMERIC_ID = Regex("\\d{1,20}")

@@ -1,6 +1,7 @@
 package com.codeframe78.twentyfourseven.player.data
 
 import com.codeframe78.twentyfourseven.player.domain.RequestSearchResult
+import com.codeframe78.twentyfourseven.player.domain.RequestSearchTarget
 import com.codeframe78.twentyfourseven.player.domain.RequestableTrack
 import com.codeframe78.twentyfourseven.player.domain.TrackRequestAvailability
 import com.codeframe78.twentyfourseven.player.domain.classifyStationRequestAvailability
@@ -18,16 +19,43 @@ internal class SongRequestPageParser {
                 uri.scheme == "https" && uri.host.equals(expected.host, true) &&
                     queryValue(uri, "name") == "Album" && !queryValue(uri, "asin").isNullOrBlank()
             }
-            if (albumLinks.size < 2) return@mapNotNull null
             val albumIds = albumLinks.mapNotNull { queryValue(URI(it.absUrl("href")), "asin") }.distinct()
-            if (albumIds.size != 1) return@mapNotNull null
-            val albumId = albumIds.single()
-            val title = albumLinks[0].text().clean()
-            val album = albumLinks[1].text().clean()
-            if (title.isBlank() || album.isBlank()) return@mapNotNull null
-            val year = row.select("td").map { it.text().clean() }.lastOrNull { it.matches(YEAR) }
-            RequestSearchResult(albumId, title, album, year)
-        }.distinctBy { listOf(it.albumId, it.trackTitle, it.albumTitle) }.take(MAX_RESULTS)
+            if (albumIds.size == 1 && albumLinks.isNotEmpty()) {
+                val albumId = albumIds.single()
+                val firstTitle = albumLinks.first().text().clean()
+                val albumTitle = albumLinks.getOrNull(1)?.text()?.clean()
+                if (firstTitle.isBlank() || albumLinks.size > 1 && albumTitle.isNullOrBlank()) {
+                    return@mapNotNull null
+                }
+                val year = row.select("td").map { it.text().clean() }.lastOrNull { it.matches(YEAR) }
+                return@mapNotNull RequestSearchResult(
+                    target = RequestSearchTarget.Album(albumId),
+                    title = firstTitle,
+                    subtitle = albumTitle,
+                    year = year,
+                )
+            }
+
+            val artistLink = row.select("a[href]").firstOrNull { link ->
+                val uri = runCatching { URI(link.absUrl("href")) }.getOrNull() ?: return@firstOrNull false
+                uri.scheme == "https" && uri.host.equals(expected.host, true) &&
+                    queryValue(uri, "name") == "Requests" &&
+                    queryValue(uri, "postartistsearch").equals("true", true) &&
+                    !queryValue(uri, "artist").isNullOrBlank()
+            } ?: return@mapNotNull null
+            val artistUri = URI(artistLink.absUrl("href"))
+            val artistName = queryValue(artistUri, "artist")?.clean()?.takeIf { it.length <= MAX_ARTIST_NAME_LENGTH }
+                ?: return@mapNotNull null
+            val displayName = artistLink.text().clean()
+            if (displayName.isBlank()) return@mapNotNull null
+            val genre = row.select("td").map { it.text().clean() }
+                .lastOrNull { it.isNotBlank() && it != displayName }
+            RequestSearchResult(
+                target = RequestSearchTarget.Artist(artistName),
+                title = displayName,
+                subtitle = genre,
+            )
+        }.distinctBy { listOf(it.target, it.title, it.subtitle) }.take(MAX_RESULTS)
     }
 
     fun parseAlbum(html: String, origin: String, expectedAlbumId: String): RequestAlbum {
@@ -151,5 +179,6 @@ internal class SongRequestPageParser {
         val TRAILING_DURATION = Regex("\\s*\\(\\d{1,2}:\\d{2}\\)\\s*$")
         const val MAX_RESULTS = 100
         const val MAX_TRACKS = 250
+        const val MAX_ARTIST_NAME_LENGTH = 200
     }
 }

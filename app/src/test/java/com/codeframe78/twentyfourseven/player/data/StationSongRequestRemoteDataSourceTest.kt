@@ -1,5 +1,7 @@
 package com.codeframe78.twentyfourseven.player.data
 
+import com.codeframe78.twentyfourseven.player.domain.RequestSearchField
+import com.codeframe78.twentyfourseven.player.domain.RequestSearchTarget
 import com.codeframe78.twentyfourseven.player.domain.RequestableTrack
 import com.codeframe78.twentyfourseven.player.domain.RequestSuggestionMode
 import com.codeframe78.twentyfourseven.player.domain.StationId
@@ -105,6 +107,48 @@ class StationSongRequestRemoteDataSourceTest {
         assertTrue(connections[0].url.query.contains("random=1"))
         assertTrue(connections[1].url.query.contains("randomleast=1"))
         assertTrue(connections.all { it.url.query.contains("searchpgstart=1") })
+    }
+
+    @Test
+    fun `all search modes preserve station result shapes and artist refinements`() = runTest {
+        val connections = mutableListOf<FakeConnection>()
+        val albumRow = """
+            <table><tr><td><a href="/modules.php?name=Album&amp;asin=ALBUM_1">Example Album</a></td><td>2004</td></tr></table>
+        """.trimIndent()
+        val artistRow = """
+            <table><tr><td><a href="/modules.php?name=Requests&amp;postartistsearch=true&amp;artist=Example+Composer">Example Composer</a></td><td>Soundtrack</td></tr></table>
+        """.trimIndent()
+        val remote = StationSongRequestRemoteDataSource { uri ->
+            val response = when {
+                uri.rawQuery.orEmpty().contains("postartistsearch=true") -> albumRow
+                uri.rawQuery.orEmpty().contains("searchby=artist") -> artistRow
+                uri.rawQuery.orEmpty().contains("searchby=genre") -> artistRow
+                else -> albumRow
+            }
+            FakeConnection(uri.toURL(), response).also(connections::add)
+        }
+
+        val results = RequestSearchField.entries.associateWith { field ->
+            remote.search(stationId, "Example", field).single()
+        }
+        val artistAlbums = remote.loadArtistAlbums(stationId, "Example Composer")
+
+        assertEquals(RequestSearchTarget.Album("ALBUM_1"), results.getValue(RequestSearchField.Title).target)
+        assertEquals(RequestSearchTarget.Album("ALBUM_1"), results.getValue(RequestSearchField.Album).target)
+        assertEquals(
+            RequestSearchTarget.Artist("Example Composer"),
+            results.getValue(RequestSearchField.Artist).target,
+        )
+        assertEquals(
+            RequestSearchTarget.Artist("Example Composer"),
+            results.getValue(RequestSearchField.Genre).target,
+        )
+        assertEquals(RequestSearchTarget.Album("ALBUM_1"), artistAlbums.single().target)
+        RequestSearchField.entries.forEachIndexed { index, field ->
+            assertTrue(connections[index].url.query.contains("searchby=${field.wireValue}"))
+        }
+        assertTrue(connections.last().url.query.contains("postartistsearch=true"))
+        assertTrue(connections.last().url.query.contains("artist=Example+Composer"))
     }
 
     @Test

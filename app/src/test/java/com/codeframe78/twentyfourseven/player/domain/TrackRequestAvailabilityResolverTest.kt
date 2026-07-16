@@ -100,6 +100,34 @@ class TrackRequestAvailabilityResolverTest {
         )
     }
 
+    @Test
+    fun `batch resolution handles a full favorite list and preserves input order`() {
+        val candidates = (1..1_500).map { position ->
+            TrackRequestCandidate(
+                RequestTrackIdentity(
+                    songId = position.toString(),
+                    albumId = "ALBUM_$position",
+                    title = "Favorite $position",
+                    artist = "Artist $position",
+                    albumTitle = "Album $position",
+                ),
+                available,
+            )
+        }
+        val queue = readyQueue(
+            upcoming = listOf(QueueTrack(1, "Favorite 750", songId = "750")),
+            recentlyPlayed = listOf(HistoryTrack("Favorite 1250", songId = "1250")),
+        )
+
+        val resolved = TrackRequestAvailabilityResolver.resolveAll(stationId, candidates, queue)
+
+        assertEquals(1_500, resolved.size)
+        assertEquals(TrackRequestStatus.Available, resolved.first().status)
+        assertEquals(TrackRequestStatus.InCurrentQueue, resolved[749].status)
+        assertEquals(TrackRequestStatus.RecentlyPlayed, resolved[1_249].status)
+        assertEquals(TrackRequestStatus.Available, resolved.last().status)
+    }
+
     private fun readyQueue(
         upcoming: List<QueueTrack> = emptyList(),
         recentlyPlayed: List<HistoryTrack> = emptyList(),

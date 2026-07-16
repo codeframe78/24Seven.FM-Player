@@ -1,5 +1,7 @@
 package com.codeframe78.twentyfourseven.player.playback
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.net.Uri
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
@@ -14,6 +16,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.extractor.metadata.icy.IcyInfo
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
+import com.codeframe78.twentyfourseven.player.MainActivity
 import com.codeframe78.twentyfourseven.player.RadioApplication
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingPublisher
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingArtworkRepository
@@ -102,7 +105,17 @@ class RadioPlaybackService : MediaSessionService() {
             .build()
         player.addListener(fallbackListener)
         player.addListener(metadataListener)
-        mediaSession = MediaSession.Builder(this, sessionPlayer).build()
+        val sessionActivity = PendingIntent.getActivity(
+            this,
+            0,
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+        mediaSession = MediaSession.Builder(this, sessionPlayer)
+            .setSessionActivity(sessionActivity)
+            .build()
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo) = mediaSession
@@ -203,4 +216,3 @@ internal fun MediaMetadata.withNowPlayingTitle(displayTitle: String): MediaMetad
 
 internal fun shouldClearNowPlaying(activeMediaId: String?, incomingMediaId: String?): Boolean =
     activeMediaId == null || incomingMediaId == null || activeMediaId != incomingMediaId
-

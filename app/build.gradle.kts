@@ -32,6 +32,7 @@ android {
         versionCode = 2
         versionName = "0.1.0-alpha01"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["appLabel"] = "24Seven.FM Player"
     }
     buildFeatures { compose = true }
     signingConfigs {
@@ -45,6 +46,11 @@ android {
         }
     }
     buildTypes {
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            manifestPlaceholders["appLabel"] = "24Seven.FM Player (Debug)"
+        }
         getByName("release") {
             if (hasCompleteUploadSigning) {
                 signingConfig = signingConfigs.getByName("playUpload")
@@ -93,4 +99,3 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
-

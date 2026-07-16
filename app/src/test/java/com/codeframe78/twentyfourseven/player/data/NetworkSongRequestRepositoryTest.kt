@@ -2,6 +2,7 @@ package com.codeframe78.twentyfourseven.player.data
 
 import com.codeframe78.twentyfourseven.player.domain.RequestSearchField
 import com.codeframe78.twentyfourseven.player.domain.RequestSearchResult
+import com.codeframe78.twentyfourseven.player.domain.RequestSearchTarget
 import com.codeframe78.twentyfourseven.player.domain.RequestSuggestionMode
 import com.codeframe78.twentyfourseven.player.domain.RequestableTrack
 import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
@@ -28,9 +29,9 @@ class NetworkSongRequestRepositoryTest {
         assertEquals(0, remote.searchCalls)
         repository.search(stationId, "Example", RequestSearchField.Title)
         assertEquals(1, remote.searchCalls)
-        assertEquals("Example track", repository.observeRequests(stationId).first().searchResults.single().trackTitle)
+        assertEquals("Example track", repository.observeRequests(stationId).first().searchResults.single().title)
 
-        repository.openAlbum(stationId, "ALBUM_1")
+        repository.openSearchResult(stationId, albumTarget)
         assertEquals(1, remote.albumCalls)
         val albumState = repository.observeRequests(stationId).first()
         assertEquals("Requestable track", albumState.tracks.single().title)
@@ -38,10 +39,25 @@ class NetworkSongRequestRepositoryTest {
     }
 
     @Test
+    fun `artist refinement loads albums only after selection`() = runTest {
+        val remote = FakeRemote()
+        val repository = NetworkSongRequestRepository(remote)
+
+        assertEquals(0, remote.artistAlbumCalls)
+        repository.openSearchResult(stationId, RequestSearchTarget.Artist("Example Composer"))
+
+        assertEquals(1, remote.artistAlbumCalls)
+        assertEquals("Example Composer", remote.lastArtistName)
+        val state = repository.observeRequests(stationId).first()
+        assertEquals(albumTarget, state.searchResults.single().target)
+        assertEquals(emptyList<RequestableTrack>(), state.tracks)
+    }
+
+    @Test
     fun `submission requires preparation and is never retried`() = runTest {
         val remote = FakeRemote()
         val repository = NetworkSongRequestRepository(remote)
-        repository.openAlbum(stationId, "ALBUM_1")
+        repository.openSearchResult(stationId, albumTarget)
 
         repository.confirmRequest(stationId, readyQueue)
         assertEquals(0, remote.submitCalls)
@@ -78,7 +94,7 @@ class NetworkSongRequestRepositoryTest {
     fun `indeterminate confirmation suppresses retry and directs user to queue`() = runTest {
         val remote = FakeRemote().apply { submitFailure = IOException("Station response was too large") }
         val repository = NetworkSongRequestRepository(remote)
-        repository.openAlbum(stationId, "ALBUM_1")
+        repository.openSearchResult(stationId, albumTarget)
         repository.prepareRequest(stationId, "12345")
 
         repository.confirmRequest(stationId, readyQueue)
@@ -100,7 +116,7 @@ class NetworkSongRequestRepositoryTest {
     fun `fresh queue validation blocks a queued track without submitting`() = runTest {
         val remote = FakeRemote()
         val repository = NetworkSongRequestRepository(remote)
-        repository.openAlbum(stationId, "ALBUM_1")
+        repository.openSearchResult(stationId, albumTarget)
         repository.prepareRequest(stationId, "12345")
         val queue = readyQueue.copy(
             upcoming = listOf(
@@ -126,7 +142,7 @@ class NetworkSongRequestRepositoryTest {
     fun `missing fresh queue fails closed without submitting`() = runTest {
         val remote = FakeRemote()
         val repository = NetworkSongRequestRepository(remote)
-        repository.openAlbum(stationId, "ALBUM_1")
+        repository.openSearchResult(stationId, albumTarget)
         repository.prepareRequest(stationId, "12345")
 
         repository.confirmRequest(stationId, QueueState(stationId, QueueLoadStatus.Error))
@@ -139,7 +155,7 @@ class NetworkSongRequestRepositoryTest {
     fun `track leaving queue remains blocked when fresh station data says recently played`() = runTest {
         val remote = FakeRemote()
         val repository = NetworkSongRequestRepository(remote)
-        repository.openAlbum(stationId, "ALBUM_1")
+        repository.openSearchResult(stationId, albumTarget)
         repository.prepareRequest(stationId, "12345")
         remote.trackAvailability = TrackRequestAvailability(
             TrackRequestStatus.RecentlyPlayed,
@@ -158,16 +174,40 @@ class NetworkSongRequestRepositoryTest {
     private class FakeRemote : SongRequestRemoteDataSource {
         var searchCalls = 0
         var albumCalls = 0
+        var artistAlbumCalls = 0
         var submitCalls = 0
         var suggestCalls = 0
         var submitFailure: Throwable? = null
         var lastMessage: String? = null
+        var lastArtistName: String? = null
         var lastSuggestionMode: RequestSuggestionMode? = null
         var trackAvailability = TrackRequestAvailability.available()
 
         override suspend fun search(stationId: StationId, query: String, field: RequestSearchField): List<RequestSearchResult> {
             searchCalls++
-            return listOf(RequestSearchResult("ALBUM_1", "Example track", "Example album", "2004"))
+            return listOf(
+                RequestSearchResult(
+                    target = albumTarget,
+                    title = "Example track",
+                    subtitle = "Example album",
+                    year = "2004",
+                ),
+            )
+        }
+
+        override suspend fun loadArtistAlbums(
+            stationId: StationId,
+            artistName: String,
+        ): List<RequestSearchResult> {
+            artistAlbumCalls++
+            lastArtistName = artistName
+            return listOf(
+                RequestSearchResult(
+                    target = albumTarget,
+                    title = "Example album",
+                    year = "2004",
+                ),
+            )
         }
 
         override suspend fun loadAlbum(stationId: StationId, albumId: String): RequestAlbum {
@@ -212,6 +252,7 @@ class NetworkSongRequestRepositoryTest {
 
     private companion object {
         val stationId = StationId("sst")
+        val albumTarget = RequestSearchTarget.Album("ALBUM_1")
         val readyQueue = QueueState(stationId, status = QueueLoadStatus.Ready)
     }
 }

@@ -36,58 +36,92 @@ data class RequestTrackIdentity(
     val albumTitle: String? = null,
 )
 
+data class TrackRequestCandidate(
+    val identity: RequestTrackIdentity,
+    val stationAvailability: TrackRequestAvailability,
+)
+
 object TrackRequestAvailabilityResolver {
     fun resolve(
         stationId: StationId,
         identity: RequestTrackIdentity,
         stationAvailability: TrackRequestAvailability,
         queue: QueueState,
-    ): TrackRequestAvailability {
+    ): TrackRequestAvailability = resolveAll(
+        stationId,
+        listOf(TrackRequestCandidate(identity, stationAvailability)),
+        queue,
+    ).single()
+
+    fun resolveAll(
+        stationId: StationId,
+        candidates: List<TrackRequestCandidate>,
+        queue: QueueState,
+    ): List<TrackRequestAvailability> {
         if (queue.stationId != stationId) {
-            return TrackRequestAvailability(
-                TrackRequestStatus.StationUnavailable,
-                "Request status was not available for the selected station.",
-            )
-        }
-        if (queue.status != QueueLoadStatus.Ready || queue.isStale) {
-            return if (stationAvailability.status == TrackRequestStatus.Available) {
+            return candidates.map {
                 TrackRequestAvailability(
-                    TrackRequestStatus.RequestsUnavailable,
-                    if (queue.isStale) {
-                        "Cached Queue data is stale and must be refreshed before this track can be requested."
-                    } else {
-                        "Queue status must be refreshed before this track can be requested."
-                    },
+                    TrackRequestStatus.StationUnavailable,
+                    "Request status was not available for the selected station.",
                 )
-            } else {
-                stationAvailability
             }
         }
-        queue.upcoming.firstOrNull { matches(identity, it.identity()) }?.let {
-            return TrackRequestAvailability(
-                TrackRequestStatus.InCurrentQueue,
-                "This track is currently in the station queue.",
-            )
+        if (queue.status != QueueLoadStatus.Ready || queue.isStale) {
+            return candidates.map { candidate ->
+                if (candidate.stationAvailability.status == TrackRequestStatus.Available) {
+                    TrackRequestAvailability(
+                        TrackRequestStatus.RequestsUnavailable,
+                        if (queue.isStale) {
+                            "Cached Queue data is stale and must be refreshed before this track can be requested."
+                        } else {
+                            "Queue status must be refreshed before this track can be requested."
+                        },
+                    )
+                } else {
+                    candidate.stationAvailability
+                }
+            }
         }
-        if (queue.upcoming.any { sameText(identity.title, it.displayTitle) }) {
-            return TrackRequestAvailability(
-                TrackRequestStatus.RequestsUnavailable,
-                "A queued track shares this title, but its metadata could not be matched safely.",
-            )
+
+        val upcoming = RequestIdentityIndex(queue.upcoming.map { it.identity() })
+        val recentlyPlayed = RequestIdentityIndex(queue.recentlyPlayed.map { it.identity() })
+        return candidates.map { candidate ->
+            when {
+                upcoming.matches(candidate.identity) -> TrackRequestAvailability(
+                    TrackRequestStatus.InCurrentQueue,
+                    "This track is currently in the station queue.",
+                )
+                upcoming.sharesTitle(candidate.identity) -> TrackRequestAvailability(
+                    TrackRequestStatus.RequestsUnavailable,
+                    "A queued track shares this title, but its metadata could not be matched safely.",
+                )
+                recentlyPlayed.matches(candidate.identity) -> TrackRequestAvailability(
+                    TrackRequestStatus.RecentlyPlayed,
+                    candidate.stationAvailability.detail
+                        ?: "This track appears in the station's recently played list.",
+                )
+                recentlyPlayed.sharesTitle(candidate.identity) -> TrackRequestAvailability(
+                    TrackRequestStatus.RequestsUnavailable,
+                    "A recently played track shares this title, but its metadata could not be matched safely.",
+                )
+                else -> candidate.stationAvailability
+            }
         }
-        queue.recentlyPlayed.firstOrNull { matches(identity, it.identity()) }?.let {
-            return TrackRequestAvailability(
-                TrackRequestStatus.RecentlyPlayed,
-                stationAvailability.detail ?: "This track appears in the station's recently played list.",
-            )
+    }
+
+    private class RequestIdentityIndex(identities: List<RequestTrackIdentity>) {
+        private val songIds = identities.mapNotNullTo(HashSet()) { it.songId?.takeIf(String::isNotBlank) }
+        private val identitiesByTitle = identities.groupBy { normalizeText(it.title) }
+
+        fun matches(candidate: RequestTrackIdentity): Boolean {
+            if (candidate.songId?.takeIf(String::isNotBlank) in songIds) return true
+            return candidatesWithSameTitle(candidate).any { observed -> matches(candidate, observed) }
         }
-        if (queue.recentlyPlayed.any { sameText(identity.title, it.displayTitle) }) {
-            return TrackRequestAvailability(
-                TrackRequestStatus.RequestsUnavailable,
-                "A recently played track shares this title, but its metadata could not be matched safely.",
-            )
-        }
-        return stationAvailability
+
+        fun sharesTitle(candidate: RequestTrackIdentity): Boolean = candidatesWithSameTitle(candidate).isNotEmpty()
+
+        private fun candidatesWithSameTitle(candidate: RequestTrackIdentity): List<RequestTrackIdentity> =
+            identitiesByTitle[normalizeText(candidate.title)].orEmpty()
     }
 
     fun matches(candidate: RequestTrackIdentity, observed: RequestTrackIdentity): Boolean {

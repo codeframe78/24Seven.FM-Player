@@ -27,6 +27,7 @@ class RadioPlaybackServiceTest {
 
         connectController().useOnMainThread { controller ->
             val commands = controller.availableCommands
+            assertNotNull(controller.sessionActivity)
             assertTrue(commands.contains(Player.COMMAND_PLAY_PAUSE))
             assertFalse(commands.contains(Player.COMMAND_SEEK_TO_NEXT))
             assertFalse(commands.contains(Player.COMMAND_SEEK_TO_NEXT_MEDIA_ITEM))

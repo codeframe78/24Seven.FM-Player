@@ -201,6 +201,33 @@ class RadioAppTest {
     }
 
     @Test
+    fun foldedPortraitShowsPlayerControlsAndStationCarouselWithoutScrolling() {
+        composeRule.setContent {
+            MaterialTheme {
+                Box(Modifier.requiredSize(412.dp, 731.dp)) {
+                    RadioApp(
+                        state = sampleState().copy(
+                            nowPlaying = NowPlayingState(
+                                station.id,
+                                "James Horner - Legends Of The Fall - The Ludlows (5:35)",
+                            ),
+                        ),
+                        onSelectStation = {},
+                        onSelectDestination = {},
+                        onPlay = {},
+                        onPause = {},
+                        onStop = {},
+                        onRefreshQueue = {},
+                    )
+                }
+            }
+        }
+
+        composeRule.onNodeWithTag("primary_play_pause").assertIsDisplayed()
+        composeRule.onNodeWithTag("station_selector").assertIsDisplayed()
+    }
+
+    @Test
     fun nowPlayingArtworkRendersOnPlayerAndMiniPlayer() {
         composeRule.setContent {
             var state by remember {
@@ -456,6 +483,56 @@ class RadioAppTest {
             assertEquals(listOf(StationId("adagio")), refreshed)
             assertEquals(listOf(StationId("entranced")), signedIn)
         }
+    }
+
+    @Test
+    fun compactMorePrioritizesSelectedAccountAndTogglesDisclosures() {
+        val sst = accountStation("sst", "StreamingSoundtracks.com", "SST")
+        val adagio = accountStation("adagio", "Adagio.FM", "Adagio")
+        val accounts = listOf(
+            StationAccountUiState(sst, AuthState(sst.id)),
+            StationAccountUiState(adagio, AuthState(adagio.id)),
+        )
+
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(
+                        destination = MainDestination.More,
+                        stations = listOf(sst, adagio),
+                        selectedStation = adagio,
+                        auth = accounts.last().auth,
+                        accounts = accounts,
+                    ),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                )
+            }
+        }
+
+        composeRule.onAllNodesWithTag("account_card_adagio").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("account_card_sst").assertCountEquals(0)
+
+        composeRule.onNodeWithContentDescription("Song requests, collapsed").assertExists()
+        composeRule.onNodeWithText("Song requests have not been verified for this station.")
+            .assertDoesNotExist()
+        composeRule.onNodeWithTag("more_song_requests").performScrollTo().performClick()
+        composeRule.onNodeWithContentDescription("Song requests, expanded").assertExists()
+        composeRule.onNodeWithText("Song requests have not been verified for this station.")
+            .assertIsDisplayed()
+        composeRule.onNodeWithTag("more_song_requests").performClick()
+        composeRule.onNodeWithContentDescription("Song requests, collapsed").assertExists()
+        composeRule.onNodeWithText("Song requests have not been verified for this station.")
+            .assertDoesNotExist()
+
+        composeRule.onNodeWithTag("toggle_other_station_accounts").performScrollTo().performClick()
+        composeRule.onAllNodesWithTag("account_card_sst").assertCountEquals(1)
+        composeRule.onNodeWithTag("toggle_other_station_accounts").performScrollTo().performClick()
+        composeRule.onAllNodesWithTag("account_card_sst").assertCountEquals(0)
     }
 
     @Test
@@ -730,6 +807,9 @@ class RadioAppTest {
         }
 
         composeRule.onNodeWithTag("more_song_requests").performScrollTo().performClick()
+        composeRule.onNodeWithTag("library_track_sort").performScrollTo().performClick()
+        composeRule.onNodeWithText("Play state").performClick()
+        composeRule.onNodeWithText("Sort: Play state").assertIsDisplayed()
         composeRule.onAllNodesWithText("Request Now").assertCountEquals(2)[1].performScrollTo().performClick()
         composeRule.onNodeWithText("Request this track?").assertIsDisplayed()
         composeRule.onNodeWithText("Message (optional)").performTextInput("Enjoy this one")
@@ -819,6 +899,59 @@ class RadioAppTest {
         composeRule.onAllNodesWithText("Request Now").assertCountEquals(2)[1].performClick()
         composeRule.onNodeWithText("Request this track?").assertIsDisplayed()
         composeRule.runOnIdle { assertEquals(listOf(available), prepared) }
+    }
+
+    @Test
+    fun fullVipFavoritesListRemainsBrowsableAndOffersPlayStateSorting() {
+        val tracks = (1..1_500).map { position ->
+            val status = when {
+                position % 10 == 0 -> TrackRequestStatus.Available
+                position % 3 == 0 -> TrackRequestStatus.RecentlyPlayed
+                else -> TrackRequestStatus.RequestsUnavailable
+            }
+            FavoriteTrack(
+                position = position,
+                title = "Favorite $position",
+                album = "Album $position",
+                artist = "Artist $position",
+                availability = TrackRequestAvailability(status),
+            )
+        }
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(
+                        destination = MainDestination.Favorites,
+                        selectedStation = station.copy(
+                            capabilities = StationCapabilities(
+                                supportsAuthentication = true,
+                                supportsFavorites = true,
+                                supportsRequests = true,
+                            ),
+                        ),
+                        auth = AuthState(station.id, AuthStatus.SignedIn, displayName = "VIP Listener"),
+                        favorites = FavoriteTracksState(
+                            station.id,
+                            FavoriteTracksLoadStatus.Ready,
+                            tracks = tracks,
+                        ),
+                        requests = SongRequestState(station.id, SongRequestLoadStatus.Ready),
+                    ),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("1500 tracks").assertIsDisplayed()
+        composeRule.onNodeWithTag("favorite_track_sort").performScrollTo().performClick()
+        composeRule.onNodeWithText("Play state").performClick()
+        composeRule.onNodeWithText("Sort: Play state").assertIsDisplayed()
+        composeRule.onNodeWithText("Favorite 10").performScrollTo().assertIsDisplayed()
     }
 
     private fun sampleState() = MainUiState(

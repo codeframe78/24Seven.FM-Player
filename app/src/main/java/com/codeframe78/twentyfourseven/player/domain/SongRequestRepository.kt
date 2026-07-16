@@ -18,10 +18,15 @@ enum class SongRequestLoadStatus { Idle, Loading, Ready, Submitting, Error }
 
 const val MAX_REQUEST_MESSAGE_CHARACTERS = 80
 
+sealed interface RequestSearchTarget {
+    data class Album(val albumId: String) : RequestSearchTarget
+    data class Artist(val artistName: String) : RequestSearchTarget
+}
+
 data class RequestSearchResult(
-    val albumId: String,
-    val trackTitle: String,
-    val albumTitle: String,
+    val target: RequestSearchTarget,
+    val title: String,
+    val subtitle: String? = null,
     val year: String? = null,
 )
 
@@ -65,7 +70,7 @@ interface SongRequestRepository {
     fun observeRequests(stationId: StationId): Flow<SongRequestState>
     suspend fun search(stationId: StationId, query: String, field: RequestSearchField)
     suspend fun suggest(stationId: StationId, mode: RequestSuggestionMode)
-    suspend fun openAlbum(stationId: StationId, albumId: String)
+    suspend fun openSearchResult(stationId: StationId, target: RequestSearchTarget)
     suspend fun prepareRequest(stationId: StationId, songId: String)
     suspend fun prepareRequest(stationId: StationId, track: RequestableTrack)
     suspend fun cancelRequest(stationId: StationId)

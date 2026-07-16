@@ -18,6 +18,7 @@ import com.codeframe78.twentyfourseven.player.domain.AuthStatus
 import com.codeframe78.twentyfourseven.player.domain.ChatRepository
 import com.codeframe78.twentyfourseven.player.domain.ChatState
 import com.codeframe78.twentyfourseven.player.domain.RequestSearchField
+import com.codeframe78.twentyfourseven.player.domain.RequestSearchTarget
 import com.codeframe78.twentyfourseven.player.domain.RequestSuggestionMode
 import com.codeframe78.twentyfourseven.player.domain.SongRequestRepository
 import com.codeframe78.twentyfourseven.player.domain.SongRequestState
@@ -27,6 +28,7 @@ import com.codeframe78.twentyfourseven.player.domain.FavoriteTracksRepository
 import com.codeframe78.twentyfourseven.player.domain.FavoriteTracksState
 import com.codeframe78.twentyfourseven.player.domain.TrackRequestAvailability
 import com.codeframe78.twentyfourseven.player.domain.TrackRequestAvailabilityResolver
+import com.codeframe78.twentyfourseven.player.domain.TrackRequestCandidate
 import com.codeframe78.twentyfourseven.player.domain.TrackRequestStatus
 import com.codeframe78.twentyfourseven.player.domain.LocalStationPreferences
 import com.codeframe78.twentyfourseven.player.domain.ListenerActivityLoadStatus
@@ -295,8 +297,8 @@ class MainViewModel(
         requests.suggest(stations.observeSelectedStation().first().id, mode)
     }
 
-    fun openRequestAlbum(albumId: String) = viewModelScope.launch {
-        requests.openAlbum(stations.observeSelectedStation().first().id, albumId)
+    fun openRequestSearchResult(target: RequestSearchTarget) = viewModelScope.launch {
+        requests.openSearchResult(stations.observeSelectedStation().first().id, target)
     }
 
     fun prepareSongRequest(songId: String) = viewModelScope.launch {
@@ -397,17 +399,35 @@ private fun com.codeframe78.twentyfourseven.player.domain.RequestableTrack.resol
         return copy(eligible = resolved.canRequest, availability = resolved)
 }
 
-private fun FavoriteTracksState.resolveAvailability(stationId: StationId, queue: QueueState): FavoriteTracksState = copy(
-    tracks = tracks.map { track ->
-        val resolved = TrackRequestAvailabilityResolver.resolve(stationId, track.identity, track.availability, queue)
-        track.copy(
-            availability = resolved,
-            requestTrack = track.requestTrack?.copy(
-                eligible = resolved.canRequest,
-                albumTitle = track.album,
-                availability = resolved,
-            ),
-        )
-    },
-)
-
+private fun FavoriteTracksState.resolveAvailability(stationId: StationId, queue: QueueState): FavoriteTracksState {
+    val resolvedAvailability = TrackRequestAvailabilityResolver.resolveAll(
+        stationId,
+        tracks.map { TrackRequestCandidate(it.identity, it.availability) },
+        queue,
+    )
+    return copy(
+        tracks = tracks.mapIndexed { index, track ->
+            val resolved = resolvedAvailability[index]
+            val requestTrack = track.requestTrack
+            val requestNeedsUpdate = requestTrack != null && (
+                requestTrack.eligible != resolved.canRequest ||
+                    requestTrack.albumTitle != track.album ||
+                    requestTrack.availability != resolved
+                )
+            val resolvedRequestTrack = if (requestNeedsUpdate) {
+                requestTrack?.copy(
+                    eligible = resolved.canRequest,
+                    albumTitle = track.album,
+                    availability = resolved,
+                )
+            } else {
+                requestTrack
+            }
+            if (track.availability == resolved && track.requestTrack == resolvedRequestTrack) {
+                track
+            } else {
+                track.copy(availability = resolved, requestTrack = resolvedRequestTrack)
+            }
+        },
+    )
+}

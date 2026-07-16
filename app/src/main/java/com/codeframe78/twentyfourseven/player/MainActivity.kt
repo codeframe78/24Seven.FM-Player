@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
                     onSignOut = viewModel::signOut,
                     onSearchRequests = viewModel::searchRequests,
                     onSuggestRequest = viewModel::suggestRequest,
-                    onOpenRequestAlbum = viewModel::openRequestAlbum,
+                    onOpenRequestAlbum = viewModel::openRequestSearchResult,
                     onPrepareRequest = viewModel::prepareSongRequest,
                     onPrepareFavoriteRequest = viewModel::prepareFavoriteRequest,
                     onCancelRequest = viewModel::cancelSongRequest,

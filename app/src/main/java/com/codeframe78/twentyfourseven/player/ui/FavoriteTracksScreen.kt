@@ -1,6 +1,7 @@
 package com.codeframe78.twentyfourseven.player.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,8 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -54,12 +58,14 @@ internal fun FavoriteTracksScreen(
     val favorites = state.favorites
     val signedIn = state.auth?.status == AuthStatus.SignedIn
     var filter by remember(state.selectedStation?.id) { mutableStateOf("") }
-    val visibleTracks = remember(favorites?.tracks, filter) {
+    var sortOrder by remember(state.selectedStation?.id) { mutableStateOf(TrackSortOrder.LibraryOrder) }
+    var sortMenuOpen by remember { mutableStateOf(false) }
+    val visibleTracks = remember(favorites?.tracks, filter, sortOrder) {
         val query = filter.trim()
         favorites?.tracks.orEmpty().filter { track ->
             query.isBlank() || sequenceOf(track.title, track.album, track.artist, track.genre.orEmpty())
                 .any { it.contains(query, ignoreCase = true) }
-        }
+        }.sortedForDisplay(sortOrder, FavoriteTrack::availability)
     }
 
     LazyColumn(
@@ -131,6 +137,30 @@ internal fun FavoriteTracksScreen(
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                     )
+                }
+                item {
+                    Box {
+                        TextButton(
+                            onClick = { sortMenuOpen = true },
+                            modifier = Modifier.testTag("favorite_track_sort"),
+                        ) {
+                            Text("Sort: ${sortOrder.label}")
+                        }
+                        DropdownMenu(
+                            expanded = sortMenuOpen,
+                            onDismissRequest = { sortMenuOpen = false },
+                        ) {
+                            TrackSortOrder.entries.forEach { option ->
+                                DropdownMenuItem(
+                                    text = { Text(option.label) },
+                                    onClick = {
+                                        sortOrder = option
+                                        sortMenuOpen = false
+                                    },
+                                )
+                            }
+                        }
+                    }
                 }
                 if (visibleTracks.isEmpty()) {
                     item { Text(if (filter.isBlank()) "No favorite tracks were found." else "No favorites match this filter.") }

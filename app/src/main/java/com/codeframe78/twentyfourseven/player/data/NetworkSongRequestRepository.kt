@@ -1,6 +1,7 @@
 package com.codeframe78.twentyfourseven.player.data
 
 import com.codeframe78.twentyfourseven.player.domain.RequestSearchField
+import com.codeframe78.twentyfourseven.player.domain.RequestSearchTarget
 import com.codeframe78.twentyfourseven.player.domain.RequestSuggestionMode
 import com.codeframe78.twentyfourseven.player.domain.SongRequestLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.SongRequestRepository
@@ -39,21 +40,78 @@ internal class NetworkSongRequestRepository(
             update(stationId) { it.copy(status = SongRequestLoadStatus.Loading, query = normalized, searchField = field, errorMessage = null, notice = null, pendingRequest = null) }
             runCatching { remote.search(stationId, normalized, field) }
                 .onSuccess { results ->
-                    update(stationId) { it.copy(status = SongRequestLoadStatus.Ready, searchResults = results, tracks = emptyList(), albumTitle = null, errorMessage = null, notice = if (results.isEmpty()) "No matching tracks were found." else null) }
+                    update(stationId) { it.copy(status = SongRequestLoadStatus.Ready, searchResults = results, tracks = emptyList(), albumTitle = null, errorMessage = null, notice = if (results.isEmpty()) "No matching library results were found." else null) }
                 }
                 .onFailure { failure(stationId, "Could not search this station right now.") }
         }
 
-    override suspend fun openAlbum(stationId: StationId, albumId: String): Unit = lock(stationId).withLock {
-        val knownAlbumTitle = state(stationId).value.searchResults.firstOrNull { it.albumId == albumId }?.albumTitle
-        update(stationId) { it.copy(status = SongRequestLoadStatus.Loading, albumTitle = knownAlbumTitle, errorMessage = null, notice = null, pendingRequest = null) }
-        runCatching { remote.loadAlbum(stationId, albumId) }
-            .onSuccess { album ->
-                update(stationId) { it.copy(status = SongRequestLoadStatus.Ready, searchResults = emptyList(), albumTitle = knownAlbumTitle ?: album.title, tracks = album.tracks, errorMessage = null, notice = if (album.tracks.isEmpty()) "No requestable track listing was found for this album." else null) }
+    override suspend fun openSearchResult(stationId: StationId, target: RequestSearchTarget): Unit =
+        lock(stationId).withLock {
+            when (target) {
+                is RequestSearchTarget.Album -> {
+                    val knownAlbumTitle = state(stationId).value.searchResults
+                        .firstOrNull { it.target == target }
+                        ?.let { it.subtitle ?: it.title }
+                    update(stationId) {
+                        it.copy(
+                            status = SongRequestLoadStatus.Loading,
+                            albumTitle = knownAlbumTitle,
+                            errorMessage = null,
+                            notice = null,
+                            pendingRequest = null,
+                        )
+                    }
+                    runCatching { remote.loadAlbum(stationId, target.albumId) }
+                        .onSuccess { album ->
+                            update(stationId) {
+                                it.copy(
+                                    status = SongRequestLoadStatus.Ready,
+                                    searchResults = emptyList(),
+                                    albumTitle = knownAlbumTitle ?: album.title,
+                                    tracks = album.tracks,
+                                    errorMessage = null,
+                                    notice = if (album.tracks.isEmpty()) {
+                                        "No requestable track listing was found for this album."
+                                    } else {
+                                        null
+                                    },
+                                )
+                            }
+                        }
+                        .onFailure { failure(stationId, "Could not load this album right now.") }
+                }
+
+                is RequestSearchTarget.Artist -> {
+                    update(stationId) {
+                        it.copy(
+                            status = SongRequestLoadStatus.Loading,
+                            searchResults = emptyList(),
+                            tracks = emptyList(),
+                            albumTitle = null,
+                            errorMessage = null,
+                            notice = null,
+                            pendingRequest = null,
+                        )
+                    }
+                    runCatching { remote.loadArtistAlbums(stationId, target.artistName) }
+                        .onSuccess { results ->
+                            update(stationId) {
+                                it.copy(
+                                    status = SongRequestLoadStatus.Ready,
+                                    searchResults = results,
+                                    errorMessage = null,
+                                    notice = if (results.isEmpty()) {
+                                        "No albums were found for this artist."
+                                    } else {
+                                        null
+                                    },
+                                )
+                            }
+                        }
+                        .onFailure { failure(stationId, "Could not load this artist's albums right now.") }
+                }
             }
-            .onFailure { failure(stationId, "Could not load this album right now.") }
-        Unit
-    }
+        }
 
     override suspend fun suggest(stationId: StationId, mode: RequestSuggestionMode): Unit =
         lock(stationId).withLock {

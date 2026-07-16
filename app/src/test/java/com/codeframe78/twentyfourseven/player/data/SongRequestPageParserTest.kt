@@ -1,5 +1,6 @@
 package com.codeframe78.twentyfourseven.player.data
 
+import com.codeframe78.twentyfourseven.player.domain.RequestSearchTarget
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -26,10 +27,32 @@ class SongRequestPageParserTest {
         )
 
         assertEquals(2, results.size)
-        assertEquals("ALBUM_1", results.first().albumId)
-        assertEquals("Track One", results.first().trackTitle)
-        assertEquals("Album One", results.first().albumTitle)
+        assertEquals(RequestSearchTarget.Album("ALBUM_1"), results.first().target)
+        assertEquals("Track One", results.first().title)
+        assertEquals("Album One", results.first().subtitle)
         assertEquals("2004", results.first().year)
+    }
+
+    @Test
+    fun `parses album and artist refinement search rows`() {
+        val results = parser.parseSearch(
+            """
+                <table>
+                  <tr><td><a href="/modules.php?name=Album&amp;asin=ALBUM_1">Album One</a></td><td>2004</td></tr>
+                  <tr><td><a href="/modules.php?name=Requests&amp;postartistsearch=true&amp;artist=Example+Composer">Example Composer</a></td><td>Soundtrack</td></tr>
+                </table>
+            """.trimIndent(),
+            origin,
+        )
+
+        assertEquals(2, results.size)
+        assertEquals(RequestSearchTarget.Album("ALBUM_1"), results[0].target)
+        assertEquals("Album One", results[0].title)
+        assertEquals(null, results[0].subtitle)
+        assertEquals("2004", results[0].year)
+        assertEquals(RequestSearchTarget.Artist("Example Composer"), results[1].target)
+        assertEquals("Example Composer", results[1].title)
+        assertEquals("Soundtrack", results[1].subtitle)
     }
 
     @Test

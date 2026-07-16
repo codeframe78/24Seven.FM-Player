@@ -93,6 +93,7 @@ import com.codeframe78.twentyfourseven.player.domain.QueueTrack
 import com.codeframe78.twentyfourseven.player.domain.StationId
 import com.codeframe78.twentyfourseven.player.domain.StationPage
 import com.codeframe78.twentyfourseven.player.domain.RequestSearchField
+import com.codeframe78.twentyfourseven.player.domain.RequestSearchTarget
 import com.codeframe78.twentyfourseven.player.domain.RequestSuggestionMode
 import com.codeframe78.twentyfourseven.player.domain.RequestReadiness
 import com.codeframe78.twentyfourseven.player.domain.SongRequestLoadStatus
@@ -133,7 +134,7 @@ internal fun RadioApp(
     onSignOut: (StationId) -> Unit = {},
     onSearchRequests: (String, RequestSearchField) -> Unit = { _, _ -> },
     onSuggestRequest: (RequestSuggestionMode) -> Unit = {},
-    onOpenRequestAlbum: (String) -> Unit = {},
+    onOpenRequestAlbum: (RequestSearchTarget) -> Unit = {},
     onPrepareRequest: (String) -> Unit = {},
     onPrepareFavoriteRequest: (FavoriteTrack) -> Unit = {},
     onCancelRequest: () -> Unit = {},
@@ -170,7 +171,7 @@ private fun PhoneShell(
     onSignOut: (StationId) -> Unit,
     onSearchRequests: (String, RequestSearchField) -> Unit,
     onSuggestRequest: (RequestSuggestionMode) -> Unit,
-    onOpenRequestAlbum: (String) -> Unit,
+    onOpenRequestAlbum: (RequestSearchTarget) -> Unit,
     onPrepareRequest: (String) -> Unit,
     onPrepareFavoriteRequest: (FavoriteTrack) -> Unit,
     onCancelRequest: () -> Unit,
@@ -222,7 +223,7 @@ private fun TabletShell(
     onSignOut: (StationId) -> Unit,
     onSearchRequests: (String, RequestSearchField) -> Unit,
     onSuggestRequest: (RequestSuggestionMode) -> Unit,
-    onOpenRequestAlbum: (String) -> Unit,
+    onOpenRequestAlbum: (RequestSearchTarget) -> Unit,
     onPrepareRequest: (String) -> Unit,
     onPrepareFavoriteRequest: (FavoriteTrack) -> Unit,
     onCancelRequest: () -> Unit,
@@ -315,7 +316,7 @@ private fun DestinationContent(
     onSignOut: (StationId) -> Unit,
     onSearchRequests: (String, RequestSearchField) -> Unit,
     onSuggestRequest: (RequestSuggestionMode) -> Unit,
-    onOpenRequestAlbum: (String) -> Unit,
+    onOpenRequestAlbum: (RequestSearchTarget) -> Unit,
     onPrepareRequest: (String) -> Unit,
     onPrepareFavoriteRequest: (FavoriteTrack) -> Unit,
     onCancelRequest: () -> Unit,
@@ -740,7 +741,7 @@ private fun MoreScreen(
     onRefreshListenerActivity: () -> Unit,
     onSearchRequests: (String, RequestSearchField) -> Unit,
     onSuggestRequest: (RequestSuggestionMode) -> Unit,
-    onOpenRequestAlbum: (String) -> Unit,
+    onOpenRequestAlbum: (RequestSearchTarget) -> Unit,
     onPrepareRequest: (String) -> Unit,
     onCancelRequest: () -> Unit,
     onConfirmRequest: (String) -> Unit,
@@ -1268,7 +1269,7 @@ private fun SongRequestSection(
     state: MainUiState,
     onSearch: (String, RequestSearchField) -> Unit,
     onSuggest: (RequestSuggestionMode) -> Unit,
-    onOpenAlbum: (String) -> Unit,
+    onOpenAlbum: (RequestSearchTarget) -> Unit,
     onPrepareRequest: (String) -> Unit,
     onCancelRequest: () -> Unit,
     onConfirmRequest: (String) -> Unit,
@@ -1278,6 +1279,8 @@ private fun SongRequestSection(
     var query by remember(state.selectedStation?.id) { mutableStateOf("") }
     var field by remember(state.selectedStation?.id) { mutableStateOf(RequestSearchField.Title) }
     var fieldMenuOpen by remember { mutableStateOf(false) }
+    var trackSortOrder by remember(state.selectedStation?.id) { mutableStateOf(TrackSortOrder.LibraryOrder) }
+    var trackSortMenuOpen by remember { mutableStateOf(false) }
     val signedIn = state.auth?.status == AuthStatus.SignedIn
 
     RequestConfirmationDialog(state, onCancelRequest, onConfirmRequest)
@@ -1352,18 +1355,23 @@ private fun SongRequestSection(
                 Text("Search results", style = MaterialTheme.typography.titleSmall)
                 results.forEach { result ->
                     Surface(
-                        onClick = { onOpenAlbum(result.albumId) },
+                        onClick = { onOpenAlbum(result.target) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         tonalElevation = 2.dp,
                     ) {
                         Column(Modifier.padding(12.dp)) {
-                            Text(result.trackTitle, fontWeight = FontWeight.Medium)
+                            Text(result.title, fontWeight = FontWeight.Medium)
+                            listOfNotNull(result.subtitle, result.year).takeIf { it.isNotEmpty() }?.let { details ->
+                                Text(
+                                    details.joinToString(" • "),
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
                             Text(
-                                listOfNotNull(result.albumTitle, result.year).joinToString(" • "),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                if (result.target is RequestSearchTarget.Artist) "View albums" else "View album",
+                                color = MaterialTheme.colorScheme.primary,
                             )
-                            Text("View album", color = MaterialTheme.colorScheme.primary)
                         }
                     }
                 }
@@ -1374,7 +1382,29 @@ private fun SongRequestSection(
                 if (!signedIn) {
                     Text("Sign in to request a track. Library browsing remains available without an account.")
                 }
-                tracks.forEach { track ->
+                Box {
+                    TextButton(
+                        onClick = { trackSortMenuOpen = true },
+                        modifier = Modifier.testTag("library_track_sort"),
+                    ) {
+                        Text("Sort: ${trackSortOrder.label}")
+                    }
+                    DropdownMenu(
+                        expanded = trackSortMenuOpen,
+                        onDismissRequest = { trackSortMenuOpen = false },
+                    ) {
+                        TrackSortOrder.entries.forEach { option ->
+                            DropdownMenuItem(
+                                text = { Text(option.label) },
+                                onClick = {
+                                    trackSortOrder = option
+                                    trackSortMenuOpen = false
+                                },
+                            )
+                        }
+                    }
+                }
+                tracks.sortedForDisplay(trackSortOrder) { it.availability }.forEach { track ->
                     Row(
                         Modifier.fillMaxWidth().padding(vertical = 4.dp),
                         verticalAlignment = Alignment.CenterVertically,
