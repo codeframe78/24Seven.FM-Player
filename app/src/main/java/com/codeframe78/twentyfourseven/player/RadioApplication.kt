@@ -15,6 +15,7 @@ import com.codeframe78.twentyfourseven.player.data.StationFavoriteTracksRemoteDa
 import com.codeframe78.twentyfourseven.player.data.StationSongRequestRemoteDataSource
 import com.codeframe78.twentyfourseven.player.data.StationNowPlayingArtworkRepository
 import com.codeframe78.twentyfourseven.player.data.SharedPreferencesStationPreferencesRepository
+import com.codeframe78.twentyfourseven.player.data.SharedPreferencesCommunitySafetyRepository
 import com.codeframe78.twentyfourseven.player.data.NetworkListenerActivityRepository
 import com.codeframe78.twentyfourseven.player.data.StationListenerActivityRemoteDataSource
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingArtworkRepository
@@ -33,6 +34,7 @@ class AppContainer(application: Application) {
     private val nowPlayingStore = InMemoryNowPlayingRepository()
     private val authSessionStore = AndroidKeystoreAuthSessionStore(application)
     private val stationPreferences = SharedPreferencesStationPreferencesRepository(application)
+    val communitySafetyRepository = SharedPreferencesCommunitySafetyRepository(application)
 
     val stationRepository = BootstrapStationRepository(stationPreferences)
     val playbackController by lazy { Media3PlaybackController(application) }
@@ -56,4 +58,3 @@ class AppContainer(application: Application) {
         StationListenerActivityRemoteDataSource(sessionStore = authSessionStore),
     )
 }
-

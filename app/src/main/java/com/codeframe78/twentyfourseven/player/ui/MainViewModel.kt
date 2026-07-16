@@ -34,6 +34,11 @@ import com.codeframe78.twentyfourseven.player.domain.LocalStationPreferences
 import com.codeframe78.twentyfourseven.player.domain.ListenerActivityLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.ListenerActivityRepository
 import com.codeframe78.twentyfourseven.player.domain.ListenerActivityState
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportState
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportSubmission
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportTarget
+import com.codeframe78.twentyfourseven.player.domain.CommunitySafetyRepository
+import com.codeframe78.twentyfourseven.player.domain.CommunitySafetyState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -41,6 +46,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -59,6 +65,8 @@ data class MainUiState(
     val requests: SongRequestState? = null,
     val favorites: FavoriteTracksState? = null,
     val listenerActivity: ListenerActivityState? = null,
+    val communitySafety: CommunitySafetyState = CommunitySafetyState(),
+    val abuseReport: AbuseReportState = AbuseReportState(),
     val stationPreferences: LocalStationPreferences = LocalStationPreferences(),
     val destination: MainDestination = MainDestination.Player,
 )
@@ -79,6 +87,7 @@ class MainViewModel(
     private val requests: SongRequestRepository,
     private val favorites: FavoriteTracksRepository,
     private val listenerActivity: ListenerActivityRepository,
+    private val communitySafety: CommunitySafetyRepository,
 ) : ViewModel() {
     private val destination = MutableStateFlow(MainDestination.Player)
 
@@ -135,13 +144,22 @@ class MainViewModel(
 
     private val accountContent = combine(authContent, selectedListenerActivity, ::AccountContent)
 
+    private val safetyState = communitySafety.observeSafety()
+
     private val selectedChat = combine(
         stations.observeSelectedStation(),
         destination,
-    ) { station, selectedDestination -> station to selectedDestination }
-        .flatMapLatest { (station, selectedDestination) ->
-            if (selectedDestination == MainDestination.Chat) {
-                chat.observeChat(station.id)
+        safetyState,
+    ) { station, selectedDestination, safety -> Triple(station, selectedDestination, safety) }
+        .flatMapLatest { (station, selectedDestination, safety) ->
+            if (selectedDestination == MainDestination.Chat && safety.canViewCommunityContent) {
+                chat.observeChat(station.id).map { state ->
+                    state.copy(
+                        messages = state.messages.filterNot { message ->
+                            safety.isBlocked(station.id, message.authorDisplayName)
+                        },
+                    )
+                }
             } else {
                 flowOf(ChatState(station.id))
             }
@@ -173,12 +191,19 @@ class MainViewModel(
         ::StationContent,
     )
 
+    private val safetyContent = combine(
+        safetyState,
+        communitySafety.observeReport(),
+        ::SafetyContent,
+    )
+
     val uiState: StateFlow<MainUiState> = combine(
         stationSelection,
         playback.state,
         stationContent,
         destination,
-    ) { selection, playbackState, content, selectedDestination ->
+        safetyContent,
+    ) { selection, playbackState, content, selectedDestination, safety ->
         val selected = selection.selected
         val selectedQueueState = content.queue.takeIf { it.stationId == selected.id }
             ?: QueueState(selected.id)
@@ -195,13 +220,15 @@ class MainViewModel(
             playback = playbackState,
             nowPlaying = content.nowPlaying.takeIf { it.stationId == selected.id }
                 ?: NowPlayingState(stationId = selected.id),
-            queue = selectedQueueState,
+            queue = selectedQueueState.withCommunityVisibility(selected.id, safety.safety),
             auth = selectedAuthState,
             accounts = content.account.auth.accounts,
             chat = content.chat.takeIf { it.stationId == selected.id },
             requests = resolvedRequests,
             favorites = resolvedFavorites,
             listenerActivity = content.account.listenerActivity.takeIf { it.stationId == selected.id },
+            communitySafety = safety.safety,
+            abuseReport = safety.report,
             stationPreferences = selection.preferences,
             destination = selectedDestination,
         )
@@ -258,6 +285,7 @@ class MainViewModel(
     }
 
     fun refreshChat() = viewModelScope.launch {
+        if (!communitySafety.observeSafety().first().canViewCommunityContent) return@launch
         chat.refresh(stations.observeSelectedStation().first().id)
     }
 
@@ -270,8 +298,46 @@ class MainViewModel(
     }
 
     fun sendChatMessage(message: String) = viewModelScope.launch {
+        if (!communitySafety.observeSafety().first().canContributeCommunityContent) return@launch
         chat.sendMessage(stations.observeSelectedStation().first().id, message)
     }
+
+    fun submitCommunityAgeScreen(year: Int, month: Int, day: Int) = viewModelScope.launch {
+        communitySafety.submitAgeScreen(year, month, day)
+    }
+
+    fun acceptCommunityTerms() = viewModelScope.launch {
+        communitySafety.acceptTerms()
+    }
+
+    fun setCommunityContentVisible(visible: Boolean) = viewModelScope.launch {
+        communitySafety.setCommunityContentVisible(visible)
+    }
+
+    fun blockCommunityUser(stationId: StationId, displayName: String) = viewModelScope.launch {
+        communitySafety.blockUser(stationId, displayName)
+    }
+
+    fun unblockCommunityUser(stationId: StationId, displayName: String) = viewModelScope.launch {
+        communitySafety.unblockUser(stationId, displayName)
+    }
+
+    fun beginAbuseReport(target: AbuseReportTarget) = viewModelScope.launch {
+        communitySafety.beginReport(stations.observeSelectedStation().first().id, target)
+    }
+
+    fun retryAbuseReport() = viewModelScope.launch {
+        val current = communitySafety.observeReport().first()
+        val stationId = current.stationId ?: return@launch
+        val target = current.target ?: return@launch
+        communitySafety.beginReport(stationId, target)
+    }
+
+    fun submitAbuseReport(submission: AbuseReportSubmission) = viewModelScope.launch {
+        communitySafety.submitReport(submission)
+    }
+
+    fun dismissAbuseReport() = communitySafety.dismissReport()
 
     fun signIn(stationId: StationId, username: String, password: String, securityCode: String) = viewModelScope.launch {
         auth.signIn(stationId, username, password, securityCode)
@@ -314,6 +380,7 @@ class MainViewModel(
     }
 
     fun confirmSongRequest(message: String) = viewModelScope.launch {
+        if (!communitySafety.observeSafety().first().canContributeCommunityContent) return@launch
         val stationId = stations.observeSelectedStation().first().id
         queue.refresh(stationId)
         requests.confirmRequest(stationId, queue.currentQueue(stationId), message)
@@ -329,10 +396,22 @@ class MainViewModel(
         private val requests: SongRequestRepository,
         private val favorites: FavoriteTracksRepository,
         private val listenerActivity: ListenerActivityRepository,
+        private val communitySafety: CommunitySafetyRepository,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            MainViewModel(stations, playback, nowPlaying, queue, auth, chat, requests, favorites, listenerActivity) as T
+            MainViewModel(
+                stations,
+                playback,
+                nowPlaying,
+                queue,
+                auth,
+                chat,
+                requests,
+                favorites,
+                listenerActivity,
+                communitySafety,
+            ) as T
     }
 }
 
@@ -363,6 +442,25 @@ private data class AccountContent(
 private data class RequestContent(
     val requests: SongRequestState,
     val favorites: FavoriteTracksState,
+)
+
+private data class SafetyContent(
+    val safety: CommunitySafetyState,
+    val report: AbuseReportState,
+)
+
+private fun QueueState.withCommunityVisibility(
+    stationId: StationId,
+    safety: CommunitySafetyState,
+): QueueState = copy(
+    upcoming = upcoming.map { track ->
+        val hide = !safety.canViewCommunityContent || safety.isBlocked(stationId, track.requesterName)
+        if (hide) track.copy(requesterName = null, requestMessage = null) else track
+    },
+    recentlyPlayed = recentlyPlayed.map { track ->
+        val hide = !safety.canViewCommunityContent || safety.isBlocked(stationId, track.requesterName)
+        if (hide) track.copy(requesterName = null, requestMessage = null) else track
+    },
 )
 
 private fun SongRequestState.resolveAvailability(

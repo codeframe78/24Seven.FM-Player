@@ -24,6 +24,7 @@ internal fun RequestConfirmationDialog(
     state: MainUiState,
     onCancelRequest: () -> Unit,
     onConfirmRequest: (String) -> Unit,
+    onReviewTerms: () -> Unit,
 ) {
     val requests = state.requests ?: return
     val track = requests.pendingRequest ?: return
@@ -46,6 +47,23 @@ internal fun RequestConfirmationDialog(
                 availability.detail?.let { detail ->
                     Text(detail, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
+                if (!state.communitySafety.canContributeCommunityContent) {
+                    Text(
+                        "Community access and the current Terms of Participation are required because requests publish requester attribution.",
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                    if (
+                        state.communitySafety.ageGateStatus == com.codeframe78.twentyfourseven.player.domain.AgeGateStatus.Adult &&
+                        !state.communitySafety.hasAcceptedCurrentTerms
+                    ) {
+                        TextButton(onClick = onReviewTerms) { Text("Review terms") }
+                    } else {
+                        Text(
+                            "Use Community safety in More to complete access or show community content.",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
                 if (state.selectedStation?.capabilities?.supportsRequestMessages == true) {
                     OutlinedTextField(
                         value = requestMessage,
@@ -60,7 +78,8 @@ internal fun RequestConfirmationDialog(
         confirmButton = {
             Button(
                 onClick = { onConfirmRequest(requestMessage) },
-                enabled = requests.status != SongRequestLoadStatus.Submitting && availability.canRequest,
+                enabled = requests.status != SongRequestLoadStatus.Submitting &&
+                    availability.canRequest && state.communitySafety.canContributeCommunityContent,
             ) { Text("Send request") }
         },
         dismissButton = { TextButton(onClick = onCancelRequest) { Text("Cancel") } },

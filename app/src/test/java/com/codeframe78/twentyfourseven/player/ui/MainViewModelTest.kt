@@ -2,14 +2,19 @@ package com.codeframe78.twentyfourseven.player.ui
 
 import com.codeframe78.twentyfourseven.player.data.BootstrapStationRepository
 import com.codeframe78.twentyfourseven.player.data.InMemoryStationPreferencesRepository
+import com.codeframe78.twentyfourseven.player.data.InMemoryCommunitySafetyRepository
 import com.codeframe78.twentyfourseven.player.data.UnavailableAuthRepository
 import com.codeframe78.twentyfourseven.player.data.UnavailableChatRepository
 import com.codeframe78.twentyfourseven.player.data.UnavailableSongRequestRepository
 import com.codeframe78.twentyfourseven.player.data.UnavailableFavoriteTracksRepository
 import com.codeframe78.twentyfourseven.player.data.UnavailableListenerActivityRepository
 import com.codeframe78.twentyfourseven.player.domain.ChatRepository
+import com.codeframe78.twentyfourseven.player.domain.ChatMessage
 import com.codeframe78.twentyfourseven.player.domain.ChatState
 import com.codeframe78.twentyfourseven.player.domain.AuthRepository
+import com.codeframe78.twentyfourseven.player.domain.AgeGateStatus
+import com.codeframe78.twentyfourseven.player.domain.CommunitySafetyState
+import com.codeframe78.twentyfourseven.player.domain.CURRENT_COMMUNITY_TERMS_VERSION
 import com.codeframe78.twentyfourseven.player.domain.AuthState
 import com.codeframe78.twentyfourseven.player.domain.AuthStatus
 import com.codeframe78.twentyfourseven.player.domain.PlaybackController
@@ -39,7 +44,6 @@ import com.codeframe78.twentyfourseven.player.domain.RequestReadiness
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -85,6 +89,7 @@ class MainViewModelTest {
             UnavailableSongRequestRepository(),
             UnavailableFavoriteTracksRepository(),
             UnavailableListenerActivityRepository(),
+            enabledSafetyRepository(),
         )
         advanceUntilIdle()
 
@@ -117,6 +122,7 @@ class MainViewModelTest {
             UnavailableSongRequestRepository(),
             UnavailableFavoriteTracksRepository(),
             UnavailableListenerActivityRepository(),
+            enabledSafetyRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -146,6 +152,7 @@ class MainViewModelTest {
             UnavailableSongRequestRepository(),
             UnavailableFavoriteTracksRepository(),
             UnavailableListenerActivityRepository(),
+            enabledSafetyRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -172,6 +179,7 @@ class MainViewModelTest {
             UnavailableSongRequestRepository(),
             UnavailableFavoriteTracksRepository(),
             UnavailableListenerActivityRepository(),
+            enabledSafetyRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -213,6 +221,7 @@ class MainViewModelTest {
             UnavailableSongRequestRepository(),
             UnavailableFavoriteTracksRepository(),
             UnavailableListenerActivityRepository(),
+            enabledSafetyRepository(),
         )
         advanceUntilIdle()
 
@@ -232,6 +241,7 @@ class MainViewModelTest {
             UnavailableSongRequestRepository(),
             UnavailableFavoriteTracksRepository(),
             UnavailableListenerActivityRepository(),
+            enabledSafetyRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -280,6 +290,7 @@ class MainViewModelTest {
             UnavailableSongRequestRepository(),
             UnavailableFavoriteTracksRepository(),
             UnavailableListenerActivityRepository(),
+            enabledSafetyRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -314,6 +325,7 @@ class MainViewModelTest {
             UnavailableSongRequestRepository(),
             UnavailableFavoriteTracksRepository(),
             listenerActivity,
+            enabledSafetyRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -361,6 +373,7 @@ class MainViewModelTest {
             UnavailableSongRequestRepository(),
             UnavailableFavoriteTracksRepository(),
             UnavailableListenerActivityRepository(),
+            enabledSafetyRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -400,6 +413,7 @@ class MainViewModelTest {
             UnavailableSongRequestRepository(),
             UnavailableFavoriteTracksRepository(),
             UnavailableListenerActivityRepository(),
+            enabledSafetyRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         advanceUntilIdle()
@@ -428,6 +442,100 @@ class MainViewModelTest {
         viewModel.selectDestination(MainDestination.Player)
         advanceUntilIdle()
         assertEquals(0, chat.activeObservations)
+    }
+
+    @Test
+    fun `community content stays unobserved and cannot be posted before the complete access flow`() = runTest(dispatcher) {
+        val chat = FakeChatRepository()
+        val safety = InMemoryCommunitySafetyRepository(today = { java.time.LocalDate.of(2026, 7, 15) })
+        val viewModel = MainViewModel(
+            BootstrapStationRepository(),
+            FakePlaybackController(),
+            FakeNowPlayingRepository(),
+            FakeQueueRepository(),
+            UnavailableAuthRepository(),
+            chat,
+            UnavailableSongRequestRepository(),
+            UnavailableFavoriteTracksRepository(),
+            UnavailableListenerActivityRepository(),
+            safety,
+        )
+        backgroundScope.launch { viewModel.uiState.collect() }
+        viewModel.selectDestination(MainDestination.Chat)
+        viewModel.refreshChat()
+        viewModel.sendChatMessage("Blocked before consent")
+        advanceUntilIdle()
+
+        assertEquals(0, chat.activeObservations)
+        assertNull(chat.refreshedStation)
+        assertNull(chat.sentMessage)
+
+        viewModel.submitCommunityAgeScreen(1990, 1, 2)
+        viewModel.acceptCommunityTerms()
+        viewModel.setCommunityContentVisible(true)
+        advanceUntilIdle()
+        viewModel.sendChatMessage("Allowed after consent")
+        advanceUntilIdle()
+
+        assertEquals(1, chat.activeObservations)
+        assertEquals("Allowed after consent", chat.sentMessage)
+        assertEquals(true, viewModel.uiState.value.communitySafety.canContributeCommunityContent)
+    }
+
+    @Test
+    fun `blocking a station user immediately hides chat and request attribution`() = runTest(dispatcher) {
+        val stationId = StationId("sst")
+        val chat = FakeChatRepository().apply {
+            emit(
+                ChatState(
+                    stationId,
+                    messages = listOf(
+                        ChatMessage("Blocked Listener", "unsafe text", "12:00"),
+                        ChatMessage("Visible Listener", "ordinary text", "12:01"),
+                    ),
+                ),
+            )
+        }
+        val queue = FakeQueueRepository()
+        val safety = enabledSafetyRepository()
+        val viewModel = MainViewModel(
+            BootstrapStationRepository(),
+            FakePlaybackController(),
+            FakeNowPlayingRepository(),
+            queue,
+            UnavailableAuthRepository(),
+            chat,
+            UnavailableSongRequestRepository(),
+            UnavailableFavoriteTracksRepository(),
+            UnavailableListenerActivityRepository(),
+            safety,
+        )
+        backgroundScope.launch { viewModel.uiState.collect() }
+        viewModel.selectDestination(MainDestination.Chat)
+        advanceUntilIdle()
+        assertEquals(2, viewModel.uiState.value.chat?.messages?.size)
+
+        viewModel.blockCommunityUser(stationId, "  blocked listener ")
+        advanceUntilIdle()
+        assertEquals(listOf("Visible Listener"), viewModel.uiState.value.chat?.messages?.map { it.authorDisplayName })
+
+        viewModel.selectDestination(MainDestination.Queue)
+        queue.emit(
+            QueueState(
+                stationId,
+                QueueLoadStatus.Ready,
+                upcoming = listOf(
+                    QueueTrack(1, "One", requesterName = "Blocked Listener", requestMessage = "hidden"),
+                    QueueTrack(2, "Two", requesterName = "Visible Listener", requestMessage = "visible"),
+                ),
+            ),
+        )
+        advanceUntilIdle()
+
+        assertNull(viewModel.uiState.value.queue?.upcoming?.first()?.requesterName)
+        assertNull(viewModel.uiState.value.queue?.upcoming?.first()?.requestMessage)
+        assertEquals("Visible Listener", viewModel.uiState.value.queue?.upcoming?.last()?.requesterName)
+        assertEquals("visible", viewModel.uiState.value.queue?.upcoming?.last()?.requestMessage)
     }
 
     @Test
@@ -467,6 +575,7 @@ class MainViewModelTest {
             UnavailableSongRequestRepository(),
             favorites,
             UnavailableListenerActivityRepository(),
+            enabledSafetyRepository(),
         )
         backgroundScope.launch { viewModel.uiState.collect() }
         viewModel.selectDestination(MainDestination.Favorites)
@@ -494,6 +603,14 @@ class MainViewModelTest {
         assertEquals(TrackRequestStatus.InCurrentQueue, viewModel.uiState.value.favorites?.tracks?.single()?.availability?.status)
         assertEquals(1, queue.activeObservations)
     }
+
+    private fun enabledSafetyRepository() = InMemoryCommunitySafetyRepository(
+        CommunitySafetyState(
+            ageGateStatus = AgeGateStatus.Adult,
+            acceptedTermsVersion = CURRENT_COMMUNITY_TERMS_VERSION,
+            communityContentVisible = true,
+        ),
+    )
 
     private class FakeNowPlayingRepository : NowPlayingRepository {
         val state = MutableStateFlow(NowPlayingState())
@@ -653,14 +770,14 @@ class MainViewModelTest {
         var refreshedStation: StationId? = null
         var sentStation: StationId? = null
         var sentMessage: String? = null
+        private val states = mutableMapOf<StationId, MutableStateFlow<ChatState>>()
 
         override fun observeChat(stationId: StationId): Flow<ChatState> {
             observedStation = stationId
             return flow {
                 activeObservations++
-                emit(ChatState(stationId))
                 try {
-                    awaitCancellation()
+                    state(stationId).collect { emit(it) }
                 } finally {
                     activeObservations--
                 }
@@ -674,6 +791,14 @@ class MainViewModelTest {
         override suspend fun sendMessage(stationId: StationId, message: String) {
             sentStation = stationId
             sentMessage = message
+        }
+
+        fun emit(chat: ChatState) {
+            state(chat.stationId).value = chat
+        }
+
+        private fun state(stationId: StationId) = states.getOrPut(stationId) {
+            MutableStateFlow(ChatState(stationId))
         }
     }
 }

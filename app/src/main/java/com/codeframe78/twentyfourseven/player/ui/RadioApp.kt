@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,12 +27,17 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.QueueMusic
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Block
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.Policy
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Radio
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -68,6 +74,7 @@ import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.painterResource
@@ -76,11 +83,20 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import com.codeframe78.twentyfourseven.player.domain.AuthStatus
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportCategory
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportKind
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportSource
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportStatus
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportSubmission
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportTarget
+import com.codeframe78.twentyfourseven.player.domain.AgeGateStatus
 import com.codeframe78.twentyfourseven.player.domain.ChatLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.ChatMessage
 import com.codeframe78.twentyfourseven.player.domain.ChatMessagePart
@@ -116,6 +132,18 @@ private data class NavigationItem(
     val icon: ImageVector,
 )
 
+internal data class CommunitySafetyActions(
+    val onSubmitAgeScreen: (Int, Int, Int) -> Unit = { _, _, _ -> },
+    val onAcceptTerms: () -> Unit = {},
+    val onSetCommunityContentVisible: (Boolean) -> Unit = {},
+    val onBlockUser: (StationId, String) -> Unit = { _, _ -> },
+    val onUnblockUser: (StationId, String) -> Unit = { _, _ -> },
+    val onBeginReport: (AbuseReportTarget) -> Unit = {},
+    val onRetryReport: () -> Unit = {},
+    val onSubmitReport: (AbuseReportSubmission) -> Unit = {},
+    val onDismissReport: () -> Unit = {},
+)
+
 @Composable
 internal fun RadioApp(
     state: MainUiState,
@@ -142,14 +170,26 @@ internal fun RadioApp(
     onUseLastStationAtStartup: () -> Unit = {},
     onSetStartupStation: (StationId) -> Unit = {},
     onOpenStationPage: (StationPage) -> Unit = {},
+    communitySafetyActions: CommunitySafetyActions = CommunitySafetyActions(),
 ) {
+    var showTerms by rememberSaveable { mutableStateOf(false) }
     BoxWithConstraints(Modifier.fillMaxSize()) {
         if (maxWidth >= 600.dp) {
-            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage)
+            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions) { showTerms = true }
         } else {
-            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage)
+            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions) { showTerms = true }
         }
     }
+    if (showTerms) {
+        CommunityTermsDialog(
+            onAgree = {
+                communitySafetyActions.onAcceptTerms()
+                showTerms = false
+            },
+            onDecline = { showTerms = false },
+        )
+    }
+    AbuseReportDialog(state, communitySafetyActions)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -179,6 +219,8 @@ private fun PhoneShell(
     onUseLastStationAtStartup: () -> Unit,
     onSetStartupStation: (StationId) -> Unit,
     onOpenStationPage: (StationPage) -> Unit,
+    communitySafetyActions: CommunitySafetyActions,
+    onReviewTerms: () -> Unit,
 ) {
     Scaffold(
         topBar = { StationTopBar(state, onSelectDestination) },
@@ -200,7 +242,7 @@ private fun PhoneShell(
             }
         },
     ) { padding ->
-        DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage)
+        DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions, onReviewTerms)
     }
 }
 
@@ -231,6 +273,8 @@ private fun TabletShell(
     onUseLastStationAtStartup: () -> Unit,
     onSetStartupStation: (StationId) -> Unit,
     onOpenStationPage: (StationPage) -> Unit,
+    communitySafetyActions: CommunitySafetyActions,
+    onReviewTerms: () -> Unit,
 ) {
     Row(Modifier.fillMaxSize()) {
         NavigationRail(Modifier.fillMaxHeight().testTag("tablet_navigation_rail")) {
@@ -254,7 +298,7 @@ private fun TabletShell(
                 }
             },
         ) { padding ->
-            DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage)
+            DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions, onReviewTerms)
         }
     }
 }
@@ -324,6 +368,8 @@ private fun DestinationContent(
     onUseLastStationAtStartup: () -> Unit,
     onSetStartupStation: (StationId) -> Unit,
     onOpenStationPage: (StationPage) -> Unit,
+    communitySafetyActions: CommunitySafetyActions,
+    onReviewTerms: () -> Unit,
 ) {
     when (state.destination) {
         MainDestination.Player -> AdaptivePlayerScreen(state, padding, onSelectStation, onPlay, onPause, onStop)
@@ -335,10 +381,11 @@ private fun DestinationContent(
             onCancelRequest = onCancelRequest,
             onConfirmRequest = onConfirmRequest,
             onOpenAccount = { onSelectDestination(MainDestination.More) },
+            onReviewTerms = onReviewTerms,
         )
-        MainDestination.Chat -> ChatScreen(state, padding, onRefreshChat, onSendChatMessage)
-        MainDestination.Queue -> QueueScreen(state, padding, onRefreshQueue)
-        MainDestination.More -> MoreScreen(state, padding, onRefreshAuth, onSignIn, onSignOut, onRefreshListenerActivity, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage)
+        MainDestination.Chat -> ChatScreen(state, padding, onRefreshChat, onSendChatMessage, communitySafetyActions, onReviewTerms)
+        MainDestination.Queue -> QueueScreen(state, padding, onRefreshQueue, communitySafetyActions)
+        MainDestination.More -> MoreScreen(state, padding, onRefreshAuth, onSignIn, onSignOut, onRefreshListenerActivity, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions, onReviewTerms)
     }
 }
 
@@ -348,16 +395,29 @@ private fun ChatScreen(
     padding: PaddingValues,
     onRefresh: () -> Unit,
     onSendMessage: (String) -> Unit,
+    communitySafetyActions: CommunitySafetyActions,
+    onReviewTerms: () -> Unit,
 ) {
     val chat = state.chat
     when {
-        state.selectedStation?.capabilities?.supportsChat != true ||
-            chat == null || chat.status == ChatLoadStatus.Unavailable -> FeatureScreen(
+        state.selectedStation?.capabilities?.supportsChat != true -> FeatureScreen(
                 title = "Chat",
                 description = "No supported chat connection has been verified for this station yet.",
                 icon = Icons.AutoMirrored.Filled.Chat,
                 padding = padding,
             )
+        !state.communitySafety.canViewCommunityContent -> CommunityAccessGate(
+            state = state,
+            padding = padding,
+            actions = communitySafetyActions,
+            onReviewTerms = onReviewTerms,
+        )
+        chat == null || chat.status == ChatLoadStatus.Unavailable -> FeatureScreen(
+            title = "Chat",
+            description = "The station chat is not available yet.",
+            icon = Icons.AutoMirrored.Filled.Chat,
+            padding = padding,
+        )
         chat.status == ChatLoadStatus.Loading -> Box(
             Modifier.fillMaxSize().padding(padding),
             contentAlignment = Alignment.Center,
@@ -382,7 +442,7 @@ private fun ChatScreen(
                 Text("Try again")
             }
         }
-        else -> ChatMessages(state, padding, onRefresh, onSendMessage)
+        else -> ChatMessages(state, padding, onRefresh, onSendMessage, communitySafetyActions)
     }
 }
 
@@ -392,6 +452,7 @@ private fun ChatMessages(
     padding: PaddingValues,
     onRefresh: () -> Unit,
     onSendMessage: (String) -> Unit,
+    communitySafetyActions: CommunitySafetyActions,
 ) {
     val chat = checkNotNull(state.chat)
     var draft by remember(state.selectedStation?.id) { mutableStateOf("") }
@@ -447,6 +508,35 @@ private fun ChatMessages(
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 }
+                                CommunityMessageActions(
+                                    author = message.authorDisplayName,
+                                    onReportContent = {
+                                        communitySafetyActions.onBeginReport(
+                                            AbuseReportTarget(
+                                                kind = AbuseReportKind.Content,
+                                                source = AbuseReportSource.Chat,
+                                                reportedUser = message.authorDisplayName,
+                                                displayedTimestamp = message.postedAtLabel,
+                                                contentSnapshot = message.messageText,
+                                            ),
+                                        )
+                                    },
+                                    onReportUser = {
+                                        communitySafetyActions.onBeginReport(
+                                            AbuseReportTarget(
+                                                kind = AbuseReportKind.User,
+                                                source = AbuseReportSource.Chat,
+                                                reportedUser = message.authorDisplayName,
+                                                displayedTimestamp = message.postedAtLabel,
+                                            ),
+                                        )
+                                    },
+                                    onBlockUser = {
+                                        state.selectedStation?.id?.let { stationId ->
+                                            communitySafetyActions.onBlockUser(stationId, message.authorDisplayName)
+                                        }
+                                    },
+                                )
                             }
                             Spacer(Modifier.height(4.dp))
                             ChatMessageText(message)
@@ -526,7 +616,357 @@ private fun ChatMessageText(message: ChatMessage) {
 }
 
 @Composable
-private fun QueueScreen(state: MainUiState, padding: PaddingValues, onRefresh: () -> Unit) {
+private fun CommunityMessageActions(
+    author: String,
+    onReportContent: (() -> Unit)?,
+    onReportUser: () -> Unit,
+    onBlockUser: () -> Unit,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            Icon(Icons.Default.MoreVert, contentDescription = "Safety actions for $author")
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            onReportContent?.let { reportContent ->
+                DropdownMenuItem(
+                    text = { Text("Report content") },
+                    leadingIcon = { Icon(Icons.Default.Flag, contentDescription = null) },
+                    onClick = {
+                        expanded = false
+                        reportContent()
+                    },
+                )
+            }
+            DropdownMenuItem(
+                text = { Text("Report user") },
+                leadingIcon = { Icon(Icons.Default.Flag, contentDescription = null) },
+                onClick = {
+                    expanded = false
+                    onReportUser()
+                },
+            )
+            DropdownMenuItem(
+                text = { Text("Block user") },
+                leadingIcon = { Icon(Icons.Default.Block, contentDescription = null) },
+                onClick = {
+                    expanded = false
+                    onBlockUser()
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun CommunityAccessGate(
+    state: MainUiState,
+    padding: PaddingValues,
+    actions: CommunitySafetyActions,
+    onReviewTerms: () -> Unit,
+) {
+    val scrollState = rememberScrollState()
+    LaunchedEffect(
+        state.communitySafety.ageGateStatus,
+        state.communitySafety.acceptedTermsVersion,
+    ) {
+        scrollState.scrollTo(0)
+    }
+    Column(
+        Modifier.fillMaxSize().padding(padding).verticalScroll(scrollState).padding(28.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Icon(Icons.Default.Policy, contentDescription = null, modifier = Modifier.size(56.dp))
+        Spacer(Modifier.height(16.dp))
+        when (state.communitySafety.ageGateStatus) {
+            AgeGateStatus.NotCompleted -> {
+                Text("Date of birth", style = MaterialTheme.typography.headlineSmall)
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    "Community content is hidden. Enter your date of birth to determine access; the date itself is not saved.",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(Modifier.height(16.dp))
+                AgeScreenFields(state, actions.onSubmitAgeScreen)
+            }
+            AgeGateStatus.Underage -> {
+                Text("Community features unavailable", style = MaterialTheme.typography.headlineSmall)
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    "The network's community features are restricted to adults. Playback and non-community station information remain available.",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            AgeGateStatus.Adult -> if (!state.communitySafety.hasAcceptedCurrentTerms) {
+                Text("Terms required", style = MaterialTheme.typography.headlineSmall)
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    "Review and accept the Terms of Participation before viewing or contributing community content.",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(Modifier.height(16.dp))
+                Button(onClick = onReviewTerms, modifier = Modifier.testTag("review_community_terms")) {
+                    Text("Review terms")
+                }
+            } else {
+                Text("Mature community content is hidden", style = MaterialTheme.typography.headlineSmall)
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    "Chat and public request attribution may contain mature themes or explicit language. Choose separately whether to show it.",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(Modifier.height(16.dp))
+                Button(
+                    onClick = { actions.onSetCommunityContentVisible(true) },
+                    modifier = Modifier.testTag("show_community_content"),
+                ) { Text("Show community content") }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AgeScreenFields(
+    state: MainUiState,
+    onSubmit: (Int, Int, Int) -> Unit,
+) {
+    var month by rememberSaveable { mutableStateOf("") }
+    var day by rememberSaveable { mutableStateOf("") }
+    var year by rememberSaveable { mutableStateOf("") }
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        OutlinedTextField(
+            value = month,
+            onValueChange = { month = it.filter(Char::isDigit).take(2) },
+            label = { Text("Month") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.weight(1f).testTag("age_month"),
+        )
+        OutlinedTextField(
+            value = day,
+            onValueChange = { day = it.filter(Char::isDigit).take(2) },
+            label = { Text("Day") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.weight(1f).testTag("age_day"),
+        )
+        OutlinedTextField(
+            value = year,
+            onValueChange = { year = it.filter(Char::isDigit).take(4) },
+            label = { Text("Year") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.weight(1.3f).testTag("age_year"),
+        )
+    }
+    state.communitySafety.ageGateErrorMessage?.let {
+        Spacer(Modifier.height(8.dp))
+        Text(it, color = MaterialTheme.colorScheme.error)
+    }
+    Spacer(Modifier.height(12.dp))
+    Button(
+        onClick = {
+            onSubmit(year.toIntOrNull() ?: 0, month.toIntOrNull() ?: 0, day.toIntOrNull() ?: 0)
+        },
+        enabled = year.length == 4 && month.isNotBlank() && day.isNotBlank(),
+        modifier = Modifier.testTag("submit_age_screen"),
+    ) { Text("Continue") }
+}
+
+@Composable
+private fun CommunityTermsDialog(
+    onAgree: () -> Unit,
+    onDecline: () -> Unit,
+) {
+    val context = LocalContext.current
+    val terms = remember(context) {
+        context.resources.openRawResource(R.raw.terms_of_participation)
+            .bufferedReader()
+            .use { it.readText() }
+    }
+    var agreed by rememberSaveable { mutableStateOf(false) }
+    AlertDialog(
+        onDismissRequest = onDecline,
+        title = { Text("Terms of Participation") },
+        text = {
+            Column(
+                Modifier.heightIn(max = 520.dp).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Text(terms, style = MaterialTheme.typography.bodySmall)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = agreed,
+                        onCheckedChange = { agreed = it },
+                        modifier = Modifier.testTag("agree_community_terms"),
+                    )
+                    Text("I Agree")
+                }
+            }
+        },
+        confirmButton = {
+            Button(onClick = onAgree, enabled = agreed, modifier = Modifier.testTag("accept_community_terms")) {
+                Text("I Agree")
+            }
+        },
+        dismissButton = { TextButton(onClick = onDecline) { Text("I Decline") } },
+    )
+}
+
+@Composable
+private fun AbuseReportDialog(state: MainUiState, actions: CommunitySafetyActions) {
+    val report = state.abuseReport
+    if (report.status == AbuseReportStatus.Idle) return
+    val target = report.target ?: return
+    var reporterName by remember(target) { mutableStateOf(state.auth?.displayName.orEmpty()) }
+    var reporterEmail by remember(target) { mutableStateOf("") }
+    var category by remember(target) { mutableStateOf(AbuseReportCategory.Harassment) }
+    var categoryMenuOpen by remember { mutableStateOf(false) }
+    var details by remember(target) { mutableStateOf("") }
+    var securityCode by remember(target, report.captchaImageUrl) { mutableStateOf("") }
+    val canDismiss = report.status != AbuseReportStatus.Submitting
+
+    AlertDialog(
+        onDismissRequest = { if (canDismiss) actions.onDismissReport() },
+        title = { Text(target.kind.label) },
+        text = {
+            Column(
+                Modifier.fillMaxWidth().heightIn(max = 540.dp).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Text("Reported user: ${target.reportedUser}", fontWeight = FontWeight.SemiBold)
+                target.contentSnapshot?.let {
+                    Text("Content: “$it”", maxLines = 4, overflow = TextOverflow.Ellipsis)
+                }
+                when (report.status) {
+                    AbuseReportStatus.LoadingForm -> CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
+                    AbuseReportStatus.Ready, AbuseReportStatus.Submitting -> {
+                        Text(
+                            "This sends a bounded report to the selected station's authorized administrators. Your contact information is required for the Contact Us form and is not saved by the app.",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        OutlinedTextField(
+                            reporterName,
+                            { reporterName = it.take(100) },
+                            label = { Text("Your name or station nickname") },
+                            singleLine = true,
+                            enabled = report.status == AbuseReportStatus.Ready,
+                            modifier = Modifier.fillMaxWidth().testTag("reporter_name"),
+                        )
+                        OutlinedTextField(
+                            reporterEmail,
+                            { reporterEmail = it.take(254) },
+                            label = { Text("Your email") },
+                            singleLine = true,
+                            enabled = report.status == AbuseReportStatus.Ready,
+                            modifier = Modifier.fillMaxWidth().testTag("reporter_email"),
+                        )
+                        Box {
+                            TextButton(onClick = { categoryMenuOpen = true }) {
+                                Text("Category: ${category.label}")
+                            }
+                            DropdownMenu(
+                                expanded = categoryMenuOpen,
+                                onDismissRequest = { categoryMenuOpen = false },
+                            ) {
+                                AbuseReportCategory.entries.forEach { option ->
+                                    DropdownMenuItem(
+                                        text = { Text(option.label) },
+                                        onClick = {
+                                            category = option
+                                            categoryMenuOpen = false
+                                        },
+                                    )
+                                }
+                            }
+                        }
+                        OutlinedTextField(
+                            details,
+                            { details = it.take(500) },
+                            label = { Text("Optional details") },
+                            supportingText = { Text("${details.length}/500") },
+                            enabled = report.status == AbuseReportStatus.Ready,
+                            modifier = Modifier.fillMaxWidth().testTag("report_details"),
+                        )
+                        AsyncImage(
+                            model = report.captchaImageUrl,
+                            contentDescription = "Report security code image",
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.fillMaxWidth().height(96.dp).background(Color.White).padding(12.dp),
+                        )
+                        OutlinedTextField(
+                            securityCode,
+                            { securityCode = it.filter(Char::isLetterOrDigit).take(3) },
+                            label = { Text("Three-character security code") },
+                            supportingText = { Text("Case-sensitive") },
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
+                            enabled = report.status == AbuseReportStatus.Ready,
+                            modifier = Modifier.fillMaxWidth().testTag("report_security_code"),
+                        )
+                        report.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                        if (report.status == AbuseReportStatus.Submitting) {
+                            CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
+                        }
+                    }
+                    AbuseReportStatus.Submitted -> Text(
+                        "Report sent to the selected station's administrators.",
+                        modifier = Modifier.testTag("report_submitted"),
+                    )
+                    AbuseReportStatus.Error -> Text(
+                        report.errorMessage ?: "The report could not be completed.",
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                    AbuseReportStatus.Idle -> Unit
+                }
+            }
+        },
+        confirmButton = {
+            when (report.status) {
+                AbuseReportStatus.Ready -> Button(
+                    onClick = {
+                        actions.onSubmitReport(
+                            AbuseReportSubmission(
+                                reporterName = reporterName,
+                                reporterEmail = reporterEmail,
+                                category = category,
+                                optionalDetails = details,
+                                securityCode = securityCode,
+                            ),
+                        )
+                    },
+                    enabled = reporterName.isNotBlank() && reporterEmail.isNotBlank() && securityCode.length == 3,
+                    modifier = Modifier.testTag("submit_abuse_report"),
+                ) { Text("Send report") }
+                AbuseReportStatus.Error -> if (report.retryAllowed) {
+                    Button(onClick = actions.onRetryReport) { Text("Try again") }
+                } else {
+                    Button(onClick = actions.onDismissReport) { Text("Done") }
+                }
+                AbuseReportStatus.Submitted -> Button(onClick = actions.onDismissReport) { Text("Done") }
+                else -> Unit
+            }
+        },
+        dismissButton = {
+            if (canDismiss && report.status != AbuseReportStatus.Submitted) {
+                TextButton(onClick = actions.onDismissReport) { Text("Cancel") }
+            }
+        },
+    )
+}
+
+@Composable
+private fun QueueScreen(
+    state: MainUiState,
+    padding: PaddingValues,
+    onRefresh: () -> Unit,
+    communitySafetyActions: CommunitySafetyActions,
+) {
     val queue = state.queue
     val supportsQueueOrHistory = state.selectedStation?.capabilities?.run {
         supportsQueue || supportsHistory
@@ -570,6 +1010,8 @@ private fun QueueScreen(state: MainUiState, padding: PaddingValues, onRefresh: (
             queue.errorMessage,
             padding,
             onRefresh,
+            state.selectedStation?.id,
+            communitySafetyActions,
         )
     }
 }
@@ -582,6 +1024,8 @@ private fun QueueLists(
     refreshMessage: String?,
     padding: PaddingValues,
     onRefresh: () -> Unit,
+    stationId: StationId?,
+    communitySafetyActions: CommunitySafetyActions,
 ) {
     LazyColumn(
         Modifier.fillMaxSize().padding(padding),
@@ -617,6 +1061,35 @@ private fun QueueLists(
                     track.artworkUrl,
                     track.requesterName,
                     track.requestMessage,
+                    communityActions = track.requesterName?.let { requester ->
+                        {
+                            CommunityMessageActions(
+                                author = requester,
+                                onReportContent = track.requestMessage?.let { message ->
+                                    {
+                                        communitySafetyActions.onBeginReport(
+                                            AbuseReportTarget(
+                                                kind = AbuseReportKind.Content,
+                                                source = AbuseReportSource.Request,
+                                                reportedUser = requester,
+                                                contentSnapshot = message,
+                                            ),
+                                        )
+                                    }
+                                },
+                                onReportUser = {
+                                    communitySafetyActions.onBeginReport(
+                                        AbuseReportTarget(
+                                            kind = AbuseReportKind.User,
+                                            source = AbuseReportSource.Request,
+                                            reportedUser = requester,
+                                        ),
+                                    )
+                                },
+                                onBlockUser = { stationId?.let { communitySafetyActions.onBlockUser(it, requester) } },
+                            )
+                        }
+                    },
                 )
             }
         }
@@ -637,6 +1110,35 @@ private fun QueueLists(
                     track.artworkUrl,
                     track.requesterName,
                     track.requestMessage,
+                    communityActions = track.requesterName?.let { requester ->
+                        {
+                            CommunityMessageActions(
+                                author = requester,
+                                onReportContent = track.requestMessage?.let { message ->
+                                    {
+                                        communitySafetyActions.onBeginReport(
+                                            AbuseReportTarget(
+                                                kind = AbuseReportKind.Content,
+                                                source = AbuseReportSource.Request,
+                                                reportedUser = requester,
+                                                contentSnapshot = message,
+                                            ),
+                                        )
+                                    }
+                                },
+                                onReportUser = {
+                                    communitySafetyActions.onBeginReport(
+                                        AbuseReportTarget(
+                                            kind = AbuseReportKind.User,
+                                            source = AbuseReportSource.Request,
+                                            reportedUser = requester,
+                                        ),
+                                    )
+                                },
+                                onBlockUser = { stationId?.let { communitySafetyActions.onBlockUser(it, requester) } },
+                            )
+                        }
+                    },
                 )
             }
         }
@@ -658,6 +1160,7 @@ private fun TrackCard(
     artworkUrl: String? = null,
     requesterName: String? = null,
     requestMessage: String? = null,
+    communityActions: (@Composable () -> Unit)? = null,
 ) {
     Card(Modifier.fillMaxWidth()) {
         Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -707,6 +1210,7 @@ private fun TrackCard(
                 Spacer(Modifier.width(12.dp))
                 Text(it, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
+            communityActions?.invoke()
         }
     }
 }
@@ -748,18 +1252,21 @@ private fun MoreScreen(
     onUseLastStationAtStartup: () -> Unit,
     onSetStartupStation: (StationId) -> Unit,
     onOpenStationPage: (StationPage) -> Unit,
+    communitySafetyActions: CommunitySafetyActions,
+    onReviewTerms: () -> Unit,
 ) {
     Column(
         Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         AccountSection(state, onRefreshAuth, onSignIn, onSignOut)
+        CommunitySafetySection(state, communitySafetyActions, onReviewTerms)
         MoreDisclosure(
             title = "Song requests",
             summary = "Search or ask the station for an available track.",
             testTag = "more_song_requests",
         ) {
-            SongRequestSection(state, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest, showTitle = false)
+            SongRequestSection(state, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onCancelRequest, onConfirmRequest, onReviewTerms, showTitle = false)
         }
         if (state.selectedStation?.capabilities?.supportsListenerActivity == true) {
             MoreDisclosure(
@@ -779,6 +1286,82 @@ private fun MoreScreen(
         }
         SecondaryContentSection(state, onOpenStationPage)
         PrivacySection()
+    }
+}
+
+@Composable
+private fun CommunitySafetySection(
+    state: MainUiState,
+    actions: CommunitySafetyActions,
+    onReviewTerms: () -> Unit,
+) {
+    val safety = state.communitySafety
+    val selectedStation = state.selectedStation
+    val status = when {
+        safety.ageGateStatus == AgeGateStatus.Underage -> "Community features unavailable"
+        safety.ageGateStatus == AgeGateStatus.NotCompleted -> "Age screen not completed"
+        !safety.hasAcceptedCurrentTerms -> "Terms acceptance required"
+        safety.communityContentVisible -> "Community content shown"
+        else -> "Community content hidden"
+    }
+    MoreDisclosure(
+        title = "Community safety",
+        summary = status,
+        testTag = "more_community_safety",
+    ) {
+        Card(Modifier.fillMaxWidth().testTag("community_safety_controls")) {
+            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(status, fontWeight = FontWeight.SemiBold)
+                when (safety.ageGateStatus) {
+                    AgeGateStatus.NotCompleted -> {
+                        Text(
+                            "Enter your date of birth to determine community access. The date itself is not saved.",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        AgeScreenFields(state, actions.onSubmitAgeScreen)
+                    }
+                    AgeGateStatus.Underage -> Text(
+                        "Playback remains available, but this adult network's Chat and public request attribution are unavailable.",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    AgeGateStatus.Adult -> {
+                        TextButton(onClick = onReviewTerms, modifier = Modifier.testTag("open_terms_from_more")) {
+                            Text(if (safety.hasAcceptedCurrentTerms) "Review Terms of Participation" else "Review and accept terms")
+                        }
+                        if (safety.hasAcceptedCurrentTerms) {
+                            Button(
+                                onClick = { actions.onSetCommunityContentVisible(!safety.communityContentVisible) },
+                                modifier = Modifier.testTag("toggle_community_content"),
+                            ) {
+                                Text(if (safety.communityContentVisible) "Hide community content" else "Show community content")
+                            }
+                        }
+                    }
+                }
+                val blocked = selectedStation?.let { station ->
+                    safety.blockedUsers.filter { it.stationId == station.id }
+                }.orEmpty()
+                Text("Blocked users — ${selectedStation?.shortName ?: "station"}", style = MaterialTheme.typography.titleSmall)
+                if (blocked.isEmpty()) {
+                    Text("No users are blocked on this device for this station.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                } else {
+                    blocked.forEach { user ->
+                        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            Text(user.displayName, modifier = Modifier.weight(1f))
+                            TextButton(
+                                onClick = { actions.onUnblockUser(user.stationId, user.displayName) },
+                                modifier = Modifier.testTag("unblock_${user.normalizedIdentity}"),
+                            ) { Text("Unblock") }
+                        }
+                    }
+                }
+                Text(
+                    "Blocks are stored only on this device and hide that user's Chat messages and request attribution in the app.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
     }
 }
 
@@ -1273,6 +1856,7 @@ private fun SongRequestSection(
     onPrepareRequest: (String) -> Unit,
     onCancelRequest: () -> Unit,
     onConfirmRequest: (String) -> Unit,
+    onReviewTerms: () -> Unit,
     showTitle: Boolean = true,
 ) {
     val requests = state.requests
@@ -1283,7 +1867,7 @@ private fun SongRequestSection(
     var trackSortMenuOpen by remember { mutableStateOf(false) }
     val signedIn = state.auth?.status == AuthStatus.SignedIn
 
-    RequestConfirmationDialog(state, onCancelRequest, onConfirmRequest)
+    RequestConfirmationDialog(state, onCancelRequest, onConfirmRequest, onReviewTerms)
 
     if (showTitle) Text("Song requests", style = MaterialTheme.typography.titleMedium)
     Card(Modifier.fillMaxWidth()) {

@@ -53,8 +53,9 @@ internal fun FavoriteTracksScreen(
     onCancelRequest: () -> Unit,
     onConfirmRequest: (String) -> Unit,
     onOpenAccount: () -> Unit,
+    onReviewTerms: () -> Unit,
 ) {
-    RequestConfirmationDialog(state, onCancelRequest, onConfirmRequest)
+    RequestConfirmationDialog(state, onCancelRequest, onConfirmRequest, onReviewTerms)
     val favorites = state.favorites
     val signedIn = state.auth?.status == AuthStatus.SignedIn
     var filter by remember(state.selectedStation?.id) { mutableStateOf("") }

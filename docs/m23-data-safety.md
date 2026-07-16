@@ -19,11 +19,12 @@ Checked against the current Google Play definitions on July 15, 2026. This is a 
 | Station session cookie | Yes, returned to the originating station on authenticated calls | Encrypted locally with Android Keystore until sign-out/data clear/uninstall | User IDs or other account identifier, depending on the active form wording | Optional | Account management; app functionality | No; sent only to the originating station |
 | Chat message | Yes, after explicit Send | Current chat history is memory-only | Messages → Other in-app messages | Optional | App functionality | No, if the explicit user-initiated station post exception applies |
 | Optional song-request message | Yes, after explicit confirmation | Pending text is transient | Messages → Other in-app messages | Optional | App functionality | No, if the explicit user-initiated station post exception applies |
+| Abuse report: reporter name/email, category, reported username, bounded Chat/request snapshot, timestamp, and optional details | Yes, only after explicit Send report | Form state and submitted report are transient and are not persisted by the app | Personal info → Name and Email address; Messages → Other in-app messages; potentially Other user-generated content under the active form | Optional | App functionality; fraud prevention, security, and compliance | No, if the explicit user-initiated direct-station transfer exception applies; confirm against the active form |
 | Track request/selection action | Yes, after explicit confirmation | No developer backend; station-reported results are transient | App activity → Other actions | Optional | App functionality | No, if the explicit user-initiated station action exception applies |
 | Station-library search text | Yes, when Search is explicitly used | Results and query UI state are transient | App activity → In-app search history | Optional | App functionality | No, if the direct station query qualifies for the user-initiated-action exception |
 | Public playback, queue, history, artwork, chat, and station catalog responses | Requests leave the device, but the returned public content is not user data supplied by this app | Cached only by normal in-memory/network/media mechanisms | No user-data type identified | Core functionality | App functionality | No |
 | Favorite lists, request activity, and membership indicators returned by a station | The user identifier needed to fetch them is covered above | Memory-only and cleared from UI on sign-out | No additional outgoing type beyond User IDs identified | Optional | App functionality | No |
-| App preferences, selected station, sleep timer, and UI state | No developer or analytics server | On-device preferences only | Out of scope for collection | Core/optional by setting | App functionality | No |
+| App preferences, selected station, adult age-screen result, accepted Terms version, community-content visibility, station-scoped blocked identities, sleep timer, and UI state | No developer or analytics server | On-device preferences only; date of birth is not saved | Out of scope for collection | Core/optional by setting | App functionality; safety | No |
 | Crash, analytics, advertising, location, contacts, files, microphone, camera, phone, or SMS data | No | No corresponding SDK or permission | Not collected | N/A | N/A | No |
 
 ## Provisional form posture
@@ -41,7 +42,7 @@ Before completing the form:
 
 1. Re-run the release dependency and merged-manifest audits against the exact signed AAB.
 2. Probe every authenticated/user-submission endpoint for HTTPS-only transmission and redirect behavior without recording credentials or cookies.
-3. Confirm with station administration whether server logs or feature storage retain search terms, login submissions, chat/request messages, and request actions.
+3. Confirm with station administration whether server logs or feature storage retain search terms, login submissions, chat/request messages, request actions, and abuse reports.
 4. Compare every question in the active Console form with this table; the Console wording is authoritative.
 5. Have the product owner attest to the final answers before saving or submitting them.
 

@@ -107,6 +107,23 @@ keeps its station-issued account material transient, enforces the 255-character 
 user's message, and performs one confirmation read. Cookies and posting material never reach the ViewModel or UI.
 See `docs/m8-chat-research.md`.
 
+## Community safety and moderation
+
+Community access and moderation live behind `CommunitySafetyRepository`. `MainViewModel` depends only on that domain
+contract and prevents Chat observation/posting and attributed request contribution until immutable safety state confirms
+an adult age-screen result, acceptance of the current Terms version, and a separate community-content reveal. Compose
+renders the gate, report form, and block management from state and emits actions upward.
+
+The SharedPreferences implementation stores only the adult/not-adult result, accepted Terms version, visibility
+preference, and station-scoped normalized blocked identities. The entered date of birth and all report form/submission
+data remain transient. Block filtering is applied in the ViewModel to public Chat and Queue/History requester
+attribution; it is explicitly device-local and does not claim to mute or ban a station account.
+
+The report adapter accepts only the five authorized same-origin HTTPS Contact Us forms, verifies the moderator subject,
+bounds every field, and never retries a submission. A recognized success page confirms delivery, a freshly returned
+form is a definite rejection, and any other response is indeterminate and suppresses retry to avoid duplicate reports.
+See `docs/m23-ugc-safety-research.md` and `docs/m23-ugc-safety-validation.md`.
+
 ## Initial modules
 
 The project begins as one Android application module organized by package. Modules should be split only when boundaries are stable enough to justify the additional Gradle complexity.

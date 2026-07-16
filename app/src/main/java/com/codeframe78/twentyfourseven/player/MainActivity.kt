@@ -55,6 +55,7 @@ class MainActivity : ComponentActivity() {
                     container.songRequestRepository,
                     container.favoriteTracksRepository,
                     container.listenerActivityRepository,
+                    container.communitySafetyRepository,
                 ),
             )
             val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -84,6 +85,17 @@ class MainActivity : ComponentActivity() {
                     onRefreshFavorites = viewModel::refreshFavorites,
                     onRefreshListenerActivity = viewModel::refreshListenerActivity,
                     onSendChatMessage = viewModel::sendChatMessage,
+                    communitySafetyActions = com.codeframe78.twentyfourseven.player.ui.CommunitySafetyActions(
+                        onSubmitAgeScreen = viewModel::submitCommunityAgeScreen,
+                        onAcceptTerms = viewModel::acceptCommunityTerms,
+                        onSetCommunityContentVisible = viewModel::setCommunityContentVisible,
+                        onBlockUser = viewModel::blockCommunityUser,
+                        onUnblockUser = viewModel::unblockCommunityUser,
+                        onBeginReport = viewModel::beginAbuseReport,
+                        onRetryReport = viewModel::retryAbuseReport,
+                        onSubmitReport = viewModel::submitAbuseReport,
+                        onDismissReport = viewModel::dismissAbuseReport,
+                    ),
                     onRefreshAuth = viewModel::refreshAuth,
                     onSignIn = viewModel::signIn,
                     onSignOut = viewModel::signOut,

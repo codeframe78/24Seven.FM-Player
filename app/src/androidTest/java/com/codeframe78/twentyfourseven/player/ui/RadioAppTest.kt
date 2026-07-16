@@ -39,6 +39,16 @@ import com.codeframe78.twentyfourseven.player.domain.StationPage
 import com.codeframe78.twentyfourseven.player.domain.StationPageKind
 import com.codeframe78.twentyfourseven.player.domain.StreamVariant
 import com.codeframe78.twentyfourseven.player.domain.AuthState
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportKind
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportSource
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportState
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportStatus
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportSubmission
+import com.codeframe78.twentyfourseven.player.domain.AbuseReportTarget
+import com.codeframe78.twentyfourseven.player.domain.BlockedCommunityUser
+import com.codeframe78.twentyfourseven.player.domain.AgeGateStatus
+import com.codeframe78.twentyfourseven.player.domain.CommunitySafetyState
+import com.codeframe78.twentyfourseven.player.domain.CURRENT_COMMUNITY_TERMS_VERSION
 import com.codeframe78.twentyfourseven.player.domain.AuthStatus
 import com.codeframe78.twentyfourseven.player.domain.ChatLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.ChatMessage
@@ -62,6 +72,7 @@ import com.codeframe78.twentyfourseven.player.domain.RequestReadiness
 import org.junit.Rule
 import org.junit.Test
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 
 class RadioAppTest {
     @get:Rule
@@ -525,8 +536,9 @@ class RadioAppTest {
         composeRule.onNodeWithTag("more_song_requests").performScrollTo().performClick()
         composeRule.onNodeWithContentDescription("Song requests, expanded").assertExists()
         composeRule.onNodeWithText("Song requests have not been verified for this station.")
+            .performScrollTo()
             .assertIsDisplayed()
-        composeRule.onNodeWithTag("more_song_requests").performClick()
+        composeRule.onNodeWithTag("more_song_requests").performScrollTo().performClick()
         composeRule.onNodeWithContentDescription("Song requests, collapsed").assertExists()
         composeRule.onNodeWithText("Song requests have not been verified for this station.")
             .assertDoesNotExist()
@@ -900,6 +912,7 @@ class RadioAppTest {
         favoritesList.performScrollToNode(hasContentDescription(unavailableDescription))
         composeRule.onNodeWithContentDescription(unavailableDescription).assertIsDisplayed()
         composeRule.onNodeWithText("Last played today; requestable again tomorrow.")
+            .performScrollTo()
             .assertIsDisplayed()
         favoritesList.performScrollToNode(hasContentDescription(queuedDescription))
         composeRule.onNodeWithContentDescription(queuedDescription).assertIsDisplayed()
@@ -962,9 +975,205 @@ class RadioAppTest {
         composeRule.onNodeWithText("Favorite 10").performScrollTo().assertIsDisplayed()
     }
 
+    @Test
+    fun communityContentRequiresAgeTermsAndSeparateRevealActions() {
+        val chatStation = station.copy(capabilities = StationCapabilities(supportsChat = true))
+        composeRule.setContent {
+            var state by remember {
+                mutableStateOf(
+                    sampleState().copy(
+                        selectedStation = chatStation,
+                        stations = listOf(chatStation),
+                        destination = MainDestination.Chat,
+                        communitySafety = CommunitySafetyState(),
+                        chat = ChatState(
+                            chatStation.id,
+                            ChatLoadStatus.Ready,
+                            messages = listOf(ChatMessage("Listener", "Visible only after access", "12:00")),
+                        ),
+                    ),
+                )
+            }
+            MaterialTheme {
+                RadioApp(
+                    state = state,
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                    communitySafetyActions = CommunitySafetyActions(
+                        onSubmitAgeScreen = { _, _, _ ->
+                            state = state.copy(
+                                communitySafety = state.communitySafety.copy(ageGateStatus = AgeGateStatus.Adult),
+                            )
+                        },
+                        onAcceptTerms = {
+                            state = state.copy(
+                                communitySafety = state.communitySafety.copy(
+                                    acceptedTermsVersion = CURRENT_COMMUNITY_TERMS_VERSION,
+                                ),
+                            )
+                        },
+                        onSetCommunityContentVisible = { visible ->
+                            state = state.copy(
+                                communitySafety = state.communitySafety.copy(communityContentVisible = visible),
+                            )
+                        },
+                    ),
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("Visible only after access").assertDoesNotExist()
+        composeRule.onNodeWithTag("age_month").performTextInput("1")
+        composeRule.onNodeWithTag("age_day").performTextInput("2")
+        composeRule.onNodeWithTag("age_year").performTextInput("1990")
+        composeRule.onNodeWithTag("submit_age_screen").performClick()
+        composeRule.onNodeWithText("Terms required").assertIsDisplayed()
+        composeRule.onNodeWithTag("review_community_terms").performClick()
+        composeRule.onNodeWithTag("agree_community_terms").performScrollTo().performClick()
+        composeRule.onNodeWithTag("accept_community_terms").performClick()
+        composeRule.onNodeWithText("Mature community content is hidden").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("show_community_content").performScrollTo().performClick()
+        composeRule.onNodeWithText("Visible only after access").assertIsDisplayed()
+    }
+
+    @Test
+    fun chatOffersSeparateReportAndImmediateBlockActions() {
+        val chatStation = station.copy(capabilities = StationCapabilities(supportsChat = true))
+        composeRule.setContent {
+            var state by remember {
+                mutableStateOf(
+                    sampleState().copy(
+                        selectedStation = chatStation,
+                        stations = listOf(chatStation),
+                        destination = MainDestination.Chat,
+                        chat = ChatState(
+                            chatStation.id,
+                            ChatLoadStatus.Ready,
+                            messages = listOf(ChatMessage("Troublemaker", "Reportable text", "12:34")),
+                        ),
+                    ),
+                )
+            }
+            MaterialTheme {
+                RadioApp(
+                    state = state,
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                    communitySafetyActions = CommunitySafetyActions(
+                        onBlockUser = { stationId, name ->
+                            state = state.copy(
+                                chat = state.chat?.copy(messages = emptyList()),
+                                communitySafety = state.communitySafety.copy(
+                                    blockedUsers = listOf(BlockedCommunityUser(stationId, name)),
+                                ),
+                            )
+                        },
+                    ),
+                )
+            }
+        }
+
+        composeRule.onNodeWithContentDescription("Safety actions for Troublemaker").performClick()
+        composeRule.onNodeWithText("Report content").assertIsDisplayed()
+        composeRule.onNodeWithText("Report user").assertIsDisplayed()
+        composeRule.onNodeWithText("Block user").assertIsDisplayed().performClick()
+        composeRule.onNodeWithText("Reportable text").assertDoesNotExist()
+    }
+
+    @Test
+    fun nativeReportDialogCollectsContactCaptchaAndBoundedDetails() {
+        var submitted: AbuseReportSubmission? = null
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(
+                        abuseReport = AbuseReportState(
+                            stationId = station.id,
+                            target = AbuseReportTarget(
+                                AbuseReportKind.Content,
+                                AbuseReportSource.Chat,
+                                "Troublemaker",
+                                "12:34",
+                                "Reportable text",
+                            ),
+                            status = AbuseReportStatus.Ready,
+                        ),
+                    ),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                    communitySafetyActions = CommunitySafetyActions(onSubmitReport = { submitted = it }),
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("Report content").assertIsDisplayed()
+        composeRule.onNodeWithTag("reporter_name").performTextInput("Reporter")
+        composeRule.onNodeWithTag("reporter_email").performTextInput("reporter@example.com")
+        composeRule.onNodeWithTag("report_details").performTextInput("Harmless test details")
+        composeRule.onNodeWithTag("report_security_code").performTextInput("123")
+        composeRule.onNodeWithTag("submit_abuse_report").performClick()
+        composeRule.runOnIdle {
+            assertEquals("Reporter", submitted?.reporterName)
+            assertEquals("reporter@example.com", submitted?.reporterEmail)
+            assertEquals("123", submitted?.securityCode)
+        }
+    }
+
+    @Test
+    fun indeterminateReportDialogSuppressesDuplicateRetry() {
+        var dismissed = false
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(
+                        abuseReport = AbuseReportState(
+                            stationId = station.id,
+                            target = AbuseReportTarget(
+                                AbuseReportKind.User,
+                                AbuseReportSource.Chat,
+                                "Troublemaker",
+                            ),
+                            status = AbuseReportStatus.Error,
+                            errorMessage = "The station response could not confirm delivery. Do not resend until an administrator checks receipt.",
+                            retryAllowed = false,
+                        ),
+                    ),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                    communitySafetyActions = CommunitySafetyActions(onDismissReport = { dismissed = true }),
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("Try again").assertDoesNotExist()
+        composeRule.onNodeWithText("Done").assertIsDisplayed().performClick()
+        composeRule.runOnIdle { assertTrue(dismissed) }
+    }
+
     private fun sampleState() = MainUiState(
         stations = listOf(station),
         selectedStation = station,
+        communitySafety = CommunitySafetyState(
+            ageGateStatus = AgeGateStatus.Adult,
+            acceptedTermsVersion = CURRENT_COMMUNITY_TERMS_VERSION,
+            communityContentVisible = true,
+        ),
     )
 
     private fun accountStation(id: String, name: String, shortName: String) = Station(
