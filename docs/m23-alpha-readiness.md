@@ -54,7 +54,7 @@ as already complete.
 - The signed release APK was installed cleanly on the API 35 emulator, cold-launched as version code 2, exposed the expected adaptive Player semantics, and reached `Playing live` on StreamingSoundtracks with the Pause action available. The emulator was restored to the debug build afterward; the wirelessly connected Razr and its sessions were not modified.
 - The release dependency graph contains no advertising, analytics, Crashlytics, App Center, or Sentry SDK.
 - Google Play accepts target API 35 on July 15, 2026 but requires API 36 for new apps and updates beginning August 31, 2026. M23.3 therefore migrates before the closed-test/update window instead of treating API 35 as the final Alpha target.
-- The project-specific provisional Data Safety worksheet is recorded in `docs/m23-data-safety.md`; its final answers remain gated on the active Play Console form and station transmission/retention confirmation.
+- The project-specific provisional Data Safety worksheet is recorded in `docs/m23-data-safety.md`; it includes the M23.2 age/Terms/block preferences and transient abuse-report fields. Final answers remain gated on the active Play Console form and station retention confirmation.
 - The activated Play Console was inspected read-only on July 15: it is a newly activated personal account with no existing apps. The intended public name `24Seven.FM Player` fits the 30-character limit, and Console reports `com.codeframe78.twentyfourseven.player` as available.
 - The Play Console app was created on July 15 as an English (United States), App, Free listing with the intended package. The owner explicitly accepted the Developer Program Policies, Play App Signing Terms, and US export declaration; automatic installer protection was disabled to preserve approved sideload testing.
 - Play Console App content now records the four evidence-backed objective declarations: no ads, not a government app, no financial features, and no health features. The changes are saved in Publishing overview but have not been sent for review.
@@ -114,10 +114,10 @@ Signing files and secrets must never be committed. Gradle should receive their p
 - Upload the verified signed AAB to Play and confirm that Console reports the expected upload-certificate fingerprint.
 - Verify Play-delivered installation on the physical Razr and a same-key Play update after a subsequent version code exists.
 - Complete the owner-input Console forms: least-privileged reviewer credentials/instructions, save the selected 18+ target audience, content rating, and final Data Safety answers.
-- Complete M23.2 UGC Terms/report/block/moderation work or explicitly remove public UGC surfaces from the Play candidate.
+- Confirm administrator receipt of the single authorized M23.2 harmless report. Native age/Terms/mature-content gates, separate report-content/report-user/block-user actions, local block management, and duplicate-safe report handling are implemented and test-green.
 - **Complete:** API 36 target migration and Android 16 regression pass; see `m23-api36-readiness.md`.
 - Save the media-playback foreground-service declaration with its description, interruption impact, use case, and demonstration video.
 - Privately confirm written rights for the app/station branding, artwork, streams, screenshots, and Play distribution.
 - Close minimum-API, 16 KB runtime, genuine tablet/foldable, physical Razr hinge, and Play pre-launch coverage.
-- Add adaptive/monochrome launcher resources before the public listing phase.
+- **Complete:** adaptive/monochrome launcher resources preserve the established logo across legacy, masked, and Android 13 themed-icon surfaces; see `m23-launcher-polish.md`.
 - Publish only after explicit authorization.

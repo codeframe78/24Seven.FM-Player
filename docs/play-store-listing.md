@@ -48,6 +48,7 @@ The owner confirmed the public support email on July 15, 2026. Console now recor
 ## Graphic inventory
 
 - App icon: complete at `docs/play-store-assets/app-icon-512.png` (512×512 PNG, 282,959 bytes)
+- Installed launcher icon: density-specific legacy PNGs plus adaptive foreground/background resources and an Android 13 monochrome radio-wave layer are complete; see `m23-launcher-polish.md`
 - Feature graphic: complete at `docs/play-store-assets/feature-graphic-1024x500.png` (1024×500 PNG, 628,135 bytes)
 - Phone screenshots: four privacy-reviewed 1080×1920 captures are available under
   `docs/play-store-assets/screenshots/`: live Player, live Queue, station selector, and station capabilities
@@ -58,6 +59,9 @@ The owner confirmed the public support email on July 15, 2026. Console now recor
 - Expanded landscape screenshot: `docs/play-store-assets/screenshots/tablet-landscape-player.png` verifies a
   1707dp freely resized window and all five station cards
 - No preview video is planned for Alpha
+
+The existing store graphics and screenshots were revalidated during M23.7. No recapture was needed because launcher
+polish does not alter the in-app Player, Queue, or adaptive-layout surfaces represented by those assets.
 
 Screenshots must show the actual app, avoid credentials or protected sessions, and avoid using public chat/requester content that could create unnecessary personal-data exposure in marketing assets.
 
