@@ -9,5 +9,9 @@ Thanks for helping build 24Seven.FM Player.
 5. Never publish passwords, cookies, tokens, private messages, or unsanitized captures.
 6. Submit a pull request describing the behavior and validation performed.
 
-This is an independent community project; avoid wording or artwork that implies official endorsement.
+Ready, same-repository pull requests are automatically enrolled for merge after the
+required Android validation passes and the branch is current with `main`. Draft pull
+requests and pull requests from forks remain manual so they can be reviewed before
+merging.
 
+This is an independent community project; avoid wording or artwork that implies official endorsement.
