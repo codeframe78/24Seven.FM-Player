@@ -59,14 +59,14 @@ internal fun FavoriteTracksScreen(
     val favorites = state.favorites
     val signedIn = state.auth?.status == AuthStatus.SignedIn
     var filter by remember(state.selectedStation?.id) { mutableStateOf("") }
-    var sortOrder by remember(state.selectedStation?.id) { mutableStateOf(TrackSortOrder.LibraryOrder) }
+    var sortOrder by remember(state.selectedStation?.id) { mutableStateOf(FavoriteTrackSortOrder.Position) }
     var sortMenuOpen by remember { mutableStateOf(false) }
     val visibleTracks = remember(favorites?.tracks, filter, sortOrder) {
         val query = filter.trim()
         favorites?.tracks.orEmpty().filter { track ->
             query.isBlank() || sequenceOf(track.title, track.album, track.artist, track.genre.orEmpty())
                 .any { it.contains(query, ignoreCase = true) }
-        }.sortedForDisplay(sortOrder, FavoriteTrack::availability)
+        }.sortedForFavorites(sortOrder)
     }
 
     Box(Modifier.fillMaxSize()) {
@@ -152,7 +152,7 @@ internal fun FavoriteTracksScreen(
                                 expanded = sortMenuOpen,
                                 onDismissRequest = { sortMenuOpen = false },
                             ) {
-                                TrackSortOrder.entries.forEach { option ->
+                                FavoriteTrackSortOrder.entries.forEach { option ->
                                     DropdownMenuItem(
                                         text = { Text(option.label) },
                                         onClick = {
