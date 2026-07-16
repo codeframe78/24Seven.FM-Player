@@ -1,6 +1,6 @@
 # Google Play Alpha setup checklist
 
-The Google Play developer account was approved on July 14, 2026. Use this during M23–M24; do not place Console credentials, reviewer credentials, upload keys, passwords, or tester email lists in Git.
+The Google Play developer account was approved on July 14, 2026. Use this during M23–M28; do not place Console credentials, reviewer credentials, upload keys, passwords, or tester email lists in Git.
 
 ## Local preparation already complete
 

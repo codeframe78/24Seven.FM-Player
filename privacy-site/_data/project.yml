@@ -11,6 +11,9 @@ navigation:
   - section: testing
     label: Testing
     path: /project/testing/
+  - section: product-testing
+    label: Test the Player
+    path: /project/product-testing/
   - section: roadmap
     label: Roadmap
     path: /project/roadmap/
@@ -203,3 +206,35 @@ workstreams:
     state_label: Complete
     summary: Density-specific legacy, adaptive, and Android 13 monochrome launcher resources are complete.
     evidence: docs/m23-launcher-polish.md
+
+pre_alpha:
+  - id: M24
+    name: Sleep Timer
+    state: planned
+    state_label: Planned before Alpha
+    summary: Add a service-owned timer with presets, a custom duration, visible remaining time, adjust and cancel actions, and deterministic expiry across pause, station changes, device sleep, and service recreation.
+    evidence: docs/IMPLEMENTATION_PLAN.md
+  - id: M25
+    name: Cast / Audio-Output Selection
+    state: planned
+    state_label: Discovery first
+    summary: Verify the permitted routing architecture, stream authorization, and dependency impact before adding supported Cast and/or dedicated output selection with explicit handoff and recovery behavior.
+    evidence: docs/future-scope.md
+  - id: M26
+    name: In-App Diagnostics
+    state: planned
+    state_label: Planned before Alpha
+    summary: Provide a deliberately generated, redacted support snapshot with app, device, station, bounded playback, network, and route state while excluding sessions, community content, private endpoints, and raw logs.
+    evidence: docs/IMPLEMENTATION_PLAN.md
+  - id: M27
+    name: Community Push Notifications
+    state: planned
+    state_label: Discovery first
+    summary: Add opt-in station-scoped true push for exact signed-in-name Chat mentions and, once M17 delivery works, new Private Messages, with separate controls, safe deep links, blocked-user filtering, and duplicate suppression.
+    evidence: docs/future-scope.md
+  - id: M28
+    name: Alpha Publication
+    state: planned
+    state_label: Final pre-Alpha gate
+    summary: Revalidate the changed release candidate and publish the explicitly authorized signed bundle to internal or closed testing only after M23–M27 have closed.
+    evidence: docs/play-console-checklist.md

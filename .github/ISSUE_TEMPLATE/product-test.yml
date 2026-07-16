@@ -1,0 +1,165 @@
+name: Product testing result
+description: Record a pass, failure, pass with notes, or blocked 24Seven.FM Player test.
+title: "[Test]: "
+labels:
+  - testing-feedback
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for testing 24Seven.FM Player. GitHub issues are public. Do not include passwords, security answers, cookies, session values, private messages, abuse-report content, private endpoints, signing material, full network captures, or unredacted personal screenshots.
+  - type: input
+    id: build
+    attributes:
+      label: App version and version code
+      description: Copy both values from Android app information or the approved test release notes.
+      placeholder: "0.1.0-alpha01 (version code 1)"
+    validations:
+      required: true
+  - type: dropdown
+    id: installation
+    attributes:
+      label: Installation source
+      options:
+        - Google Play internal or closed testing
+        - Approved release APK
+        - Local debug APK
+        - Local release APK
+        - Other or unknown
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device model
+      placeholder: "Motorola Razr 2023, Pixel 8, Pixel Fold emulator"
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: Android version and API level
+      placeholder: "Android 16 / API 36"
+    validations:
+      required: true
+  - type: dropdown
+    id: form-factor
+    attributes:
+      label: Form factor
+      options:
+        - Phone
+        - Foldable open
+        - Foldable tabletop
+        - Foldable closed or cover display
+        - Tablet
+        - Multi-window or freeform
+        - Emulator with another configuration
+    validations:
+      required: true
+  - type: dropdown
+    id: station
+    attributes:
+      label: Station
+      options:
+        - Not station-specific
+        - StreamingSoundtracks.com
+        - 1980s.FM
+        - Adagio.FM
+        - Death.FM
+        - Entranced.FM
+        - Multiple stations
+    validations:
+      required: true
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Overall outcome
+      options:
+        - Pass
+        - Pass with notes
+        - Fail
+        - Blocked by setup or access
+    validations:
+      required: true
+  - type: checkboxes
+    id: areas
+    attributes:
+      label: Areas exercised
+      options:
+        - label: Launch and navigation
+        - label: Playback and station switching
+        - label: Background media and notification
+        - label: Metadata, Queue, or History
+        - label: Library search, sorting, Favorites, or requests
+        - label: Account and session isolation
+        - label: Chat or community safeguards
+        - label: Accessibility or adaptive layout
+        - label: Network, route, or lifecycle recovery
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Test scenario
+      description: Describe the bounded session and configuration you exercised.
+      placeholder: "Listening smoke test on Wi-Fi, compact portrait, then background notification navigation."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: State the observable pass boundary.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Record exactly what appeared, changed, played, stopped, or remained unchanged.
+    validations:
+      required: true
+  - type: dropdown
+    id: repeatability
+    attributes:
+      label: Repeatability
+      options:
+        - Not repeated because the test passed
+        - Repeated every attempt
+        - Repeated intermittently
+        - Happened once and did not repeat
+        - Could not repeat because setup or access changed
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps for a failure or note
+      description: Number the smallest sequence that reproduces the result. Write Not applicable for a clean pass.
+      placeholder: "1. Select Death.FM\n2. Start playback\n3. Background the app..."
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Suggested severity
+      options:
+        - Not applicable - clean pass
+        - Critical - safety, privacy, data exposure, or app unusable
+        - High - core workflow cannot complete
+        - Medium - workflow is impaired but has a workaround
+        - Low - usability, wording, visual, or polish issue
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted evidence or additional notes
+      description: Add privacy-reviewed screenshots or short notes only. Do not attach raw traffic or logs containing private data.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Public-report safety check
+      options:
+        - label: I reviewed this report and its attachments for personal or account information.
+          required: true
+        - label: I did not include credentials, sessions, private conversations, report content, signing data, private endpoints, or raw network captures.
+          required: true

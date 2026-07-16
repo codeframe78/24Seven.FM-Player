@@ -1,7 +1,7 @@
 ---
 layout: project
 title: Roadmap and milestone history · 24Seven.FM Player
-description: Follow the verified achievement order, active Play-testing workstreams, deferred Private Messages boundary, and planned Alpha publication for 24Seven.FM Player.
+description: Follow the verified achievement order, active Play-testing workstreams, deferred Private Messages boundary, pre-Alpha feature milestones, and Alpha publication plan for 24Seven.FM Player.
 permalink: /project/roadmap/
 section: roadmap
 ---
@@ -26,7 +26,7 @@ section: roadmap
   <a href="#now">Current program</a>
   <a href="#history">Achievement history</a>
   <a href="#deferred">Deferred M17</a>
-  <a href="#next">M24–M25</a>
+  <a href="#next">M24–M28</a>
   <a href="https://github.com/users/codeframe78/projects/1">Live dashboard ↗</a>
 </nav>
 
@@ -75,16 +75,29 @@ section: roadmap
 </section>
 
 <section class="content-section" id="next">
-  <div class="roadmap-callout next-callout">
-    <div><p class="eyebrow">M24 · Planned</p><h2>Authorized Alpha publication</h2></div>
-    <div><p>M24 begins after every required M23 gate closes and the owner explicitly authorizes publication. It verifies the selected signed bundle, tester-track configuration, reviewer access, Play delivery, and final release outcome.</p><div class="actions"><a class="button primary" href="https://github.com/users/codeframe78/projects/1">Open live dashboard</a><a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/IMPLEMENTATION_PLAN.md">Implementation plan</a></div></div>
+  <div class="content-intro wide">
+    <p class="eyebrow">Before Alpha publication</p>
+    <h2>Four product milestones, then release</h2>
+    <p>M24–M27 are ordered feature gates ahead of M28. Each milestone must be implemented, validated, documented, and committed before the release candidate can advance.</p>
+  </div>
+  <div class="workstream-grid">
+    {% for item in site.data.project.pre_alpha %}
+    <article class="roadmap-card {{ item.state }}">
+      <p class="status"><span></span>{{ item.state_label }}</p>
+      <p class="milestone-id">{{ item.id }}</p>
+      <h3>{{ item.name }}</h3>
+      <p>{{ item.summary }}</p>
+      <a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/{{ item.evidence }}">View milestone scope <span aria-hidden="true">↗</span></a>
+    </article>
+    {% endfor %}
   </div>
   <div class="roadmap-callout future-callout">
-    <div><p class="eyebrow">M25 · Planned after M24</p><h2>Chat Mention Notifications</h2></div>
+    <div><p class="eyebrow">M27 · Delivery boundary</p><h2>One safe notification foundation</h2></div>
     <div>
-      <p>Add opt-in notifications when the signed-in member's exact station display identity is mentioned in Chat. The experience will be station-scoped, filter locally blocked authors, suppress duplicates, expose per-station controls and a dedicated notification channel, and deep-link through the existing community-safety gates.</p>
-      <p><strong>Discovery gate:</strong> the current app has no developer backend and reads Chat only while the screen is selected. Reliable push requires an authorized station event source, webhook, or privacy-compatible relay. Continuous background polling will not be presented as push.</p>
-      <ul class="inline-requirements"><li>Authorized event delivery</li><li>Minimal payloads</li><li>No session forwarding</li><li>Privacy and Data Safety update</li><li>Battery and traffic validation</li></ul>
+      <p>Chat mentions are required before M28. New Private Message notifications share the same station-scoped controls, channels, filtering, duplicate suppression, and safety-gated deep links, but live PM delivery activates only after M17 is repaired and verified.</p>
+      <p><strong>Discovery gate:</strong> the app has no developer-operated backend and currently observes Chat only while its screen is selected. Reliable notification delivery requires an authorized station event source or privacy-compatible relay. Continuous background polling will not be presented as push.</p>
+      <ul class="inline-requirements"><li>Authorized true push</li><li>Minimal payloads</li><li>Separate Chat and PM controls</li><li>No session forwarding</li><li>Privacy and Data Safety review</li><li>Battery and traffic validation</li></ul>
+      <div class="actions"><a class="button primary" href="https://github.com/users/codeframe78/projects/1">Open live dashboard</a><a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/IMPLEMENTATION_PLAN.md">Implementation plan</a></div>
     </div>
   </div>
 </section>

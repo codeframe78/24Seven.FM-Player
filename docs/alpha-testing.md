@@ -46,6 +46,8 @@ Do not distribute the development debug APK as the public Alpha. Its machine-loc
 
 ## Reporting a problem
 
+Use the public [product-testing workspace](https://codeframe78.github.io/24Seven.FM-Player/project/product-testing/) to choose a test session and open the structured GitHub result form. The same form accepts passes, failures, passes with notes, and blocked tests so successful coverage is recorded alongside defects.
+
 Include:
 
 - app version and version code from Android app information;
@@ -62,7 +64,7 @@ Never include passwords, security-code answers or images, cookies, session value
   but New Message selection remains suspect and a profile-originated MorgHubby test was not delivered; the site owner
   has the reproduced result.
 - Representative authenticated certification is complete for all five stations; natural server-side session expiry was not forcibly induced.
-- Sleep timer, Cast/audio-output selection, and diagnostics are not implemented.
+- The current candidate does not yet include M24 Sleep Timer, M25 Cast / Audio-Output Selection, M26 In-App Diagnostics, or M27 Community Push Notifications. These are required before the renumbered M28 publication gate.
 - Station accounts are currently station-specific.
 - Public station interfaces can change independently of the app.
 - Physical Razr playback and UI survive a measured open/tabletop/closed/reopened hinge cycle. Play-delivered install/update validation, the Play pre-launch report, and a complete spoken TalkBack pass remain release checks.
