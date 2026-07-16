@@ -58,6 +58,8 @@ The following objective declarations and listing settings are saved in Play Cons
 
 These saved declarations have not been sent for review. The remaining App content forms require owner-provided or policy-sensitive inputs and must not be guessed: reviewer credentials/instructions for restricted station features, a policy-compatible target audience, content-rating answers, and final Data Safety confirmation.
 
+The copy-ready, non-secret portion of those declarations is maintained in `docs/m23-play-declaration-packet.md`.
+
 ## App-content details to review
 
 - **App access:** Public playback, Queue, and History do not require login. Authentication, Chat posting, Favorites, and requests do. Console requires reusable sign-in details that give reviewers full access and will not unlock Target audience until this declaration is complete. Because accounts are station-specific, provide least-privileged non-administrator reviewer details for every station needed to exercise the restricted features, only through Play Console's protected reviewer form. Do not place them in Git or chat.
@@ -66,6 +68,7 @@ These saved declarations have not been sent for review. The remaining App conten
 - **Privacy policy:** Completed on July 15, 2026. The active public HTTPS page is `https://codeframe78.github.io/24Seven.FM-Player/`; the same canonical policy remains available as native text under More in the app.
 - **Account deletion:** The app does not create station accounts; it only signs into pre-existing station accounts and can remove the local session with Sign out. Confirm the appropriate Console declaration when completing App content.
 - **Target audience/content rating:** The owner selected **18+** on July 15, 2026. The service community is predominantly long-standing adult members, and the app is not designed or presented as a children's product. M23.2 now hides community content by default behind an adult age screen, versioned Terms acceptance, and a separate reveal action; accurate content-rating answers are still required. Console entry remains blocked until reusable reviewer-access details are saved.
+- **Foreground service:** Declare only **Media playback** for `FOREGROUND_SERVICE_MEDIA_PLAYBACK`. Use the copy and demonstration sequence in `docs/m23-play-declaration-packet.md`; upload or link the final reviewer-accessible video through Console without committing account data.
 
 ## Release progression
 

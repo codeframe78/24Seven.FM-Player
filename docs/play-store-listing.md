@@ -24,9 +24,11 @@ Listen to all five 24Seven.FM radio stations in one fully native Android player:
 
 Move between stations without losing the player, continue listening in the background, and control playback from Android media controls, notifications, headsets, and Bluetooth devices. The player shows available live metadata and artwork, clearly communicates buffering or reconnection states, and preserves the selected station across restarts.
 
-Explore each station's upcoming queue and recently played tracks. Where the station supports them, signed-in members can use native chat, browse favorites, search the station library, and explicitly confirm song requests and optional request messages. Station accounts and capabilities remain station-specific.
+Explore each station's upcoming queue and recently played tracks. Where the station supports them, signed-in members can use native chat, browse favorites, search the station library by title, album, artist, or genre, sort requestable tracks by station order or play state, and explicitly confirm song requests and optional request messages. Station accounts and capabilities remain station-specific.
 
-Additional tools include a sleep timer, favorite-station shortcuts, sharing, appearance preferences, connection diagnostics, and responsive phone, tablet, foldable, and resizable-window layouts.
+Community content is hidden by default behind an adult age screen, Terms acceptance, and a separate reveal action. The app provides distinct report-content, report-user, and block-user controls, including station-scoped local block management.
+
+Device-local startup preferences can resume the last station or use a chosen station. Responsive layouts support phones, tablets, foldables, rotation, and resizable windows.
 
 Public listening does not require an account. The app contains no ads, analytics, tracking SDKs, or developer-operated data server.
 
@@ -71,7 +73,7 @@ Screenshots must show the actual app, avoid credentials or protected sessions, a
 - Feature graphic: `Five colored radio signals crossing a dark 24Seven.FM player backdrop.`
 - Player screenshot: `Now Playing screen with live artwork, station controls, and five-station selector.`
 - Queue screenshot: `Upcoming and recently played station tracks in the native Queue screen.`
-- More screenshot: `Station capabilities, account access, preferences, and diagnostics.`
+- More screenshot: `Station capabilities, account access, device preferences, and community safety controls.`
 - Tablet screenshot: `Expanded Now Playing layout with navigation rail and supporting station content.`
 
 ## Source requirements checked
@@ -79,3 +81,4 @@ Screenshots must show the actual app, avoid credentials or protected sessions, a
 - [Store listing best practices](https://support.google.com/googleplay/android-developer/answer/13393723)
 - [Preview asset specifications](https://support.google.com/googleplay/android-developer/answer/9866151)
 - [Metadata policy](https://support.google.com/googleplay/android-developer/answer/9898842)
+- [Play Console sign-in details requirements](https://support.google.com/googleplay/android-developer/answer/15748846)
