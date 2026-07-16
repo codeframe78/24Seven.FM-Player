@@ -1,6 +1,6 @@
 # M23 modern Android device compatibility matrix
 
-Validated July 15, 2026 for the `0.1.0-alpha01` candidate. The product requirement is adaptive support across
+Validated through July 16, 2026 for the `0.1.0-alpha01` candidate. The product requirement is adaptive support across
 current Android phones, tablets, foldables, multi-window, and freely resized windows. This is a window-size contract,
 not a list of hard-coded device models.
 
@@ -20,17 +20,17 @@ not a list of hard-coded device models.
 | --- | --- | --- | --- |
 | Motorola Razr 2023, Android 16 / API 36 | 411×731dp compact portrait | `phone-player-live-playing.png`, `phone-queue-live.png`, `phone-stations.png` | Bottom navigation, artwork, metadata, playback, mini-player, live Queue, and horizontally scrollable station cards remain reachable. |
 | API 35 Pixel 7 emulator | 411×731dp compact portrait | `phone-more.png`; connected UI suite | Compact navigation and supporting destinations render at an exact 1080×1920 Play screenshot size. |
-| API 26 phone AVD | Minimum supported runtime | 27/27 connected tests | Minimum-SDK installation, launch, compact navigation, playback UI, and established feature suite pass without changing SDK packages or clearing build caches. |
-| API 35 16 KB phone AVD | 411×731dp compact portrait; 16,384-byte runtime page size | 27/27 connected tests; `PAGE_SIZE=16384` | The app installs, launches, and passes the established feature suite on a genuine 16 KB runtime. |
+| API 26 phone AVD | Minimum supported runtime | 36/36 current-head connected tests | Minimum-SDK installation, launch, compact navigation, playback UI, UGC safety, legal disclosures, and the established feature suite pass without changing SDK packages or clearing build caches. One test was corrected to scroll to a More-menu disclosure before asserting viewport visibility. |
+| API 35 16 KB phone AVD | 411×731dp compact portrait; 16,384-byte runtime page size | 36/36 current-head connected tests; `PAGE_SIZE=16384` | The app installs, launches, and passes the complete current suite on a genuine 16 KB runtime. |
 | API 35 Pixel 7 emulator resized as a 7-inch class window | 720×1280dp portrait | `tablet-7-player2.png` | Navigation rail replaces bottom navigation; Player controls and station cards remain visible. |
 | API 35 Pixel 7 emulator resized as a 10-inch class window | 960×1707dp portrait | `tablet-10-player.png` | Expanded two-pane Player and navigation rail render without stretching the compact layout. |
 | API 35 Pixel 7 emulator, expanded landscape/freeform | 1707×960dp landscape | `tablet-landscape-player.png` | Two-pane Player, navigation rail, controls, and all five station cards are simultaneously reachable. |
-| API 35 Pixel Fold emulator, open inner display | 2208×1840 physical display | Focused adaptive connected tests and live emulator inspection | Expanded layout renders correctly on the genuine foldable inner display. |
-| API 35 Pixel Fold emulator, half-open inner display | Device-state 1; 2208×1840 physical display | 33/33 connected tests and live inspection | The full current suite passes across the hinge-state transition. Intermittent gfxstream black tiles cleared after an activity rerender and produced no application crash or semantic-test failure. |
-| API 35 Pixel Fold emulator, closed outer display | Device-state 0; 1080×2092 physical display, inner display off | 33/33 connected tests and cold-launch screenshot inspection | Compact Player controls and the horizontally reachable station carousel are visible; the complete current suite passes on the genuine outer display. |
-| API 35 Pixel Tablet emulator, native landscape | 2560×1600 physical display; 1280×800dp | 33/33 connected tests and cold-launch screenshot inspection | Expanded two-pane Player, navigation rail, artwork, controls, and station carousel render cleanly. |
-| API 35 Pixel Tablet emulator, native portrait | 1600×2560 physical display; 800×1280dp | 34/34 connected tests and rotation screenshot inspection | Medium-width rail layout retains visible artwork, controls, and a horizontally reachable station carousel after rotation; the final suite includes duplicate-report retry suppression. |
-| API 36 phone AVD targeting API 36 | 411×914dp compact portrait | 27/27 connected tests plus cold-launch/two-Back inspection | Adaptive navigation, Favorites lazy scrolling, MediaSession service, edge-to-edge Player, and the exit dialog pass under Android 16 target behavior. |
+| API 35 Pixel Fold emulator, open inner display | 2208×1840 physical display | 36/36 current-head connected tests plus live emulator inspection | Expanded layout and the complete current feature suite pass on the genuine foldable inner display. |
+| API 35 Pixel Fold emulator, half-open inner display | Device-state 1; 2208×1840 physical display | Earlier 33/33 full suite; 2/2 current-head More/disclosure tests | The full feature suite and the current-head More-menu paths pass across the hinge-state transition. Intermittent gfxstream black tiles observed in the earlier pass cleared after an activity rerender and produced no application crash or semantic-test failure. |
+| API 35 Pixel Fold emulator, closed outer display | Device-state 0; 1080×2092 physical display, inner display off | Earlier 33/33 full suite; 2/2 current-head More/disclosure tests; cold-launch inspection | Compact Player controls and the horizontally reachable station carousel are visible; the full feature suite and current-head More-menu paths pass on the genuine outer display. |
+| API 35 Pixel Tablet emulator, native landscape | 2560×1600 physical display; 1280×800dp | 36/36 current-head connected tests plus cold-launch inspection | Expanded two-pane Player, navigation rail, artwork, controls, station carousel, and complete current feature suite pass. |
+| API 35 Pixel Tablet emulator, native portrait | 1600×2560 physical display; 800×1280dp | Earlier 34/34 full suite; 1/1 current-head open-source disclosure test; rotation inspection | Medium-width rail layout retains visible artwork, controls, and a horizontally reachable station carousel after rotation; the current legal-disclosure path is also scroll-reachable. |
+| API 36 phone AVD targeting API 36 | 411×914dp compact portrait | 36/36 current-head connected tests plus cold-launch/two-Back inspection | Adaptive navigation, UGC safety, legal disclosures, Favorites lazy scrolling, MediaSession service, edge-to-edge Player, and the exit dialog pass under Android 16 target behavior. |
 
 All display overrides were temporary. The Razr returned to its physical 1080×2640 display and 420dpi density; the
 emulator returned to 1080×2400 and 420dpi after capture.
@@ -43,17 +43,19 @@ emulator returned to 1080×2400 and 420dpi after capture.
 - Short-wide layout keeps playback controls scroll-reachable.
 - 1.5× font scale keeps the compact Player's primary action reachable.
 - Folded portrait keeps playback controls and the complete station carousel visible without scrolling.
-- The 33-test connected suite passes on the Pixel Fold half-open inner display, closed outer display, and Pixel Tablet
-  native landscape. The final 34-test suite, with duplicate-report retry suppression added, passes on Pixel Tablet portrait.
+- The complete current-head 36-test connected suite passes on API 26, API 36, the API 35 16 KB runtime, Pixel Fold
+  open, and Pixel Tablet native landscape. The current More-menu preference and legal-disclosure paths also pass after
+  live transitions to the Fold half-open and closed/outer-display states, and the disclosure path passes after rotating
+  the Tablet to portrait.
 - A generated 1,500-track Favorites list remains browsable and supports stable play-state sorting; the preserved full
   MorG list remained responsive during physical Razr inspection.
 - Existing previews cover compact playing, phone landscape, expanded buffering, long metadata, missing artwork,
   reconnecting/error states, light mode, and large type.
-- The earlier API 35 phone suite passed 24/24 tests. The current M23.2-inclusive suite passes 33/33 on each fold/tablet
-  posture listed above, including compact/medium navigation selection, live width-change state preservation,
-  short-wide scrolling, 1.5× font-scale reachability, community access gating, and native report/block flows.
-- The API 36 connected suite passes 27/27 tests after correcting one viewport-dependent lazy-test assumption; the
-  installed candidate reports target API 36 and the cold-launch two-Back flow reaches the expected exit dialog.
+- Earlier full posture suites remain recorded above. The July 16 current-head pass adds the packaged open-source notice,
+  backup/privacy hardening state, and all M23.2 UGC safety paths to the 36-test baseline. It also corrects a test-only
+  viewport assumption so the Device preferences disclosure is scrolled into view before asserting visibility.
+- The API 36 connected suite now passes 36/36; the installed candidate reports target API 36 and the earlier cold-launch
+  two-Back flow reaches the expected exit dialog.
 
 ## Foldable and OEM boundary
 

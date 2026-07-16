@@ -579,8 +579,7 @@ class RadioAppTest {
             }
         }
 
-        composeRule.onNodeWithText("Device preferences").assertIsDisplayed()
-        composeRule.onNodeWithTag("more_device_preferences").performScrollTo().performClick()
+        composeRule.onNodeWithTag("more_device_preferences").performScrollTo().assertIsDisplayed().performClick()
         composeRule.onNodeWithText("Always start with Adagio.FM").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("startup_use_last_station").performScrollTo().performClick()
         composeRule.onNodeWithTag("startup_use_current_station").performScrollTo().performClick()
