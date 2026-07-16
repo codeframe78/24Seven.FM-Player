@@ -1,0 +1,311 @@
+package com.codeframe78.twentyfourseven.player.data
+
+import com.codeframe78.twentyfourseven.player.domain.RequestSearchField
+import com.codeframe78.twentyfourseven.player.domain.RequestSearchTarget
+import com.codeframe78.twentyfourseven.player.domain.RequestSuggestionMode
+import com.codeframe78.twentyfourseven.player.domain.SongRequestLoadStatus
+import com.codeframe78.twentyfourseven.player.domain.SongRequestRepository
+import com.codeframe78.twentyfourseven.player.domain.SongRequestState
+import com.codeframe78.twentyfourseven.player.domain.StationId
+import com.codeframe78.twentyfourseven.player.domain.MAX_REQUEST_MESSAGE_CHARACTERS
+import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
+import com.codeframe78.twentyfourseven.player.domain.QueueState
+import com.codeframe78.twentyfourseven.player.domain.TrackRequestAvailability
+import com.codeframe78.twentyfourseven.player.domain.TrackRequestAvailabilityResolver
+import com.codeframe78.twentyfourseven.player.domain.TrackRequestStatus
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import java.io.IOException
+import java.net.SocketTimeoutException
+import java.util.concurrent.ConcurrentHashMap
+
+internal class NetworkSongRequestRepository(
+    private val remote: SongRequestRemoteDataSource,
+) : SongRequestRepository {
+    private val states = ConcurrentHashMap<StationId, MutableStateFlow<SongRequestState>>()
+    private val locks = ConcurrentHashMap<StationId, Mutex>()
+
+    override fun observeRequests(stationId: StationId): Flow<SongRequestState> = state(stationId).asStateFlow()
+
+    override suspend fun search(stationId: StationId, query: String, field: RequestSearchField) =
+        lock(stationId).withLock {
+            val normalized = query.trim()
+            if (normalized.isBlank()) {
+                state(stationId).value = state(stationId).value.copy(errorMessage = "Enter something to search for.")
+                return@withLock
+            }
+            update(stationId) { it.copy(status = SongRequestLoadStatus.Loading, query = normalized, searchField = field, errorMessage = null, notice = null, pendingRequest = null) }
+            runCatching { remote.search(stationId, normalized, field) }
+                .onSuccess { results ->
+                    update(stationId) { it.copy(status = SongRequestLoadStatus.Ready, searchResults = results, tracks = emptyList(), albumTitle = null, errorMessage = null, notice = if (results.isEmpty()) "No matching library results were found." else null) }
+                }
+                .onFailure { failure(stationId, "Could not search this station right now.") }
+        }
+
+    override suspend fun openSearchResult(stationId: StationId, target: RequestSearchTarget): Unit =
+        lock(stationId).withLock {
+            when (target) {
+                is RequestSearchTarget.Album -> {
+                    val knownAlbumTitle = state(stationId).value.searchResults
+                        .firstOrNull { it.target == target }
+                        ?.let { it.subtitle ?: it.title }
+                    update(stationId) {
+                        it.copy(
+                            status = SongRequestLoadStatus.Loading,
+                            albumTitle = knownAlbumTitle,
+                            errorMessage = null,
+                            notice = null,
+                            pendingRequest = null,
+                        )
+                    }
+                    runCatching { remote.loadAlbum(stationId, target.albumId) }
+                        .onSuccess { album ->
+                            update(stationId) {
+                                it.copy(
+                                    status = SongRequestLoadStatus.Ready,
+                                    searchResults = emptyList(),
+                                    albumTitle = knownAlbumTitle ?: album.title,
+                                    tracks = album.tracks,
+                                    errorMessage = null,
+                                    notice = if (album.tracks.isEmpty()) {
+                                        "No requestable track listing was found for this album."
+                                    } else {
+                                        null
+                                    },
+                                )
+                            }
+                        }
+                        .onFailure { failure(stationId, "Could not load this album right now.") }
+                }
+
+                is RequestSearchTarget.Artist -> {
+                    update(stationId) {
+                        it.copy(
+                            status = SongRequestLoadStatus.Loading,
+                            searchResults = emptyList(),
+                            tracks = emptyList(),
+                            albumTitle = null,
+                            errorMessage = null,
+                            notice = null,
+                            pendingRequest = null,
+                        )
+                    }
+                    runCatching { remote.loadArtistAlbums(stationId, target.artistName) }
+                        .onSuccess { results ->
+                            update(stationId) {
+                                it.copy(
+                                    status = SongRequestLoadStatus.Ready,
+                                    searchResults = results,
+                                    errorMessage = null,
+                                    notice = if (results.isEmpty()) {
+                                        "No albums were found for this artist."
+                                    } else {
+                                        null
+                                    },
+                                )
+                            }
+                        }
+                        .onFailure { failure(stationId, "Could not load this artist's albums right now.") }
+                }
+            }
+        }
+
+    override suspend fun suggest(stationId: StationId, mode: RequestSuggestionMode): Unit =
+        lock(stationId).withLock {
+            update(stationId) {
+                it.copy(
+                    status = SongRequestLoadStatus.Loading,
+                    searchResults = emptyList(),
+                    tracks = emptyList(),
+                    albumTitle = null,
+                    errorMessage = null,
+                    notice = null,
+                    pendingRequest = null,
+                )
+            }
+            runCatching { remote.suggest(stationId, mode) }
+                .onSuccess { suggestion ->
+                    update(stationId) {
+                        it.copy(
+                            status = SongRequestLoadStatus.Ready,
+                            albumTitle = suggestion.title,
+                            tracks = suggestion.tracks,
+                            notice = if (suggestion.tracks.isEmpty()) {
+                                "The station did not return an available suggestion."
+                            } else {
+                                null
+                            },
+                        )
+                    }
+                }
+                .onFailure { failure(stationId, "Could not load a station suggestion right now.") }
+        }
+
+    override suspend fun prepareRequest(stationId: StationId, songId: String) = lock(stationId).withLock {
+        val track = state(stationId).value.tracks.firstOrNull { it.songId == songId && it.eligible } ?: return@withLock
+        update(stationId) { it.copy(pendingRequest = track, notice = null, errorMessage = null) }
+    }
+
+    override suspend fun prepareRequest(stationId: StationId, track: com.codeframe78.twentyfourseven.player.domain.RequestableTrack) =
+        lock(stationId).withLock {
+            if (!track.eligible) return@withLock
+            update(stationId) { it.copy(pendingRequest = track, notice = null, errorMessage = null) }
+        }
+
+    override suspend fun cancelRequest(stationId: StationId) = lock(stationId).withLock {
+        update(stationId) { it.copy(pendingRequest = null) }
+    }
+
+    override suspend fun confirmRequest(stationId: StationId, queue: QueueState, message: String) = lock(stationId).withLock {
+        val pending = state(stationId).value.pendingRequest ?: return@withLock
+        val normalizedMessage = message.trim()
+        require(normalizedMessage.length <= MAX_REQUEST_MESSAGE_CHARACTERS) { "Request message is too long" }
+        if (queue.stationId != stationId || queue.status != QueueLoadStatus.Ready) {
+            update(stationId) {
+                it.copy(
+                    pendingRequest = null,
+                    errorMessage = "Requests Temporarily Unavailable. Refresh Queue before trying again.",
+                )
+            }
+            return@withLock
+        }
+        update(stationId) { it.copy(status = SongRequestLoadStatus.Submitting, errorMessage = null, notice = null) }
+        val currentTrack = runCatching { remote.loadAlbum(stationId, pending.albumId) }
+            .getOrElse {
+                update(stationId) { state ->
+                    state.copy(
+                        status = SongRequestLoadStatus.Ready,
+                        pendingRequest = null,
+                        errorMessage = "Requests Temporarily Unavailable. Current track eligibility could not be confirmed.",
+                    )
+                }
+                return@withLock
+            }
+            .tracks
+            .firstOrNull { it.songId == pending.songId }
+        if (currentTrack == null) {
+            update(stationId) {
+                it.copy(
+                    status = SongRequestLoadStatus.Ready,
+                    pendingRequest = null,
+                    errorMessage = "Requests Temporarily Unavailable. This track is no longer listed by the station.",
+                )
+            }
+            return@withLock
+        }
+        val availability = TrackRequestAvailabilityResolver.resolve(
+            stationId,
+            currentTrack.identity,
+            currentTrack.availability,
+            queue,
+        )
+        if (!availability.canRequest) {
+            update(stationId) {
+                it.copy(
+                    status = SongRequestLoadStatus.Ready,
+                    pendingRequest = null,
+                    tracks = it.tracks.map { track ->
+                        if (track.songId == pending.songId) {
+                            track.copy(eligible = false, availability = availability)
+                        } else {
+                            track
+                        }
+                    },
+                    errorMessage = availability.rejectionMessage(),
+                )
+            }
+            return@withLock
+        }
+        runCatching { remote.submit(stationId, currentTrack, normalizedMessage) }
+            .onSuccess { result ->
+                when (result) {
+                    is RequestSubmissionResult.Submitted -> update(stationId) { current ->
+                        current.copy(
+                            status = SongRequestLoadStatus.Ready,
+                            pendingRequest = null,
+                            notice = result.message,
+                            tracks = current.tracks.map {
+                                if (it.songId == pending.songId) {
+                                    it.copy(
+                                        eligible = false,
+                                        availability = TrackRequestAvailability(
+                                            TrackRequestStatus.RequestsUnavailable,
+                                            "The request was submitted; confirm its queue position before requesting again.",
+                                        ),
+                                    )
+                                } else {
+                                    it
+                                }
+                            },
+                        )
+                    }
+                    is RequestSubmissionResult.Rejected -> update(stationId) { it.copy(status = SongRequestLoadStatus.Ready, pendingRequest = null, errorMessage = result.message) }
+                    RequestSubmissionResult.AuthenticationRequired -> update(stationId) { it.copy(status = SongRequestLoadStatus.Ready, pendingRequest = null, errorMessage = "Sign in to this station before requesting a song.") }
+                }
+            }
+            .onFailure { failure ->
+                update(stationId) { current ->
+                    current.copy(
+                        status = SongRequestLoadStatus.Ready,
+                        pendingRequest = null,
+                        tracks = current.tracks.map {
+                            if (it.songId == pending.songId) {
+                                it.copy(
+                                    eligible = false,
+                                    availability = TrackRequestAvailability(
+                                        TrackRequestStatus.RequestsUnavailable,
+                                        "The request result could not be confirmed; check Queue before trying again.",
+                                    ),
+                                )
+                            } else {
+                                it
+                            }
+                        },
+                        errorMessage = "The station may have received this request, but confirmation could not be read. " +
+                            "${confirmationFailureDetail(failure)} Check Queue before trying again. Nothing was retried.",
+                    )
+                }
+            }
+    }
+
+    private fun state(stationId: StationId) = states.getOrPut(stationId) { MutableStateFlow(SongRequestState(stationId)) }
+    private fun lock(stationId: StationId) = locks.getOrPut(stationId, ::Mutex)
+    private fun update(stationId: StationId, transform: (SongRequestState) -> SongRequestState) {
+        state(stationId).value = transform(state(stationId).value)
+    }
+    private fun failure(stationId: StationId, message: String) = update(stationId) {
+        it.copy(status = SongRequestLoadStatus.Error, pendingRequest = null, errorMessage = message)
+    }
+
+    private fun confirmationFailureDetail(failure: Throwable): String = when {
+        failure is SocketTimeoutException -> "The confirmation timed out."
+        failure is IOException && failure.message == "Station response was too large" ->
+            "The confirmation page exceeded the safe response limit."
+        failure is IOException && failure.message == "Too many station redirects" ->
+            "The station returned too many confirmation redirects."
+        failure is IOException && failure.message == "Untrusted request scheme" ->
+            "The station redirected confirmation to an unsupported protocol."
+        failure is IOException && failure.message == "Untrusted request host" ->
+            "The station redirected confirmation to an unverified host."
+        failure is IOException && failure.message == "Untrusted request port" ->
+            "The station redirected confirmation to an unverified port."
+        failure is IOException && failure.message == "Unrecognized station request confirmation" ->
+            "The station response did not explicitly confirm the request."
+        failure is IOException -> "The confirmation connection failed."
+        else -> "The confirmation could not be processed."
+    }
+
+    private fun TrackRequestAvailability.rejectionMessage(): String = when (status) {
+        TrackRequestStatus.InCurrentQueue, TrackRequestStatus.RecentlyPlayed ->
+            "Track Recently Played. ${detail.orEmpty()}".trim()
+        TrackRequestStatus.AuthenticationRequired -> "Sign In to Request. ${detail.orEmpty()}".trim()
+        TrackRequestStatus.UserCooldown -> "Request Cooldown Active. ${detail.orEmpty()}".trim()
+        TrackRequestStatus.MembershipRequired -> "VIP Membership Required. ${detail.orEmpty()}".trim()
+        TrackRequestStatus.RequestLimitReached -> "Request Limit Reached. ${detail.orEmpty()}".trim()
+        TrackRequestStatus.StationUnavailable -> "Station Unavailable. ${detail.orEmpty()}".trim()
+        else -> "Requests Temporarily Unavailable. ${detail.orEmpty()}".trim()
+    }
+}

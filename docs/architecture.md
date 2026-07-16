@@ -1,0 +1,129 @@
+# Architecture
+
+24Seven.FM Player is a native Kotlin/Compose application. It uses MVVM with unidirectional data flow and keeps Android UI, playback, and remote protocols independent.
+
+## Dependency direction
+
+```text
+Compose UI -> ViewModel -> domain repository interface
+                               ^
+                               |
+                         data implementation
+
+Compose UI -> ViewModel -> playback interface -> Media3 implementation
+```
+
+The UI must not import Retrofit, OkHttp, cookies, WebSockets, or ExoPlayer. A screen receives immutable UI state and emits actions to its ViewModel.
+
+## Station scope
+
+`StationId` is required for station-specific metadata, chat, queues, history, and requests. Do not assume that every station supports every feature. `StationCapabilities` controls which destinations and actions are shown.
+
+The bundled catalog contains identities and public website addresses only. Stream URLs and protocol endpoints must come from a reviewed source rather than guesses embedded in UI code.
+
+The initial stream addresses were extracted from station-provided PLS playlists. Each catalog entry keeps the primary `hi5` relay first and the `hi` source stream as a fallback. Because those playlists use HTTP, Android cleartext access is permitted only for the five explicit station domains; cleartext remains disabled globally.
+
+All ten committed relay URLs advertise `audio/aacp` and 128 kbps through ICY headers. The catalog therefore records `StreamFormat.Aac` and 128 kbps based on protocol evidence, not hostname inference. Revalidate this evidence before changing the labels.
+
+Live ICY titles flow from the service-owned player through a station-scoped `NowPlayingRepository` contract. Compose receives only immutable domain state. ICY supplies one composite title, so the application displays it unchanged and does not guess artist, album, composer, or duration fields. On each distinct ICY title, the service requests the station's public current-track record once and optionally enriches state and MediaSession metadata with an explicit same-station cover URL. This is event-driven rather than separately polled, and artwork failure never affects playback or title updates.
+
+
+## Playback ownership
+
+`RadioPlaybackService` owns the single `ExoPlayer` and `MediaSession`. The application connects through a Media3 `MediaController` adapter implementing the domain-facing `PlaybackController` interface. Switching stations stops the current item and atomically replaces the playlist with the selected station's ordered primary and fallback streams; two stations can never play simultaneously. The service advances to the fallback once when the primary stream fails.
+
+## Native navigation
+
+The selected Player, Chat, Queue, or More destination is immutable `MainUiState` owned by `MainViewModel`. Destination composables emit navigation and playback actions upward. Secondary destinations reuse the same domain playback and now-playing state through a persistent mini-player; they never connect to Media3 directly.
+
+The phone shell uses bottom navigation below 600 dp. Wider layouts use a navigation rail and content pane. Chat, Favorites, Queue, and authenticated listener activity remain controlled by verified station capability flags and repository state.
+
+## Secondary station content
+
+`StationPage` and `StationPageKind` are immutable domain models attached to each catalogued station. A dedicated
+`supportsSecondaryContent` capability controls whether the native More directory is shown; unsupported stations
+render an explicit unavailable state. Compose emits the selected page upward and never opens a browser directly.
+
+`MainActivity` is the Android boundary that launches an Android Custom Tab only after
+`StationPageTrustPolicy` confirms the page is an exact entry for the selected station, uses HTTPS, has no embedded
+credentials or fragment, uses the default HTTPS port, and resolves to the same canonical station host. The browser
+owns its cookies and page lifecycle: protected app sessions are never copied, pages are not fetched or parsed by
+the app, and there is no polling, caching, or automatic form submission. Death.FM uses the same trust boundary but
+its independently verified membership card targets the station-specific `RIP_Subscribe` route rather than the
+other stations' `VIP_Subscribe` route. See `docs/m16-secondary-content-research.md` and
+`docs/m21-death-certification.md`.
+
+## Queue and history
+
+`QueueRepository` is station-scoped and exposes immutable unavailable, loading, ready, and error state. `MainViewModel` observes it only while Queue is selected, switches the flow when `StationId` changes, and cancels observation when leaving Queue. Compose only renders the resulting state or emits a refresh action upward.
+
+`PollingQueueRepository` performs one request immediately and then no more than once every 60 seconds. Manual refresh uses the same limiter. The remote adapter supplies bounded I/O, station mapping, and defensive parsing for each station's public queue source. Extended sources display at most 30 upcoming and 30 recently played tracks; compact sources display the rows they provide. The parser preserves explicit track fields, does not guess unavailable fields, and only accepts artwork hosted by the selected station domain. See `docs/m6-queue-research.md`.
+
+Extended queue rows may also expose an explicit `req-text` attribution element. The parser keeps its profile-link
+requester and optional italic message separate from track metadata, bounds both fields, and passes plain immutable
+strings to Compose. It never infers attribution from unrelated links. See `docs/m10-request-attribution-research.md`.
+
+`SongRequestRepository` owns station-scoped transient search, album, suggestion, eligibility, confirmation, and
+submission state. Catalog reads are user initiated and never polled; explicit random and least-played actions use
+the station's own suggestion parameters. The remote adapter accepts only same-origin HTTPS album and request actions,
+and submission requires the M7 protected station session. Compose receives immutable state and emits search,
+suggestion, album, prepare, cancel, and confirm actions upward. A state-changing request is made only after
+two explicit actions and is never retried. StreamingSoundtracks.com's separately verified request-message
+capability adds a transient 80-character field to confirmation; a non-blank value is posted only after the song
+request is accepted, and a message failure cannot repeat the song mutation. See `docs/m9-request-research.md` and
+`docs/m10-request-attribution-research.md`.
+
+## Authentication
+
+Authentication lives behind the station-scoped `AuthRepository`; Compose receives immutable state and emits
+actions without reading cookies. The data layer owns the verified legacy form challenge, same-origin redirects,
+bounded responses, session cookies, and signed-in response classification. Passwords and security-code answers
+remain transient.
+
+Session cookies and display identity are encrypted with an Android Keystore AES-GCM key. Restored sessions are
+revalidated when the station is reachable; an anonymous response clears them, while a network failure preserves
+the protected cached identity so public playback remains available offline. Sign-out clears both the in-memory
+cookie manager and protected storage even if the remote logout request fails. See `docs/m7-auth-research.md` and
+`docs/m7-validation.md`.
+
+`ListenerActivityRepository` owns memory-only authenticated request history, cooldown/readiness, and explicit
+membership evidence. `MainViewModel` observes it only for a verified station while More is selected and refreshes
+only on destination entry or an explicit listener action; there is no polling or mutation. The SST adapter reads an
+exact last-ten history page and only follows same-origin allowlisted timer/profile sources discovered in that page.
+Administrative rank, newsletter subscription wording, and generic navigation never imply VIP/RIP membership.
+Unsupported or missing evidence remains explicit `Unknown`, and sign-out clears only that station's activity state.
+See `docs/m15-request-activity-research.md`.
+
+## Chat
+
+Chat depends on a station-scoped `ChatRepository`. `MainViewModel` observes it only while Chat is selected and
+cancels collection on destination or station changes. The verified public interface uses a same-origin HTML view
+with a 30-second browser reload, so the repository applies the same minimum interval to scheduled and manual
+reads. Parsed messages are bounded and memory-only. Compose renders plain immutable author, message, and displayed
+timestamp values.
+
+Posting is available only with a protected station session. The data layer obtains the current same-origin form,
+keeps its station-issued account material transient, enforces the 255-character ISO-8859-1 boundary, submits the
+user's message, and performs one confirmation read. Cookies and posting material never reach the ViewModel or UI.
+See `docs/m8-chat-research.md`.
+
+## Community safety and moderation
+
+Community access and moderation live behind `CommunitySafetyRepository`. `MainViewModel` depends only on that domain
+contract and prevents Chat observation/posting and attributed request contribution until immutable safety state confirms
+an adult age-screen result, acceptance of the current Terms version, and a separate community-content reveal. Compose
+renders the gate, report form, and block management from state and emits actions upward.
+
+The SharedPreferences implementation stores only the adult/not-adult result, accepted Terms version, visibility
+preference, and station-scoped normalized blocked identities. The entered date of birth and all report form/submission
+data remain transient. Block filtering is applied in the ViewModel to public Chat and Queue/History requester
+attribution; it is explicitly device-local and does not claim to mute or ban a station account.
+
+The report adapter accepts only the five authorized same-origin HTTPS Contact Us forms, verifies the moderator subject,
+bounds every field, and never retries a submission. A recognized success page confirms delivery, a freshly returned
+form is a definite rejection, and any other response is indeterminate and suppresses retry to avoid duplicate reports.
+See `docs/m23-ugc-safety-research.md` and `docs/m23-ugc-safety-validation.md`.
+
+## Initial modules
+
+The project begins as one Android application module organized by package. Modules should be split only when boundaries are stable enough to justify the additional Gradle complexity.

@@ -1,0 +1,17 @@
+.gradle/
+.idea/
+**/build/
+__pycache__/
+*.py[cod]
+local.properties
+*.iml
+*.apk
+*.aab
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+*.24seven-recovery
+captures/
+*.har
+.codex-remote-attachments/

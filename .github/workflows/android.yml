@@ -1,0 +1,85 @@
+name: Android CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install Android SDK platform
+        run: sdkmanager "platforms;android-36" "build-tools;36.1.0"
+
+      - name: Validate app
+        run: |
+          chmod +x gradlew
+          ./gradlew test lint assembleDebug --no-daemon --console=plain
+
+  notify-discord:
+    name: Notify Discord
+    needs: build
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post Android CI result
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_THREAD_ID: ${{ vars.DISCORD_THREAD_ID }}
+          DISCORD_PROJECT_UPDATE: ${{ vars.DISCORD_PROJECT_UPDATE }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          REPOSITORY: ${{ github.repository }}
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+          ACTOR: ${{ github.actor }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [[ -z "${DISCORD_WEBHOOK_URL}" ]]; then
+            echo "Discord webhook is not available; skipping notification."
+            exit 0
+          fi
+
+          if [[ -z "${DISCORD_THREAD_ID}" ]]; then
+            echo "Discord thread ID is not available; skipping notification."
+            exit 0
+          fi
+
+          post_to_discord() {
+            jq --null-input --arg content "$1" \
+              '{content: $content, allowed_mentions: {parse: []}}' \
+              | curl --fail-with-body --silent --show-error --retry 3 --retry-all-errors \
+                  --header 'Content-Type: application/json' \
+                  --data-binary @- \
+                  --url-query 'wait=true' \
+                  --url-query "thread_id=${DISCORD_THREAD_ID}" \
+                  --output /dev/null \
+                  "${DISCORD_WEBHOOK_URL}"
+          }
+
+          ci_message=$(printf '**24Seven.FM Android CI: %s**\nRepository: `%s`\nBranch: `%s`\nTriggered by: `%s`\nRun: %s' \
+            "${BUILD_RESULT}" "${REPOSITORY}" "${BRANCH_NAME}" "${ACTOR}" "${RUN_URL}")
+          post_to_discord "${ci_message}"
+
+          if [[ -n "${DISCORD_PROJECT_UPDATE}" ]]; then
+            post_to_discord "${DISCORD_PROJECT_UPDATE}"
+          fi
