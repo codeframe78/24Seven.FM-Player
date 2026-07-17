@@ -48,6 +48,7 @@ interface PlaybackController {
     fun play()
     fun pause()
     fun stop()
+    fun refreshAudioOutput() = Unit
     fun setSleepTimer(durationMillis: Long)
     fun cancelSleepTimer()
 }

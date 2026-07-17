@@ -161,6 +161,10 @@ class Media3PlaybackController(context: Context) : PlaybackController {
         updateState()
     }
 
+    override fun refreshAudioOutput() {
+        audioOutputMonitor.refresh()
+    }
+
     override fun setSleepTimer(durationMillis: Long) {
         val connected = controller ?: return
         connected.sendCustomCommand(
