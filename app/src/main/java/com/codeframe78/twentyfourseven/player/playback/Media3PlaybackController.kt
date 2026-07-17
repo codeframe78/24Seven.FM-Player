@@ -34,6 +34,9 @@ class Media3PlaybackController(context: Context) : PlaybackController {
     private val connectivityManager = appContext.getSystemService(ConnectivityManager::class.java)
     private val networkRecovery = NetworkPlaybackRecovery(connectivityManager.hasValidatedDefaultNetwork())
     private val stateFlow = MutableStateFlow(PlaybackState())
+    private val audioOutputMonitor = AndroidAudioOutputMonitor(appContext) { output ->
+        stateFlow.value = stateFlow.value.copy(audioOutput = output)
+    }
 
     private var controller: MediaController? = null
     private var selectedStation: Station? = null
@@ -156,6 +159,10 @@ class Media3PlaybackController(context: Context) : PlaybackController {
         cancelSleepTimer()
         controller?.stop()
         updateState()
+    }
+
+    override fun refreshAudioOutput() {
+        audioOutputMonitor.refresh()
     }
 
     override fun setSleepTimer(durationMillis: Long) {

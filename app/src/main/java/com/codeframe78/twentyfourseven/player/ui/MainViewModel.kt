@@ -276,6 +276,7 @@ class MainViewModel(
     fun play() = playback.play()
     fun pause() = playback.pause()
     fun stop() = playback.stop()
+    fun refreshAudioOutput() = playback.refreshAudioOutput()
     fun setSleepTimer(durationMillis: Long) = playback.setSleepTimer(durationMillis)
     fun cancelSleepTimer() = playback.cancelSleepTimer()
     fun selectDestination(destination: MainDestination) {

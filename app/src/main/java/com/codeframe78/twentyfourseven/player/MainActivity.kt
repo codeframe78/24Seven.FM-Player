@@ -14,7 +14,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.mediarouter.app.SystemOutputSwitcherDialogController
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,12 +26,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.codeframe78.twentyfourseven.player.domain.StationPageTrustPolicy
 import com.codeframe78.twentyfourseven.player.ui.DoubleBackExitGate
+import com.codeframe78.twentyfourseven.player.ui.AudioOutputActions
 import com.codeframe78.twentyfourseven.player.ui.MainViewModel
 import com.codeframe78.twentyfourseven.player.ui.RadioApp
 import com.codeframe78.twentyfourseven.player.ui.SleepTimerActions
 import com.codeframe78.twentyfourseven.player.ui.theme.TwentyFourSevenTheme
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private var audioOutputRefreshJob: Job? = null
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
     ) { }
@@ -84,6 +91,9 @@ class MainActivity : ComponentActivity() {
                     sleepTimerActions = SleepTimerActions(
                         onSet = viewModel::setSleepTimer,
                         onCancel = viewModel::cancelSleepTimer,
+                    ),
+                    audioOutputActions = AudioOutputActions(
+                        onOpenChooser = { showAudioOutputSwitcher(viewModel::refreshAudioOutput) },
                     ),
                     onRefreshQueue = viewModel::refreshQueue,
                     onRefreshChat = viewModel::refreshChat,
@@ -157,6 +167,27 @@ class MainActivity : ComponentActivity() {
                         },
                     )
                 }
+            }
+        }
+    }
+
+    private fun showAudioOutputSwitcher(refreshAudioOutput: () -> Unit) {
+        val shown = runCatching {
+            SystemOutputSwitcherDialogController.showDialog(this)
+        }.getOrDefault(false)
+        if (!shown) {
+            Toast.makeText(
+                this,
+                "Audio output selection is unavailable on this device.",
+                Toast.LENGTH_SHORT,
+            ).show()
+            return
+        }
+        audioOutputRefreshJob?.cancel()
+        audioOutputRefreshJob = lifecycleScope.launch {
+            repeat(30) {
+                delay(500L)
+                refreshAudioOutput()
             }
         }
     }
