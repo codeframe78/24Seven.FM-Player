@@ -35,6 +35,7 @@ import com.codeframe78.twentyfourseven.player.domain.HistoryTrack
 import com.codeframe78.twentyfourseven.player.domain.NowPlayingState
 import com.codeframe78.twentyfourseven.player.domain.PlaybackState
 import com.codeframe78.twentyfourseven.player.domain.PlaybackStatus
+import com.codeframe78.twentyfourseven.player.domain.SleepTimerState
 import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.QueueState
 import com.codeframe78.twentyfourseven.player.domain.QueueTrack
@@ -464,6 +465,56 @@ class RadioAppTest {
             assertEquals(listOf(StationId("adagio"), StationId("sst")), selectedStations)
             assertEquals(1, playCount)
             assertEquals(1, pauseCount)
+        }
+    }
+
+    @Test
+    fun sleepTimerPresetDisplaysRemainingTimeAndCanBeCancelled() {
+        var selectedDuration = 0L
+        var cancelCount = 0
+        composeRule.setContent {
+            var state by remember {
+                mutableStateOf(
+                    sampleState().copy(
+                        selectedStation = station.copy(
+                            streams = listOf(StreamVariant("https://example.invalid/live", "Test", 0)),
+                        ),
+                    ),
+                )
+            }
+            MaterialTheme {
+                RadioApp(
+                    state = state,
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                    sleepTimerActions = SleepTimerActions(
+                        onSet = { duration ->
+                            selectedDuration = duration
+                            state = state.copy(
+                                playback = state.playback.copy(
+                                    sleepTimer = SleepTimerState(100_000L, duration),
+                                ),
+                            )
+                        },
+                        onCancel = { cancelCount += 1 },
+                    ),
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("sleep_timer_open").performScrollTo().performClick()
+        composeRule.onNodeWithTag("sleep_timer_preset_30").performClick()
+        composeRule.onNodeWithTag("sleep_timer_remaining").assertIsDisplayed()
+        composeRule.onNodeWithText("Stops in 30:00").assertIsDisplayed()
+        composeRule.onNodeWithTag("sleep_timer_cancel").performClick()
+
+        composeRule.runOnIdle {
+            assertEquals(30L * 60L * 1_000L, selectedDuration)
+            assertEquals(1, cancelCount)
         }
     }
 

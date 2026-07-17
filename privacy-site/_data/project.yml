@@ -162,6 +162,13 @@ milestones:
     date: 2026-07-15
     commit: 924a38c
     outcome: Legacy, adaptive, and monochrome launcher resources validated.
+  - order: 24
+    id: M24
+    name: Sleep Timer
+    date: 2026-07-16
+    commit: b713783
+    evidence: docs/m24-sleep-timer-validation.md
+    outcome: Service-owned presets/custom countdown, restoration, system state, and deterministic expiry.
 
 workstreams:
   - id: M23.1
@@ -210,10 +217,10 @@ workstreams:
 pre_alpha:
   - id: M24
     name: Sleep Timer
-    state: planned
-    state_label: Planned before Alpha
-    summary: Add a service-owned timer with presets, a custom duration, visible remaining time, adjust and cancel actions, and deterministic expiry across pause, station changes, device sleep, and service recreation.
-    evidence: docs/IMPLEMENTATION_PLAN.md
+    state: done
+    state_label: Complete
+    summary: Service-owned presets and custom duration, live remaining time, adjust/cancel, system cancellation state, restoration, and real-device expiry validation are complete.
+    evidence: docs/m24-sleep-timer-validation.md
   - id: M25
     name: Cast / Audio-Output Selection
     state: planned

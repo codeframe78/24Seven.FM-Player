@@ -28,6 +28,13 @@ class PlayerExperienceTest {
         assertTrue(gate.registerPress(7_000))
     }
 
+    @Test
+    fun `sleep timer countdown rounds up and formats hours`() {
+        assertEquals("0:01", formatSleepTimerRemaining(1L))
+        assertEquals("29:59", formatSleepTimerRemaining(30L * 60L * 1_000L - 1_000L))
+        assertEquals("1:30:00", formatSleepTimerRemaining(90L * 60L * 1_000L))
+    }
+
     private fun station(id: String) = Station(
         id = StationId(id),
         name = id,

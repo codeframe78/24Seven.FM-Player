@@ -22,11 +22,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.codeframe78.twentyfourseven.player.domain.StationPageTrustPolicy
 import com.codeframe78.twentyfourseven.player.ui.DoubleBackExitGate
 import com.codeframe78.twentyfourseven.player.ui.MainViewModel
 import com.codeframe78.twentyfourseven.player.ui.RadioApp
+import com.codeframe78.twentyfourseven.player.ui.SleepTimerActions
 import com.codeframe78.twentyfourseven.player.ui.theme.TwentyFourSevenTheme
-import com.codeframe78.twentyfourseven.player.domain.StationPageTrustPolicy
 
 class MainActivity : ComponentActivity() {
     private val notificationPermissionLauncher = registerForActivityResult(
@@ -80,6 +81,10 @@ class MainActivity : ComponentActivity() {
                     onPlay = viewModel::play,
                     onPause = viewModel::pause,
                     onStop = viewModel::stop,
+                    sleepTimerActions = SleepTimerActions(
+                        onSet = viewModel::setSleepTimer,
+                        onCancel = viewModel::cancelSleepTimer,
+                    ),
                     onRefreshQueue = viewModel::refreshQueue,
                     onRefreshChat = viewModel::refreshChat,
                     onRefreshFavorites = viewModel::refreshFavorites,

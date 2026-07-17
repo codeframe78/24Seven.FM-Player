@@ -2,6 +2,7 @@ package com.codeframe78.twentyfourseven.player.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -27,9 +28,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -37,11 +40,16 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,6 +64,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -72,6 +81,13 @@ private val ExpandedPlayerBreakpoint = 840.dp
 private val CompactPlayerReservedHeight = 420.dp
 private val MinimumCompactArtworkSize = 140.dp
 private val MaximumCompactArtworkSize = 300.dp
+private val SleepTimerPresetsMinutes = listOf(15, 30, 45, 60, 90)
+
+@Immutable
+internal data class SleepTimerActions(
+    val onSet: (Long) -> Unit = {},
+    val onCancel: () -> Unit = {},
+)
 
 @Composable
 internal fun AdaptivePlayerScreen(
@@ -81,6 +97,7 @@ internal fun AdaptivePlayerScreen(
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onStop: () -> Unit,
+    sleepTimerActions: SleepTimerActions = SleepTimerActions(),
 ) {
     val palette = stationPalette(state.selectedStation?.id)
     BoxWithConstraints(
@@ -98,7 +115,7 @@ internal fun AdaptivePlayerScreen(
             ),
     ) {
         if (maxWidth >= ExpandedPlayerBreakpoint) {
-            ExpandedPlayerContent(state, palette, onSelectStation, onPlay, onPause, onStop)
+            ExpandedPlayerContent(state, palette, onSelectStation, onPlay, onPause, onStop, sleepTimerActions)
         } else {
             val availableArtworkWidth = maxWidth - 40.dp
             val availableArtworkHeight = (maxHeight - CompactPlayerReservedHeight)
@@ -108,7 +125,7 @@ internal fun AdaptivePlayerScreen(
                 availableArtworkHeight,
                 MaximumCompactArtworkSize,
             )
-            CompactPlayerContent(state, palette, artworkSize, onSelectStation, onPlay, onPause, onStop)
+            CompactPlayerContent(state, palette, artworkSize, onSelectStation, onPlay, onPause, onStop, sleepTimerActions)
         }
     }
 }
@@ -122,6 +139,7 @@ private fun CompactPlayerContent(
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onStop: () -> Unit,
+    sleepTimerActions: SleepTimerActions,
 ) {
     Column(
         Modifier
@@ -136,7 +154,7 @@ private fun CompactPlayerContent(
         NowPlayingDetails(state, palette)
         PrimaryPlayerControls(state, onSelectStation, onPlay, onPause)
         StationSelector(state, onSelectStation)
-        PlaybackDetails(state, onStop)
+        PlaybackDetails(state, onStop, sleepTimerActions)
     }
 }
 
@@ -148,6 +166,7 @@ private fun ExpandedPlayerContent(
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onStop: () -> Unit,
+    sleepTimerActions: SleepTimerActions,
 ) {
     Row(
         Modifier.fillMaxSize().padding(32.dp),
@@ -169,7 +188,7 @@ private fun ExpandedPlayerContent(
             Spacer(Modifier.height(28.dp))
             PrimaryPlayerControls(state, onSelectStation, onPlay, onPause)
             Spacer(Modifier.height(8.dp))
-            PlaybackDetails(state, onStop)
+            PlaybackDetails(state, onStop, sleepTimerActions)
             Spacer(Modifier.height(32.dp))
             Text("Choose a station", style = MaterialTheme.typography.titleMedium)
             Spacer(Modifier.height(12.dp))
@@ -343,18 +362,130 @@ private fun PrimaryPlayerControls(
 }
 
 @Composable
-private fun PlaybackDetails(state: MainUiState, onStop: () -> Unit) {
+private fun PlaybackDetails(
+    state: MainUiState,
+    onStop: () -> Unit,
+    sleepTimerActions: SleepTimerActions,
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             state.selectedStation?.streams?.minByOrNull { it.priority }?.qualityLabel.orEmpty(),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        TextButton(onClick = onStop, enabled = state.playback.status != PlaybackStatus.Idle) {
-            Icon(Icons.Default.Stop, contentDescription = null)
-            Spacer(Modifier.width(6.dp))
-            Text("Stop")
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            TextButton(onClick = onStop, enabled = state.playback.status != PlaybackStatus.Idle) {
+                Icon(Icons.Default.Stop, contentDescription = null)
+                Spacer(Modifier.width(6.dp))
+                Text("Stop")
+            }
+            SleepTimerControl(state, sleepTimerActions)
         }
+    }
+}
+
+@Composable
+private fun SleepTimerControl(state: MainUiState, actions: SleepTimerActions) {
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+    val sleepTimer = state.playback.sleepTimer
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        TextButton(
+            onClick = { showDialog = true },
+            enabled = state.selectedStation?.streams?.isNotEmpty() == true,
+            modifier = Modifier.testTag("sleep_timer_open"),
+        ) {
+            Icon(Icons.Default.Bedtime, contentDescription = null)
+            Spacer(Modifier.width(6.dp))
+            Text(if (sleepTimer.isActive) "Adjust timer" else "Sleep timer")
+        }
+        if (sleepTimer.isActive) {
+            Text(
+                "Stops in ${formatSleepTimerRemaining(sleepTimer.remainingMillis)}",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .semantics { stateDescription = "Sleep timer active" }
+                    .testTag("sleep_timer_remaining"),
+            )
+            TextButton(
+                onClick = actions.onCancel,
+                modifier = Modifier.testTag("sleep_timer_cancel"),
+            ) {
+                Text("Cancel timer")
+            }
+        }
+    }
+    if (showDialog) {
+        SleepTimerDialog(
+            isAdjusting = sleepTimer.isActive,
+            onSet = { durationMillis ->
+                actions.onSet(durationMillis)
+                showDialog = false
+            },
+            onDismiss = { showDialog = false },
+        )
+    }
+}
+
+@Composable
+private fun SleepTimerDialog(
+    isAdjusting: Boolean,
+    onSet: (Long) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var customMinutes by rememberSaveable { mutableStateOf("") }
+    val parsedMinutes = customMinutes.toLongOrNull()
+    val customIsValid = parsedMinutes != null && parsedMinutes in 1L..720L
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(if (isAdjusting) "Adjust sleep timer" else "Set sleep timer") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text("Playback stops when the countdown ends, even if the app is in the background.")
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(SleepTimerPresetsMinutes) { minutes ->
+                        Button(
+                            onClick = { onSet(minutes * 60_000L) },
+                            modifier = Modifier.testTag("sleep_timer_preset_$minutes"),
+                        ) {
+                            Text("$minutes min")
+                        }
+                    }
+                }
+                OutlinedTextField(
+                    value = customMinutes,
+                    onValueChange = { input -> customMinutes = input.filter(Char::isDigit).take(3) },
+                    label = { Text("Custom minutes") },
+                    supportingText = { Text("Enter 1–720 minutes") },
+                    isError = customMinutes.isNotEmpty() && !customIsValid,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth().testTag("sleep_timer_custom_minutes"),
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { parsedMinutes?.let { onSet(it * 60_000L) } },
+                enabled = customIsValid,
+                modifier = Modifier.testTag("sleep_timer_confirm_custom"),
+            ) {
+                Text(if (isAdjusting) "Update" else "Start")
+            }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Not now") } },
+    )
+}
+
+internal fun formatSleepTimerRemaining(remainingMillis: Long): String {
+    val totalSeconds = ((remainingMillis.coerceAtLeast(0L) + 999L) / 1_000L)
+    val hours = totalSeconds / 3_600L
+    val minutes = (totalSeconds % 3_600L) / 60L
+    val seconds = totalSeconds % 60L
+    return if (hours > 0L) {
+        "$hours:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
+    } else {
+        "$minutes:${seconds.toString().padStart(2, '0')}"
     }
 }
 

@@ -174,13 +174,14 @@ internal fun RadioApp(
     onSetStartupStation: (StationId) -> Unit = {},
     onOpenStationPage: (StationPage) -> Unit = {},
     communitySafetyActions: CommunitySafetyActions = CommunitySafetyActions(),
+    sleepTimerActions: SleepTimerActions = SleepTimerActions(),
 ) {
     var showTerms by rememberSaveable { mutableStateOf(false) }
     BoxWithConstraints(Modifier.fillMaxSize()) {
         if (maxWidth >= 600.dp) {
-            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions) { showTerms = true }
+            TabletShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, sleepTimerActions, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions) { showTerms = true }
         } else {
-            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions) { showTerms = true }
+            PhoneShell(state, onSelectStation, onSelectDestination, onPlay, onPause, onStop, sleepTimerActions, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions) { showTerms = true }
         }
     }
     if (showTerms) {
@@ -204,6 +205,7 @@ private fun PhoneShell(
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onStop: () -> Unit,
+    sleepTimerActions: SleepTimerActions,
     onRefreshQueue: () -> Unit,
     onRefreshFavorites: () -> Unit,
     onRefreshListenerActivity: () -> Unit,
@@ -257,7 +259,7 @@ private fun PhoneShell(
             }
         },
     ) { padding ->
-        DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions, onReviewTerms)
+        DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, sleepTimerActions, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions, onReviewTerms)
     }
 }
 
@@ -270,6 +272,7 @@ private fun TabletShell(
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onStop: () -> Unit,
+    sleepTimerActions: SleepTimerActions,
     onRefreshQueue: () -> Unit,
     onRefreshFavorites: () -> Unit,
     onRefreshListenerActivity: () -> Unit,
@@ -325,7 +328,7 @@ private fun TabletShell(
                 }
             },
         ) { padding ->
-            DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions, onReviewTerms)
+            DestinationContent(state, padding, onSelectStation, onSelectDestination, onPlay, onPause, onStop, sleepTimerActions, onRefreshQueue, onRefreshFavorites, onRefreshListenerActivity, onRefreshChat, onSendChatMessage, onRefreshAuth, onSignIn, onSignOut, onSearchRequests, onSuggestRequest, onOpenRequestAlbum, onPrepareRequest, onPrepareFavoriteRequest, onCancelRequest, onConfirmRequest, onUseLastStationAtStartup, onSetStartupStation, onOpenStationPage, communitySafetyActions, onReviewTerms)
         }
     }
 }
@@ -377,6 +380,7 @@ private fun DestinationContent(
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onStop: () -> Unit,
+    sleepTimerActions: SleepTimerActions,
     onRefreshQueue: () -> Unit,
     onRefreshFavorites: () -> Unit,
     onRefreshListenerActivity: () -> Unit,
@@ -399,7 +403,15 @@ private fun DestinationContent(
     onReviewTerms: () -> Unit,
 ) {
     when (state.destination) {
-        MainDestination.Player -> AdaptivePlayerScreen(state, padding, onSelectStation, onPlay, onPause, onStop)
+        MainDestination.Player -> AdaptivePlayerScreen(
+            state,
+            padding,
+            onSelectStation,
+            onPlay,
+            onPause,
+            onStop,
+            sleepTimerActions,
+        )
         MainDestination.Favorites -> FavoriteTracksScreen(
             state = state,
             padding = padding,

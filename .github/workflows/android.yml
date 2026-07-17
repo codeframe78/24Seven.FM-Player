@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   build:
+    name: Android build, test, and lint
     runs-on: ubuntu-latest
     steps:
       - name: Check out source
