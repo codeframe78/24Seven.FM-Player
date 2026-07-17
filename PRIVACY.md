@@ -1,6 +1,6 @@
 # Privacy notice for 24Seven.FM Player Alpha
 
-Last updated: July 15, 2026.
+Last updated: July 16, 2026.
 
 24Seven.FM Player is an unofficial, non-commercial native Android client for the five public 24Seven.FM radio stations. It is not affiliated with or endorsed by 24Seven.FM or its stations.
 
@@ -17,6 +17,7 @@ Last updated: July 15, 2026.
 - **Favorite tracks:** Favorite lists are loaded only after station sign-in, kept in memory, and cleared from the interface when the user signs out. They are not written to app storage.
 - **Request activity and membership:** Where verified for a station, the app can load the signed-in member's recent request summaries, station-reported request readiness, and explicit membership indicator. These values are kept in memory, cleared from the interface on sign-out, and are not written to app storage.
 - **External station pages:** Selected public station pages open only after an explicit tap in an Android browser Custom Tab. The app passes an allowlisted same-station HTTPS address but does not copy its protected station session into the browser. Browser cookies, history, and retention are controlled by the selected browser and station independently of this app.
+- **In-app diagnostics:** The app can generate a local support snapshot containing app/build version, Android/API and coarse device model, selected station, bounded playback/error category, validated-network availability, broad audio-output category, and up to five recent non-sensitive playback transitions. The preview excludes account data, messages, request/report content, URLs, route names, stable device identifiers, raw errors, and logs. It remains on the device unless the user explicitly copies it to Android's clipboard or opens Android's Share chooser and selects a recipient; the receiving app then handles the text under its own privacy practices.
 
 The application does not include advertising, analytics, crash-reporting, tracking SDKs, or a developer-operated data server. Station operators and network providers may independently retain normal server or network logs; those systems are outside this application's control.
 
@@ -34,7 +35,7 @@ The app does not request contacts, location, microphone, camera, photos, phone, 
 
 ## Retention and deletion
 
-Protected station sessions, the adult age-screen result, accepted Terms version, community-content visibility preference, and local block list remain on the originating device until the relevant in-app action, app-data clearing, or uninstall removes them. They are excluded from Android cloud backup and device-to-device transfer. Chat, favorite-track lists, request activity, membership indicators, pending song-request text, and abuse-report form/submission data are transient. Android's app settings can clear all locally retained application data.
+Protected station sessions, the adult age-screen result, accepted Terms version, community-content visibility preference, and local block list remain on the originating device until the relevant in-app action, app-data clearing, or uninstall removes them. They are excluded from Android cloud backup and device-to-device transfer. Chat, favorite-track lists, request activity, membership indicators, pending song-request text, abuse-report form/submission data, and generated diagnostic previews are transient. A copied diagnostic snapshot is controlled by Android's clipboard, and a shared snapshot is controlled by the recipient selected by the user. Android's app settings can clear all locally retained application data.
 
 ## Alpha limitations
 

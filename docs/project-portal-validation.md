@@ -10,8 +10,8 @@ The GitHub Pages surface now provides a comprehensive, accessible project portal
 - native architecture, source organization, engineering principles, and the milestone workflow;
 - automated, emulator, physical-device, accessibility, network, performance, signing, and CI evidence;
 - a tester-facing product workspace with bounded smoke, member, device, resilience, and adaptive sessions plus a structured public result form for passes, failures, notes, and blocked tests;
-- all 25 achieved milestones in verified chronological order, including completed M24 Sleep Timer and M25 Audio-Output Selection;
-- the seven M23 Play-testing workstreams, deferred M17 boundary, completed M24–M25, remaining M26–M27 pre-Alpha feature gates, and M28 Alpha publication milestone;
+- all 26 achieved milestones in verified chronological order, including completed M24 Sleep Timer, M25 Audio-Output Selection, and M26 In-App Diagnostics;
+- the seven M23 Play-testing workstreams, deferred M17 boundary, completed M24–M26, remaining M27 pre-Alpha feature gate, and M28 Alpha publication milestone;
 - a public resource index for architecture, protocol research, station certification, Play readiness, release notes, testing, and contribution.
 
 Repeated navigation and milestone history are generated from `privacy-site/_data/project.yml`. The existing `PRIVACY.md` generation and `/` permalink are unchanged.
@@ -40,7 +40,7 @@ This is a static documentation change. It does not alter Android application beh
     <td width="50%" align="center" valign="top"><img src="screenshots/project-portal-development.png" alt="Development process page describing evidence-backed vertical slices and native MVVM architecture" width="560"><br><strong>Development process</strong><br><sub>Architecture, principles, milestone lifecycle, source map, and toolchain.</sub></td>
   </tr>
   <tr>
-    <td colspan="2" align="center" valign="top"><img src="screenshots/project-portal-roadmap.png" alt="Roadmap page showing M24 Sleep Timer, M25 Cast and audio-output selection, M26 In-App Diagnostics, M27 Community Push Notifications, and M28 Alpha Publication" width="760"><br><strong>Reordered pre-Alpha roadmap</strong><br><sub>Four product milestones before publication, including the capability-gated Private Message notification contract.</sub></td>
+    <td colspan="2" align="center" valign="top"><img src="screenshots/project-portal-roadmap.png" alt="Roadmap page showing M24 Sleep Timer, M25 Cast and audio-output selection, M26 In-App Diagnostics, M27 Community Push Notifications, and M28 Alpha Publication" width="760"><br><strong>Pre-Alpha roadmap</strong><br><sub>M24–M26 are complete; M27 retains the capability-gated Private Message notification contract before M28.</sub></td>
   </tr>
   <tr>
     <td colspan="2" align="center" valign="top"><img src="screenshots/project-portal-product-testing.png" alt="Product Testing workspace with preparation steps, three bounded test sessions, and an evidence matrix" width="760"><br><strong>Product testing workspace</strong><br><sub>Focused sessions and reproducible evidence before the structured public GitHub result form.</sub></td>

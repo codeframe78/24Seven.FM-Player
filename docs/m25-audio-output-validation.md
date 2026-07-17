@@ -60,4 +60,4 @@ The first visual pass caught an important platform distinction: AndroidX MediaRo
 
 ## Privacy and traffic result
 
-The feature adds no app-operated service, account data, analytics, background polling, active route-discovery scan, or new network endpoint. Only the user-visible Android route name and broad output category are retained in memory as current playback state. Diagnostic export remains a separate M26 feature and must apply its own redaction contract.
+The feature adds no app-operated service, account data, analytics, background polling, active route-discovery scan, or new network endpoint. Only the user-visible Android route name and broad output category are retained in memory as current playback state. The later M26 diagnostics flow applies its own fixed allowlist and exports only the broad output category, never this human-readable route name.
