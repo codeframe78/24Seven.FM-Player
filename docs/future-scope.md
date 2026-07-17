@@ -18,9 +18,9 @@ The service-owned sleep countdown is complete with accessible presets and custom
 
 The dedicated Android audio-output path is complete. The Player exposes immutable current-route state and opens Android's native system chooser for device, Bluetooth, wired/USB, and system-managed remote routes while preserving the existing MediaSession and audio-focus owner. No active discovery scan, relay, proxy, or new endpoint was added. Google Cast remains intentionally capability-gated because its separate receiver compatibility and permitted stream use are not verified. Routing is not described as securing or proxying the source: Media3 still connects directly to the station-provided HTTP audio relays, while non-audio station traffic remains HTTPS. See [M25 validation](m25-audio-output-validation.md).
 
-## M26 — In-App Diagnostics
+## Completed M26 — In-App Diagnostics
 
-Add an explicit, user-controlled diagnostic snapshot and copy/share flow for support. Candidate fields include app/build version, Android/device class, selected station, bounded playback state and error category, network availability, current route type, and recent non-sensitive state transitions. Never include credentials, cookies, CSRF values, Chat or Private Message bodies, abuse-report content, signing data, private endpoints, or raw network/log captures. Complete a redaction and privacy/Data Safety review before shipping.
+The native More screen now provides an explicit, user-reviewed diagnostic snapshot and Android copy/share flow. A fixed allowlist covers app/build, Android/API and coarse device class, selected station, bounded playback/error category, validated-network availability, broad route type, and at most five enum-only recent transitions. Raw errors and human-readable route names are reduced to categories, and credentials, sessions, CSRF values, account/community/report content, endpoints, signing data, identifiers, and raw logs have no report input path. The formatter/redaction suite, full 141-test unit suite, lint, focused physical-Razr Compose test, clipboard confirmation, and system Share chooser pass. See [M26 validation](m26-diagnostics-validation.md).
 
 ## M27 — Community Push Notifications
 

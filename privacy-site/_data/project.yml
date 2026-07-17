@@ -176,6 +176,13 @@ milestones:
     commit: 183ccc0
     evidence: docs/m25-audio-output-validation.md
     outcome: Native Android output chooser, accurate current-route state, phone/Bluetooth handoff and recovery, and an explicit capability-gated Cast boundary.
+  - order: 26
+    id: M26
+    name: In-App Diagnostics
+    date: 2026-07-16
+    commit: 7aedbfc
+    evidence: docs/m26-diagnostics-validation.md
+    outcome: User-reviewed fixed-allowlist support snapshot, bounded transitions, explicit Android copy/share, and physical-Razr privacy validation.
 
 workstreams:
   - id: M23.1
@@ -236,10 +243,10 @@ pre_alpha:
     evidence: docs/m25-audio-output-validation.md
   - id: M26
     name: In-App Diagnostics
-    state: planned
-    state_label: Planned before Alpha
-    summary: Provide a deliberately generated, redacted support snapshot with app, device, station, bounded playback, network, and route state while excluding sessions, community content, private endpoints, and raw logs.
-    evidence: docs/IMPLEMENTATION_PLAN.md
+    state: done
+    state_label: Complete
+    summary: A user-reviewed fixed-allowlist snapshot covers app/build, coarse device/API, station, bounded playback/error/network/output state, and five enum-only transitions with explicit Android copy/share and no automatic transfer.
+    evidence: docs/m26-diagnostics-validation.md
   - id: M27
     name: Community Push Notifications
     state: planned

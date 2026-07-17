@@ -65,7 +65,7 @@ Never include passwords, security-code answers or images, cookies, session value
   but New Message selection remains suspect and a profile-originated MorgHubby test was not delivered; the site owner
   has the reproduced result.
 - Representative authenticated certification is complete for all five stations; natural server-side session expiry was not forcibly induced.
-- M24 Sleep Timer and M25's dedicated Android audio-output path are included. Google Cast is not exposed because receiver compatibility and permitted stream use remain unverified. M26 In-App Diagnostics and M27 Community Push Notifications remain required before the renumbered M28 publication gate.
+- M24 Sleep Timer, M25's dedicated Android audio-output path, and M26's user-reviewed privacy-safe diagnostics are included. Google Cast is not exposed because receiver compatibility and permitted stream use remain unverified. M27 Community Push Notifications remains required before the renumbered M28 publication gate.
 - Station accounts are currently station-specific.
 - Public station interfaces can change independently of the app.
 - Physical Razr playback and UI survive a measured open/tabletop/closed/reopened hinge cycle. Play-delivered install/update validation, the Play pre-launch report, and a complete spoken TalkBack pass remain release checks.
