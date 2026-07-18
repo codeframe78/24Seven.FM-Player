@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#090c15">
+    <meta name="color-scheme" content="dark light">
     <meta name="description" content="{{ page.description | default: site.description | escape }}">
     <meta property="og:title" content="{{ page.title | default: site.title | escape }}">
     <meta property="og:description" content="{{ page.description | default: site.description | escape }}">
@@ -11,21 +12,42 @@
     <meta property="og:type" content="website">
     <title>{{ page.title | default: site.title | escape }}</title>
     <link rel="icon" type="image/png" href="{{ '/assets/project/app-icon.png' | relative_url }}">
+    <script>
+      document.documentElement.classList.add('js');
+      try {
+        var savedTheme = localStorage.getItem('project-theme');
+        var preferredTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.dataset.theme = savedTheme || preferredTheme;
+      } catch (error) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    </script>
     <link rel="stylesheet" href="{{ '/assets/project.css' | relative_url }}">
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <header class="project-header">
+    <div class="scroll-progress" aria-hidden="true"><span></span></div>
+    <header class="project-header" data-site-header>
       <a class="project-brand" href="{{ '/project/' | relative_url }}" aria-label="24Seven.FM Player home">
         <img src="{{ '/assets/project/app-icon.png' | relative_url }}" alt="" width="44" height="44">
         <span><strong>24Seven.FM Player</strong><small>Project portal</small></span>
       </a>
-      <nav aria-label="Primary navigation">
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="project-navigation">
+        <span class="nav-toggle-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>Menu</span>
+      </button>
+      <nav id="project-navigation" aria-label="Primary navigation">
         {% for item in site.data.project.navigation %}
         <a{% if page.section == item.section %} aria-current="page"{% endif %} href="{{ item.path | relative_url }}">{{ item.label }}</a>
         {% endfor %}
       </nav>
-      <a class="header-github" href="https://github.com/codeframe78/24Seven.FM-Player">GitHub <span aria-hidden="true">↗</span></a>
+      <div class="header-actions">
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <span class="theme-toggle-icon" aria-hidden="true">◐</span>
+          <span class="theme-toggle-label">Theme</span>
+        </button>
+        <a class="header-github" href="https://github.com/codeframe78/24Seven.FM-Player">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
     </header>
     <main id="main-content">
       {{ content }}
@@ -44,5 +66,13 @@
         <a href="https://github.com/users/codeframe78/projects/1">Build dashboard</a>
       </nav>
     </footer>
+    <button class="back-to-top" type="button" aria-label="Back to top" title="Back to top"><span aria-hidden="true">↑</span></button>
+    <div class="site-toast" role="status" aria-live="polite" aria-atomic="true"></div>
+    <dialog class="media-dialog" aria-labelledby="media-dialog-title">
+      <button class="media-dialog-close" type="button" aria-label="Close image preview">×</button>
+      <img src="" alt="">
+      <p id="media-dialog-title"></p>
+    </dialog>
+    <script src="{{ '/assets/project.js' | relative_url }}" defer></script>
   </body>
 </html>

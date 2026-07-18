@@ -19,6 +19,10 @@ section: roadmap
       <div><dt>Active</dt><dd>2</dd></div>
       <div><dt>External</dt><dd>3</dd></div>
     </dl>
+    <div class="program-progress">
+      <div><span>Release-readiness gates</span><strong>29%</strong></div>
+      <progress value="2" max="7">2 of 7 complete</progress>
+    </div>
   </aside>
 </section>
 
@@ -36,9 +40,19 @@ section: roadmap
     <h2>Seven reviewable release gates</h2>
     <p>M23 is an umbrella program, not one opaque task. Work can progress locally while owner, administrator, or Play Console dependencies remain visible.</p>
   </div>
-  <div class="workstream-grid">
+  <div class="roadmap-tools" data-filter-controls data-target="#m23-workstreams">
+    <label class="filter-search" for="m23-search">Find a workstream<input id="m23-search" type="search" placeholder="Search ID, name, or outcome" autocomplete="off" data-filter-query></label>
+    <div class="filter-buttons" role="group" aria-label="Filter M23 workstreams by status">
+      <button type="button" data-filter-state="all" aria-pressed="true">All</button>
+      <button type="button" data-filter-state="done" aria-pressed="false">Complete</button>
+      <button type="button" data-filter-state="active" aria-pressed="false">In progress</button>
+      <button type="button" data-filter-state="waiting" aria-pressed="false">External</button>
+    </div>
+    <p class="filter-count" aria-live="polite"><strong data-filter-count>7</strong> visible</p>
+  </div>
+  <div class="workstream-grid" id="m23-workstreams" data-filter-scope>
     {% for item in site.data.project.workstreams %}
-    <article class="roadmap-card {{ item.state }}">
+    <article class="roadmap-card {{ item.state }}" data-filter-item data-state="{{ item.state }}">
       <p class="status"><span></span>{{ item.state_label }}</p>
       <p class="milestone-id">{{ item.id }}</p>
       <h3>{{ item.name }}</h3>
@@ -46,6 +60,7 @@ section: roadmap
       <a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/{{ item.evidence }}">View evidence <span aria-hidden="true">↗</span></a>
     </article>
     {% endfor %}
+    <p class="filter-empty" data-filter-empty hidden>No workstreams match that filter.</p>
   </div>
 </section>
 
@@ -55,9 +70,13 @@ section: roadmap
     <h2>How the Alpha was achieved</h2>
     <p>The application moved from a buildable native shell through playback, station data, authenticated participation, adaptive UX, five-station certification, and platform/store hardening.</p>
   </div>
-  <ol class="milestone-history">
+  <div class="roadmap-tools" data-filter-controls data-target="#milestone-history">
+    <label class="filter-search" for="history-search">Search achieved milestones<input id="history-search" type="search" placeholder="Try M8, playback, accessibility…" autocomplete="off" data-filter-query></label>
+    <p class="filter-count" aria-live="polite"><strong data-filter-count>27</strong> visible</p>
+  </div>
+  <ol class="milestone-history" id="milestone-history" data-filter-scope>
     {% for item in site.data.project.milestones %}
-    <li>
+    <li data-filter-item data-state="history">
       <div class="history-order">{{ item.order }}</div>
       <div class="history-date"><time datetime="{{ item.date }}">{{ item.date | date: "%b %-d, %Y" }}</time>{% if item.joint %}<span>Joint checkpoint</span>{% endif %}</div>
       <div class="history-copy"><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.outcome }}</p></div>
@@ -68,6 +87,7 @@ section: roadmap
       {% endif %}
     </li>
     {% endfor %}
+    <li class="filter-empty" data-filter-empty hidden>No achieved milestones match that search.</li>
   </ol>
 </section>
 
@@ -84,9 +104,19 @@ section: roadmap
     <h2>Local mention delivery is working; true push remains</h2>
     <p>M24–M26 and M27.1 are complete with service, route, privacy, notification, and physical-Razr evidence. M27.2 remains the ordered feature gate ahead of M28: it needs an authorized event source for reliable closed-app delivery. Google Cast remains intentionally gated behind receiver compatibility and permitted stream use.</p>
   </div>
-  <div class="workstream-grid">
+  <div class="roadmap-tools" data-filter-controls data-target="#pre-alpha-workstreams">
+    <label class="filter-search" for="pre-alpha-search">Find a milestone<input id="pre-alpha-search" type="search" placeholder="Search M24–M28" autocomplete="off" data-filter-query></label>
+    <div class="filter-buttons" role="group" aria-label="Filter pre-Alpha milestones by status">
+      <button type="button" data-filter-state="all" aria-pressed="true">All</button>
+      <button type="button" data-filter-state="done" aria-pressed="false">Complete</button>
+      <button type="button" data-filter-state="active" aria-pressed="false">Active</button>
+      <button type="button" data-filter-state="planned" aria-pressed="false">Planned</button>
+    </div>
+    <p class="filter-count" aria-live="polite"><strong data-filter-count>5</strong> visible</p>
+  </div>
+  <div class="workstream-grid" id="pre-alpha-workstreams" data-filter-scope>
     {% for item in site.data.project.pre_alpha %}
-    <article class="roadmap-card {{ item.state }}">
+    <article class="roadmap-card {{ item.state }}" data-filter-item data-state="{{ item.state }}">
       <p class="status"><span></span>{{ item.state_label }}</p>
       <p class="milestone-id">{{ item.id }}</p>
       <h3>{{ item.name }}</h3>
@@ -94,6 +124,7 @@ section: roadmap
       <a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/{{ item.evidence }}">View milestone scope <span aria-hidden="true">↗</span></a>
     </article>
     {% endfor %}
+    <p class="filter-empty" data-filter-empty hidden>No pre-Alpha milestones match that filter.</p>
   </div>
   <div class="roadmap-callout future-callout">
     <div><p class="eyebrow">M27 · Delivery boundary</p><h2>One safe notification foundation</h2></div>

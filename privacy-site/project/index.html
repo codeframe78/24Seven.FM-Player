@@ -20,6 +20,11 @@ section: overview
       <li>Media3</li>
       <li>No WebView</li>
     </ul>
+    <a class="hero-status" href="{{ '/project/roadmap/' | relative_url }}">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span><small>Current program</small><strong>M23 Play-testing readiness</strong></span>
+      <span>View roadmap <span aria-hidden="true">→</span></span>
+    </a>
   </div>
   <div class="hero-art" aria-hidden="true">
     <div class="art-glow"></div>
@@ -80,6 +85,7 @@ section: overview
     <a href="{{ '/project/testing/' | relative_url }}"><span>Quality</span><strong>Read the validation evidence</strong><small>Automated tests, emulator matrix, Razr testing, and release checks</small></a>
     <a href="{{ '/project/product-testing/' | relative_url }}"><span>Testers</span><strong>Run a product test and report the result</strong><small>Guided smoke, feature, device, and accessibility sessions with structured public reporting</small></a>
     <a href="{{ '/project/roadmap/' | relative_url }}"><span>Progress</span><strong>Trace the actual development journey</strong><small>27 achieved milestones, active M23 gates, deferred M17, completed M24–M26/M27.1, and pre-Alpha M27.2–M28</small></a>
+    <a href="{{ '/project/resources/' | relative_url }}"><span>Reference</span><strong>Browse the project evidence library</strong><small>Architecture, protocol research, station certifications, release notes, and contributor guides</small></a>
   </div>
 </section>
 
@@ -91,15 +97,21 @@ section: overview
   </div>
   <div class="device-gallery">
     <figure class="phone-shot">
-      <img src="{{ '/assets/project/screenshots/player.png' | relative_url }}" alt="Player screen showing live track artwork, metadata, station carousel, and playback controls" loading="lazy">
+      <button class="gallery-open" type="button" data-lightbox="{{ '/assets/project/screenshots/player.png' | relative_url }}" data-lightbox-alt="Player screen showing live track artwork, metadata, station carousel, and playback controls" data-lightbox-caption="Live Player · Artwork, metadata, stations, and playback" aria-label="Open larger Live Player screenshot">
+        <img src="{{ '/assets/project/screenshots/player.png' | relative_url }}" alt="Player screen showing live track artwork, metadata, station carousel, and playback controls" loading="lazy">
+      </button>
       <figcaption><strong>Live Player</strong><span>Artwork, metadata, stations, and playback</span></figcaption>
     </figure>
     <figure class="phone-shot offset">
-      <img src="{{ '/assets/project/screenshots/queue.png' | relative_url }}" alt="Queue screen showing upcoming tracks and persistent playback controls" loading="lazy">
+      <button class="gallery-open" type="button" data-lightbox="{{ '/assets/project/screenshots/queue.png' | relative_url }}" data-lightbox-alt="Queue screen showing upcoming tracks and persistent playback controls" data-lightbox-caption="Queue · Upcoming station tracks at a glance" aria-label="Open larger Queue screenshot">
+        <img src="{{ '/assets/project/screenshots/queue.png' | relative_url }}" alt="Queue screen showing upcoming tracks and persistent playback controls" loading="lazy">
+      </button>
       <figcaption><strong>Queue</strong><span>Upcoming station tracks at a glance</span></figcaption>
     </figure>
     <figure class="tablet-shot">
-      <img src="{{ '/assets/project/screenshots/tablet.png' | relative_url }}" alt="Expanded landscape tablet Player layout" loading="lazy">
+      <button class="gallery-open" type="button" data-lightbox="{{ '/assets/project/screenshots/tablet.png' | relative_url }}" data-lightbox-alt="Expanded landscape tablet Player layout" data-lightbox-caption="Expanded layout · Responsive navigation on larger displays" aria-label="Open larger expanded-layout screenshot">
+        <img src="{{ '/assets/project/screenshots/tablet.png' | relative_url }}" alt="Expanded landscape tablet Player layout" loading="lazy">
+      </button>
       <figcaption><strong>Expanded layout</strong><span>Responsive navigation on larger displays</span></figcaption>
     </figure>
   </div>
@@ -111,7 +123,7 @@ section: overview
     <h2 id="quality-title">A tested Alpha</h2>
   </div>
   <dl>
-    <div><dt>24</dt><dd>completed milestone checkpoints</dd></div>
+    <div><dt>27</dt><dd>achieved milestone checkpoints</dd></div>
     <div><dt>146</dt><dd>unit tests passing</dd></div>
     <div><dt>40/40</dt><dd>current tablet connected suite</dd></div>
     <div><dt>5</dt><dd>certified station integrations</dd></div>

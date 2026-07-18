@@ -1,30 +1,61 @@
-# 24Seven.FM Player
+<div align="center">
+  <img src="docs/play-store-assets/app-icon-512.png" width="128" height="128" alt="24Seven.FM Player application icon">
+  <h1>24Seven.FM Player</h1>
+  <p><strong>Five stations. One adaptive, fully native Android player.</strong></p>
+  <p>A community-built Kotlin, Jetpack Compose, and Media3 client for the 24seven.FM internet-radio network.</p>
+  <p>
+    <a href="https://github.com/codeframe78/24Seven.FM-Player/actions/workflows/android.yml"><img src="https://github.com/codeframe78/24Seven.FM-Player/actions/workflows/android.yml/badge.svg?branch=main" alt="Android CI status"></a>
+    <a href="https://github.com/codeframe78/24Seven.FM-Player/actions/workflows/privacy-pages.yml"><img src="https://github.com/codeframe78/24Seven.FM-Player/actions/workflows/privacy-pages.yml/badge.svg?branch=main" alt="Project Pages status"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-7b52ab" alt="Apache-2.0 license"></a>
+  </p>
+  <p>
+    <a href="https://codeframe78.github.io/24Seven.FM-Player/project/"><strong>Project portal</strong></a> ·
+    <a href="https://codeframe78.github.io/24Seven.FM-Player/project/product-testing/"><strong>Test the Player</strong></a> ·
+    <a href="https://codeframe78.github.io/24Seven.FM-Player/project/roadmap/"><strong>Interactive roadmap</strong></a> ·
+    <a href="https://github.com/users/codeframe78/projects/1"><strong>Build dashboard</strong></a>
+  </p>
+</div>
 
-An unofficial, community-built native Android client for the 24seven.FM internet-radio network.
+> [!NOTE]
+> This is an unofficial, non-commercial community project. It is not affiliated with or endorsed by 24seven.FM or its stations. The application is fully native and does not use a WebView.
 
-The application is written in Kotlin with Jetpack Compose and Jetpack Media3. It does not use a WebView and is not affiliated with or endorsed by 24seven.FM or its stations.
+## At a glance
 
-[Comprehensive project portal](https://codeframe78.github.io/24Seven.FM-Player/project/) · [Live build dashboard](https://github.com/users/codeframe78/projects/1) · [Privacy notice](https://codeframe78.github.io/24Seven.FM-Player/)
+| Platform | Station integrations | Supported runtime | Current target |
+| :---: | :---: | :---: | :---: |
+| Native Android | **5 certified** | Android 8.0+ | Android 16 / API 36 |
 
-The project portal documents the product experience, native architecture, development workflow, validation evidence, chronological milestone history, release readiness, and contribution resources.
+| StreamingSoundtracks.com | 1980s.FM | Adagio.FM | Death.FM | Entranced.FM |
+| :---: | :---: | :---: | :---: | :---: |
+| Soundtracks | 1980s | Classical | Extreme metal | Trance |
 
-## Supported stations
-
-- StreamingSoundtracks.com
-- 1980s.FM
-- Adagio.FM
-- Death.FM
-- Entranced.FM
+The [comprehensive project portal](https://codeframe78.github.io/24Seven.FM-Player/project/) connects the product experience to its native architecture, development workflow, validation evidence, milestone history, release readiness, and contributor resources. The canonical [privacy notice](https://codeframe78.github.io/24Seven.FM-Player/) remains at the site root.
 
 ## Alpha status
 
 Milestones M1–M16, M18–M22, M24–M26, and the M27.1 local notification foundation are complete in project history. M17 Private Messages remains deferred for legacy server repair. All five station-certification gates now pass; the expanded M23 Play-testing readiness program is in progress, M27.2 reliable background delivery remains the final pre-Alpha feature slice, and publication is M28.
 
+> [!IMPORTANT]
+> **Current focus:** close the remaining M23 Play-testing and external approval gates, then complete authorized M27.2 background delivery before the explicitly approved M28 Alpha publication.
+
+<details>
+<summary><strong>Explore the complete current Alpha capability and validation summary</strong></summary>
+
 The current Alpha provides a responsive native player, service-owned Media3 playback, a service-owned Sleep Timer, native Android audio-output selection with visible current-route state, five-station navigation, device-local startup/last-station preferences, live metadata and artwork, queue/history, an independent five-station account dashboard with Android-protected sessions, chat, song requests, signed-in favorite-track browsing, a verified SST request-history/cooldown/membership surface, a trusted browser directory for selected public station content, and user-reviewed in-app diagnostics. The diagnostics flow uses a fixed privacy allowlist, bounds recent enum-only transitions, reduces errors and audio routes to broad categories, and requires an explicit Copy or Share action. The timer offers presets/custom duration, live remaining time, adjust/cancel actions, service recreation, and deterministic playback stop at expiry; compatible system media surfaces receive an active-timer cancellation command. The output control opens Android's system route surface for phone, Bluetooth, wired/USB, and other system-managed outputs without adding a relay or unverified stream URL; Google Cast remains capability-gated. The media notification body reopens the existing player task, station-library search supports title/album/artist/genre, Library results can be sorted by station order or play state, and Favorites can be sorted by number, track name, album, artist, genre, year, length, or play state. Request availability is conservatively revalidated against fresh station and Queue data before submission, with indexed and stable-state resolution keeping a full 1,500-track VIP/RIP Favorites list responsive; requests sent from Favorites now show the station's success, rejection, or indeterminate-confirmation result without leaving the list. Public community content is now hidden behind an adult age screen, versioned Terms acceptance, and a separate mature-content reveal, with native report-content/report-user/block-user actions and station-scoped local block management. M27.1 adds opt-in, station-scoped exact-name Chat-mention detection, first-snapshot baselining, duplicate suppression, blocked-author filtering, privacy-minimized Android alerts, and safety-gated Chat navigation while the existing Chat feed is actively observed; true closed-app push remains pending an authorized event source. Navigation, Player station cards, and account headers reflow at Android's 2× text setting with an enlarged display while preserving explicit destination semantics. An offline terminal playback failure now presents a clear waiting state and performs one automatic Media3 prepare when validated connectivity returns; pause, stop, or a station change cancels that recovery. All 146 unit tests, debug lint, release bundle checks, the current focused 2/2 M27.1 physical-Razr connected checks, the prior 40/40 connected suite on the API 35 Pixel Tablet at normal settings, the prior 39/39 suite at maximum tested accessibility settings, prior 36/36 connected suites on API 26, API 36, the API 35 16 KB runtime, Pixel Fold open, and Pixel Tablet landscape, focused current-head phone/Fold/accessibility checks, the focused M24–M26 physical Razr checks, live phone and Tablet network cut/restore cycles, the earlier 21/21 physical Razr suite, Windows validation, and a complete physical Razr open/tabletop/closed/reopened playback cycle are green. Startup, memory, and large-Favorites diagnostics are recorded in [the M23 performance validation](docs/m23-performance-validation.md), with the adaptive device contract in [the M23 compatibility matrix](docs/m23-device-compatibility.md), timer evidence in [the M24 validation](docs/m24-sleep-timer-validation.md), route evidence in [the M25 validation](docs/m25-audio-output-validation.md), support-snapshot evidence in [the M26 validation](docs/m26-diagnostics-validation.md), and local mention evidence in [the M27.1 validation](docs/m27-community-notification-validation.md).
+
+</details>
 
 ## Project Roadmap
 
 This roadmap separates the order work was actually completed from the stable milestone IDs used for requirements and evidence. The achievement history below is chronological and authoritative; detailed completion gates, estimates, dependencies, and confidence risks are maintained in [the implementation plan](docs/IMPLEMENTATION_PLAN.md).
+
+| Program | State | Current signal |
+| --- | :---: | --- |
+| M23 Play-testing readiness | 🚧 **Active** | 2 of 7 reviewable gates complete; local work and external dependencies remain visible |
+| M17 Private Messages | 🧊 **Deferred** | Excluded until the legacy delivery failure is repaired and verified |
+| M24–M26 | ✅ **Complete** | Sleep Timer, audio-output selection, and privacy-safe diagnostics are validated |
+| M27 Notifications | 🚧 **Split** | M27.1 local mention foundation complete; M27.2 true delivery awaits authorization |
+| M28 Alpha publication | ⏳ **Planned** | Explicitly authorized publication after all earlier gates close |
 
 ### Current progression
 
@@ -35,6 +66,9 @@ This roadmap separates the order work was actually completed from the stable mil
 - **Deferred:** M17 Private Messages remains excluded from the shipping build until the reproduced server-side delivery failure is repaired and verified.
 - **Pre-Alpha features:** M24's service-owned Sleep Timer, M25's dedicated Android audio-output path, and M26's privacy-safe in-app diagnostics are complete. M25 intentionally leaves Google Cast gated behind verified receiver compatibility and permitted stream use. M27.1's local Chat-mention foundation is complete for the actively observed Chat feed; M27 still requires an authorized event source for reliable closed-app push and will also support new Private Messages whenever M17 is repaired and enabled, without exposing a broken PM surface or imitating push with perpetual background polling.
 - **Project documentation:** The GitHub Pages [project portal](https://codeframe78.github.io/24Seven.FM-Player/project/) now connects the product, architecture, development process, testing evidence, a structured [product-testing workspace](https://codeframe78.github.io/24Seven.FM-Player/project/product-testing/), roadmap, and contributor resources while preserving the canonical privacy-policy URL ([validation and screenshots](docs/project-portal-validation.md)).
+
+<details>
+<summary><strong>Browse all 27 achieved milestones in chronological order</strong></summary>
 
 ### Completed milestones — actual achievement order
 
@@ -68,6 +102,9 @@ The sequence number is the order in which Git history and milestone evidence sho
 | 24 | 2026-07-16 | M24 Sleep Timer | [`b713783`](https://github.com/codeframe78/24Seven.FM-Player/commit/b713783) | Service-owned presets/custom countdown, restoration, system state, and deterministic expiry ([validation](docs/m24-sleep-timer-validation.md)) |
 | 25 | 2026-07-16 | M25 Cast / Audio-Output Selection | [`183ccc0`](https://github.com/codeframe78/24Seven.FM-Player/commit/183ccc0) | Native Android output chooser, accurate current-route state, phone/Bluetooth handoff and recovery, and an explicit capability-gated Cast boundary ([validation](docs/m25-audio-output-validation.md)) |
 | 26 | 2026-07-16 | M26 In-App Diagnostics | [`7aedbfc`](https://github.com/codeframe78/24Seven.FM-Player/commit/7aedbfc) | User-reviewed fixed-allowlist snapshot, bounded transitions, explicit Android copy/share, and physical-Razr privacy validation ([validation](docs/m26-diagnostics-validation.md)) |
+| 27 | 2026-07-16 | M27.1 Local Chat-Mention Foundation | [`afd563a`](https://github.com/codeframe78/24Seven.FM-Player/commit/afd563a) | Station opt-ins, exact-name matching, baseline and duplicate suppression, blocked-author filtering, private Android alerts, and gated Chat navigation ([validation](docs/m27-community-notification-validation.md)) |
+
+</details>
 
 ### Deferred milestone
 
@@ -107,6 +144,16 @@ The app is fully native and uses immutable Compose UI state, repository boundari
 ## Screenshots
 
 Most captures are from the physical Razr and use live station data, so track and chat content will naturally change over time. The M15 request-activity capture intentionally shows the safe signed-out state after a fresh debug install. The final accessibility and network-recovery pairs are privacy-safe API 35 emulator evidence. The Player and Queue captures show the M11 Alpha shell; Chat and Requests retain their already-working native M8–M10 content presentation. The M16 capture shows the original trusted browser directory, while M18–M22 include station-certification evidence.
+
+<table>
+  <tr>
+    <td width="36%" align="center" valign="top"><img src="docs/play-store-assets/screenshots/phone-player-live-playing.png" alt="Compact physical Razr Player with live artwork, metadata, controls, and bottom navigation" width="300"><br><strong>Compact Player</strong><br><sub>Live physical-Razr experience.</sub></td>
+    <td width="64%" align="center" valign="top"><img src="docs/play-store-assets/screenshots/tablet-landscape-player.png" alt="Expanded landscape Player with navigation rail and two-pane now-playing content" width="620"><br><strong>Expanded Player</strong><br><sub>Responsive two-pane tablet layout.</sub></td>
+  </tr>
+</table>
+
+<details>
+<summary><strong>Open the complete validated screenshot gallery</strong></summary>
 
 <table>
   <tr>
@@ -165,6 +212,8 @@ Most captures are from the physical Razr and use live station data, so track and
     <td colspan="2" align="center" valign="top"><img src="docs/screenshots/m25-audio-output-chooser.png" alt="Motorola Razr Android audio-output chooser with the JBL speaker connected while the Player reports the same active route" width="420"><br><strong>M25 Audio-Output Handoff</strong><br><sub>Android System UI and the native Player agree on the active Bluetooth route.</sub></td>
   </tr>
 </table>
+
+</details>
 
 Audio stream addresses come from station-provided playlists and remain subject to device verification. Remote interfaces are added only after source verification and permission review. See the milestone research and validation documents under [docs](docs) for authorization, protocol evidence, limits, and device results.
 
