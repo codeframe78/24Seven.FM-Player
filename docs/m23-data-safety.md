@@ -1,6 +1,6 @@
 # M28–M35 Google Play Data Safety worksheet
 
-Checked against the current Google Play definitions on July 15, 2026. This is a conservative implementation worksheet, not a substitute for the product owner's final declaration in Play Console. Reconcile it with the exact active artifact and the Console form immediately before submission.
+Checked against the current Google Play definitions on July 18, 2026. This is a conservative implementation worksheet, not a substitute for the product owner's final declaration in Play Console. Reconcile it with the exact active artifact and the Console form immediately before submission.
 
 ## Scope and decision rules
 
@@ -19,7 +19,7 @@ Checked against the current Google Play definitions on July 15, 2026. This is a 
 | Station session cookie | Yes, returned to the originating station on authenticated calls | Encrypted locally with Android Keystore until sign-out/data clear/uninstall | User IDs or other account identifier, depending on the active form wording | Optional | Account management; app functionality | No; sent only to the originating station |
 | Chat message | Yes, after explicit Send | Current chat history is memory-only | Messages → Other in-app messages | Optional | App functionality | No, if the explicit user-initiated station post exception applies |
 | Optional song-request message | Yes, after explicit confirmation | Pending text is transient | Messages → Other in-app messages | Optional | App functionality | No, if the explicit user-initiated station post exception applies |
-| Abuse report: reporter name/email, category, reported username, bounded Chat/request snapshot, timestamp, and optional details | Yes, only after explicit Send report | Form state and submitted report are transient and are not persisted by the app | Personal info → Name and Email address; Messages → Other in-app messages; potentially Other user-generated content under the active form | Optional | App functionality; fraud prevention, security, and compliance | No, if the explicit user-initiated direct-station transfer exception applies; confirm against the active form |
+| Abuse-report email draft: reporter name/station nickname, sender address supplied by the chosen email account, category, reported username, bounded Chat/request snapshot, timestamp, and optional details | Yes, only if the user explicitly sends the prepared draft from the email app | Draft state is transient and not persisted by the Player; the chosen email app controls its own draft/sent storage | Personal info → Name and Email address; Messages → Emails or Other in-app messages; potentially Other user-generated content under the active form | Optional | App functionality; fraud prevention, security, and compliance | Evaluate the explicit user-initiated transfer to the monitored recipient against the active form; do not assume an exception |
 | Track request/selection action | Yes, after explicit confirmation | No developer backend; station-reported results are transient | App activity → Other actions | Optional | App functionality | No, if the explicit user-initiated station action exception applies |
 | Station-library search text | Yes, when Search is explicitly used | Results and query UI state are transient | App activity → In-app search history | Optional | App functionality | No, if the direct station query qualifies for the user-initiated-action exception |
 | Public playback, queue, history, artwork, chat, and station catalog responses | Requests leave the device, but the returned public content is not user data supplied by this app | Cached only by normal in-memory/network/media mechanisms | No user-data type identified | Core functionality | App functionality | No |
@@ -44,7 +44,7 @@ Before completing the form:
 
 1. Re-run the release dependency and merged-manifest audits against the exact signed AAB.
 2. Probe every authenticated/user-submission endpoint for HTTPS-only transmission and redirect behavior without recording credentials or cookies.
-3. Confirm with station administration whether server logs or feature storage retain search terms, login submissions, chat/request messages, request actions, and abuse reports.
+3. Confirm with station administration whether server logs or feature storage retain search terms, login submissions, chat/request messages, and request actions; separately confirm retention for abuse reports received through the monitored email destination.
 4. Compare every question in the active Console form with this table; the Console wording is authoritative.
 5. Have the product owner attest to the final answers before saving or submitting them.
 

@@ -424,6 +424,10 @@ class MainViewModel(
         communitySafety.submitReport(submission)
     }
 
+    fun reportEmailComposerResult(opened: Boolean) {
+        communitySafety.reportEmailComposerResult(opened)
+    }
+
     fun dismissAbuseReport() = communitySafety.dismissReport()
 
     fun signIn(stationId: StationId, username: String, password: String, securityCode: String) = viewModelScope.launch {

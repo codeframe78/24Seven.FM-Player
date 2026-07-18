@@ -7,6 +7,7 @@ import com.codeframe78.twentyfourseven.player.domain.StationPage
 import com.codeframe78.twentyfourseven.player.domain.StationPageKind
 import com.codeframe78.twentyfourseven.player.domain.StationRepository
 import com.codeframe78.twentyfourseven.player.domain.LocalStationPreferences
+import com.codeframe78.twentyfourseven.player.domain.PLAYER_CONTACT_EMAIL
 import com.codeframe78.twentyfourseven.player.domain.StationPreferencesRepository
 import com.codeframe78.twentyfourseven.player.domain.StartupStationMode
 import com.codeframe78.twentyfourseven.player.domain.StreamFormat
@@ -139,7 +140,12 @@ class BootstrapStationRepository(
         )
 
         fun secondaryPages(domain: String, membershipTitle: String, membershipModule: String) = listOf(
-            page(domain, StationPageKind.Contact, "Contact", "Contact the station team", "Contact_Us"),
+            StationPage(
+                StationPageKind.Contact,
+                "Contact Us",
+                "Email the monitored 24Seven.FM Player contact",
+                "mailto:$PLAYER_CONTACT_EMAIL",
+            ),
             page(domain, StationPageKind.Membership, membershipTitle, "Station membership information", membershipModule),
         )
 

@@ -10,6 +10,7 @@ import com.codeframe78.twentyfourseven.player.domain.CURRENT_COMMUNITY_TERMS_VER
 import com.codeframe78.twentyfourseven.player.domain.CommunitySafetyRepository
 import com.codeframe78.twentyfourseven.player.domain.CommunitySafetyState
 import com.codeframe78.twentyfourseven.player.domain.StationId
+import com.codeframe78.twentyfourseven.player.domain.abuseReportEmailDraft
 import com.codeframe78.twentyfourseven.player.domain.isAdultOnDate
 import com.codeframe78.twentyfourseven.player.domain.normalizedCommunityIdentity
 import com.codeframe78.twentyfourseven.player.domain.validatedBirthDate
@@ -82,12 +83,44 @@ internal class InMemoryCommunitySafetyRepository(
         report.value = AbuseReportState(
             stationId = stationId,
             target = target,
-            status = AbuseReportStatus.Error,
-            errorMessage = "Reporting is unavailable in this test repository.",
+            status = AbuseReportStatus.Ready,
         )
     }
 
-    override suspend fun submitReport(submission: AbuseReportSubmission) = Unit
+    override suspend fun submitReport(submission: AbuseReportSubmission) {
+        val current = report.value
+        val stationId = current.stationId ?: return
+        val target = current.target ?: return
+        if (current.status != AbuseReportStatus.Ready) return
+        report.value = runCatching { abuseReportEmailDraft(stationId, target, submission) }
+            .fold(
+                onSuccess = { draft ->
+                    current.copy(status = AbuseReportStatus.EmailReady, emailDraft = draft)
+                },
+                onFailure = { error ->
+                    current.copy(
+                        status = AbuseReportStatus.Error,
+                        errorMessage = error.message ?: "Check the report fields and try again.",
+                        retryAllowed = true,
+                    )
+                },
+            )
+    }
+
+    override fun reportEmailComposerResult(opened: Boolean) {
+        val current = report.value
+        if (current.status != AbuseReportStatus.EmailReady) return
+        report.value = if (opened) {
+            current.copy(status = AbuseReportStatus.EmailHandoffStarted, emailDraft = null)
+        } else {
+            current.copy(
+                status = AbuseReportStatus.Error,
+                emailDraft = null,
+                errorMessage = "No email app is available. The report was not sent.",
+                retryAllowed = true,
+            )
+        }
+    }
 
     override fun dismissReport() {
         report.value = AbuseReportState()

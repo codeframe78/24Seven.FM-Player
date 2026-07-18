@@ -281,12 +281,12 @@ roadmap:
     legacy_id: "M23.2"
     phase: "alpha-readiness"
     name: "UGC Safety and Ongoing Moderation"
-    state: "waiting"
-    state_label: "Waiting externally"
+    state: "active"
+    state_label: "In progress"
     blocking: true
-    dependencies: "Administrator receipt and operator ownership"
+    dependencies: "Physical email-composer validation and one fresh receipt check"
     evidence: "docs/m23-ugc-safety-validation.md"
-    summary: "Native safeguards pass; report receipt and continuing moderation ownership remain."
+    summary: "A fixed-recipient native email handoff is implemented; device validation and one fresh receipt check remain."
 
   - id: "M29"
     legacy_id: "M23.4"

@@ -26,7 +26,7 @@ The active program is M28–M35 Alpha readiness:
 
 | ID | Size | State | Implementation focus | Principal dependency |
 | --- | --- | --- | --- | --- |
-| M28 UGC Safety and Ongoing Moderation | M | Waiting externally | Reconcile the authorized native safety implementation with verified receipt, responsible operator, and continuing all-station moderation | Administrator/operator evidence |
+| M28 UGC Safety and Ongoing Moderation | M | In progress | Validate the fixed-recipient native Contact/report email handoff, revised Terms/privacy boundary, and honest composer state; then reconcile one fresh authorized report with receipt | Physical device and one-shot evidence |
 | M29 Play Declarations, Privacy, and Data Safety | M | Waiting externally | Exact-artifact privacy/Data Safety, content rating, reviewer access, retention/deletion, and foreground-media evidence | Owner answers and Play Console |
 | M30 Brand, Content, and Distribution Rights | S | Waiting externally | Preserve private rights evidence and record only sanitized completion facts | Written rights-holder authorization |
 | M31 Payments, External Links, and Account Lifecycle | M | Planned | Audit every shipped Custom Tab and downstream purchase/account path; remove, gate, or lawfully implement any incompatible route | Live destination behavior and Play program eligibility |

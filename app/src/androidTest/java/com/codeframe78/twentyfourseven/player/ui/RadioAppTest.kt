@@ -57,6 +57,7 @@ import com.codeframe78.twentyfourseven.player.domain.AgeGateStatus
 import com.codeframe78.twentyfourseven.player.domain.CommunitySafetyState
 import com.codeframe78.twentyfourseven.player.domain.CommunityNotificationState
 import com.codeframe78.twentyfourseven.player.domain.CURRENT_COMMUNITY_TERMS_VERSION
+import com.codeframe78.twentyfourseven.player.domain.PLAYER_CONTACT_EMAIL
 import com.codeframe78.twentyfourseven.player.domain.AuthStatus
 import com.codeframe78.twentyfourseven.player.domain.ChatLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.ChatMessage
@@ -989,9 +990,9 @@ class RadioAppTest {
         val opened = mutableListOf<StationPage>()
         val contact = StationPage(
             StationPageKind.Contact,
-            "Contact",
-            "Contact the station team",
-            "https://streamingsoundtracks.com/modules.php?name=Contact_Us",
+            "Contact Us",
+            "Email the monitored 24Seven.FM Player contact",
+            "mailto:$PLAYER_CONTACT_EMAIL",
         )
         val contentStation = station.copy(
             capabilities = StationCapabilities(supportsSecondaryContent = true),
@@ -1018,7 +1019,7 @@ class RadioAppTest {
 
         composeRule.onNodeWithTag("secondary_content_directory").assertExists()
         composeRule.onNodeWithContentDescription(
-            "Open Contact for StreamingSoundtracks.com in browser",
+            "Email Contact Us for StreamingSoundtracks.com",
         ).performScrollTo().assertIsDisplayed().performClick()
         composeRule.runOnIdle { assertEquals(listOf(contact), opened) }
     }
@@ -1473,7 +1474,7 @@ class RadioAppTest {
     }
 
     @Test
-    fun nativeReportDialogCollectsContactCaptchaAndBoundedDetails() {
+    fun nativeReportDialogCollectsBoundedDetailsBeforeEmailReview() {
         var submitted: AbuseReportSubmission? = null
         composeRule.setContent {
             MaterialTheme {
@@ -1504,19 +1505,16 @@ class RadioAppTest {
 
         composeRule.onNodeWithText("Report content").assertIsDisplayed()
         composeRule.onNodeWithTag("reporter_name").performTextInput("Reporter")
-        composeRule.onNodeWithTag("reporter_email").performTextInput("reporter@example.com")
         composeRule.onNodeWithTag("report_details").performTextInput("Harmless test details")
-        composeRule.onNodeWithTag("report_security_code").performTextInput("123")
         composeRule.onNodeWithTag("submit_abuse_report").performClick()
         composeRule.runOnIdle {
             assertEquals("Reporter", submitted?.reporterName)
-            assertEquals("reporter@example.com", submitted?.reporterEmail)
-            assertEquals("123", submitted?.securityCode)
+            assertEquals("Harmless test details", submitted?.optionalDetails)
         }
     }
 
     @Test
-    fun indeterminateReportDialogSuppressesDuplicateRetry() {
+    fun startedEmailHandoffDialogDoesNotClaimTheReportWasSent() {
         var dismissed = false
         composeRule.setContent {
             MaterialTheme {
@@ -1529,9 +1527,7 @@ class RadioAppTest {
                                 AbuseReportSource.Chat,
                                 "Troublemaker",
                             ),
-                            status = AbuseReportStatus.Error,
-                            errorMessage = "The station response could not confirm delivery. Do not resend until an administrator checks receipt.",
-                            retryAllowed = false,
+                            status = AbuseReportStatus.EmailHandoffStarted,
                         ),
                     ),
                     onSelectStation = {},
@@ -1545,6 +1541,7 @@ class RadioAppTest {
             }
         }
 
+        composeRule.onNodeWithText("not sent unless", substring = true).assertIsDisplayed()
         composeRule.onNodeWithText("Try again").assertDoesNotExist()
         composeRule.onNodeWithText("Done").assertIsDisplayed().performClick()
         composeRule.runOnIdle { assertTrue(dismissed) }

@@ -3,9 +3,21 @@ package com.codeframe78.twentyfourseven.player.domain
 import java.net.URI
 
 object StationPageTrustPolicy {
+    fun trustedEmailRecipient(station: Station?, page: StationPage): String? {
+        if (station == null || !station.capabilities.supportsSecondaryContent) return null
+        if (page !in station.secondaryPages || page.kind != StationPageKind.Contact) return null
+
+        val pageUri = page.url.toUriOrNull() ?: return null
+        if (!pageUri.scheme.equals("mailto", ignoreCase = true)) return null
+        if (pageUri.rawSchemeSpecificPart != PLAYER_CONTACT_EMAIL) return null
+        if (pageUri.rawQuery != null || pageUri.rawFragment != null) return null
+        return PLAYER_CONTACT_EMAIL
+    }
+
     fun trustedUrl(station: Station?, page: StationPage): String? {
         if (station == null || !station.capabilities.supportsSecondaryContent) return null
         if (page !in station.secondaryPages) return null
+        if (page.kind == StationPageKind.Contact) return null
 
         val stationUri = station.websiteUrl.toUriOrNull() ?: return null
         val pageUri = page.url.toUriOrNull() ?: return null

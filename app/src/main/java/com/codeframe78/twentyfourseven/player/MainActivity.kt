@@ -7,6 +7,7 @@ import android.content.ClipboardManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ApplicationInfo
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
@@ -32,6 +33,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.codeframe78.twentyfourseven.player.domain.StationPageTrustPolicy
 import com.codeframe78.twentyfourseven.player.domain.StationId
+import com.codeframe78.twentyfourseven.player.domain.PlayerEmailDraft
+import com.codeframe78.twentyfourseven.player.domain.StationPageKind
+import com.codeframe78.twentyfourseven.player.domain.stationContactEmailDraft
 import com.codeframe78.twentyfourseven.player.data.AndroidCommunityNotificationRepository
 import com.codeframe78.twentyfourseven.player.ui.DoubleBackExitGate
 import com.codeframe78.twentyfourseven.player.ui.AudioOutputActions
@@ -88,6 +92,14 @@ class MainActivity : ComponentActivity() {
                 viewModel.selectStation(stationId)
                 viewModel.selectDestination(com.codeframe78.twentyfourseven.player.ui.MainDestination.Chat)
                 requestedChatStationId.value = null
+            }
+            val reportEmailDraft = state.abuseReport.emailDraft
+            LaunchedEffect(reportEmailDraft) {
+                reportEmailDraft?.let { draft ->
+                    viewModel.reportEmailComposerResult(
+                        openEmailComposer(draft),
+                    )
+                }
             }
             TwentyFourSevenTheme {
                 var showExitConfirmation by remember { mutableStateOf(false) }
@@ -154,8 +166,21 @@ class MainActivity : ComponentActivity() {
                     onUseLastStationAtStartup = viewModel::useLastStationAtStartup,
                     onSetStartupStation = viewModel::setStartupStation,
                     onOpenStationPage = { page ->
-                        val trustedUrl = StationPageTrustPolicy.trustedUrl(state.selectedStation, page)
-                        if (trustedUrl == null) {
+                        val station = state.selectedStation
+                        val trustedRecipient = StationPageTrustPolicy.trustedEmailRecipient(station, page)
+                        val trustedUrl = StationPageTrustPolicy.trustedUrl(station, page)
+                        if (trustedRecipient != null && station != null && page.kind == StationPageKind.Contact) {
+                            val opened = openEmailComposer(
+                                stationContactEmailDraft(station),
+                            )
+                            if (!opened) {
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "No email app is available on this device.",
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            }
+                        } else if (trustedUrl == null) {
                             Toast.makeText(this@MainActivity, "This station page is not available.", Toast.LENGTH_SHORT).show()
                         } else {
                             try {
@@ -258,6 +283,25 @@ class MainActivity : ComponentActivity() {
             startActivity(Intent.createChooser(shareIntent, "Share diagnostics"))
         } catch (_: ActivityNotFoundException) {
             Toast.makeText(this, "No sharing app is available on this device.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun openEmailComposer(draft: PlayerEmailDraft): Boolean {
+        val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse(
+                "mailto:${Uri.encode(draft.recipient)}" +
+                    "?subject=${Uri.encode(draft.subject)}&body=${Uri.encode(draft.body)}",
+            )
+            putExtra(Intent.EXTRA_SUBJECT, draft.subject)
+            putExtra(Intent.EXTRA_TEXT, draft.body)
+        }
+        return try {
+            startActivity(emailIntent)
+            true
+        } catch (_: ActivityNotFoundException) {
+            false
+        } catch (_: SecurityException) {
+            false
         }
     }
 }

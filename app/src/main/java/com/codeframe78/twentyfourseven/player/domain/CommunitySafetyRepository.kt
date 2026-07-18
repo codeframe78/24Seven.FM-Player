@@ -6,7 +6,7 @@ import java.time.DateTimeException
 import java.time.LocalDate
 import java.util.Locale
 
-const val CURRENT_COMMUNITY_TERMS_VERSION = "2026-07-15"
+const val CURRENT_COMMUNITY_TERMS_VERSION = "2026-07-18"
 
 enum class AgeGateStatus { NotCompleted, Adult, Underage }
 
@@ -67,23 +67,21 @@ data class AbuseReportTarget(
     val contentSnapshot: String? = null,
 )
 
-enum class AbuseReportStatus { Idle, LoadingForm, Ready, Submitting, Submitted, Error }
+enum class AbuseReportStatus { Idle, Ready, PreparingEmail, EmailReady, EmailHandoffStarted, Error }
 
 data class AbuseReportState(
     val stationId: StationId? = null,
     val target: AbuseReportTarget? = null,
     val status: AbuseReportStatus = AbuseReportStatus.Idle,
-    val captchaImageUrl: String? = null,
+    val emailDraft: PlayerEmailDraft? = null,
     val errorMessage: String? = null,
     val retryAllowed: Boolean = false,
 )
 
 data class AbuseReportSubmission(
     val reporterName: String,
-    val reporterEmail: String,
     val category: AbuseReportCategory,
     val optionalDetails: String,
-    val securityCode: String,
 )
 
 interface CommunitySafetyRepository {
@@ -104,6 +102,8 @@ interface CommunitySafetyRepository {
     suspend fun beginReport(stationId: StationId, target: AbuseReportTarget)
 
     suspend fun submitReport(submission: AbuseReportSubmission)
+
+    fun reportEmailComposerResult(opened: Boolean)
 
     fun dismissReport()
 }

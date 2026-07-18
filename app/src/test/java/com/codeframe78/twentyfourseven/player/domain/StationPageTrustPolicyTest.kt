@@ -78,4 +78,36 @@ class StationPageTrustPolicyTest {
             ),
         )
     }
+
+    @Test
+    fun `contact kind allows only the fixed monitored email recipient`() {
+        val contact = StationPage(
+            StationPageKind.Contact,
+            "Contact Us",
+            "Email the Player contact",
+            "mailto:$PLAYER_CONTACT_EMAIL",
+        )
+        val contactStation = station.copy(secondaryPages = listOf(contact))
+
+        assertEquals(
+            PLAYER_CONTACT_EMAIL,
+            StationPageTrustPolicy.trustedEmailRecipient(contactStation, contact),
+        )
+        assertNull(StationPageTrustPolicy.trustedUrl(contactStation, contact))
+
+        listOf(
+            "mailto:other@example.com",
+            "mailto:$PLAYER_CONTACT_EMAIL?subject=Injected",
+            "https://streamingsoundtracks.com/modules.php?name=Contact_Us",
+        ).forEach { unsafeUrl ->
+            val unsafe = contact.copy(url = unsafeUrl)
+            assertNull(
+                unsafeUrl,
+                StationPageTrustPolicy.trustedEmailRecipient(
+                    contactStation.copy(secondaryPages = listOf(unsafe)),
+                    unsafe,
+                ),
+            )
+        }
+    }
 }

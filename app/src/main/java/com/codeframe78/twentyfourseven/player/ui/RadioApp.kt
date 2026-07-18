@@ -27,6 +27,7 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.QueueMusic
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Policy
@@ -111,6 +112,7 @@ import com.codeframe78.twentyfourseven.player.domain.QueueLoadStatus
 import com.codeframe78.twentyfourseven.player.domain.QueueTrack
 import com.codeframe78.twentyfourseven.player.domain.StationId
 import com.codeframe78.twentyfourseven.player.domain.StationPage
+import com.codeframe78.twentyfourseven.player.domain.StationPageKind
 import com.codeframe78.twentyfourseven.player.domain.RequestSearchField
 import com.codeframe78.twentyfourseven.player.domain.RequestSearchTarget
 import com.codeframe78.twentyfourseven.player.domain.RequestSuggestionMode
@@ -877,12 +879,13 @@ private fun AbuseReportDialog(state: MainUiState, actions: CommunitySafetyAction
     if (report.status == AbuseReportStatus.Idle) return
     val target = report.target ?: return
     var reporterName by remember(target) { mutableStateOf(state.auth?.displayName.orEmpty()) }
-    var reporterEmail by remember(target) { mutableStateOf("") }
     var category by remember(target) { mutableStateOf(AbuseReportCategory.Harassment) }
     var categoryMenuOpen by remember { mutableStateOf(false) }
     var details by remember(target) { mutableStateOf("") }
-    var securityCode by remember(target, report.captchaImageUrl) { mutableStateOf("") }
-    val canDismiss = report.status != AbuseReportStatus.Submitting
+    val canDismiss = report.status !in setOf(
+        AbuseReportStatus.PreparingEmail,
+        AbuseReportStatus.EmailReady,
+    )
 
     AlertDialog(
         onDismissRequest = { if (canDismiss) actions.onDismissReport() },
@@ -897,10 +900,9 @@ private fun AbuseReportDialog(state: MainUiState, actions: CommunitySafetyAction
                     Text("Content: “$it”", maxLines = 4, overflow = TextOverflow.Ellipsis)
                 }
                 when (report.status) {
-                    AbuseReportStatus.LoadingForm -> CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
-                    AbuseReportStatus.Ready, AbuseReportStatus.Submitting -> {
+                    AbuseReportStatus.Ready -> {
                         Text(
-                            "This sends a bounded report to the selected station's authorized administrators. Your contact information is required for the Contact Us form and is not saved by the app.",
+                            "The Player will prepare a bounded report addressed to the monitored moderation mailbox. Your email app will open so you can review, edit, and explicitly send it. The Player cannot read your email account or confirm delivery.",
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         OutlinedTextField(
@@ -908,16 +910,7 @@ private fun AbuseReportDialog(state: MainUiState, actions: CommunitySafetyAction
                             { reporterName = it.take(100) },
                             label = { Text("Your name or station nickname") },
                             singleLine = true,
-                            enabled = report.status == AbuseReportStatus.Ready,
                             modifier = Modifier.fillMaxWidth().testTag("reporter_name"),
-                        )
-                        OutlinedTextField(
-                            reporterEmail,
-                            { reporterEmail = it.take(254) },
-                            label = { Text("Your email") },
-                            singleLine = true,
-                            enabled = report.status == AbuseReportStatus.Ready,
-                            modifier = Modifier.fillMaxWidth().testTag("reporter_email"),
                         )
                         Box {
                             TextButton(onClick = { categoryMenuOpen = true }) {
@@ -943,32 +936,15 @@ private fun AbuseReportDialog(state: MainUiState, actions: CommunitySafetyAction
                             { details = it.take(500) },
                             label = { Text("Optional details") },
                             supportingText = { Text("${details.length}/500") },
-                            enabled = report.status == AbuseReportStatus.Ready,
                             modifier = Modifier.fillMaxWidth().testTag("report_details"),
                         )
-                        AsyncImage(
-                            model = report.captchaImageUrl,
-                            contentDescription = "Report security code image",
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier.fillMaxWidth().height(96.dp).background(Color.White).padding(12.dp),
-                        )
-                        OutlinedTextField(
-                            securityCode,
-                            { securityCode = it.filter(Char::isLetterOrDigit).take(3) },
-                            label = { Text("Three-character security code") },
-                            supportingText = { Text("Case-sensitive") },
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
-                            enabled = report.status == AbuseReportStatus.Ready,
-                            modifier = Modifier.fillMaxWidth().testTag("report_security_code"),
-                        )
-                        report.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-                        if (report.status == AbuseReportStatus.Submitting) {
-                            CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
-                        }
                     }
-                    AbuseReportStatus.Submitted -> Text(
-                        "Report sent to the selected station's administrators.",
+                    AbuseReportStatus.PreparingEmail, AbuseReportStatus.EmailReady -> {
+                        Text("Opening your email app for review…")
+                        CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
+                    }
+                    AbuseReportStatus.EmailHandoffStarted -> Text(
+                        "Android opened the email handoff. The report is not sent unless you choose an email app, review the draft, and send it there; the Player cannot confirm delivery.",
                         modifier = Modifier.testTag("report_submitted"),
                     )
                     AbuseReportStatus.Error -> Text(
@@ -986,27 +962,25 @@ private fun AbuseReportDialog(state: MainUiState, actions: CommunitySafetyAction
                         actions.onSubmitReport(
                             AbuseReportSubmission(
                                 reporterName = reporterName,
-                                reporterEmail = reporterEmail,
                                 category = category,
                                 optionalDetails = details,
-                                securityCode = securityCode,
                             ),
                         )
                     },
-                    enabled = reporterName.isNotBlank() && reporterEmail.isNotBlank() && securityCode.length == 3,
+                    enabled = reporterName.trim().length >= 2,
                     modifier = Modifier.testTag("submit_abuse_report"),
-                ) { Text("Send report") }
+                ) { Text("Review email") }
                 AbuseReportStatus.Error -> if (report.retryAllowed) {
                     Button(onClick = actions.onRetryReport) { Text("Try again") }
                 } else {
                     Button(onClick = actions.onDismissReport) { Text("Done") }
                 }
-                AbuseReportStatus.Submitted -> Button(onClick = actions.onDismissReport) { Text("Done") }
+                AbuseReportStatus.EmailHandoffStarted -> Button(onClick = actions.onDismissReport) { Text("Done") }
                 else -> Unit
             }
         },
         dismissButton = {
-            if (canDismiss && report.status != AbuseReportStatus.Submitted) {
+            if (canDismiss && report.status != AbuseReportStatus.EmailHandoffStarted) {
                 TextButton(onClick = actions.onDismissReport) { Text("Cancel") }
             }
         },
@@ -1600,7 +1574,7 @@ private fun SecondaryContentSection(
     }
     Text("Station links", style = MaterialTheme.typography.titleMedium)
     Text(
-        "Opens securely in your browser.",
+        "Contact Us opens your email app; website links open securely in your browser.",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
@@ -1609,13 +1583,18 @@ private fun SecondaryContentSection(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         station.secondaryPages.forEach { page ->
+            val opensEmail = page.kind == StationPageKind.Contact
             Card(
                 onClick = { onOpenStationPage(page) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag("secondary_content_${page.kind.name.lowercase()}")
                     .semantics {
-                        contentDescription = "Open ${page.title} for ${station.name} in browser"
+                        contentDescription = if (opensEmail) {
+                            "Email ${page.title} for ${station.name}"
+                        } else {
+                            "Open ${page.title} for ${station.name} in browser"
+                        }
                     },
             ) {
                 Row(
@@ -1631,7 +1610,10 @@ private fun SecondaryContentSection(
                         )
                     }
                     Spacer(Modifier.width(12.dp))
-                    Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
+                    Icon(
+                        if (opensEmail) Icons.Default.Email else Icons.AutoMirrored.Filled.OpenInNew,
+                        contentDescription = null,
+                    )
                 }
             }
         }

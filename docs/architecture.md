@@ -127,9 +127,12 @@ preference, and station-scoped normalized blocked identities. The entered date o
 data remain transient. Block filtering is applied in the ViewModel to public Chat and Queue/History requester
 attribution; it is explicitly device-local and does not claim to mute or ban a station account.
 
-The report adapter accepts only the five authorized same-origin HTTPS Contact Us forms, verifies the moderator subject,
-bounds every field, and never retries a submission. A recognized success page confirms delivery, a freshly returned
-form is a definite rejection, and any other response is indeterminate and suppresses retry to avoid duplicate reports.
+The repository bounds every report field and prepares an immutable transient email draft addressed only to the
+owner-authorized monitored moderation contact. `MainActivity` performs the Android `ACTION_SENDTO` handoff so Compose
+still emits actions upward and neither the ViewModel nor repository depends on Android intents. The user reviews and
+sends the draft in their chosen email app; the Player does not access email credentials, send silently, or claim that
+opening the composer proves sending or delivery. Contact Us uses the same fixed-recipient handoff, while other approved
+station links retain the same-origin HTTPS Custom Tab trust policy.
 See `docs/m23-ugc-safety-research.md` and `docs/m23-ugc-safety-validation.md`.
 
 ## Initial modules

@@ -118,7 +118,7 @@ class BootstrapStationRepositoryTest {
             )
             assertEquals(
                 true,
-                station.secondaryPages.all { StationPageTrustPolicy.trustedUrl(station, it) == it.url },
+                station.secondaryPages.all { it.isTrustedFor(station) },
             )
         }
     }
@@ -148,7 +148,7 @@ class BootstrapStationRepositoryTest {
         )
         assertEquals(
             true,
-            station.secondaryPages.all { StationPageTrustPolicy.trustedUrl(station, it) == it.url },
+            station.secondaryPages.all { it.isTrustedFor(station) },
         )
     }
 
@@ -177,7 +177,7 @@ class BootstrapStationRepositoryTest {
         )
         assertEquals(
             true,
-            station.secondaryPages.all { StationPageTrustPolicy.trustedUrl(station, it) == it.url },
+            station.secondaryPages.all { it.isTrustedFor(station) },
         )
     }
 
@@ -208,7 +208,7 @@ class BootstrapStationRepositoryTest {
         assertEquals("https://death.fm/modules.php?name=RIP_Subscribe", station.secondaryPages.last().url)
         assertEquals(
             true,
-            station.secondaryPages.all { StationPageTrustPolicy.trustedUrl(station, it) == it.url },
+            station.secondaryPages.all { it.isTrustedFor(station) },
         )
     }
 
@@ -239,7 +239,16 @@ class BootstrapStationRepositoryTest {
         assertEquals("https://entranced.fm/modules.php?name=VIP_Subscribe", station.secondaryPages.last().url)
         assertEquals(
             true,
-            station.secondaryPages.all { StationPageTrustPolicy.trustedUrl(station, it) == it.url },
+            station.secondaryPages.all { it.isTrustedFor(station) },
         )
+    }
+
+    private fun com.codeframe78.twentyfourseven.player.domain.StationPage.isTrustedFor(
+        station: com.codeframe78.twentyfourseven.player.domain.Station,
+    ): Boolean = if (kind == StationPageKind.Contact) {
+        StationPageTrustPolicy.trustedEmailRecipient(station, this) ==
+            com.codeframe78.twentyfourseven.player.domain.PLAYER_CONTACT_EMAIL
+    } else {
+        StationPageTrustPolicy.trustedUrl(station, this) == url
     }
 }

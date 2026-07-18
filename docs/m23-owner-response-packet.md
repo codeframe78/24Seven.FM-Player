@@ -1,8 +1,8 @@
 # M28–M35 site-owner response packet
 
-Prepared July 15, 2026
+Prepared July 18, 2026
 
-Status: copy-ready requests prepared; no response or private evidence is recorded here
+Status: monitored moderation destination confirmed; physical Player email-handoff receipt check required
 
 This packet consolidates the factual confirmations still needed from an authorized 24seven.FM representative. Send it
 privately. Retain the original response and its sender/date privately; commit only a sanitized completion note. Do not
@@ -12,18 +12,26 @@ Git, Discord, or a public issue.
 The moderation authorization already supplied for M28 authorizes app-originated abuse reports. It does not, by
 itself, establish permission to use third-party names, logos, artwork, streams, screenshots, or to distribute the app.
 
-## 1. Reconcile the single harmless moderation report
+## 1. Complete the selected Player email handoff
 
-Please reply with exactly one factual statement:
+On July 18, 2026, the project owner confirmed that a dedicated destination is monitored for 24Seven.FM Player moderation reports and received a separately sent sanitized harmless report. Original correspondence is retained privately. The repository intentionally omits the address, message headers, sender identity, and report body.
 
-> I received the clearly labeled M28 harmless test report submitted on July 15, 2026.
+The owner subsequently directed the Player's Contact Us and moderation-report actions to use that monitored email destination. This keeps administrator behavior outside the Player while giving users an explicit, reviewable native handoff.
+
+After an authorized build is installed on the physical test device:
+
+1. Open Contact Us for one assigned station. Verify the fixed recipient and station-specific subject, then cancel without sending.
+2. From an approved synthetic Chat/request target, prepare one newly authorized harmless report.
+3. Verify the recipient, station-specific subject, bounded body, and no unexpected private data in the email app.
+4. Send it exactly once and confirm one factual outcome:
+
+> I received the clearly labeled M28 harmless report sent through the Player email handoff on [date].
 
 or:
 
-> I did not receive the clearly labeled M28 harmless test report submitted on July 15, 2026.
+> I did not receive the clearly labeled M28 harmless report sent through the Player email handoff on [date].
 
-Do not ask the app project to send another report until that answer is known. The original request had an indeterminate
-server response, and the app intentionally suppresses duplicate retries.
+The Player must never claim delivery based only on opening the composer. Do not add administrator access, SMTP credentials, silent email delivery, or email-account access to the Player.
 
 ## 2. Brand, content, stream, screenshot, and distribution permission
 
@@ -92,7 +100,7 @@ implemented from a success page alone; both sender and recipient delivery must b
 - Keep reviewer credentials only in Play Console and the owner's password manager.
 - Record only a sanitized repository note such as: “Written authorization covering the documented M30 scope was
   received from an authorized network representative on [date]; original evidence retained privately.”
-- M28 completes only after the report receipt answer is reconciled with the app result.
+- M28 completes only after the fixed-recipient implementation passes automated/device checks and one fresh authorized Player email handoff is reconciled with actual receipt.
 - M29 completes only after reviewer access, retention facts, the foreground-service video, and the active Console
   questionnaires are saved and reviewed.
 - M30 completes only after the full rights statement or an equivalent written grant is received and any exclusions are
