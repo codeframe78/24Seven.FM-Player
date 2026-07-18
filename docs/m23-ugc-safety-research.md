@@ -1,4 +1,4 @@
-# M23.2 UGC safety and moderation research
+# M28 UGC safety and moderation research
 
 Date: July 15, 2026
 Status: authorized implementation complete; one-shot report receipt confirmation pending
@@ -11,7 +11,7 @@ Determine what the Play-testing candidate must do with public user-generated con
 
 - **Chat:** anyone using the app can read the selected station's recent public Chat rows. A member signed in to that station can submit a 255-character message.
 - **Queue and History:** public requester display names and optional request messages can appear beside station-selected tracks. Signed-in members can create new request messages where the station supports them.
-- **Private Messages:** M17 remains deferred and is not part of the shipping application.
+- **Private Messages:** M47 remains deferred and is not part of the shipping application.
 
 The base music catalog, playback metadata, and a song request with no user-authored message are not treated as public conversation. The requester identity and optional message attached to a request are UGC and must not be mistaken for ordinary track metadata.
 
@@ -57,7 +57,7 @@ Exactly one administrator-authorized harmless test was submitted to StreamingSou
 
 The administrator only needs to confirm one of these outcomes:
 
-- “I received the clearly labeled M23.2 harmless test report submitted on July 15, 2026.”
+- “I received the clearly labeled M28 harmless test report submitted on July 15, 2026.”
 - “I did not receive it.”
 
-No additional report should be submitted until that receipt check is complete. M23.2 must not be marked complete until the result is reconciled and the final transport behavior is verified.
+No additional report should be submitted until that receipt check is complete. M28 must not be marked complete until the result is reconciled and the final transport behavior is verified.

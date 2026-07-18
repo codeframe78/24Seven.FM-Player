@@ -1,4 +1,4 @@
-# M22 Entranced.FM certification — complete
+# M21 Entranced.FM certification — complete
 
 Public, physical-device, and representative authenticated certification was completed July 15, 2026 on
 `agent/initial-android-scaffold`.
@@ -19,7 +19,7 @@ Public, physical-device, and representative authenticated certification was comp
 | Capability | Evidence | Result |
 | --- | --- | --- |
 | Primary playback | The unchanged primary relay reached Media3 `PLAYING` on the wireless Android 16 Razr while media volume was temporarily reduced | Pass |
-| Source fallback | Both unchanged station-supplied relays returned live `audio/aacp` bytes at 128 kbps; the shared ordered Media3 fallback behavior remains covered by M2 and unit evidence | Pass without destructive failure injection |
+| Source fallback | Both unchanged station-supplied relays returned live `audio/aacp` bytes at 128 kbps; the shared ordered Media3 fallback behavior remains covered by M02 and unit evidence | Pass without destructive failure injection |
 | Metadata/artwork | A fresh live run presented the Entranced.FM title and artist separately, loaded same-station *Syro* artwork, showed `LIVE`, and reported AAC/128 kbps | Pass |
 | Legacy punctuation | An earlier live title exposed Windows-1252 byte `0x92` as a C1 control/replacement glyph. The ICY boundary now maps only defined Windows-1252 C1 punctuation while preserving unrelated Unicode. The installed build showed neither replacement nor C1 characters. | Pass; exact apostrophe mapping is deterministic in unit evidence because the live track changed |
 | Queue/History | The exact bounded public extended endpoint returned 37 table rows; native Queue/History retained the shared 60-second minimum interval | Pass |
@@ -85,4 +85,4 @@ signed out. It contains only the administrator-approved test identity and no cre
 
 Entranced.FM request messages, listener request activity, and native membership state remain explicitly `Not verified`.
 They are not inferred from StreamingSoundtracks.com or similar page structure. Native Private Messages
-remain deferred under M17.
+remain deferred under M47.

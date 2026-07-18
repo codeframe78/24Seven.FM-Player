@@ -62,7 +62,7 @@ The owner confirmed the public support email on July 15, 2026. Console now recor
   1707dp freely resized window and all five station cards
 - No preview video is planned for Alpha
 
-The existing store graphics and screenshots were revalidated during M23.7. No recapture was needed because launcher
+The existing store graphics and screenshots were revalidated during M23. No recapture was needed because launcher
 polish does not alter the in-app Player, Queue, or adaptive-layout surfaces represented by those assets.
 
 Screenshots must show the actual app, avoid credentials or protected sessions, and avoid using public chat/requester content that could create unnecessary personal-data exposure in marketing assets.

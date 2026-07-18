@@ -42,4 +42,4 @@ The debug app was installed and launched over wired ADB on device `motorola razr
 
 - A fresh debug install has no retained production session by design.
 - Live sign-in across all five stations was not automated because credentials and CAPTCHA answers must remain user-entered and must not enter source, logs, or fixtures.
-- Representative live accounts and session-expiration behavior remain station-certification checks in M18–M22.
+- Representative live accounts and session-expiration behavior remain station-certification checks in M17–M21.

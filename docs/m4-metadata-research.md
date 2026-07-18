@@ -1,4 +1,4 @@
-# M4 metadata research
+# M04 metadata research
 
 Research performed on July 13, 2026 against the ten stream URLs already verified and committed from station-provided PLS files. No endpoint was guessed or added.
 
@@ -41,7 +41,7 @@ Primary-to-source fallback was verified under a controlled primary-only network 
 
 A continuous-playback check on the Motorola Razr 2023 observed one station until its raw title changed. The updated Compose title and the application MediaSession title matched, both remained in `PLAYING`, the session reported no error, and log inspection found no player or fatal application error. The observation allowed up to ten minutes rather than assuming a short track boundary; the verified transition occurred after 40 seconds in this run. The active speaker route was read back at 0/15 before playback, and the original unmuted 7/15 volume plus the original screen timeout were restored afterward.
 
-These results complete M4. Artwork and separately structured artist, album, composer, and duration remain intentionally unavailable because the verified source supplies only one composite ICY title. Playback continues independently when metadata is absent.
+These results complete M04. Artwork and separately structured artist, album, composer, and duration remain intentionally unavailable because the verified source supplies only one composite ICY title. Playback continues independently when metadata is absent.
 
 ## Current-track artwork addendum (2026-07-14)
 

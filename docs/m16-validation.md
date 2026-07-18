@@ -37,11 +37,11 @@ The installed debug build rendered the SST secondary directory below the existin
 - Custom Tabs use the browser's own cookies and privacy controls; the app's protected station session is deliberately not transferred.
 - Death.FM has no M16 cards until its HTTPS origin is repaired and independently reverified.
 - These legacy pages remain station-owned browser content. M16 does not promise native rendering, offline availability, or stability of content within them.
-- Private Messages remains outside this directory and deferred as M17; existing native routes are never replaced by browser links.
+- Private Messages remains outside this directory and deferred as M47; existing native routes are never replaced by browser links.
 
-## M21 follow-up — July 15, 2026
+## M20 follow-up — July 15, 2026
 
-Death.FM's HTTPS service was repaired after M16. M21 independently reverified its seven exact public destinations,
+Death.FM's HTTPS service was repaired after M16. M20 independently reverified its seven exact public destinations,
 including the station-specific `RIP_Subscribe` membership route, and enabled them without changing the M16 trust
 policy. See [m21-death-certification.md](m21-death-certification.md). The original M16 validation result above is
 retained as historical evidence.

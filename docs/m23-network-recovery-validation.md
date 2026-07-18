@@ -1,4 +1,4 @@
-# M23.6 network-loss and playback-reconnection validation
+# M34 network-loss and playback-reconnection validation
 
 Validated July 16, 2026 for the `0.1.0-alpha01` candidate.
 

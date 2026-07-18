@@ -615,6 +615,8 @@ figcaption span { color: var(--muted); font-size: 0.88rem; }
 .active .status span { background: #ffcb6b; box-shadow: 0 0 0.8rem rgba(255, 203, 107, 0.4); }
 .waiting .status span { background: var(--accent); }
 .planned .status span { background: #7f8ba5; }
+.deferred .status span { background: #ff7f8d; box-shadow: 0 0 0.8rem rgba(255, 127, 141, 0.32); }
+.roadmap-card.deferred { border-color: rgba(255, 127, 141, 0.25); background: linear-gradient(145deg, rgba(255, 127, 141, 0.07), rgba(255, 255, 255, 0.012)); }
 
 .roadmap-note { max-width: 55rem; margin: 1.5rem 0 0; color: var(--muted); font-size: 0.92rem; }
 
@@ -956,6 +958,8 @@ figcaption span { color: var(--muted); font-size: 0.88rem; }
 .workstream-grid .roadmap-card { display: flex; flex-direction: column; }
 .workstream-grid .roadmap-card > p:nth-of-type(2) { flex-grow: 1; }
 .workstream-grid .roadmap-card > a { color: var(--cyan); font-size: 0.82rem; font-weight: 750; }
+.workstream-grid .roadmap-card .roadmap-dependency { flex-grow: 0; margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid var(--border); font-size: 0.78rem; }
+.workstream-grid .roadmap-card .roadmap-dependency strong { color: var(--text); }
 .milestone-id { margin: 0 0 0.55rem; color: var(--accent) !important; font: 850 0.78rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.08em; }
 
 .milestone-history li {
@@ -982,6 +986,7 @@ figcaption span { color: var(--muted); font-size: 0.88rem; }
 .deferred-callout { background: linear-gradient(120deg, rgba(127, 139, 165, 0.12), rgba(255, 255, 255, 0.02)); }
 .next-callout { background: linear-gradient(120deg, rgba(210, 156, 255, 0.14), rgba(103, 230, 209, 0.06)); }
 .future-callout { border-color: rgba(103, 230, 209, 0.35); background: linear-gradient(120deg, rgba(103, 230, 209, 0.1), rgba(210, 156, 255, 0.06)); }
+.migration-callout { margin-top: 2rem; border-color: rgba(210, 156, 255, 0.35); background: linear-gradient(120deg, rgba(210, 156, 255, 0.11), rgba(103, 230, 209, 0.045)); }
 .inline-requirements { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.2rem 0 0; padding: 0; list-style: none; }
 .inline-requirements li { padding: 0.3rem 0.55rem; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); font-size: 0.75rem; }
 

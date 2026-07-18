@@ -1,4 +1,4 @@
-# M25 Cast / Audio-Output Selection validation
+# M25 System Audio-Output Selection validation
 
 Status: Complete through the dedicated Android audio-output path; Google Cast remains capability-gated.
 

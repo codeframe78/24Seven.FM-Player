@@ -1,77 +1,81 @@
 ---
 layout: project
-title: Roadmap and milestone history · 24Seven.FM Player
-description: Follow the verified achievement order, active Play-testing workstreams, deferred Private Messages boundary, pre-Alpha feature milestones, and Alpha publication plan for 24Seven.FM Player.
+title: Canonical roadmap · 24Seven.FM Player
+description: Explore the dependency-ordered M01–M57 roadmap, verified completion history, active Alpha gates, production path, and bounded future work.
 permalink: /project/roadmap/
 section: roadmap
 ---
 <section class="page-hero">
   <div>
-    <p class="eyebrow">Project progression</p>
-    <h1>Roadmap with evidence</h1>
-    <p class="page-lede">Milestone IDs remain stable requirement references. The timeline below separately records when each completed milestone actually reached its gate, so project history stays accurate even when work finishes out of numeric order.</p>
+    <p class="eyebrow">Canonical delivery plan</p>
+    <h1>M01–M57. One traceable roadmap.</h1>
+    <p class="page-lede">The roadmap was rebuilt from Git history, validation evidence, implementation findings, current Play requirements, and production operations. Every reviewable gate now has one dependency-ordered ID; historical IDs remain available through the migration ledger.</p>
   </div>
   <aside class="page-summary" aria-label="Roadmap summary">
-    <span>Achievement record</span>
-    <strong>27 achieved</strong>
+    <span>Verified program</span>
+    <strong>{{ site.data.project.roadmap_meta.achieved_count }} achieved</strong>
     <dl>
-      <div><dt>M23 done</dt><dd>2/7</dd></div>
-      <div><dt>Active</dt><dd>2</dd></div>
-      <div><dt>External</dt><dd>3</dd></div>
+      <div><dt>Total</dt><dd>{{ site.data.project.roadmap_meta.total_count }}</dd></div>
+      <div><dt>Current</dt><dd>{{ site.data.project.roadmap_meta.active_phase }}</dd></div>
+      <div><dt>Stations</dt><dd>5</dd></div>
     </dl>
     <div class="program-progress">
-      <div><span>Release-readiness gates</span><strong>29%</strong></div>
-      <progress value="2" max="7">2 of 7 complete</progress>
+      <div><span>Canonical milestones achieved</span><strong>47%</strong></div>
+      <progress value="27" max="57">27 of 57 achieved</progress>
     </div>
   </aside>
 </section>
 
 <nav class="section-jump" aria-label="On this page">
-  <a href="#now">Current program</a>
-  <a href="#history">Achievement history</a>
-  <a href="#deferred">Deferred M17</a>
-  <a href="#next">M24–M28</a>
+  <a href="#current">Alpha readiness</a>
+  <a href="#history">M01–M27 achieved</a>
+  <a href="#notifications">Notifications</a>
+  <a href="#alpha">Alpha delivery</a>
+  <a href="#production">Production</a>
+  <a href="#future">Future</a>
   <a href="https://github.com/users/codeframe78/projects/1">Live dashboard ↗</a>
 </nav>
 
-<section class="content-section" id="now">
+{% assign alpha_readiness = site.data.project.roadmap | where: "phase", "alpha-readiness" %}
+<section class="content-section" id="current">
   <div class="content-intro wide">
-    <p class="eyebrow">M23 · Play-testing readiness</p>
-    <h2>Seven reviewable release gates</h2>
-    <p>M23 is an umbrella program, not one opaque task. Work can progress locally while owner, administrator, or Play Console dependencies remain visible.</p>
+    <p class="eyebrow">{{ site.data.project.roadmap_meta.active_phase }} · Current program</p>
+    <h2>{{ site.data.project.roadmap_meta.active_label }}</h2>
+    <p>Eight independently reviewable gates replace the former umbrella milestone. External dependencies stay visible while local security, transaction, device, and release-tooling work progresses.</p>
   </div>
-  <div class="roadmap-tools" data-filter-controls data-target="#m23-workstreams">
-    <label class="filter-search" for="m23-search">Find a workstream<input id="m23-search" type="search" placeholder="Search ID, name, or outcome" autocomplete="off" data-filter-query></label>
-    <div class="filter-buttons" role="group" aria-label="Filter M23 workstreams by status">
+  <div class="roadmap-tools" data-filter-controls data-target="#alpha-readiness-grid">
+    <label class="filter-search" for="alpha-readiness-search">Find an Alpha-readiness gate<input id="alpha-readiness-search" type="search" placeholder="Search ID, policy, security, device…" autocomplete="off" data-filter-query></label>
+    <div class="filter-buttons" role="group" aria-label="Filter Alpha-readiness milestones by status">
       <button type="button" data-filter-state="all" aria-pressed="true">All</button>
-      <button type="button" data-filter-state="done" aria-pressed="false">Complete</button>
       <button type="button" data-filter-state="active" aria-pressed="false">In progress</button>
       <button type="button" data-filter-state="waiting" aria-pressed="false">External</button>
+      <button type="button" data-filter-state="planned" aria-pressed="false">Planned</button>
     </div>
-    <p class="filter-count" aria-live="polite"><strong data-filter-count>7</strong> visible</p>
+    <p class="filter-count" aria-live="polite"><strong data-filter-count>{{ alpha_readiness.size }}</strong> visible</p>
   </div>
-  <div class="workstream-grid" id="m23-workstreams" data-filter-scope>
-    {% for item in site.data.project.workstreams %}
+  <div class="workstream-grid" id="alpha-readiness-grid" data-filter-scope>
+    {% for item in alpha_readiness %}
     <article class="roadmap-card {{ item.state }}" data-filter-item data-state="{{ item.state }}">
       <p class="status"><span></span>{{ item.state_label }}</p>
       <p class="milestone-id">{{ item.id }}</p>
       <h3>{{ item.name }}</h3>
       <p>{{ item.summary }}</p>
-      <a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/{{ item.evidence }}">View evidence <span aria-hidden="true">↗</span></a>
+      <p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p>
+      <a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/{{ item.evidence }}">View scope or evidence <span aria-hidden="true">↗</span></a>
     </article>
     {% endfor %}
-    <p class="filter-empty" data-filter-empty hidden>No workstreams match that filter.</p>
+    <p class="filter-empty" data-filter-empty hidden>No Alpha-readiness milestones match that filter.</p>
   </div>
 </section>
 
 <section class="content-section" id="history">
   <div class="content-intro wide">
-    <p class="eyebrow">Verified chronology</p>
-    <h2>How the Alpha was achieved</h2>
-    <p>The application moved from a buildable native shell through playback, station data, authenticated participation, adaptive UX, five-station certification, and platform/store hardening.</p>
+    <p class="eyebrow">M01–M27 · Verified chronology</p>
+    <h2>Completed work remains evidence-backed</h2>
+    <p>Renumbering changed references, not history. The original commit, date, achievement order, and validation remain attached to each completed milestone.</p>
   </div>
   <div class="roadmap-tools" data-filter-controls data-target="#milestone-history">
-    <label class="filter-search" for="history-search">Search achieved milestones<input id="history-search" type="search" placeholder="Try M8, playback, accessibility…" autocomplete="off" data-filter-query></label>
+    <label class="filter-search" for="history-search">Search achieved milestones<input id="history-search" type="search" placeholder="Try M08, playback, accessibility…" autocomplete="off" data-filter-query></label>
     <p class="filter-count" aria-live="polite"><strong data-filter-count>27</strong> visible</p>
   </div>
   <ol class="milestone-history" id="milestone-history" data-filter-scope>
@@ -80,59 +84,56 @@ section: roadmap
       <div class="history-order">{{ item.order }}</div>
       <div class="history-date"><time datetime="{{ item.date }}">{{ item.date | date: "%b %-d, %Y" }}</time>{% if item.joint %}<span>Joint checkpoint</span>{% endif %}</div>
       <div class="history-copy"><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.outcome }}</p></div>
-      {% if item.commit %}
       <a class="commit-link" href="https://github.com/codeframe78/24Seven.FM-Player/commit/{{ item.commit }}"><code>{{ item.commit }}</code><span class="sr-only"> commit</span></a>
-      {% else %}
-      <a class="commit-link" href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/{{ item.evidence }}">Validation<span class="sr-only"> evidence</span></a>
-      {% endif %}
     </li>
     {% endfor %}
     <li class="filter-empty" data-filter-empty hidden>No achieved milestones match that search.</li>
   </ol>
-</section>
-
-<section class="content-section" id="deferred">
-  <div class="roadmap-callout deferred-callout">
-    <div><p class="eyebrow">M17 · Deferred</p><h2>Private Messages are not in the shipping Alpha</h2></div>
-    <div><p>Inbox and Sent Box discovery succeeded, but New Message selection remained suspect and a profile-originated MorgHubby test appeared to submit without delivery. The site owner has the reproduced result.</p><p>Development resumes only after the legacy server path is repaired and its production limits can be verified. The existing app does not pretend this capability works.</p></div>
+  <div class="roadmap-callout migration-callout">
+    <div><p class="eyebrow">Renumbering trace</p><h2>Legacy IDs are never orphaned</h2></div>
+    <div><p>Old commit messages and public evidence remain valid. The migration ledger maps every former milestone and split program to its canonical ID.</p><div class="actions"><a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/MILESTONE_MIGRATION.md">Open migration ledger</a></div></div>
   </div>
 </section>
 
-<section class="content-section" id="next">
-  <div class="content-intro wide">
-    <p class="eyebrow">Before Alpha publication</p>
-    <h2>Local mention delivery is working; true push remains</h2>
-    <p>M24–M26 and M27.1 are complete with service, route, privacy, notification, and physical-Razr evidence. M27.2 remains the ordered feature gate ahead of M28: it needs an authorized event source for reliable closed-app delivery. Google Cast remains intentionally gated behind receiver compatibility and permitted stream use.</p>
+{% assign notification_items = site.data.project.roadmap | where: "phase", "notifications" %}
+<section class="content-section" id="notifications">
+  <div class="content-intro wide"><p class="eyebrow">M36–M38 · Authorization before implementation</p><h2>True delivery without fake push</h2><p>M27 is complete for actively observed Chat. Closed-app delivery begins only with an authorized event source, then a secure implementation, then lifecycle/privacy certification.</p></div>
+  <div class="workstream-grid">
+    {% for item in notification_items %}<article class="roadmap-card {{ item.state }}"><p class="status"><span></span>{{ item.state_label }}</p><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.summary }}</p><p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p></article>{% endfor %}
   </div>
-  <div class="roadmap-tools" data-filter-controls data-target="#pre-alpha-workstreams">
-    <label class="filter-search" for="pre-alpha-search">Find a milestone<input id="pre-alpha-search" type="search" placeholder="Search M24–M28" autocomplete="off" data-filter-query></label>
-    <div class="filter-buttons" role="group" aria-label="Filter pre-Alpha milestones by status">
-      <button type="button" data-filter-state="all" aria-pressed="true">All</button>
-      <button type="button" data-filter-state="done" aria-pressed="false">Complete</button>
-      <button type="button" data-filter-state="active" aria-pressed="false">Active</button>
-      <button type="button" data-filter-state="planned" aria-pressed="false">Planned</button>
-    </div>
-    <p class="filter-count" aria-live="polite"><strong data-filter-count>5</strong> visible</p>
+</section>
+
+{% assign alpha_distribution = site.data.project.roadmap | where: "phase", "alpha-distribution" %}
+<section class="content-section" id="alpha">
+  <div class="content-intro wide"><p class="eyebrow">M39–M41 · Exact artifact to authorized release</p><h2>Freeze, prove delivery, then publish</h2><p>Candidate creation, Play delivery/remediation, and publication are separate gates. A green build never publishes itself.</p></div>
+  <div class="workstream-grid">
+    {% for item in alpha_distribution %}<article class="roadmap-card {{ item.state }}"><p class="status"><span></span>{{ item.state_label }}</p><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.summary }}</p><p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p></article>{% endfor %}
   </div>
-  <div class="workstream-grid" id="pre-alpha-workstreams" data-filter-scope>
-    {% for item in site.data.project.pre_alpha %}
-    <article class="roadmap-card {{ item.state }}" data-filter-item data-state="{{ item.state }}">
-      <p class="status"><span></span>{{ item.state_label }}</p>
-      <p class="milestone-id">{{ item.id }}</p>
-      <h3>{{ item.name }}</h3>
-      <p>{{ item.summary }}</p>
-      <a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/{{ item.evidence }}">View milestone scope <span aria-hidden="true">↗</span></a>
-    </article>
-    {% endfor %}
-    <p class="filter-empty" data-filter-empty hidden>No pre-Alpha milestones match that filter.</p>
+</section>
+
+{% assign production_items = site.data.project.roadmap | where: "phase", "production" %}
+<section class="content-section" id="production">
+  <div class="content-intro wide"><p class="eyebrow">M42–M45 · Beyond Alpha</p><h2>A complete path to production and maintenance</h2><p>Closed testing, production access, staged rollout, and continuing operations now have explicit exit criteria instead of disappearing after Alpha publication.</p></div>
+  <div class="workstream-grid">
+    {% for item in production_items %}<article class="roadmap-card {{ item.state }}"><p class="status"><span></span>{{ item.state_label }}</p><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.summary }}</p><p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p></article>{% endfor %}
   </div>
-  <div class="roadmap-callout future-callout">
-    <div><p class="eyebrow">M27 · Delivery boundary</p><h2>One safe notification foundation</h2></div>
-    <div>
-      <p>M27.1 now detects exact signed-in-name mentions from actively observed Chat, baselines existing messages, ignores blocked authors, suppresses duplicates, posts privacy-minimized Android alerts, and returns to gated station Chat. New Private Message notifications will reuse this contract only after M17 is repaired and verified.</p>
-      <p><strong>M27.2 delivery gate:</strong> the app has no developer-operated backend and currently observes Chat only while its screen is selected. Reliable closed-app delivery requires an authorized station event source or privacy-compatible relay. Continuous background polling will not be presented as push.</p>
-      <ul class="inline-requirements"><li>Authorized true push</li><li>Minimal payloads</li><li>Separate Chat and PM controls</li><li>No session forwarding</li><li>Privacy and Data Safety review</li><li>Battery and traffic validation</li></ul>
-      <div class="actions"><a class="button primary" href="https://github.com/users/codeframe78/projects/1">Open live dashboard</a><a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/IMPLEMENTATION_PLAN.md">Implementation plan</a></div>
-    </div>
+</section>
+
+{% assign future_items = site.data.project.roadmap | where: "phase", "future" %}
+<section class="content-section" id="future">
+  <div class="content-intro wide"><p class="eyebrow">M46–M57 · Nonblocking future scope</p><h2>Bounded programs with honest prerequisites</h2><p>Architecture, Private Messages, Forum access, Cast, extended station behavior, and account lifecycle access are visible without pretending they belong in the current Alpha.</p></div>
+  <div class="roadmap-tools" data-filter-controls data-target="#future-grid">
+    <label class="filter-search" for="future-search">Search future milestones<input id="future-search" type="search" placeholder="Search PM, Forum, Cast, accounts…" autocomplete="off" data-filter-query></label>
+    <div class="filter-buttons" role="group" aria-label="Filter future milestones by status"><button type="button" data-filter-state="all" aria-pressed="true">All</button><button type="button" data-filter-state="planned" aria-pressed="false">Planned</button><button type="button" data-filter-state="deferred" aria-pressed="false">Deferred</button></div>
+    <p class="filter-count" aria-live="polite"><strong data-filter-count>{{ future_items.size }}</strong> visible</p>
   </div>
+  <div class="workstream-grid" id="future-grid" data-filter-scope>
+    {% for item in future_items %}<article class="roadmap-card {{ item.state }}" data-filter-item data-state="{{ item.state }}"><p class="status"><span></span>{{ item.state_label }}</p><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.summary }}</p><p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p><a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/{{ item.evidence }}">View future scope <span aria-hidden="true">↗</span></a></article>{% endfor %}
+    <p class="filter-empty" data-filter-empty hidden>No future milestones match that filter.</p>
+  </div>
+</section>
+
+<section class="cta" aria-labelledby="roadmap-cta-title">
+  <div><p class="eyebrow">Live execution state</p><h2 id="roadmap-cta-title">Follow every canonical milestone on GitHub.</h2><p>The repository roadmap is authoritative; GitHub Project #1 mirrors status, evidence, area, and achievement order.</p></div>
+  <div class="actions"><a class="button primary" href="https://github.com/users/codeframe78/projects/1">Open live dashboard</a><a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/ROADMAP.md">Read the roadmap source</a></div>
 </section>

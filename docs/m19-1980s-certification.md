@@ -1,4 +1,4 @@
-# M19 1980s.FM certification — complete
+# M18 1980s.FM certification — complete
 
 Public, device, and representative authenticated certification was performed July 14–15, 2026 on
 `agent/initial-android-scaffold`.
@@ -15,7 +15,7 @@ Public, device, and representative authenticated certification was performed Jul
 | Capability | Evidence | Current result |
 | --- | --- | --- |
 | Primary playback | The unchanged primary relay reached the native live-playing state on the wired Android 16 Razr with media volume temporarily muted | Pass |
-| Source fallback | M2's controlled 1980s primary-only failure advanced Media3 to the unchanged source relay and reached `PLAYING` | Pass; not destructively repeated |
+| Source fallback | M02's controlled 1980s primary-only failure advanced Media3 to the unchanged source relay and reached `PLAYING` | Pass; not destructively repeated |
 | Metadata/artwork | A fresh live run supplied a structured title, artist, same-station album cover, `LIVE`, selected 1980s styling, and AAC/128 kbps | Pass |
 | Queue/History | The exact public extended endpoint returned HTTP 200, remained below the 512k bound, contained separate Queue and Played tables, and exposed 35 table rows; native `Up next` loaded without error under the 60-second limiter | Pass |
 | Public Chat | Native 1980s Chat loaded without error and showed the correct signed-out posting boundary; the shared 30-second/memory-only behavior remains intact | Pass |
@@ -23,7 +23,7 @@ Public, device, and representative authenticated certification was performed Jul
 | Request browsing | The native least-played suggestion returned album-track content and retained the signed-out submission boundary; no request was submitted | Pass |
 | Authentication challenge | Native username/password fields, same-station CAPTCHA image, alphanumeric security-code field, sign-in action, and new-code action loaded without an error | Pass |
 | Capability differences | Request messages and listener activity remain explicit `Not verified`; they do not inherit SST-only capability flags | Pass |
-| Secondary pages | The trusted directory exposes the common pages plus 1980s Games and Awards; Games opened in a Chrome Custom Tab and Back returned to the native app | Pass |
+| Secondary pages at certification time | Historical Games/Awards browser evidence passed; the later catalog refinement removed those controls, leaving only Contact and Membership in the shipped app | Historical pass; not current scope |
 | Navigation/accessibility | Player, Favorites, Chat, Queue, and More remain present with station-qualified semantics and the persistent mini-player on secondary destinations | Pass |
 
 No production Chat post, song request, profile change, membership action, or request mutation was performed. The only
@@ -55,7 +55,7 @@ automated repository/ViewModel tests, while the live gate proves successful rest
 
 - authentication, Chat, Favorites, Queue, History, requests, and trusted secondary content remain enabled;
 - SST-only request messages and listener activity remain disabled;
-- the HTTPS station origin and complete common/Games/Awards route set remain exact trusted catalog entries.
+- the current HTTPS station catalog contains exact Contact and Membership entries; historical Games/Awards routes remain evidence only and are not shipped controls.
 
 The focused unit test passes.
 
@@ -77,4 +77,4 @@ The authenticated account capture contains the public username only and no crede
 - 1980s.FM membership, personal request activity, and optional request-message behavior remain unavailable because
   reliable station-specific sources were not exposed by this ordinary account. They are explicit capability limits,
   not an incomplete authentication gate.
-- M17 Private Messages remains outside M19 under the separate server-repair deferral.
+- M47 Private Messages remains outside M18 under the separate server-repair deferral.

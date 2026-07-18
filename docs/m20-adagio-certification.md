@@ -1,4 +1,4 @@
-# M20 Adagio.FM certification — complete
+# M19 Adagio.FM certification — complete
 
 Public, physical-device, and representative authenticated certification was completed July 15, 2026 on
 `agent/initial-android-scaffold`.
@@ -15,7 +15,7 @@ Public, physical-device, and representative authenticated certification was comp
 | Capability | Evidence | Current result |
 | --- | --- | --- |
 | Primary playback | The unchanged primary relay reached the native live-playing state on the wired Android 16 Razr with media volume temporarily muted | Pass |
-| Source fallback | Both unchanged station-supplied relays delivered live audio bytes; the shared ordered Media3 fallback behavior remains covered by M2 and unit evidence | Pass without a destructive station-specific failure injection |
+| Source fallback | Both unchanged station-supplied relays delivered live audio bytes; the shared ordered Media3 fallback behavior remains covered by M02 and unit evidence | Pass without a destructive station-specific failure injection |
 | Classical metadata/artwork | A fresh live run supplied composer plus the complete work/ensemble title, a same-station *Spectacular Dances* cover, `LIVE`, selected Adagio styling, and AAC/128 kbps | Pass; the raw ICY value remains preserved before presentation |
 | Queue/History | The exact public extended endpoint returned HTTP 200, remained below the 512k bound, contained separate Queue and Played tables, and exposed 31 table rows; native `Up next` loaded classical rows without error under the 60-second limiter | Pass |
 | Public Chat | Native Adagio Chat loaded current public messages without error and showed the correct signed-out posting boundary; the shared 30-second/memory-only behavior remains intact | Pass |
@@ -79,5 +79,5 @@ signed out. It contains only the administrator-approved test identity and no cre
 ## Certified limits
 
 Adagio.FM request messages, listener request activity, and station membership remain explicitly `Not verified`.
-They are not inferred from StreamingSoundtracks.com or similar page structure, and M20 introduced no capability
-flag or production network mutation for them. Native Private Messages remain deferred under M17.
+They are not inferred from StreamingSoundtracks.com or similar page structure, and M19 introduced no capability
+flag or production network mutation for them. Native Private Messages remain deferred under M47.

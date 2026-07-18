@@ -1,8 +1,8 @@
-# M27.1 local Chat-mention notification validation
+# M27 local Chat-mention notification validation
 
 Date: July 16, 2026
 
-Status: **Complete for the existing actively observed Chat feed. Reliable closed-app push remains M27.2.**
+Status: **Complete for the existing actively observed Chat feed. Reliable closed-app push remains M36–M38.**
 
 ## Delivered boundary
 
@@ -26,9 +26,9 @@ increases the verified 30-second polling cadence nor observes Chat from other sc
 workers, or a developer backend. Consequently it can demonstrate correct local mention classification and Android
 delivery, but it cannot receive a new event while the app is closed, backgrounded away from Chat, or asleep.
 
-M27.2 requires an authorized station-side event source, webhook, or privacy-compatible relay before reliable push can
+M36–M38 requires an authorized station-side event source, webhook, or privacy-compatible relay before reliable push can
 be implemented. Protected station sessions must not be forwarded to a relay, and periodic/background polling must not
-be represented as push. Private Message events remain capability-gated with M17's server repair.
+be represented as push. Private Message events remain capability-gated with M47's server repair.
 
 ## Verification
 
@@ -44,11 +44,11 @@ be represented as push. Private Message events remain capability-gated with M17'
   implementation plan, future scope, and README. No new endpoint, SDK, permission, background worker, or message-text
   persistence was introduced.
 
-## Remaining M27.2 checks
+## Remaining M36–M38 checks
 
 - Obtain and document authorization for the true event source.
 - Define minimal authenticated Chat/PM event payloads, retention/deletion, abuse controls, outage behavior, and key
   rotation without transmitting protected station sessions.
 - Validate closed/background/idle delivery, duplicate behavior across reinstalls and token rotation, multi-station
   identity mapping, battery/traffic impact, lock-screen behavior, notification permission denial, and all target APIs.
-- Reconcile the final delivery provider and payload against Google Play Data Safety before M28 publication.
+- Reconcile the final delivery provider and payload against Google Play Data Safety before M41 publication.

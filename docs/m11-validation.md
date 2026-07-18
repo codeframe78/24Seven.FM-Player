@@ -1,6 +1,6 @@
 # M11 Adaptive Alpha UI validation
 
-Validated July 14, 2026 on the existing `agent/initial-android-scaffold` implementation. M11 is a presentation-layer evolution over M1–M10; no playback, stream, repository, protocol, persistence, package, module, toolchain, or dependency contract was replaced.
+Validated July 14, 2026 on the existing `agent/initial-android-scaffold` implementation. M11 is a presentation-layer evolution over M01–M10; no playback, stream, repository, protocol, persistence, package, module, toolchain, or dependency contract was replaced.
 
 ## Delivered interface
 
@@ -15,9 +15,9 @@ Validated July 14, 2026 on the existing `agent/initial-android-scaffold` impleme
 
 ## Preservation result
 
-The complete evidence matrix and pre-edit migration plan are in `docs/m11-ui-preservation-plan.md`. All working M1–M10 surfaces remain reachable. The Media3 service, controller, repositories, session store, network security rules, PLS resources, verified stream addresses, polling limits, authentication flow, chat behavior, request behavior, and request-message workflow are unchanged.
+The complete evidence matrix and pre-edit migration plan are in `docs/m11-ui-preservation-plan.md`. All working M01–M10 surfaces remain reachable. The Media3 service, controller, repositories, session store, network security rules, PLS resources, verified stream addresses, polling limits, authentication flow, chat behavior, request behavior, and request-message workflow are unchanged.
 
-Favorites, sleep timer, Share, Cast/audio-output selection, user settings, diagnostics, and native Private Messages were confirmed absent from the current implementation, so M11 does not display dead controls or invent backing behavior. Private Messages are now tracked as M17 and remain deferred because of the underlying website/server issues.
+Favorites, sleep timer, Share, Cast/audio-output selection, user settings, diagnostics, and native Private Messages were confirmed absent from the current implementation, so M11 does not display dead controls or invent backing behavior. Private Messages are now tracked as M47 and remain deferred because of the underlying website/server issues.
 
 ## Accessibility and adaptive behavior
 

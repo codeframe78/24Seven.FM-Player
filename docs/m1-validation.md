@@ -1,4 +1,4 @@
-# M1 build validation
+# M01 build validation
 
 Validation performed on July 12, 2026:
 
@@ -32,7 +32,7 @@ Environment warnings:
 - The installed command-line SDK tooling understands SDK XML through version 3 while the Android 36.1 package contains version 4 metadata. This did not affect compilation, tests, lint, or packaging.
 - The debug packaging task kept `libandroidx.graphics.path.so` unstripped. This is informational for the debug artifact.
 
-No Android device or AVD was available on this machine, so installation and launch remain the final local M1 verification step.
+No Android device or AVD was available on this machine, so installation and launch remain the final local M01 verification step.
 
 ## Windows revalidation
 

@@ -1,4 +1,4 @@
-# M23 modern Android device compatibility matrix
+# M28–M35 modern Android device compatibility matrix
 
 Validated through July 16, 2026 for the `0.1.0-alpha01` candidate. The product requirement is adaptive support across
 current Android phones, tablets, foldables, multi-window, and freely resized windows. This is a window-size contract,
@@ -88,7 +88,7 @@ changes cancel a pending recovery.
 - Existing previews cover compact playing, phone landscape, expanded buffering, long metadata, missing artwork,
   fallback reconnection, offline automatic recovery, errors, light mode, and large type.
 - Earlier full posture suites remain recorded above. The July 16 current-head pass adds the packaged open-source notice,
-  backup/privacy hardening state, and all M23.2 UGC safety paths to the 36-test baseline. It also corrects a test-only
+  backup/privacy hardening state, and all M28 UGC safety paths to the 36-test baseline. It also corrects a test-only
   viewport assumption so the Device preferences disclosure is scrolled into view before asserting visibility.
 - The API 36 connected suite now passes 36/36; the installed candidate reports target API 36 and the earlier cold-launch
   two-Back flow reaches the expected exit dialog.
@@ -108,7 +108,7 @@ OEM-controlled presentation display that does not host normal app activities; co
 supported fully folded behavior on this model. The API 35 Pixel Fold validates the open inner display, half-open state,
 and fully closed outer display, while the dedicated Pixel Tablet validates its native landscape and portrait windows.
 The layout responds to the available window and naturally leaves the center gutter between expanded Player panes.
-Play-delivered installation/update and the Play pre-launch report remain external M23.6 gates.
+Play-delivered installation/update and the Play pre-launch report remain external M34 gates.
 
 No application can guarantee behavior on every future OEM configuration. For Alpha, "all modern Android devices"
 means the supported API range and adaptive window classes above are release requirements, regressions in those classes

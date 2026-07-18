@@ -1,4 +1,4 @@
-# M23.1 current-head release-candidate audit
+# M35 current-head release-candidate audit
 
 Date: July 16, 2026
 
@@ -13,10 +13,10 @@ package without persisting signing material. Both artifacts match the registered
 
 Google's July 16 account email also confirms that the account's Play apps were automatically registered to the verified
 developer account for Android developer verification. This closes the email-confirmation checkpoint, but not the two
-remaining M23.1 delivery gates: the owner must still confirm the app's per-app registration and version-code status
+remaining M35 delivery gates: the owner must still confirm the app's per-app registration and version-code status
 in Play Console, then validate a Play-delivered install/update.
 
-M23.1 completes only after the owner confirms that version code 2 is still eligible in Play Console and validates a
+M35 completes only after the owner confirms that version code 2 is still eligible in Play Console and validates a
 Play-delivered install/update. The established Windows DPAPI copy remains intact. Routine signing can use the existing
 authenticated recovery package through the Linux helper without persisting a plaintext keystore or credential file.
 
@@ -83,7 +83,7 @@ and exercises that path.
 - Android `zipalign -c -P 16 -v 4` passed for the release APK.
 - The AAB contains only `libandroidx.graphics.path.so`, for `arm64-v8a`, `armeabi-v7a`, `x86`, and `x86_64`.
 - Every ELF `LOAD` segment in every ABI reports `0x4000` alignment.
-- The established API 35 16 KB runtime suite also remains green; Play-generated split delivery remains an M23.6 gate.
+- The established API 35 16 KB runtime suite also remains green; Play-generated split delivery remains an M34 gate.
 
 ## Dependencies and notices
 

@@ -1,4 +1,4 @@
-# M23.2 UGC safety implementation validation
+# M28 UGC safety implementation validation
 
 Date: July 15, 2026
 

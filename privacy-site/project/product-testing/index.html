@@ -9,7 +9,7 @@ section: product-testing
   <div>
     <p class="eyebrow">Tester workspace</p>
     <h1>Test the player. Record every result.</h1>
-    <p class="page-lede">This is the complete manual acceptance catalog for the Alpha. A coordinator assigns the cases, stations, accounts, devices, and accessories needed for each run; no single tester is expected to own the entire matrix.</p>
+    <p class="page-lede">This is the canonical manual acceptance catalog for the M01–M57 roadmap. A coordinator assigns current, specialist, campaign, or future cases with the stations, accounts, devices, and accessories needed for each run; no single tester is expected to own the entire matrix.</p>
     <div class="actions">
       <a class="button primary" href="https://github.com/codeframe78/24Seven.FM-Player/issues/new?template=product-test.yml">Submit a test result</a>
       <a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/issues?q=is%3Aissue+label%3Atesting-feedback">Browse tester reports</a>
@@ -17,7 +17,7 @@ section: product-testing
   </div>
   <aside class="page-summary" aria-label="Testing workspace summary">
     <span>Manual acceptance catalog</span>
-    <strong>22 test cases</strong>
+    <strong>34 test cases</strong>
     <dl>
       <div><dt>Stations</dt><dd>5</dd></div>
       <div><dt>Outcomes</dt><dd>4</dd></div>
@@ -31,6 +31,7 @@ section: product-testing
   <a href="#listening-tests">Listening</a>
   <a href="#member-tests">Account and community</a>
   <a href="#device-tests">Devices and access</a>
+  <a href="#future-tests">Future programs</a>
   <a href="#coverage">Coverage matrix</a>
   <a href="#report">Report a result</a>
   <a href="#safety">Safety</a>
@@ -46,10 +47,10 @@ section: product-testing
     <button type="button" data-test-filter="future" aria-pressed="false">Future</button>
   </div>
   <div class="tester-catalog-progress">
-    <span data-test-progress-text>0 of 22 checked</span>
-    <progress max="22" value="0" data-test-progress aria-label="Tester catalog progress">0 of 22</progress>
+    <span data-test-progress-text>0 of 34 checked</span>
+    <progress max="34" value="0" data-test-progress aria-label="Tester catalog progress">0 of 34</progress>
   </div>
-  <p class="catalog-visible-count" data-test-visible-count role="status" aria-live="polite">22 test cases visible</p>
+  <p class="catalog-visible-count" data-test-visible-count role="status" aria-live="polite">34 test cases visible</p>
   <button type="button" class="catalog-clear" data-test-clear-progress>Clear progress</button>
 </div>
 <p class="catalog-empty-state" data-test-empty-state hidden>No test cases match the current search and filter.</p>
@@ -118,7 +119,7 @@ section: product-testing
     <article id="pt-07">
       <span>PT-07 · Every station across the cohort</span>
       <h3>Queue, History, and station data</h3>
-      <ol><li>Open Queue for the assigned station and verify ordered upcoming tracks plus recently played content.</li><li>Check only supplied title, artist/composer, album, duration, artwork, requester, and request-message values appear; missing fields remain absent.</li><li>Before community access is enabled, confirm public requester identity and messages remain hidden; after PT-14, confirm permitted attribution appears separately from track metadata.</li><li>Refresh once, switch stations, and confirm old rows, artwork, requester identity, and error state do not leak into the new station.</li><li>Cover SST/1980s/Adagio/Entranced extended lists and Death.FM's compact list across the cohort.</li></ol>
+      <ol><li>Open Queue for the assigned station and verify ordered upcoming tracks plus recently played content.</li><li>Check only supplied title, artist/composer, album, duration, artwork, requester, and request-message values appear; missing fields remain absent.</li><li>Before community access is enabled, confirm public requester identity and messages remain hidden; after PT-14, confirm permitted attribution appears separately from track metadata.</li><li>Refresh once, switch stations, and confirm old rows, artwork, requester identity, and error state do not leak into the new station.</li><li>After one successful refresh, induce an assigned read failure and verify retained rows are visibly stale or failed rather than silently current.</li><li>Cover SST/1980s/Adagio/Entranced extended lists and Death.FM's compact list across the cohort.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> Queue and History remain bounded, ordered, capability-aware, station-scoped, and honest about unavailable data.</p>
     </article>
     <article id="pt-08">
@@ -152,13 +153,13 @@ section: product-testing
     <article id="pt-11">
       <span>PT-11 · Read-only request browsing</span>
       <h3>Library search and pre-submit checks</h3>
-      <ol><li>While signed out, browse the library and confirm request submission remains gated.</li><li>Search useful assigned queries by Title, Album, Artist, and Genre; open results and verify album/track metadata.</li><li>Exercise random and least-played suggestions, plus Library order and Play state sorting.</li><li>Open an available track's confirmation, verify station/track details, then Cancel and confirm no request appears in Queue.</li><li>Confirm queued, recently played, cooldown, membership, limit, stale, ambiguous, and unavailable states use distinct text and do not expose an enabled action.</li></ol>
+      <ol><li>While signed out, browse the library and confirm request submission remains gated.</li><li>Search useful assigned queries by Title, Album, Artist, and Genre; open results and verify album/track metadata.</li><li>Exercise random and least-played suggestions, plus Library order and Play state sorting.</li><li>Open an available track's confirmation, verify the exact station/account identity and track, then Cancel and confirm no request appears in Queue.</li><li>Confirm Queue/recent restrictions, account state, membership, cooldown/readiness, request limits, stale/ambiguous data, and unsupported capabilities fail closed with accessible non-color semantics.</li><li>Change one eligibility input before confirmation and verify the app refreshes sufficiently fresh station and Queue evidence instead of trusting the earlier row.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> browsing works without mutation, Cancel is safe, and confirmation is reachable only after fresh, station-scoped eligibility.</p>
     </article>
     <article id="pt-12">
       <span>PT-12 · Explicit mutation approval required</span>
       <h3>One-shot song request</h3>
-      <ol><li>Confirm the coordinator-approved station/account is signed in, ready, outside cooldown, and allowed exactly one request.</li><li>Select one green eligible track and verify the confirmation identifies the intended station and track.</li><li>On SST, exercise the optional request message within its 80-character limit; on other stations confirm the SST-only field is absent.</li><li>Confirm once and record the exact success, rejection, or indeterminate result. Never tap Confirm twice.</li><li>Inspect Queue before any further action. Verify a received request appears once, with requester and optional message separate from metadata.</li><li>If the result is indeterminate, do not retry. If a cooldown becomes visible, confirm it prevents another request.</li></ol>
+      <ol><li>Confirm the coordinator-approved station/account is signed in, ready, outside cooldown, and allowed exactly one request.</li><li>Select one eligible track and verify the confirmation identifies the intended station, account, and track.</li><li>Before Confirm, verify fresh Queue/recent-play, membership, cooldown/readiness, request-limit, session, and station-identity checks still pass; assigned negative subcases must prevent submission.</li><li>On SST, exercise the optional request message within its 80-character limit; on other stations confirm the SST-only field is absent.</li><li>Confirm once and record the exact success, rejection, or indeterminate result. Never tap Confirm twice.</li><li>Inspect Queue before any further action. Verify a received request appears once, with requester and optional message separate from metadata.</li><li>If the result is indeterminate, do not retry. If a cooldown becomes visible, confirm it prevents another request.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> one explicit confirmation causes at most one mutation, the UI reports uncertainty honestly, and no automatic or tester retry duplicates it.</p>
     </article>
     <article id="pt-13">
@@ -176,7 +177,7 @@ section: product-testing
     <article id="pt-15">
       <span>PT-15 · Posting requires approval</span>
       <h3>Chat reading and posting</h3>
-      <ol><li>After PT-14, load the assigned station's Chat and verify bounded author, message, timestamp, and smiley-alt presentation.</li><li>Refresh once, switch station, and confirm messages and errors remain station-scoped. Relaunch to confirm prior Chat history is not presented as persisted app data.</li><li>While signed out, confirm reading remains available but the composer does not.</li><li>With an approved account, verify the 255-character counter and that unsupported legacy characters are rejected rather than silently changed.</li><li>Only when authorized, send one harmless approved message, confirm it appears once, and do not retry an indeterminate post.</li></ol>
+      <ol><li>After PT-14, load the assigned station's Chat and verify bounded author, message, timestamp, and smiley-alt presentation.</li><li>Refresh once, switch station, and confirm messages and errors remain station-scoped. Relaunch to confirm prior Chat history is not presented as persisted app data.</li><li>After a successful refresh, induce an assigned network/server failure and verify retained messages are visibly stale or failed rather than silently current; restore and refresh once.</li><li>While signed out, confirm reading remains available but the composer does not.</li><li>With an approved account, verify the 255-character counter and that unsupported legacy characters are rejected rather than silently changed.</li><li>Only when authorized, send one harmless approved message, confirm it appears once, and do not retry an indeterminate post.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> Chat is gated, bounded, memory-only, correctly encoded, station-scoped, and posts only after one explicit Send.</p>
     </article>
     <article id="pt-16">
@@ -188,14 +189,14 @@ section: product-testing
     <article id="pt-17">
       <span>PT-17 · Two approved Chat accounts</span>
       <h3>Local Chat-mention notifications</h3>
-      <ol><li>Across assigned Android 13+ devices, test notification permission allowed and denied; denial must not block Chat.</li><li>Sign in, complete community gates, enable mentions for one station, relaunch, and confirm the station-scoped choice persists.</li><li>Keep that station's Chat selected and allow the first snapshot to baseline without alerting for old messages.</li><li>From another approved account, post an exact full display-name mention. Verify one private notification names the station and sender but contains no message text.</li><li>Verify self-authored, longer embedded-name, substring, blocked-author, historical, and duplicate snapshots do not alert.</li><li>Tap the notification and confirm it selects the originating station and opens native Chat without bypassing any gate; then turn the option off.</li></ol>
+      <ol><li>On a clean Android 13+ install, confirm the app does not request community-notification permission before contextual explanation or station opt-in.</li><li>Sign in, complete community gates, enable mentions for one station, then exercise permission allowed and denied; denial must not block Chat. Relaunch and confirm the station-scoped choice persists.</li><li>Keep that station's Chat selected and allow the first snapshot to baseline without alerting for old messages.</li><li>From another approved account, post an exact full display-name mention. Verify one private notification names the station and sender but contains no message text.</li><li>Verify self-authored, longer embedded-name, substring, blocked-author, historical, and duplicate snapshots do not alert.</li><li>Tap the notification and confirm it selects the originating station and opens native Chat without bypassing any gate; then turn the option off.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> exact eligible mentions alert once with a minimal payload. The current preview observes only actively refreshing Chat; no alert while closed or away from Chat is expected yet.</p>
     </article>
     <article id="pt-18">
       <span>PT-18 · Every station across the cohort</span>
       <h3>Trusted station pages and browser isolation</h3>
-      <ol><li>For the assigned station, open both entries currently shipped under <strong>Station links</strong>: Contact and the station's VIP or RIP membership page.</li><li>Confirm Android uses a secure browser Custom Tab at the expected HTTPS station host, never an in-app WebView.</li><li>Press Back and verify the existing app task, selected station, navigation state, timer, and playback remain intact.</li><li>If a station website requests sign-in, confirm its browser session is separate from the protected native app session.</li><li>Record a clear unavailable/rejected/no-browser state rather than navigating to an unexpected host.</li></ol>
-      <p class="test-pass"><strong>Pass:</strong> only the allowlisted same-station pages open, browser and app sessions remain isolated, and Back returns to the live native task.</p>
+      <ol><li>For the assigned station, open the currently approved Contact entry. Open Membership only when the M31 compliance coordinator explicitly assigns PT-23.</li><li>After M51 ships, also open the independently verified Forum entry for the assigned station; otherwise mark that subcase Blocked.</li><li>Confirm Android uses a secure browser Custom Tab at the expected HTTPS station host, never an in-app WebView.</li><li>Press Back and verify the existing app task, selected station, navigation state, timer, and playback remain intact.</li><li>If a station website requests sign-in, confirm its browser session is separate from the protected native app session.</li><li>Record a clear unavailable/rejected/no-browser state rather than navigating to an unexpected host.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> only currently approved allowlisted same-station pages open, browser and app sessions remain isolated, and Back returns to the live native task.</p>
     </article>
     <article id="pt-19">
       <span>PT-19 · Release-build support check</span>
@@ -208,28 +209,110 @@ section: product-testing
 
 <section class="content-section" id="device-tests">
   <div class="content-intro wide">
-    <p class="eyebrow">PT-20–PT-22 · Device, accessibility, and delivery</p>
-    <h2>Cover configurations that automation cannot judge</h2>
-    <p>PT-20 and PT-21 are current physical/manual acceptance gates. PT-22 is published now so the future closed-app notification build has an explicit acceptance contract; it is Blocked—not failed—against the current active-Chat preview.</p>
+    <p class="eyebrow">PT-20–PT-25 · Device, accessibility, delivery, and release integrity</p>
+    <h2>Cover human and specialist boundaries</h2>
+    <p>PT-20 and PT-21 are current physical/manual acceptance gates. PT-22–PT-25 define blocked future or specialist evidence for M31, M32, and M38; do not improvise a harness or authorization that has not been supplied.</p>
   </div>
   <div class="test-session-grid comprehensive-test-grid">
     <article id="pt-20">
       <span>PT-20 · Assigned form factor</span>
       <h3>Adaptive UI, theme, and lifecycle continuity</h3>
-      <ol><li>Exercise assigned compact portrait/landscape, tablet portrait/landscape, multi-window/freeform, and foldable open/tabletop/closed/reopened windows.</li><li>Verify bottom navigation, rail, and two-pane Player appear at suitable widths without hiding any destination, station card, primary control, dialog action, or list content.</li><li>Rotate or resize while playing and while viewing an expanded More section; confirm meaningful selected state and the existing player remain coherent.</li><li>Check system bars, cutouts, keyboard, light/dark themes, and Android 16 edge-to-edge/predictive-Back behavior.</li><li>On a physical foldable, run the full hinge cycle while playing and confirm task, audio, selected station, metadata, and controls survive without crash or ANR.</li></ol>
+      <ol><li>Exercise assigned compact portrait/landscape, tablet portrait/landscape, multi-window/freeform, and foldable open/tabletop/closed/reopened windows.</li><li>Verify bottom navigation, rail, and two-pane Player appear at suitable widths without hiding any destination, station card, primary control, dialog action, or list content.</li><li>Rotate or resize while playing and while viewing an expanded More section; confirm meaningful selected state and the existing player remain coherent.</li><li>Check system bars, cutouts, soft and external keyboards, mouse/trackpad selection and scrolling, light/dark themes, and Android 16 edge-to-edge/predictive-Back behavior.</li><li>On supported devices, exercise multi-window multi-resume and verify the app neither duplicates playback nor loses the active task/session.</li><li>On a physical foldable, run the full hinge cycle while playing and confirm task, audio, selected station, metadata, and controls survive without crash or ANR.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> content reflows instead of clipping, lifecycle changes preserve one task/player, and every primary action remains visible and operable.</p>
     </article>
     <article id="pt-21">
       <span>PT-21 · Human accessibility tester</span>
       <h3>Large text and spoken TalkBack traversal</h3>
-      <ol><li>At the assigned maximum font and enlarged display settings, traverse Player, Favorites, Chat, Queue, More, account cards, dialogs, and long/empty/error lists.</li><li>With TalkBack on a physical device, start from launch and reach all five destinations, station radio choices, playback, Sleep Timer, Audio output, community gates, request status/actions, and diagnostics.</li><li>Listen for meaningful names, roles, selected/disabled/state announcements, focus order, pronunciation, pacing, and the Terms <strong>I Agree</strong> checkbox.</li><li>Confirm green/red request states also have exact text, artwork is not a duplicate focus trap, and no actionable node is unlabeled.</li><li>Repeat the assigned orientation or fold posture and confirm focus does not strand the tester or hide an action.</li></ol>
+      <ol><li>At the assigned maximum font and enlarged display settings, traverse Player, Favorites, Chat, Queue, More, account cards, dialogs, and long/empty/error lists.</li><li>With TalkBack on a physical device, start from launch and reach all five destinations, station radio choices, playback, Sleep Timer, Audio output, community gates, request status/actions, and diagnostics.</li><li>Listen for meaningful names, roles, selected/disabled/state announcements, focus order, pronunciation, pacing, and the Terms <strong>I Agree</strong> checkbox.</li><li>Confirm request states have exact text in addition to color, artwork is not a duplicate focus trap, and no actionable node is unlabeled.</li><li>Run assigned Switch Access or Voice Access traversal and Accessibility Scanner/touch-target/contrast inspection; record unavailable tooling as Blocked.</li><li>Repeat the assigned orientation or fold posture and confirm focus does not strand the tester or hide an action.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> every task is understandable and completable through spoken feedback at enlarged settings, without relying on color, position, or sight alone.</p>
     </article>
     <article class="future-test-case" id="pt-22">
-      <span>PT-22 · Future M27.2 build only</span>
+      <span>PT-22 · Future M38 build only</span>
       <h3>Closed-app notification delivery</h3>
-      <ol><li>Do not run this case against the current active-Chat preview. Mark it Blocked until an authorized true-push build and event source are supplied.</li><li>When supplied, test permission allow/deny, foreground, background, task-removed/closed, device-idle, reboot, reinstall/token rotation, and network outage/recovery states.</li><li>Across assigned station/account pairs, verify exact-name mapping, self/blocked/duplicate suppression, station-specific opt-in/out, sign-out, and minimal private lock-screen payloads.</li><li>Tap an alert and verify station selection plus gated native Chat navigation; no protected session or message text may pass through a relay.</li><li>Record delivery delay, duplicate count, data/battery observations, and outage behavior. Private Message delivery remains excluded until M17 is repaired and verified.</li></ol>
+      <ol><li>Do not run this case against the current active-Chat preview. Mark it Blocked until M36 authorizes a source and an M37 delivery build is supplied.</li><li>When supplied, test permission allow/deny, foreground, background, task-removed/closed, device-idle, reboot, reinstall/token rotation, and network outage/recovery states.</li><li>Across assigned station/account pairs, verify exact-name mapping, self/blocked/duplicate suppression, station-specific opt-in/out, sign-out, and minimal private lock-screen payloads.</li><li>Tap an alert and verify station selection plus gated native Chat navigation; no protected session or message text may pass through a relay.</li><li>Record delivery delay, duplicate count, data/battery observations, and outage behavior. Private Message delivery remains excluded until M47–M50 close.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> authorized events arrive once under the documented lifecycle states, respect privacy and user controls, and never depend on continuous background polling.</p>
+    </article>
+    <article class="future-test-case" id="pt-23">
+      <span>PT-23 · M31 compliance assignment only</span>
+      <h3>Membership, payment, and account-route compliance</h3>
+      <ol><li>Use the exact Play-candidate build and coordinator-approved station without entering payment or personal account data.</li><li>Open each shipped Membership or other external-content entry and record every reachable purchase, subscription, registration, recovery, management, and deletion path.</li><li>Verify regional/build gating and required disclosures match the approved M31 decision; a disallowed transaction or account-creation route must be absent or blocked.</li><li>Confirm browser/app sessions remain separate and Back returns to the same native task.</li><li>Cross-check the privacy notice, Data Safety worksheet, store listing, and tester instructions against the observed artifact.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> the Play artifact exposes only routes approved by M31 and its account/payment declarations match observable behavior.</p>
+    </article>
+    <article class="future-test-case" id="pt-24">
+      <span>PT-24 · M32 expiring-session harness required</span>
+      <h3>Protected-session expiry and recovery coherence</h3>
+      <ol><li>Sign in to two approved stations, then expire or rotate only one station session through the supplied safe harness or operator action.</li><li>Exercise Chat, Favorites, Requests, and Listener Activity for the affected station and verify every surface converges on one explicit expired/signed-out state.</li><li>Confirm the unaffected station remains signed in and usable.</li><li>Reauthenticate the expired station and verify new cookies/session state persist correctly through process recreation without extending an already expired lifetime.</li><li>Sign out and confirm all memory-only protected content clears only for that station.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> session rotation, expiry, recovery, and logout remain coherent and isolated across every protected feature.</p>
+    </article>
+    <article class="future-test-case" id="pt-25">
+      <span>PT-25 · M32 specialist security harness</span>
+      <h3>External controller and station-network trust</h3>
+      <ol><li>Use the approved foreign-controller test app to connect to the exported MediaSession.</li><li>Verify system/foreign controllers receive only approved transport commands and cannot replace media, inject a stream, or set/cancel the sleep timer.</li><li>Use approved mock station responses to exercise same-origin redirects, cross-origin redirects, HTTPS downgrade, unexpected ports, excess redirects, and malformed destinations for Queue/artwork/public reads.</li><li>Confirm untrusted targets fail closed with generic UI errors and no endpoint detail.</li><li>Verify the trusted local controller and approved station redirects still preserve normal playback and data behavior.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> controller authority and network redirects stay within the explicit M32 trust policy without regressing approved system controls.</p>
+    </article>
+  </div>
+</section>
+
+<section class="content-section" id="future-tests">
+  <div class="content-intro wide">
+    <p class="eyebrow">PT-26–PT-34 · Deferred and future capability contracts</p>
+    <h2>Publish the test boundary before the feature</h2>
+    <p>These cases are intentionally visible and marked Future. Run them only when the named milestone supplies an authorized build, accounts, station evidence, and mutation allowance; otherwise record Blocked rather than treating absence as a defect.</p>
+  </div>
+  <div class="test-session-grid comprehensive-test-grid">
+    <article class="future-test-case" id="pt-26">
+      <span>PT-26 · M48 build only</span>
+      <h3>Private Message Inbox and Sent reading</h3>
+      <ol><li>After M47 certifies server repair, sign in to the assigned station and load bounded Inbox and Sent lists.</li><li>Verify read/unread, sender/recipient, subject, time, body, pagination, empty, stale, failure, and expired-session states without cross-station leakage.</li><li>Switch stations, sign out, background, recreate the process, and confirm protected content clears or restores only as documented.</li><li>Confirm PM content never appears in diagnostics, logs, public screenshots, Chat, or notifications.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> protected reading is bounded, station-isolated, lifecycle-safe, and private.</p>
+    </article>
+    <article class="future-test-case" id="pt-27">
+      <span>PT-27 · M49 mutation approval required</span>
+      <h3>Private Message compose, reply, and send</h3>
+      <ol><li>Verify recipient/reply context, limits, encoding, preview, and confirmation with disposable accounts.</li><li>Cancel once and confirm no message is sent and transient form/token data is cleared.</li><li>Send one approved harmless message exactly once and classify success, rejection, or indeterminate delivery.</li><li>For an indeterminate result, inspect Inbox/Sent once and do not retry.</li><li>Exercise session expiry and station switching before confirmation; submission must fail closed.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> every mutation is explicit, one-shot, correctly scoped, and honest about uncertainty.</p>
+    </article>
+    <article class="future-test-case" id="pt-28">
+      <span>PT-28 · M50 certification build</span>
+      <h3>Private Message station, lifecycle, and notification certification</h3>
+      <ol><li>Repeat PT-26 and PT-27 across all five stations with independent accounts and representative content.</li><li>Verify logout, expiry, process recreation, adaptive layouts, large text, TalkBack, and Razr lifecycle behavior.</li><li>If M38 is complete, test opt-in PM notifications, minimal payloads, duplicate suppression, sign-out, blocked identities where applicable, and gated navigation.</li><li>Confirm Chat and PM event controls and content never cross.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> each station passes independently and optional delivery uses only the authorized notification architecture.</p>
+    </article>
+    <article class="future-test-case" id="pt-29">
+      <span>PT-29 · M52 read-only build</span>
+      <h3>Native Forum reading and browser fallback</h3>
+      <ol><li>Complete community gates, then browse categories, boards, thread lists, pagination, posts, authors, timestamps, quotes, links, and supported media.</li><li>Verify loading, empty, stale, malformed, failure, station-switch, logout, and memory-bound behavior.</li><li>Confirm blocked authors and report actions apply before content is displayed where required.</li><li>Open unsupported formatting or content through the trusted M51 browser fallback and return to the same native task.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> authorized semantic content is native, bounded, safe, and station-scoped with an honest browser fallback.</p>
+    </article>
+    <article class="future-test-case" id="pt-30">
+      <span>PT-30 · M53 mutation approval required</span>
+      <h3>Forum compose, reply, report, and block</h3>
+      <ol><li>Verify sign-in, draft limits, supported formatting, preview, destination thread, and confirmation.</li><li>Cancel once, then submit one harmless approved post/reply once; classify success, rejection, or indeterminate result without retry.</li><li>Exercise report-content, report-user, block, unblock, expired session, and station-switch safety.</li><li>Confirm unsupported editing, deletion, attachments, reactions, polls, or private boards remain unavailable.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> Forum mutations are explicit, one-shot, moderated, and limited to certified behavior.</p>
+    </article>
+    <article class="future-test-case" id="pt-31">
+      <span>PT-31 · M54 certification build</span>
+      <h3>Forum five-station, lifecycle, accessibility, and notifications</h3>
+      <ol><li>Repeat PT-29 and authorized PT-30 paths for all five stations, including pagination and sparse/malformed content.</li><li>Validate phone, tablet, foldable, rotation, process recreation, 2× text, TalkBack, alternative input, and Razr use.</li><li>If M38 is complete, verify minimal station/thread notification payloads, opt-in/out, dedupe, blocks, sign-out, and gated deep links.</li><li>Confirm browser fallback remains available when native behavior cannot safely render or recover.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> each station and intended capability is independently certified without removing safe fallback.</p>
+    </article>
+    <article class="future-test-case" id="pt-32">
+      <span>PT-32 · M55 Cast-certified build</span>
+      <h3>Google Cast receiver, handoff, and recovery</h3>
+      <ol><li>Verify only approved receivers and permitted station streams appear.</li><li>Start local playback, Cast, switch stations, pause/resume/stop, background, remove/reopen the task, and return to local output.</li><li>Verify metadata/artwork, timer semantics, notification/system state, disconnect, receiver loss, network loss, and reconnection.</li><li>Repeat the certified stream path across all five stations and confirm no custom relay or second logical player appears.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> sender/receiver ownership, rights, lifecycle, and station behavior match the M55 contract.</p>
+    </article>
+    <article class="future-test-case" id="pt-33">
+      <span>PT-33 · M56 capability assignment</span>
+      <h3>Extended station-specific capability certification</h3>
+      <ol><li>For the assigned non-SST station, test only the newly enabled request-message, activity/cooldown, membership, or other named capability.</li><li>Verify exact live evidence, account requirements, unsupported/unknown states, station isolation, logout, and privacy behavior.</li><li>Confirm the capability remains disabled for every station that lacks independent certification.</li><li>Exercise representative success, empty, unavailable, expired, and malformed responses.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> the capability is truthful for the certified station and never inherited from structural similarity.</p>
+    </article>
+    <article class="future-test-case" id="pt-34">
+      <span>PT-34 · M57 approved routes/build</span>
+      <h3>Account registration, recovery, management, and deletion access</h3>
+      <ol><li>Verify the assigned station's approved registration, recovery, management, and deletion entry points without exposing real credentials or personal data.</li><li>Confirm exact HTTPS host/path, browser/native choice, disclosures, cancellation, Back behavior, and app/browser session isolation.</li><li>Exercise unavailable, invalid, expired, success, and indeterminate outcomes only within the authorized test contract.</li><li>Cross-check M31 payments/account-creation/deletion decisions, privacy, Data Safety, and Play listing behavior.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> users can reach only verified compliant account-lifecycle actions with clear ownership and safe session boundaries.</p>
     </article>
   </div>
 </section>
@@ -244,12 +327,12 @@ section: product-testing
     <table class="device-table tester-coverage-table">
       <thead><tr><th>Target</th><th>Required cases</th><th>Distinct evidence to capture</th></tr></thead>
       <tbody>
-        <tr><th>All five stations</th><td>PT-03, PT-07, signed-out PT-09–PT-11, PT-15 read, PT-18</td><td>One clean station-scoped result for playback/metadata, Queue/History, public/member gates, Chat read, and both shipped station links.</td></tr>
-        <tr><th>StreamingSoundtracks.com</th><td>PT-03, PT-07, PT-09–PT-19 as assigned</td><td>Extended Queue, large Favorites, one-shot optional request message, request activity/cooldown, explicit membership evidence, and Contact/VIP membership links.</td></tr>
-        <tr><th>1980s.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, PT-18</td><td>Independent authenticated session, request capability without SST-only fields, and the shipped Contact/VIP membership links.</td></tr>
-        <tr><th>Adagio.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, PT-18</td><td>Composer/work/ensemble presentation without invented fields, independent session, requests, and Contact/VIP membership links.</td></tr>
-        <tr><th>Death.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, PT-18</td><td>Sparse metadata, compact Queue/History, independent session, requests, and Contact/RIP membership links with RIP—not VIP—wording.</td></tr>
-        <tr><th>Entranced.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, PT-18</td><td>Legacy ICY punctuation presentation, extended Queue/History, independent session, requests, and Contact/VIP membership links.</td></tr>
+        <tr><th>All five stations</th><td>PT-03, PT-07, signed-out PT-09–PT-11, PT-15 read, approved PT-18</td><td>One clean station-scoped result for playback/metadata, Queue/History, public/member gates, Chat read, and currently approved station links.</td></tr>
+        <tr><th>StreamingSoundtracks.com</th><td>PT-03, PT-07, PT-09–PT-19 as assigned; PT-23 only by M31 coordinator</td><td>Extended Queue, large Favorites, one-shot optional request message, request activity/cooldown, explicit membership evidence, and approved Contact/external-link behavior.</td></tr>
+        <tr><th>1980s.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, approved PT-18</td><td>Independent authenticated session, request capability without SST-only fields, and approved Contact/external-link behavior.</td></tr>
+        <tr><th>Adagio.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, approved PT-18</td><td>Composer/work/ensemble presentation without invented fields, independent session, requests, and approved station links.</td></tr>
+        <tr><th>Death.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, approved PT-18</td><td>Sparse metadata, compact Queue/History, independent session, requests, and approved RIP-branded external-link behavior.</td></tr>
+        <tr><th>Entranced.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, approved PT-18</td><td>Legacy ICY punctuation presentation, extended Queue/History, independent session, requests, and approved station links.</td></tr>
       </tbody>
     </table>
   </div>
@@ -264,7 +347,21 @@ section: product-testing
         <tr><th>Wi-Fi, mobile data, full outage</th><td>PT-08</td><td>One cut/restore and one handoff; do not manipulate networks carrying unrelated critical work.</td></tr>
         <tr><th>Bluetooth and available wired/USB output</th><td>PT-04, PT-06</td><td>Record exact hardware category, Android chooser behavior, media buttons, and disconnect state.</td></tr>
         <tr><th>Maximum text plus physical TalkBack</th><td>PT-21</td><td>A human audible/intelligibility result is required; automated semantics alone do not close this row.</td></tr>
-        <tr><th>Authorized true-push build</th><td>PT-22</td><td>Remain Blocked until M27.2 supplies an authorized event source and test build.</td></tr>
+        <tr><th>Authorized closed-app delivery build</th><td>PT-22</td><td>Remain Blocked until M36–M38 supply an authorized source, implementation, and certification build.</td></tr>
+        <tr><th>Release-security harness</th><td>PT-23–PT-25</td><td>Run only with M31/M32 coordinator approval, controlled accounts, mock routes, and the supplied foreign-controller/expiry tools.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="table-wrap coverage-table-spacing" tabindex="0" role="region" aria-label="Release campaign testing coverage">
+    <table class="device-table tester-coverage-table">
+      <thead><tr><th>Roadmap campaign</th><th>Required catalog</th><th>Exit evidence</th></tr></thead>
+      <tbody>
+        <tr><th>M39 candidate freeze</th><td>All currently applicable PT cases on the exact candidate</td><td>Every required case has Pass, Pass with notes, resolved Fail, or justified Blocked evidence tied to version/code.</td></tr>
+        <tr><th>M40 Play Alpha delivery</th><td>PT-01 plus PT-02/PT-03/PT-04 and risk-based changed-feature smoke</td><td>Play-generated fresh install/update, pre-launch findings, reviewer access, and split behavior reconciled.</td></tr>
+        <tr><th>M41 Alpha publication</th><td>Owner-authorized post-publication smoke</td><td>Tester availability, install, playback, support route, and rollback record verified.</td></tr>
+        <tr><th>M42 closed-test campaign</th><td>Full risk-distributed current catalog over the qualifying period</td><td>Tester continuity, representative engagement, feedback themes, fixes, retests, and exit criteria.</td></tr>
+        <tr><th>M44 staged production</th><td>PT-01 update plus release-risk smoke at each stage</td><td>Health thresholds remain green or rollout pauses/rolls back under the documented plan.</td></tr>
+        <tr><th>M45 recurring recertification</th><td>Risk-based station, device, policy, and dependency regression</td><td>Current station contracts, moderation, rights, privacy, Play quality, and update lineage remain valid.</td></tr>
       </tbody>
     </table>
   </div>
@@ -292,7 +389,7 @@ section: product-testing
     <div><p class="eyebrow">Public report</p><h2>Redact before submitting</h2></div>
     <div>
       <p>GitHub issues are public. Never include passwords, security answers or CAPTCHA images, cookies, session values, account email addresses, real dates of birth, private messages, abuse-report content, signing material, private endpoints, full network captures, or screenshots containing personal information.</p>
-      <p>Do not repeatedly submit a song request, Chat post, or moderation report while investigating an indeterminate response. Inspect Queue or the relevant visible state once, record the outcome, and stop. Do not test closed-app push against PT-17 or Google Cast/Private Messages as if they are shipped capabilities.</p>
+      <p>Do not repeatedly submit a song request, Chat post, Forum post, Private Message, or moderation report while investigating an indeterminate response. Inspect the relevant visible destination once, record the outcome, and stop. Do not test PT-22–PT-34 as shipped capabilities until their named roadmap milestones provide an authorized build and assignment.</p>
       <ul class="inline-requirements"><li>Case ID included</li><li>Public metadata only</li><li>One environment per result</li><li>Redacted screenshots</li><li>No account secrets</li><li>No raw traffic captures</li></ul>
     </div>
   </div>

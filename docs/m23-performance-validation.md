@@ -1,4 +1,4 @@
-# M23.6 startup and large-Favorites performance validation
+# M34 startup and large-Favorites performance validation
 
 Validated July 16, 2026 for the `0.1.0-alpha01` candidate.
 
@@ -42,6 +42,6 @@ See [App startup time](https://developer.android.com/topic/performance/vitals/la
 ## Remaining release checks
 
 Play-delivered startup and memory data, Android vitals, pre-launch crawler results, and a protected signed candidate
-still belong to the M23 release gates. A dedicated Macrobenchmark module can be added if Play or physical-device data
+still belong to the M28–M35 release gates. A dedicated Macrobenchmark module can be added if Play or physical-device data
 shows a regression that requires repeatable performance tracking; the current local measurements do not justify the
 additional test module and build surface by themselves.

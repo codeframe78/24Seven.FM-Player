@@ -22,7 +22,7 @@ section: overview
     </ul>
     <a class="hero-status" href="{{ '/project/roadmap/' | relative_url }}">
       <span class="live-dot" aria-hidden="true"></span>
-      <span><small>Current program</small><strong>M23 Play-testing readiness</strong></span>
+      <span><small>Current program</small><strong>M28–M35 Alpha readiness</strong></span>
       <span>View roadmap <span aria-hidden="true">→</span></span>
     </a>
   </div>
@@ -84,7 +84,7 @@ section: overview
     <a href="{{ '/project/development/' | relative_url }}"><span>Engineering</span><strong>See how the native app is built</strong><small>Architecture, repository boundaries, workflow, and source map</small></a>
     <a href="{{ '/project/testing/' | relative_url }}"><span>Quality</span><strong>Read the validation evidence</strong><small>Automated tests, emulator matrix, Razr testing, and release checks</small></a>
     <a href="{{ '/project/product-testing/' | relative_url }}"><span>Testers</span><strong>Run a product test and report the result</strong><small>Guided smoke, feature, device, and accessibility sessions with structured public reporting</small></a>
-    <a href="{{ '/project/roadmap/' | relative_url }}"><span>Progress</span><strong>Trace the actual development journey</strong><small>27 achieved milestones, active M23 gates, deferred M17, completed M24–M26/M27.1, and pre-Alpha M27.2–M28</small></a>
+    <a href="{{ '/project/roadmap/' | relative_url }}"><span>Progress</span><strong>Trace the complete M01–M57 journey</strong><small>27 verified achievements, eight active Alpha gates, a production path, and bounded future scope</small></a>
     <a href="{{ '/project/resources/' | relative_url }}"><span>Reference</span><strong>Browse the project evidence library</strong><small>Architecture, protocol research, station certifications, release notes, and contributor guides</small></a>
   </div>
 </section>
@@ -139,33 +139,9 @@ section: overview
     </div>
     <a class="text-link" href="{{ '/project/roadmap/' | relative_url }}">Explore the full roadmap <span aria-hidden="true">→</span></a>
   </div>
+  {% assign alpha_readiness = site.data.project.roadmap | where: "phase", "alpha-readiness" %}
   <div class="roadmap-grid">
-    <article class="roadmap-card done">
-      <p class="status"><span></span>Complete</p>
-      <h3>M23.3 · Android 16</h3>
-      <p>API 36 targeting, predictive Back, edge-to-edge behavior, and connected-device coverage.</p>
-    </article>
-    <article class="roadmap-card done">
-      <p class="status"><span></span>Complete</p>
-      <h3>M23.7 · Store polish</h3>
-      <p>Legacy, adaptive, and monochrome launcher resources with revalidated store artwork.</p>
-    </article>
-    <article class="roadmap-card active">
-      <p class="status"><span></span>In progress</p>
-      <h3>M23.1 · Release candidate</h3>
-      <p>Protected Linux signing and Android developer-verification email confirmation are green; per-app Console status, version eligibility, and delivered-install checks remain.</p>
-    </article>
-    <article class="roadmap-card active">
-      <p class="status"><span></span>In progress</p>
-      <h3>M23.6 · Device matrix</h3>
-      <p>Local device and real TalkBack service coverage are green; human audible review, Play delivery, and pre-launch results remain.</p>
-    </article>
-    <article class="roadmap-card waiting">
-      <p class="status"><span></span>Waiting externally</p>
-      <h3>M23.2 / M23.4 / M23.5</h3>
-      <p>UGC receipt reconciliation, Play declarations, credentials, and rights evidence await administrator input.</p>
-    </article>
-    {% for item in site.data.project.pre_alpha %}
+    {% for item in alpha_readiness %}
     <article class="roadmap-card {{ item.state }}">
       <p class="status"><span></span>{{ item.state_label }}</p>
       <h3>{{ item.id }} · {{ item.name }}</h3>
@@ -173,7 +149,7 @@ section: overview
     </article>
     {% endfor %}
   </div>
-  <p class="roadmap-note">Private Messages (M17) remain deliberately deferred until the legacy server delivery failure is repaired and verified. M27.1 now supplies station controls and local exact-name Chat alerts for the actively observed feed. M27.2 still requires an authorized event source for reliable closed-app delivery; live PM alerts activate only when M17 works, and continuous background polling will not be presented as push.</p>
+  <p class="roadmap-note">M01–M27 preserve all verified achievements. Closed-app notifications require M36–M38, Alpha delivery is M39–M41, and production readiness is M42–M45. Private Messages remain excluded until M47 repairs and verifies server delivery; Forum access is deliberately staged across M51–M54.</p>
 </section>
 
 <section class="cta" aria-labelledby="cta-title">

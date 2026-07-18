@@ -10,8 +10,8 @@ The GitHub Pages surface now provides a comprehensive, responsive, interactive p
 - an interactive native architecture explorer, source organization, engineering principles, and milestone workflow;
 - automated, emulator, physical-device, accessibility, network, performance, signing, and CI evidence with copyable commands and inspectable table rows;
 - a tester-facing product workspace with local search, status filters, device-only checklist progress, bounded smoke/member/device/resilience/adaptive sessions, and a structured public result form for passes, failures, notes, and blocked tests;
-- all 27 achieved milestones in verified chronological order, including completed M24 Sleep Timer, M25 Audio-Output Selection, M26 In-App Diagnostics, and the M27.1 local Chat-mention foundation;
-- the seven M23 Play-testing workstreams, deferred M17 boundary, completed M24–M26/M27.1, remaining M27.2 true-push gate, and M28 Alpha publication milestone;
+- all 27 achieved milestones in verified chronological order, including completed M24 Sleep Timer, M25 Audio-Output Selection, M26 In-App Diagnostics, and the M27 local Chat-mention foundation;
+- the eight M28–M35 Alpha-readiness gates, deferred M47 boundary, completed M24–M27 work, M36–M38 closed-app delivery gates, and M39–M41 Alpha-delivery program;
 - a searchable, category-filtered public resource index for architecture, protocol research, station certification, Play readiness, release notes, testing, and contribution;
 - a searchable privacy notice with a generated on-page table of contents while keeping all canonical notice text visible without JavaScript.
 
@@ -29,7 +29,7 @@ Repeated navigation and milestone history are generated from `privacy-site/_data
 - Theme selection and persistence, mobile navigation, site explorer search/keyboard controls, privacy search/table of contents, architecture exploration, command copying, tester checklist/filtering, roadmap filtering, resource filtering, inspectable tables, and screenshot lightboxes: pass.
 - All interactive checks completed with no uncaught browser exceptions or console errors: pass.
 - Product-testing issue-form YAML with 17 blocks and 16 unique field IDs: pass.
-- Roadmap review through M17 and the reordered M24–M28 sequence: pass.
+- Roadmap review through M47 and the reordered M24–M41 sequence: pass.
 - All local stylesheets, scripts, icons, and screenshots resolved with no missing assets.
 - `git diff --check`: pass.
 

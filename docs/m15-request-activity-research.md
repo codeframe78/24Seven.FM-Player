@@ -22,4 +22,4 @@ Every discovered URL is restricted to HTTPS, the selected station origin, an exa
 - No request mutation is performed and no failure is automatically retried.
 - Missing evidence remains `Unknown`; the app never infers VIP/RIP from administrative rank, newsletter subscription text, or generic site navigation.
 
-Only StreamingSoundtracks.com is enabled for the M15 native surface. The other four stations expose similar public navigation, but authenticated timer/profile behavior has not yet been independently verified. Their capability remains unavailable until M19–M22 certification provides representative evidence. Death.FM's RIP branding is modeled but not enabled without that verification.
+Only StreamingSoundtracks.com is enabled for the M15 native surface. The other four stations expose similar public navigation, but authenticated timer/profile behavior has not yet been independently verified. Their capability remains unavailable until M18–M21 certification provides representative evidence. Death.FM's RIP branding is modeled but not enabled without that verification.

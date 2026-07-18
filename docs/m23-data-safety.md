@@ -1,4 +1,4 @@
-# M23 Google Play Data Safety worksheet
+# M28–M35 Google Play Data Safety worksheet
 
 Checked against the current Google Play definitions on July 15, 2026. This is a conservative implementation worksheet, not a substitute for the product owner's final declaration in Play Console. Reconcile it with the exact active artifact and the Console form immediately before submission.
 

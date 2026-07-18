@@ -1,8 +1,8 @@
-# M3 background playback validation
+# M03 background playback validation
 
 Validation performed on July 13, 2026.
 
-M3 is complete. The behavioral checks below passed without requiring a production-code change beyond the focused service integration test described below.
+M03 is complete. The behavioral checks below passed without requiring a production-code change beyond the focused service integration test described below.
 
 ## Motorola Razr 2023
 
@@ -33,4 +33,4 @@ A real Bluetooth A2DP accessory was connected to the Motorola Razr 2023 while St
 
 A physical wired or USB-C headset was not available during validation, so the application was not represented as physically tested with one. Wired media-button handling was exercised through Android's system headset-hook command, and wired route-loss behavior uses the same Media3 noisy-output path exercised by Android's protected `AUDIO_BECOMING_NOISY` broadcast and confirmed through a real Bluetooth route disconnect. The Motorola Razr 2023's wired and USB-C audio playback capability is known independently of this application validation.
 
-Physical wired-accessory coverage may be added later if suitable hardware becomes available, but it is not a blocker for M3 because the application-owned and platform integration paths have direct coverage.
+Physical wired-accessory coverage may be added later if suitable hardware becomes available, but it is not a blocker for M03 because the application-owned and platform integration paths have direct coverage.

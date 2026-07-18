@@ -1,4 +1,4 @@
-# M21 Death.FM certification — complete
+# M20 Death.FM certification — complete
 
 Public, physical-device, and representative authenticated certification was completed July 15, 2026 on
 `agent/initial-android-scaffold`.
@@ -28,7 +28,7 @@ Public, physical-device, and representative authenticated certification was comp
 | Capability | Evidence | Current result |
 | --- | --- | --- |
 | Primary playback | The unchanged primary relay reached Media3 `PLAYING` on the wired Android 16 Razr with media volume temporarily muted | Pass |
-| Source fallback | Both unchanged station-supplied relays delivered live audio bytes; the shared ordered Media3 fallback behavior remains covered by M2 and unit evidence | Pass without a destructive station-specific failure injection |
+| Source fallback | Both unchanged station-supplied relays delivered live audio bytes; the shared ordered Media3 fallback behavior remains covered by M02 and unit evidence | Pass without a destructive station-specific failure injection |
 | Sparse metadata/artwork | A fresh live run presented the Death.FM title and artist separately, loaded same-station artwork, showed `LIVE`, and reported AAC/128 kbps | Pass; the raw ICY value remains preserved before presentation |
 | Compact Queue/History | The exact public compact JSON feed returned HTTP 200 with ten upcoming and ten played rows; native `Up next` and `Recently played` loaded without inventing absent extended fields | Pass under the shared 60-second limiter |
 | Public Chat | Native Death.FM Chat loaded current public messages without error and showed the correct signed-out posting boundary; shared 30-second/memory-only behavior remains intact | Pass |
@@ -100,4 +100,4 @@ out. It contains only the administrator-approved test identity and no credential
 Death.FM request messages, listener request activity, and native membership state remain explicitly `Not verified`.
 The RIP membership browser card remains available as separately verified secondary content, but the app does not copy
 its protected session into the browser or infer native account capabilities from that page. Native Private Messages
-remain deferred under M17.
+remain deferred under M47.

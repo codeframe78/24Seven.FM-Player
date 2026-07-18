@@ -1,4 +1,4 @@
-# M2 playback validation
+# M02 playback validation
 
 Validation performed on July 13, 2026.
 
@@ -26,7 +26,7 @@ Results:
 - Android lint passed.
 - Debug APK assembly passed.
 
-No Android device or AVD was connected. Playback of all five live streams, primary-to-source fallback timing, audio focus, notification controls, and station switching under real network conditions still require device validation before M2 is complete.
+No Android device or AVD was connected. Playback of all five live streams, primary-to-source fallback timing, audio focus, notification controls, and station switching under real network conditions still require device validation before M02 is complete.
 
 ## Motorola Razr 2023 follow-up
 
@@ -46,7 +46,7 @@ On-device playback verification covered:
 
 No playback exceptions were recorded during these checks.
 
-## M2 completion follow-up
+## M02 completion follow-up
 
 On July 13, 2026, the validated debug APK was installed on the Motorola Razr 2023 from the second Windows development machine. The previous debug installation first had to be removed because Android debug keys are machine-specific and its signature did not match the new build.
 
@@ -60,4 +60,4 @@ Two consecutive switching cycles covered all five stations. All ten switches ret
 
 Primary-to-source fallback was exercised on the local API 35 emulator without changing either production URL. An emulator-local firewall rule rejected only the resolved address of the 1980s.FM primary relay while leaving the source relay reachable. Media3 progressed from buffering item 0 to buffering item 1 and then `PLAYING` on item 1. The expected primary connection failure was present in the log, the source fallback played successfully, and the temporary firewall rule was removed immediately after the check.
 
-Playback was stopped on both devices after validation. These results complete the planned M2 playback validation.
+Playback was stopped on both devices after validation. These results complete the planned M02 playback validation.

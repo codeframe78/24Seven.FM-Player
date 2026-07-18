@@ -18,11 +18,11 @@ navigation:
   - section: product-testing
     label: Test the Player
     path: /project/product-testing/
-    description: Searchable acceptance catalog with a private browser-local progress checklist.
+    description: Searchable acceptance catalog with private browser-local progress.
   - section: roadmap
     label: Roadmap
     path: /project/roadmap/
-    description: Achieved milestones, active release gates, evidence, and future work.
+    description: Canonical M01–M57 milestones, dependencies, evidence, and future scope.
   - section: resources
     label: Resources
     path: /project/resources/
@@ -30,249 +30,565 @@ navigation:
   - section: privacy
     label: Privacy
     path: /
-    description: Canonical app privacy notice with searchable sections and plain-language boundaries.
+    description: Canonical app privacy notice with plain-language data boundaries.
+
+roadmap_meta:
+  updated: 2026-07-18
+  achieved_count: 27
+  total_count: 57
+  active_phase: M28–M35
+  active_label: Alpha readiness and release integrity
 
 milestones:
   - order: 1
-    id: M1
-    name: Buildable baseline
-    date: 2026-07-12
-    commit: 9184afd
-    outcome: Native Gradle and Compose baseline with a verified Windows build path.
+    id: "M01"
+    legacy_id: "M1"
+    name: "Buildable baseline"
+    date: "2026-07-12"
+    commit: "9184afd"
+    evidence: "docs/m1-validation.md"
+    outcome: "Native Gradle and Compose baseline with verified Windows and Ubuntu paths."
+
   - order: 2
-    id: M2
-    name: Five-station playback
-    date: 2026-07-13
-    commit: 5cdade0
-    outcome: Verified streams, atomic station switching, and one primary-to-fallback transition.
+    id: "M02"
+    legacy_id: "M2"
+    name: "Five-station playback"
+    date: "2026-07-13"
+    commit: "5cdade0"
+    evidence: "docs/m2-validation.md"
+    outcome: "Verified streams, atomic station switching, and bounded fallback."
+
   - order: 3
-    id: M3
-    name: Background and system media
-    date: 2026-07-13
-    commit: 4206fee
-    outcome: Service-owned playback, MediaSession integration, audio focus, and route controls.
+    id: "M03"
+    legacy_id: "M3"
+    name: "Background and system media"
+    date: "2026-07-13"
+    commit: "4206fee"
+    evidence: "docs/m3-validation.md"
+    outcome: "Service-owned playback, MediaSession, audio focus, and system controls."
+
   - order: 4
-    id: M4
-    name: Now playing
-    date: 2026-07-13
-    commit: 0d9e6b3
-    outcome: Live ICY metadata with same-station artwork enrichment.
+    id: "M04"
+    legacy_id: "M4"
+    name: "Now Playing"
+    date: "2026-07-13"
+    commit: "0d9e6b3"
+    evidence: "docs/m4-metadata-research.md"
+    outcome: "Live ICY metadata with same-station artwork enrichment."
+
   - order: 5
-    id: M5
-    name: Native navigation
-    date: 2026-07-13
-    commit: 8133695
-    outcome: Adaptive native destinations with a persistent mini-player.
+    id: "M05"
+    legacy_id: "M5"
+    name: "Native navigation"
+    date: "2026-07-13"
+    commit: "8133695"
+    evidence: "docs/m5-validation.md"
+    outcome: "Adaptive native destinations with a persistent mini-player."
+
   - order: 6
-    id: M6
-    name: Queue and history
-    date: 2026-07-13
-    commit: 3babdf9
-    outcome: Bounded, station-scoped Queue and History polling.
+    id: "M06"
+    legacy_id: "M6"
+    name: "Queue and History"
+    date: "2026-07-13"
+    commit: "3babdf9"
+    evidence: "docs/m6-validation.md"
+    outcome: "Bounded station-scoped Queue and History observation."
+
   - order: 7
-    id: M7
-    name: Authentication
-    date: 2026-07-13
-    commit: a897794
-    outcome: Native station sign-in and Android Keystore-protected sessions.
+    id: "M07"
+    legacy_id: "M7"
+    name: "Authentication"
+    date: "2026-07-13"
+    commit: "a897794"
+    evidence: "docs/m7-validation.md"
+    outcome: "Native station sign-in and Android-protected sessions."
+
   - order: 8
-    id: M8
-    name: Chat
-    date: 2026-07-13
-    commit: f99635d
-    outcome: Native, memory-only, station-scoped community chat.
+    id: "M08"
+    legacy_id: "M8"
+    name: "Chat"
+    date: "2026-07-13"
+    commit: "f99635d"
+    evidence: "docs/m8-validation.md"
+    outcome: "Native memory-bounded station-scoped Chat."
+
   - order: 9
-    id: M9
-    name: Song requests
-    date: 2026-07-13
-    commit: e748f27
-    outcome: Native library search, confirmation, and one-shot request submission.
+    id: "M09"
+    legacy_id: "M9"
+    name: "Song requests"
+    date: "2026-07-13"
+    commit: "e748f27"
+    evidence: "docs/m9-validation.md"
+    outcome: "Native search, confirmation, and one-shot request submission."
+
   - order: 10
-    id: M10
-    name: Request attribution and messages
-    date: 2026-07-14
-    commit: 73a0d89
-    outcome: Queue attribution and the verified SST request-message workflow.
+    id: "M10"
+    name: "Request attribution and messages"
+    date: "2026-07-14"
+    commit: "73a0d89"
+    evidence: "docs/m10-validation.md"
+    outcome: "Queue attribution and the verified SST request-message workflow."
+
   - order: 11
-    id: M11
-    name: Adaptive Alpha UI
-    date: 2026-07-14
-    commit: 4735f13
-    outcome: Responsive branded UI, previews, accessibility semantics, and exit flow.
+    id: "M11"
+    name: "Adaptive Alpha UI"
+    date: "2026-07-14"
+    commit: "4735f13"
+    evidence: "docs/m11-validation.md"
+    outcome: "Responsive branded UI, previews, accessibility semantics, and exit flow."
     joint: true
+
   - order: 12
-    id: M12
-    name: Queue-aware request availability
-    date: 2026-07-14
-    commit: 4735f13
-    outcome: Conservative station-scoped availability and fresh pre-submit checks.
+    id: "M12"
+    name: "Queue-aware request availability"
+    date: "2026-07-14"
+    commit: "4735f13"
+    evidence: "docs/m12-validation.md"
+    outcome: "Conservative station-scoped availability and pre-submit checks."
     joint: true
+
   - order: 13
-    id: M13
-    name: Independent Accounts UX
-    date: 2026-07-14
-    commit: 9ef1f1c
-    outcome: Five separately visible account states with session isolation.
+    id: "M13"
+    name: "Independent Accounts UX"
+    date: "2026-07-14"
+    commit: "9ef1f1c"
+    evidence: "docs/m13-validation.md"
+    outcome: "Five visible account states with station isolation."
+
   - order: 14
-    id: M14
-    name: Local personalization
-    date: 2026-07-14
-    commit: 81c2c4e
-    outcome: Default and last-station preferences separated from station-owned data.
+    id: "M14"
+    name: "Local personalization"
+    date: "2026-07-14"
+    commit: "81c2c4e"
+    evidence: "docs/m14-validation.md"
+    outcome: "Startup and station preferences separated from station-owned data."
+
   - order: 15
-    id: M15
-    name: Request history and membership
-    date: 2026-07-14
-    commit: b19d5fe
-    outcome: SST request history, cooldown, readiness, and explicit membership evidence.
+    id: "M15"
+    name: "Request activity and membership"
+    date: "2026-07-14"
+    commit: "b19d5fe"
+    evidence: "docs/m15-validation.md"
+    outcome: "SST history, cooldown, readiness, and membership evidence."
+
   - order: 16
-    id: M16
-    name: Secondary content access
-    date: 2026-07-14
-    commit: 90a7f98
-    outcome: Allowlisted same-station HTTPS pages opened in Android Custom Tabs.
+    id: "M16"
+    name: "Secondary content access"
+    date: "2026-07-14"
+    commit: "90a7f98"
+    evidence: "docs/m16-validation.md"
+    outcome: "Allowlisted same-station HTTPS Custom Tabs with no WebView."
+
   - order: 17
-    id: M18
-    name: StreamingSoundtracks.com certification
-    date: 2026-07-14
-    commit: 02dffa2
-    outcome: Representative public, authenticated, VIP, request, Favorites, and Chat coverage.
+    id: "M17"
+    legacy_id: "M18"
+    name: "StreamingSoundtracks.com certification"
+    date: "2026-07-14"
+    commit: "02dffa2"
+    evidence: "docs/m18-sst-certification.md"
+    outcome: "Public, authenticated, VIP, request, Favorites, and Chat coverage."
+
   - order: 18
-    id: M19
-    name: 1980s.FM certification
-    date: 2026-07-15
-    commit: 11f1ee3
-    outcome: Independent authenticated workflows and station behavior certified.
+    id: "M18"
+    legacy_id: "M19"
+    name: "1980s.FM certification"
+    date: "2026-07-15"
+    commit: "11f1ee3"
+    evidence: "docs/m19-1980s-certification.md"
+    outcome: "Independent authenticated and station-specific behavior."
+
   - order: 19
-    id: M20
-    name: Adagio.FM certification
-    date: 2026-07-15
-    commit: 5e985ae
-    outcome: Classical metadata and authenticated workflows certified.
+    id: "M19"
+    legacy_id: "M20"
+    name: "Adagio.FM certification"
+    date: "2026-07-15"
+    commit: "5e985ae"
+    evidence: "docs/m20-adagio-certification.md"
+    outcome: "Classical metadata plus authenticated workflows."
+
   - order: 20
-    id: M21
-    name: Death.FM certification
-    date: 2026-07-15
-    commit: 6757680
-    outcome: Compact Queue, sparse metadata, RIP boundaries, and authenticated workflows certified.
+    id: "M20"
+    legacy_id: "M21"
+    name: "Death.FM certification"
+    date: "2026-07-15"
+    commit: "6757680"
+    evidence: "docs/m21-death-certification.md"
+    outcome: "Compact Queue, sparse metadata, RIP boundaries, and authenticated workflows."
+
   - order: 21
-    id: M22
-    name: Entranced.FM certification
-    date: 2026-07-15
-    commit: 1e20eea
-    outcome: Extended Queue, legacy ICY punctuation, and authenticated workflows certified.
+    id: "M21"
+    legacy_id: "M22"
+    name: "Entranced.FM certification"
+    date: "2026-07-15"
+    commit: "1e20eea"
+    evidence: "docs/m22-entranced-certification.md"
+    outcome: "Extended Queue, legacy ICY punctuation, and authenticated workflows."
+
   - order: 22
-    id: M23.3
-    name: Android 16 and API 36 readiness
-    date: 2026-07-15
-    commit: 44632f1
-    outcome: Target API 36 migration, predictive Back, edge-to-edge, and device regression coverage.
+    id: "M22"
+    legacy_id: "M23.3"
+    name: "Android 16 and API 36 readiness"
+    date: "2026-07-15"
+    commit: "44632f1"
+    evidence: "docs/m23-api36-readiness.md"
+    outcome: "API 36 target, edge-to-edge, predictive Back, and regression evidence."
+
   - order: 23
-    id: M23.7
-    name: Adaptive launcher and store polish
-    date: 2026-07-15
-    commit: 924a38c
-    outcome: Legacy, adaptive, and monochrome launcher resources validated.
+    id: "M23"
+    legacy_id: "M23.7"
+    name: "Adaptive launcher and store polish"
+    date: "2026-07-15"
+    commit: "924a38c"
+    evidence: "docs/m23-launcher-polish.md"
+    outcome: "Legacy, adaptive, and monochrome launcher resources."
+
   - order: 24
-    id: M24
-    name: Sleep Timer
-    date: 2026-07-16
-    commit: b713783
-    evidence: docs/m24-sleep-timer-validation.md
-    outcome: Service-owned presets/custom countdown, restoration, system state, and deterministic expiry.
+    id: "M24"
+    name: "Sleep Timer"
+    date: "2026-07-16"
+    commit: "b713783"
+    evidence: "docs/m24-sleep-timer-validation.md"
+    outcome: "Service-owned bounded timer with restoration and deterministic expiry."
+
   - order: 25
-    id: M25
-    name: Cast / Audio-Output Selection
-    date: 2026-07-16
-    commit: 183ccc0
-    evidence: docs/m25-audio-output-validation.md
-    outcome: Native Android output chooser, accurate current-route state, phone/Bluetooth handoff and recovery, and an explicit capability-gated Cast boundary.
+    id: "M25"
+    name: "System Audio-Output Selection"
+    date: "2026-07-16"
+    commit: "183ccc0"
+    evidence: "docs/m25-audio-output-validation.md"
+    outcome: "Android-managed output chooser and accurate current-route state."
+
   - order: 26
-    id: M26
-    name: In-App Diagnostics
-    date: 2026-07-16
-    commit: 7aedbfc
-    evidence: docs/m26-diagnostics-validation.md
-    outcome: User-reviewed fixed-allowlist support snapshot, bounded transitions, explicit Android copy/share, and physical-Razr privacy validation.
+    id: "M26"
+    name: "In-App Diagnostics"
+    date: "2026-07-16"
+    commit: "7aedbfc"
+    evidence: "docs/m26-diagnostics-validation.md"
+    outcome: "User-reviewed fixed-allowlist support snapshot with explicit copy/share."
+
   - order: 27
-    id: M27.1
-    name: Local Chat-Mention Foundation
-    date: 2026-07-16
-    evidence: docs/m27-community-notification-validation.md
-    outcome: Station opt-ins, exact-name matching, baseline and duplicate suppression, blocked-author filtering, private Android alerts, and gated Chat navigation for the actively observed feed.
+    id: "M27"
+    legacy_id: "M27.1"
+    name: "Local Chat-Mention Notifications"
+    date: "2026-07-16"
+    commit: "afd563a"
+    evidence: "docs/m27-community-notification-validation.md"
+    outcome: "Opt-in exact-name alerts for actively observed Chat with safe filtering and navigation."
 
-workstreams:
-  - id: M23.1
-    name: Signed release candidate
-    state: active
-    state_label: In progress
-    summary: Protected Linux signing, exact upload-certificate checks, and Android developer-verification email confirmation pass; per-app Console status, version eligibility, and delivered-install validation remain.
-    evidence: docs/m23-release-candidate-audit.md
-  - id: M23.2
-    name: UGC safety and moderation
-    state: waiting
-    state_label: Waiting externally
-    summary: Native age, Terms, reveal, report, and block safeguards pass; administrator receipt reconciliation remains.
-    evidence: docs/m23-ugc-safety-validation.md
-  - id: M23.3
-    name: Android 16 and API 36
-    state: done
-    state_label: Complete
-    summary: API 36 targeting, predictive Back, edge-to-edge behavior, and connected-device validation are complete.
-    evidence: docs/m23-api36-readiness.md
-  - id: M23.4
-    name: Play review declarations
-    state: waiting
-    state_label: Waiting externally
-    summary: Local declaration packet and notification-video rehearsal are prepared; protected reviewer inputs and Console submission remain.
-    evidence: docs/m23-play-declaration-packet.md
-  - id: M23.5
-    name: Brand and content rights
-    state: waiting
-    state_label: Waiting externally
-    summary: Authorization request and private evidence-handling packet are prepared; written rights-holder confirmation remains.
-    evidence: docs/m23-owner-response-packet.md
-  - id: M23.6
-    name: Release device matrix
-    state: active
-    state_label: In progress
-    summary: Local emulator, real TalkBack service, network, performance, and Razr hinge checks pass; human audible review, Play delivery, and pre-launch remain.
-    evidence: docs/m23-device-compatibility.md
-  - id: M23.7
-    name: Launcher and store polish
-    state: done
-    state_label: Complete
-    summary: Density-specific legacy, adaptive, and Android 13 monochrome launcher resources are complete.
-    evidence: docs/m23-launcher-polish.md
 
-pre_alpha:
-  - id: M24
-    name: Sleep Timer
-    state: done
-    state_label: Complete
-    summary: Service-owned presets and custom duration, live remaining time, adjust/cancel, system cancellation state, restoration, and real-device expiry validation are complete.
-    evidence: docs/m24-sleep-timer-validation.md
-  - id: M25
-    name: Cast / Audio-Output Selection
-    state: done
-    state_label: Complete
-    summary: Android's native output switcher and live route state cover system-managed device, Bluetooth, wired/USB, and remote routes without a relay or new endpoint; Google Cast remains capability-gated.
-    evidence: docs/m25-audio-output-validation.md
-  - id: M26
-    name: In-App Diagnostics
-    state: done
-    state_label: Complete
-    summary: A user-reviewed fixed-allowlist snapshot covers app/build, coarse device/API, station, bounded playback/error/network/output state, and five enum-only transitions with explicit Android copy/share and no automatic transfer.
-    evidence: docs/m26-diagnostics-validation.md
-  - id: M27
-    name: Community Push Notifications
-    state: active
-    state_label: M27.1 complete · delivery pending
-    summary: The local exact-name detector, station controls, filtering, dedupe, private channel, and Chat navigation are complete for actively observed Chat. M27.2 true closed-app push and future PM delivery still require an authorized event source.
-    evidence: docs/m27-community-notification-validation.md
-  - id: M28
-    name: Alpha Publication
-    state: planned
-    state_label: Final pre-Alpha gate
-    summary: Revalidate the changed release candidate and publish the explicitly authorized signed bundle to internal or closed testing only after M23–M27 have closed.
-    evidence: docs/play-console-checklist.md
+roadmap:
+  - id: "M28"
+    legacy_id: "M23.2"
+    phase: "alpha-readiness"
+    name: "UGC Safety and Ongoing Moderation"
+    state: "waiting"
+    state_label: "Waiting externally"
+    blocking: true
+    dependencies: "Administrator receipt and operator ownership"
+    evidence: "docs/m23-ugc-safety-validation.md"
+    summary: "Native safeguards pass; report receipt and continuing moderation ownership remain."
+
+  - id: "M29"
+    legacy_id: "M23.4"
+    phase: "alpha-readiness"
+    name: "Play Declarations Privacy and Data Safety"
+    state: "waiting"
+    state_label: "Waiting externally"
+    blocking: true
+    dependencies: "Owner answers and Play Console"
+    evidence: "docs/m23-play-declaration-packet.md"
+    summary: "Local packet exists; exact-artifact reviewer access declarations retention and final video remain."
+
+  - id: "M30"
+    legacy_id: "M23.5"
+    phase: "alpha-readiness"
+    name: "Brand Content and Distribution Rights"
+    state: "waiting"
+    state_label: "Waiting externally"
+    blocking: true
+    dependencies: "Written rights-holder authorization"
+    evidence: "docs/m23-owner-response-packet.md"
+    summary: "Private evidence process is ready; written distribution authorization remains."
+
+  - id: "M31"
+    phase: "alpha-readiness"
+    name: "Payments External Links and Account Lifecycle"
+    state: "planned"
+    state_label: "Planned"
+    blocking: true
+    dependencies: "Live destination and Play program review"
+    evidence: "docs/ROADMAP.md"
+    summary: "Audit every Custom Tab purchase and account path then remove gate or lawfully implement it."
+
+  - id: "M32"
+    phase: "alpha-readiness"
+    name: "Session Controller Network and Supply-Chain Security"
+    state: "planned"
+    state_label: "Planned"
+    blocking: true
+    dependencies: "Sol security decisions"
+    evidence: "docs/ROADMAP.md"
+    summary: "Harden MediaSession authority sessions redirects station IDs dependencies and adversarial tests."
+
+  - id: "M33"
+    phase: "alpha-readiness"
+    name: "Request Transaction Integrity"
+    state: "planned"
+    state_label: "Planned"
+    blocking: true
+    dependencies: "Verified station capability data"
+    evidence: "docs/ROADMAP.md"
+    summary: "Revalidate station Queue account membership cooldown limits and identity before one-shot submit."
+
+  - id: "M34"
+    legacy_id: "M23.6"
+    phase: "alpha-readiness"
+    name: "Device Accessibility and Pre-launch Acceptance"
+    state: "active"
+    state_label: "In progress"
+    blocking: true
+    dependencies: "Test humans hardware and Play artifact"
+    evidence: "docs/m23-device-compatibility.md"
+    summary: "Local device coverage is strong; human audible alternative-input Play delivery and pre-launch evidence remain."
+
+  - id: "M35"
+    legacy_id: "M23.1"
+    phase: "alpha-readiness"
+    name: "Release Signing and Console Eligibility"
+    state: "active"
+    state_label: "In progress"
+    blocking: true
+    dependencies: "Owner-only Console state"
+    evidence: "docs/m23-release-candidate-audit.md"
+    summary: "Signing identity is established; device verification package/version eligibility and final signed path remain."
+
+  - id: "M36"
+    legacy_id: "M27.2 authorization"
+    phase: "notifications"
+    name: "Notification Event-Source Authorization"
+    state: "waiting"
+    state_label: "Waiting externally"
+    blocking: true
+    dependencies: "Authorized station event source"
+    evidence: "docs/m27-community-notification-validation.md"
+    summary: "Establish provider ownership payload authentication retention abuse outage and station support contracts."
+
+  - id: "M37"
+    legacy_id: "M27.2 implementation"
+    phase: "notifications"
+    name: "Secure Closed-App Notification Delivery"
+    state: "planned"
+    state_label: "Planned after M36"
+    blocking: true
+    dependencies: "M36"
+    evidence: "docs/ROADMAP.md"
+    summary: "Implement minimal opt-in duplicate-safe delivery without session forwarding or perpetual polling."
+
+  - id: "M38"
+    legacy_id: "M27.2 certification"
+    phase: "notifications"
+    name: "Notification Lifecycle and Privacy Certification"
+    state: "planned"
+    state_label: "Planned after M37"
+    blocking: true
+    dependencies: "M37"
+    evidence: "docs/ROADMAP.md"
+    summary: "Certify closed idle reboot network battery privacy deep-link and all-station behavior."
+
+  - id: "M39"
+    legacy_id: "M28 candidate slice"
+    phase: "alpha-distribution"
+    name: "Alpha Candidate and Documentation Freeze"
+    state: "planned"
+    state_label: "Planned"
+    blocking: true
+    dependencies: "M28–M38"
+    evidence: "docs/ROADMAP.md"
+    summary: "Freeze current-head signed artifacts version listing release notes roadmap and testing evidence."
+
+  - id: "M40"
+    legacy_id: "M28 delivery slice"
+    phase: "alpha-distribution"
+    name: "Play Alpha Delivery and Pre-launch Remediation"
+    state: "planned"
+    state_label: "Planned after M39"
+    blocking: true
+    dependencies: "M39"
+    evidence: "docs/play-console-checklist.md"
+    summary: "Upload inspect Play splits install and update through Play then resolve automated and reviewer findings."
+
+  - id: "M41"
+    legacy_id: "M28 publication slice"
+    phase: "alpha-distribution"
+    name: "Explicit Alpha Publication"
+    state: "planned"
+    state_label: "Planned after M40"
+    blocking: true
+    dependencies: "M40 and owner authorization"
+    evidence: "docs/play-console-checklist.md"
+    summary: "Publish internal or closed Alpha only after explicit authorization and verify support and rollback records."
+
+  - id: "M42"
+    phase: "production"
+    name: "Closed-Test Operations and Stabilization"
+    state: "planned"
+    state_label: "Planned after M41"
+    blocking: false
+    dependencies: "M41"
+    evidence: "docs/ROADMAP.md"
+    summary: "Maintain qualifying tester continuity gather feedback fix and retest then meet exit criteria."
+
+  - id: "M43"
+    phase: "production"
+    name: "Production Access and Policy Approval"
+    state: "planned"
+    state_label: "Planned after M42"
+    blocking: false
+    dependencies: "M42"
+    evidence: "docs/ROADMAP.md"
+    summary: "Submit testing feedback changes value and readiness evidence and resolve Play response."
+
+  - id: "M44"
+    phase: "production"
+    name: "Production Release and Staged Rollout"
+    state: "planned"
+    state_label: "Planned after M43"
+    blocking: false
+    dependencies: "M43 and owner authorization"
+    evidence: "docs/ROADMAP.md"
+    summary: "Stage the production release with health thresholds pause rollback and update validation."
+
+  - id: "M45"
+    phase: "production"
+    name: "Operational Reliability and Recertification"
+    state: "planned"
+    state_label: "Planned"
+    blocking: false
+    dependencies: "M41 onward"
+    evidence: "docs/ROADMAP.md"
+    summary: "Maintain quality support station contracts rights moderation policies dependencies and key recovery."
+
+  - id: "M46"
+    phase: "future"
+    name: "Architecture Sustainability"
+    state: "planned"
+    state_label: "Planned post-Alpha"
+    blocking: false
+    dependencies: "Evidence-driven post-Alpha window"
+    evidence: "docs/future-scope.md"
+    summary: "Split oversized feature boundaries while preserving immutable state repositories and service ownership."
+
+  - id: "M47"
+    legacy_id: "M17 repair gate"
+    phase: "future"
+    name: "Private Messages Server Repair and Protocol Certification"
+    state: "deferred"
+    state_label: "Deferred"
+    blocking: false
+    dependencies: "Site-owner server repair"
+    evidence: "docs/future-scope.md"
+    summary: "Resume only after delivery limits isolation and error behavior are repaired and verified."
+
+  - id: "M48"
+    phase: "future"
+    name: "Native Private Message Reading"
+    state: "deferred"
+    state_label: "Deferred after M47"
+    blocking: false
+    dependencies: "M47"
+    evidence: "docs/future-scope.md"
+    summary: "Add bounded protected Inbox and Sent reading with explicit lifecycle states."
+
+  - id: "M49"
+    phase: "future"
+    name: "Private Message Compose Reply and Send"
+    state: "deferred"
+    state_label: "Deferred after M48"
+    blocking: false
+    dependencies: "M48"
+    evidence: "docs/future-scope.md"
+    summary: "Add preview confirmation one-shot mutation and indeterminate-delivery recovery."
+
+  - id: "M50"
+    phase: "future"
+    name: "Private Message Five-Station and Notification Certification"
+    state: "deferred"
+    state_label: "Deferred after M49 and M38"
+    blocking: false
+    dependencies: "M49 and M38"
+    evidence: "docs/future-scope.md"
+    summary: "Independently certify every station and optional authorized notification delivery."
+
+  - id: "M51"
+    legacy_id: "Forum F1"
+    phase: "future"
+    name: "Verified Forum Links"
+    state: "planned"
+    state_label: "Planned"
+    blocking: false
+    dependencies: "Route authorization"
+    evidence: "docs/future-scope.md"
+    summary: "Add only independently verified station Forum routes to trusted Custom Tabs."
+
+  - id: "M52"
+    legacy_id: "Forum F2"
+    phase: "future"
+    name: "Native Forum Read-Only Foundation"
+    state: "planned"
+    state_label: "Planned after M51"
+    blocking: false
+    dependencies: "M51 and retrieval authorization"
+    evidence: "docs/future-scope.md"
+    summary: "Add bounded repository-backed native categories threads posts safety gates and browser fallback."
+
+  - id: "M53"
+    legacy_id: "Forum F3"
+    phase: "future"
+    name: "Authenticated Forum Participation"
+    state: "planned"
+    state_label: "Planned after M52"
+    blocking: false
+    dependencies: "M52 and mutation authorization"
+    evidence: "docs/future-scope.md"
+    summary: "Add certified previews one-shot compose and reply plus moderation boundaries."
+
+  - id: "M54"
+    legacy_id: "Forum F4"
+    phase: "future"
+    name: "Forum Five-Station and Notification Certification"
+    state: "planned"
+    state_label: "Planned after M53 and M38"
+    blocking: false
+    dependencies: "M53 and M38"
+    evidence: "docs/future-scope.md"
+    summary: "Certify all stations devices accessibility lifecycle and optional authorized notifications."
+
+  - id: "M55"
+    phase: "future"
+    name: "Google Cast Feasibility and Certification"
+    state: "planned"
+    state_label: "Research gated"
+    blocking: false
+    dependencies: "Rights and receiver compatibility"
+    evidence: "docs/future-scope.md"
+    summary: "Verify permitted stream use receiver lifecycle and five-station behavior before implementation."
+
+  - id: "M56"
+    phase: "future"
+    name: "Extended Station Capability Certification"
+    state: "planned"
+    state_label: "Research gated"
+    blocking: false
+    dependencies: "Independent live evidence"
+    evidence: "docs/future-scope.md"
+    summary: "Verify non-SST request messages activity cooldown membership and other differences."
+
+  - id: "M57"
+    phase: "future"
+    name: "Account Registration Recovery and Management Access"
+    state: "planned"
+    state_label: "Research gated"
+    blocking: false
+    dependencies: "M31 and station authorization"
+    evidence: "docs/future-scope.md"
+    summary: "Verify permitted routes then choose trusted browser or authorized native interfaces."

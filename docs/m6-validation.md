@@ -1,4 +1,4 @@
-# M6 queue and history validation
+# M06 queue and history validation
 
 Validated on July 13, 2026.
 

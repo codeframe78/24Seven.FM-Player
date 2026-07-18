@@ -1,37 +1,98 @@
-# Future product scope
+# Deferred and future product scope
 
-## Completed scope reference — Request messages
+This file expands M46–M57 from the canonical [roadmap](ROADMAP.md). None of these milestones blocks M41 Alpha
+Publication unless the owner explicitly promotes it into the Alpha contract. All remain fully native; no phase may add
+a WebView, share Administrator sessions, or infer one station's capability from another.
 
-StreamingSoundtracks.com's exact optional-message form is implemented and verified behind a station capability. The other four stations remain disabled until their own post-request forms are independently verified.
+## M46 — Architecture Sustainability
 
-## M17 — Private Messages
+- Split oversized Compose and ViewModel files only along established feature, immutable-state, and repository boundaries.
+- Preserve service-owned playback, protected-session isolation, and station capability flags.
+- Add modules only when a boundary is stable enough to justify the build and ownership cost.
+- Use performance evidence before adding Baseline Profile, Macrobenchmark, or optimization infrastructure.
+- Preserve source compatibility and regression evidence while improving testability and iteration speed.
 
-Signed-in members should be able to use a fully native station-scoped Private Messages experience: Inbox, message reading, composing, replying, explicit user-initiated sending, and receiving/refreshing. Least-privileged protocol research and use are authorized, but implementation remains deferred until the underlying website/server issues are fixed. Production refresh limits, notification behavior, local retention, deletion semantics, attachment scope, and cross-station account behavior must be defined before implementation. Message bodies must not be logged, committed, or retained outside the minimum product requirement; protected station sessions remain in Android-protected storage.
+## M47–M50 — Private Messages
 
-When M17 becomes available, new-message events must integrate with the opt-in M27 Community Push Notifications architecture. A notification may identify the station and sender only within the approved minimal payload, must respect blocked users and safety gates, and must deep-link through authentication into the originating Inbox without exposing message text on a lock screen unless the user explicitly chooses a more revealing privacy setting.
+### M47 — Server Repair and Protocol Certification
 
-## Completed M24 — Sleep Timer
+Private Messages remain deferred. Resume only after the site owner repairs the reproduced server delivery failure and
+production behavior can establish authenticated routes, send limits, station isolation, error/indeterminate results,
+moderation boundaries, and representative accounts. Do not expose a partial shipping interface.
 
-The service-owned sleep countdown is complete with accessible presets and custom duration, remaining-time state, adjust/cancel actions, MediaSession/system cancellation state, service-recreation recovery, and deterministic expiry through the existing player. Pause and station switches preserve the deadline; manual Stop cancels it; monotonic elapsed time includes device sleep; inconsistent post-reboot/wall-clock state fails safe. See [M24 validation](m24-sleep-timer-validation.md).
+### M48 — Native Private Message Reading
 
-## Completed M25 — Cast / Audio-Output Selection
+- Define bounded station-scoped Inbox/Sent domain models and repository contracts.
+- Reuse only the originating protected station session.
+- Provide loading, empty, stale, expired, error, and unsupported states.
+- Keep message content memory-bounded and exclude it from diagnostics, logs, notifications, and public evidence.
 
-The dedicated Android audio-output path is complete. The Player exposes immutable current-route state and opens Android's native system chooser for device, Bluetooth, wired/USB, and system-managed remote routes while preserving the existing MediaSession and audio-focus owner. No active discovery scan, relay, proxy, or new endpoint was added. Google Cast remains intentionally capability-gated because its separate receiver compatibility and permitted stream use are not verified. Routing is not described as securing or proxying the source: Media3 still connects directly to the station-provided HTTP audio relays, while non-audio station traffic remains HTTPS. See [M25 validation](m25-audio-output-validation.md).
+### M49 — Compose, Reply, and Send
 
-## Completed M26 — In-App Diagnostics
+- Research CSRF, reply/recipient discovery, encoding, server limits, and success/rejection/indeterminate responses.
+- Require explicit preview and confirmation.
+- Submit once with no automatic retry; an indeterminate result directs the user to inspect Inbox/Sent before any action.
+- Keep drafts and tokens transient unless a separate encrypted-draft design is approved.
 
-The native More screen now provides an explicit, user-reviewed diagnostic snapshot and Android copy/share flow. A fixed allowlist covers app/build, Android/API and coarse device class, selected station, bounded playback/error category, validated-network availability, broad route type, and at most five enum-only recent transitions. Raw errors and human-readable route names are reduced to categories, and credentials, sessions, CSRF values, account/community/report content, endpoints, signing data, identifiers, and raw logs have no report input path. The formatter/redaction suite, full 141-test unit suite, lint, focused physical-Razr Compose test, clipboard confirmation, and system Share chooser pass. See [M26 validation](m26-diagnostics-validation.md).
+### M50 — Five-Station and Notification Certification
 
-## M27 — Community Push Notifications
+- Certify read/send/logout/expiry independently for all five stations.
+- Validate device, accessibility, lifecycle, and account-isolation behavior.
+- Add new-message notifications only through M36–M38 after their authorization and privacy gates pass.
 
-M27.1 is complete for the existing actively observed Chat feed. The app offers station-scoped opt-in controls, performs case-insensitive exact-display-name matching on-device, establishes the first snapshot as a no-alert baseline, ignores locally blocked authors and the signed-in user's own posts, suppresses duplicate snapshots with bounded memory-only fingerprints, posts through a dedicated private Android notification channel without message text, and routes a tap to the originating station's gated Chat screen. It does not increase the existing 30-second polling cadence or observe Chat outside the existing Chat-selected lifecycle.
+## M51–M54 — Forum access program
 
-Before M28 Alpha publication, add an opt-in notification path for exact mentions of the signed-in member's station display identity in Chat. The experience must remain station-scoped, ignore locally blocked authors, suppress duplicates, expose per-station controls and dedicated event channels, and deep-link to the originating station's Chat without bypassing the age, Terms, or mature-content gates.
+### M51 — Verified Forum Links
 
-The same architecture must support opt-in new-Private-Message notifications once M17 is repaired and implemented. If M17 ships before M28, live new-message push becomes part of M27's completion gate. If M17 remains deferred, the PM event type, controls, deep-link contract, and tests remain capability-gated with M17 and do not expose a nonfunctional Inbox.
+- Verify each station's exact public HTTPS Forum route, TLS behavior, browser rendering, and permitted use.
+- Add only verified station-scoped routes to the existing trusted Custom Tab directory.
+- Keep browser cookies and sign-in separate from protected app sessions.
+- Extend PT-18 and the station matrix; retain an explicit unavailable state where no route is verified.
 
-M27.2 begins with delivery research. The current application has no developer-operated backend and intentionally observes Chat only while Chat is selected. True push therefore requires an authorized station-side event source, webhook, or privacy-compatible relay. Perpetual background polling, misleadingly periodic WorkManager checks, or forwarding protected station sessions to a relay are not acceptable substitutes. Before implementation, document payload minimization, Chat/PM event separation, lock-screen privacy, identity matching, authentication, retention/deletion, abuse controls, outage and duplicate behavior, traffic/battery impact, station support differences, and the resulting privacy and Google Play Data Safety declarations.
+### M52 — Native Forum Read-Only Foundation
 
-## M28 — Alpha Publication
+- Obtain authorization for native retrieval, fields, cadence, and sanitized fixtures before implementing an adapter.
+- Define repository contracts and immutable models for categories, boards, threads, posts, authors, timestamps,
+  pagination, and loading/empty/error/stale states.
+- Render verified semantic content in Compose without arbitrary HTML; use trusted browser fallback for unsupported content.
+- Keep data bounded and memory-only initially, cancel observation when leaving, and clear content on station changes.
+- Apply age, Terms, mature-content reveal, local blocks, and accessible report actions before displaying Forum UGC.
 
-After M23–M27 close, rebuild and revalidate the signed candidate, declarations, device coverage, reviewer instructions, pre-launch results, and Play-delivered install/update behavior. Publication remains an explicit owner-authorized internal or closed testing action, never an automatic consequence of a green local build.
+### M53 — Authenticated Forum Participation
+
+- Certify session reuse, form discovery, CSRF, encoding, preview, limits, and result classification per station.
+- Add explicit compose/reply preview and confirmation with transient drafts and one-shot submission.
+- Extend report/block behavior without claiming indeterminate reports were delivered.
+- Keep editing, deletion, attachments, reactions, polls, and private boards disabled until independently authorized.
+
+### M54 — Five-Station and Notification Certification
+
+- Certify public/authenticated reading and intended participation for all five stations, including pagination,
+  malformed/sparse content, logout, lifecycle, large text, assistive access, adaptive layouts, and Razr use.
+- Add Forum notifications only through M36–M38 with minimal, station-scoped, duplicate-safe, block-aware payloads.
+- Retain Custom Tabs wherever native behavior is unsupported or fails safely.
+
+## M55 — Google Cast Feasibility and Certification
+
+M25 completed Android's system-managed audio-output path; it did not implement or promise Cast.
+
+- Verify permitted stream use and receiver compatibility before implementation.
+- Resolve station/rights implications, route ownership, fallback, reconnection, metadata, notification, and timer behavior.
+- Preserve a single logical playback owner and do not create a custom audio relay.
+- Certify all five stations and physical sender/receiver lifecycle before exposing a Cast capability.
+- If these gates cannot be met, record Cast as an explicit non-goal rather than leaving an implied promise.
+
+## M56 — Extended Station Capability Certification
+
+- Independently research non-SST request messages, request activity/cooldown, membership, and other station differences.
+- Use explicit unsupported states where live evidence is absent.
+- Do not enable capability flags from structural similarity or a different station's result.
+- Add parser fixtures, repository tests, authenticated device evidence, and privacy/declaration updates for each capability.
+
+## M57 — Account Registration, Recovery, and Management Access
+
+- Verify exact public HTTPS registration, password recovery, account management, and deletion routes per station.
+- Reconcile every route with M31 payments/account-creation/deletion compliance before exposing it.
+- Prefer trusted Custom Tabs initially; app and browser sessions remain separate.
+- A native interface requires explicit authorization, repository contracts, protected-session design, error/indeterminate
+  behavior, privacy review, and independent five-station certification.

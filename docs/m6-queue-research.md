@@ -1,4 +1,4 @@
-# M6 queue and history research
+# M06 queue and history research
 
 Observed and authorized on July 13, 2026. This note contains no cookies, credentials, private messages, device identifiers, or track values.
 

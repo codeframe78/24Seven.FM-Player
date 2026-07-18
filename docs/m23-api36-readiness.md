@@ -1,6 +1,6 @@
-# M23.3 Android 16 / API 36 readiness
+# M22 Android 16 / API 36 readiness
 
-Completed July 15, 2026 as the first implementation slice of the expanded M23 Play-testing readiness program.
+Completed July 15, 2026 as the first implementation slice of the expanded M28–M35 Play-testing readiness program.
 
 ## Outcome
 
@@ -41,12 +41,12 @@ Completed July 15, 2026 as the first implementation slice of the expanded M23 Pl
 
 The unsigned release AAB produced for this migration was 17,323,660 bytes with SHA-256
 `1B26162260868900B083DE5828F1431E3E203ABF74887345B0649EBEC66077CF`. It is local build evidence only and must not be
-distributed. M23.1 still requires a fresh protected signed candidate from the final current HEAD.
+distributed. M35 still requires a fresh protected signed candidate from the final current HEAD.
 
 ## Remaining boundaries
 
 - API 26 minimum-runtime, 16 KB page-size runtime, genuine tablet/unfolded foldable, physical Razr hinge, Play-delivered
-  installation/update, and Play pre-launch evidence remain M23.6 work.
-- No meaningful visual feature changed in M23.3, so no new repository or Discord screenshot was created.
-- M23.2 UGC safety/moderation is the recommended next milestone and must begin with an authorized reporting/moderation
+  installation/update, and Play pre-launch evidence remain M34 work.
+- No meaningful visual feature changed in M22, so no new repository or Discord screenshot was created.
+- M28 UGC safety/moderation is the recommended next milestone and must begin with an authorized reporting/moderation
   destination rather than an invented private endpoint.

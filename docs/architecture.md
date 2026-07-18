@@ -66,7 +66,7 @@ strings to Compose. It never infers attribution from unrelated links. See `docs/
 `SongRequestRepository` owns station-scoped transient search, album, suggestion, eligibility, confirmation, and
 submission state. Catalog reads are user initiated and never polled; explicit random and least-played actions use
 the station's own suggestion parameters. The remote adapter accepts only same-origin HTTPS album and request actions,
-and submission requires the M7 protected station session. Compose receives immutable state and emits search,
+and submission requires the M07 protected station session. Compose receives immutable state and emits search,
 suggestion, album, prepare, cancel, and confirm actions upward. A state-changing request is made only after
 two explicit actions and is never retried. StreamingSoundtracks.com's separately verified request-message
 capability adds a transient 80-character field to confirmation; a non-blank value is posted only after the song
@@ -107,7 +107,7 @@ keeps its station-issued account material transient, enforces the 255-character 
 user's message, and performs one confirmation read. Cookies and posting material never reach the ViewModel or UI.
 See `docs/m8-chat-research.md`.
 
-The opt-in M27.1 notification slice remains behind `CommunityNotificationRepository`. `MainViewModel` supplies only
+The opt-in M27 notification slice remains behind `CommunityNotificationRepository`. `MainViewModel` supplies only
 the signed-in station identity, immutable Chat snapshot, and station-local block identities while Chat is selected. The
 first snapshot establishes a no-alert baseline; later exact-name matches exclude the signed-in author and locally blocked
 authors while still fingerprinting blocked messages so unblocking cannot surface stale alerts. Duplicate suppression keeps at most 200 SHA-256 message fingerprints per enabled station in memory and never

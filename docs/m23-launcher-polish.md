@@ -1,4 +1,4 @@
-# M23.7 adaptive launcher and store polish
+# M23 adaptive launcher and store polish
 
 Date: July 15, 2026
 

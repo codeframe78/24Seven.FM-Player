@@ -1,19 +1,19 @@
 # Google Play Alpha setup checklist
 
-The Google Play developer account was approved on July 14, 2026. Use this during M23–M28; do not place Console credentials, reviewer credentials, upload keys, passwords, or tester email lists in Git.
+The Google Play developer account was approved on July 14, 2026. Use this during M28–M35 and M39–M41; do not place Console credentials, reviewer credentials, upload keys, passwords, or tester email lists in Git.
 
 ## Local preparation already complete
 
 - Application ID: `com.codeframe78.twentyfourseven.player`
 - Candidate: `0.1.0-alpha01`, version code 2
 - Target SDK: 36; compile SDK: 36; minimum SDK: 26
-- The current M23.1 audit verifies the production manifest, dependencies/licenses, explicit backup exclusions,
+- The current M35 audit verifies the production manifest, dependencies/licenses, explicit backup exclusions,
   protected signed release outputs, the exact registered upload certificate, and 16 KB APK/ELF packaging. The native notice is under More → Privacy →
   Open-source licenses; see `docs/m23-release-candidate-audit.md`.
 - Google's July 16 Android developer-verification email confirms that the account's Play apps were automatically
-  registered to the verified developer account. Sanitized evidence is retained in the M23.1 audit; per-app status must
+  registered to the verified developer account. Sanitized evidence is retained in the M35 audit; per-app status must
   still be confirmed in Play Console Home.
-- Current Play target-level check (July 15, 2026): target API 35 remains accepted until August 31, 2026, when new mobile apps and updates must target API 36. M23.3 migrated early so the closed-test and update path do not depend on that deadline.
+- Current Play target-level check (July 15, 2026): target API 35 remains accepted until August 31, 2026, when new mobile apps and updates must target API 36. M22 migrated early so the closed-test and update path do not depend on that deadline.
 - Privacy notice, Alpha testing guide, release notes, permission review, and device validation are complete.
 - Gradle accepts Play upload signing only from four `TWENTYFOURSEVEN_UPLOAD_*` environment variables. Supplying a partial set fails configuration.
 - `scripts/validate-play-bundle.ps1` builds the release AAB, requires a real signature, and prints its SHA-256 without revealing signing inputs.
@@ -79,7 +79,7 @@ The copy-ready, non-secret portion of those declarations is maintained in `docs/
 - **Data safety:** Internal-only testing is currently exempt, but closed/open/production releases require an accurate declaration. Use `docs/m23-data-safety.md` as the project worksheet rather than answering from memory. Account credentials and explicit abuse reports are submitted directly to the selected station, station sessions are encrypted locally, chat/report data is not persisted by the app, and the app has no analytics or developer backend.
 - **Privacy policy:** Completed on July 15, 2026. The active public HTTPS page is `https://codeframe78.github.io/24Seven.FM-Player/`; the same canonical policy remains available as native text under More in the app.
 - **Account deletion:** The app does not create station accounts; it only signs into pre-existing station accounts and can remove the local session with Sign out. Confirm the appropriate Console declaration when completing App content.
-- **Target audience/content rating:** The owner selected **18+** on July 15, 2026. The service community is predominantly long-standing adult members, and the app is not designed or presented as a children's product. M23.2 now hides community content by default behind an adult age screen, versioned Terms acceptance, and a separate reveal action; accurate content-rating answers are still required. Console entry remains blocked until reusable reviewer-access details are saved.
+- **Target audience/content rating:** The owner selected **18+** on July 15, 2026. The service community is predominantly long-standing adult members, and the app is not designed or presented as a children's product. M28 now hides community content by default behind an adult age screen, versioned Terms acceptance, and a separate reveal action; accurate content-rating answers are still required. Console entry remains blocked until reusable reviewer-access details are saved.
 - **Foreground service:** Declare only **Media playback** for `FOREGROUND_SERVICE_MEDIA_PLAYBACK`. Use the copy and demonstration sequence in `docs/m23-play-declaration-packet.md`; upload or link the final reviewer-accessible video through Console without committing account data.
 
 ## Release progression

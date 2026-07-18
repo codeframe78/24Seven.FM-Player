@@ -1,4 +1,4 @@
-# M23.6 accessibility and large-text validation
+# M34 accessibility and large-text validation
 
 Validated July 16, 2026 for the `0.1.0-alpha01` candidate.
 
@@ -8,7 +8,7 @@ The native Compose shell remains usable with Android font scale 2.0 and an enlar
 medium Fold, closed Fold, and expanded Tablet windows. The built-in Google TalkBack service also traverses the current
 candidate on a phone, all three tested Fold postures, and Tablet landscape/portrait with descriptive accessibility
 focus and no remaining unlabeled actionable nodes in the inspected surfaces. This closes the local large-text/reflow
-and service-level TalkBack checkpoints within M23.6; human audible-speech review, Play-delivered testing, and the Play
+and service-level TalkBack checkpoints within M34; human audible-speech review, Play-delivered testing, and the Play
 pre-launch report remain external gates.
 
 ## Defects corrected

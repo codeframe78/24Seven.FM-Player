@@ -1,8 +1,8 @@
-# M7 authentication validation
+# M07 authentication validation
 
 ## Result
 
-M7 native station authentication is complete. The implementation remains fully native and station-scoped,
+M07 native station authentication is complete. The implementation remains fully native and station-scoped,
 and it does not expand authorization to chat or song-request submission.
 
 ## Automated coverage
@@ -33,7 +33,7 @@ captured in test output or committed.
 Natural server expiry was not waited out. The expiry path uses the same strict signed-in response parser during
 online restoration: a reachable anonymous response clears protected session state, while a temporary network
 failure preserves the protected cached identity and leaves public playback available. A future supervised run
-may record the server's natural session lifetime without changing the M7 boundary.
+may record the server's natural session lifetime without changing the M07 boundary.
 
 ## Remaining boundaries
 

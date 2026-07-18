@@ -1,8 +1,8 @@
-# M8 chat validation
+# M08 chat validation
 
 ## Result
 
-M8 native station chat is complete. Chat reading is enabled across all five stations under the documented
+M08 native station chat is complete. Chat reading is enabled across all five stations under the documented
 administrator authorization. Posting is exposed only when the selected station has a protected signed-in session.
 No WebView, persisted chat history, captured session material, or live message fixture was added.
 

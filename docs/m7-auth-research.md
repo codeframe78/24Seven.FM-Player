@@ -1,4 +1,4 @@
-# M7 authentication research
+# M07 authentication research
 
 ## Authorization
 
@@ -15,7 +15,7 @@ This authorization does not yet cover chat reads/writes or song-request submissi
 
 ## Scope and boundary
 
-M7 adds native account authentication under the authorization above. The earlier authorization for public
+M07 adds native account authentication under the authorization above. The earlier authorization for public
 queue and history polling remains separate and does not authorize chat or request submission.
 
 The implementation includes a station-scoped `AuthRepository`, immutable authentication states, a native

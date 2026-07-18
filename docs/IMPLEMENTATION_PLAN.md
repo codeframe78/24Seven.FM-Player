@@ -1,134 +1,103 @@
 # Implementation plan
 
-Updated July 16, 2026 after completing the M27.1 local Chat-mention notification foundation. Estimates are active Codex elapsed time in this environment, including inspection, implementation, Gradle validation, documentation, Git, and remote confirmation—not traditional human developer time.
+Updated July 18, 2026 after the complete roadmap renumbering and release-gap audit.
 
-## Planning model
+The canonical milestone sequence, state, dependency, and completion gate live in [ROADMAP.md](ROADMAP.md). Historical
+IDs translate through [MILESTONE_MIGRATION.md](MILESTONE_MIGRATION.md). This file describes how the remaining work is
+executed; it does not create a competing roadmap.
 
-- M1–M16 and M18–M22 are complete and retain their existing evidence and published checkpoints.
-- M17 is the remaining shared capability, using immutable Compose state, repository contracts, capability flags, and station-isolated protected sessions once its external blocker clears.
-- M18–M22 certify the shared implementation against each station. They are hardening and evidence gates, not station-specific application forks.
-- Each station's representative native login, protected restoration, isolation, authenticated surface, and logout flow is now a hard completion gate. Public/device evidence may be gathered early but does not advance the active station order.
-- M23 is an XL Play-testing readiness program divided into M23.1–M23.7 below; M23.3 and M23.7 are complete.
-- M24 Sleep Timer, M25's dedicated Android audio-output path, M26 In-App Diagnostics, and M27.1's local Chat-mention foundation are complete. M27.2 reliable background delivery remains the required pre-Alpha feature slice. M28 is the renumbered authorized publication gate. Google Cast remains capability-gated behind verified receiver compatibility and permitted stream use rather than blocking M25's supported `and/or` route-selection outcome.
-- M27.1 safely reuses the existing Chat-selected 30-second observation: it adds opt-in station controls, exact-name matching, first-snapshot baselining, blocked-author filtering, duplicate suppression, a private notification channel, and Chat navigation without increasing polling. M27.2 still requires an authorized server-side event source or push relay; continuous background Chat polling is not an acceptable substitute. New-Private-Message notifications use the same architecture and become a live completion gate if M17 is repaired and shipped before M28; otherwise they remain capability-gated with deferred M17.
-- Private Messages remains numbered as M17 but deferred pending legacy server repair and verified production limits. Inbox and Sent Box discovery worked, while New Message selection remained suspect and a profile-originated MorgHubby test appeared to submit without delivery; the site owner has the reproduced result.
-- Early M23 readiness artifacts are preserved. M23.1's current audit covers the production manifest, dependency/license inventory, explicit backup exclusions, 16 KB APK/ELF packaging, a protected Ubuntu build from commit `2086ab9` whose AAB/APK signer matches the registered upload certificate, and Google's July 16 confirmation that the account's Play apps were automatically registered for Android developer verification. Per-app Console status, version-code eligibility, and Play delivery remain open. The Play developer account is approved; UGC reconciliation, Play review declarations, explicit rights evidence, release-device closure, and publication authorization remain dependencies.
+## Planning and model routing
 
-## Verified completion order
+- Sol plans architecture, authorization, security, privacy, release, and final acceptance decisions.
+- Terra implements approved bounded changes, tests, and documentation.
+- Luna handles source inventories, mechanical synchronization, and structured formatting that is checked against the
+  authoritative source.
+- Any unresolved playback ownership, authentication/session, request eligibility, UGC, notification delivery, signing,
+  or publication decision returns to Sol before implementation continues.
 
-The completed milestone sequence, derived from commit timestamps and milestone evidence, is:
+No milestone may introduce a WebView, a second player, administrator runtime code, cross-station session sharing,
+unverified stream addresses, background polling represented as push, or undocumented server behavior.
 
-`M1 → M2 → M3 → M4 → M5 → M6 → M7 → M8 → M9 → M10 → M11/M12 (joint checkpoint) → M13 → M14 → M15 → M16 → M18 → M19 → M20 → M21 → M22 → M23.3 → M23.7 → M24 → M25 → M26 → M27.1`
+## Current program
 
-M17 is intentionally absent because it remains deferred. The other M23 IDs are active workstreams with partial checkpoints, not completed milestones. The README contains the commit-linked chronological record; milestone IDs remain stable so existing validation documents and requirements do not need to be renumbered.
+M01–M27 are achieved checkpoints. Their historical commits and validation remain intact.
 
-## Task complexity protocol
+The active program is M28–M35 Alpha readiness:
 
-Before code changes for every roadmap task, state its Task Complexity Level and a brief milestone-specific approach:
+| ID | Size | State | Implementation focus | Principal dependency |
+| --- | --- | --- | --- | --- |
+| M28 UGC Safety and Ongoing Moderation | M | Waiting externally | Reconcile the authorized native safety implementation with verified receipt, responsible operator, and continuing all-station moderation | Administrator/operator evidence |
+| M29 Play Declarations, Privacy, and Data Safety | M | Waiting externally | Exact-artifact privacy/Data Safety, content rating, reviewer access, retention/deletion, and foreground-media evidence | Owner answers and Play Console |
+| M30 Brand, Content, and Distribution Rights | S | Waiting externally | Preserve private rights evidence and record only sanitized completion facts | Written rights-holder authorization |
+| M31 Payments, External Links, and Account Lifecycle | M | Planned | Audit every shipped Custom Tab and downstream purchase/account path; remove, gate, or lawfully implement any incompatible route | Live destination behavior and Play program eligibility |
+| M32 Session, Controller, Network, and Supply-Chain Security | XL, split | Planned | Controller command policy, protected-session coherence, trusted redirects, station-ID migration, dependency/action integrity, and adversarial tests | Sol security decisions and representative server behavior |
+| M33 Request Transaction Integrity | L | Planned | Fresh station/Queue/account/membership/cooldown/limit checks, exact status contract, station identity, and one-shot submission | Verified station capability data |
+| M34 Device, Accessibility, and Pre-launch Acceptance | L | In progress | Human audible TalkBack, alternative input, adaptive/device coverage, Play delivery/update, and pre-launch evidence | Test hardware, humans, and Play artifact |
+| M35 Release Signing and Console Eligibility | M | In progress | Protected signer path, physical-device verification, package registration, version-code eligibility, and repeatable signed build | Owner-only Console state |
 
-- Level 1 — Scaffold & Boilerplate: low reasoning; prioritize speed, Android best practices, clean architecture, concise production-ready code, and minimal explanation.
-- Level 2 — Feature Logic & API Integration: medium reasoning; emphasize robust errors, immutable ViewModel state, coroutine/thread safety, implementation detail, test recommendations, and clear state-flow explanation.
-- Level 3 — Architectural Refactoring & System Design: high reasoning; compare alternatives, justify the chosen scalable pattern, and assess performance, dependency-injection, maintenance, and side effects.
+M31–M33 are audit additions and must close before M39 freezes a candidate. M34 must be rerun where those changes alter
+observable behavior. M35's current signing checkpoint is valuable evidence, but it is not a final candidate because the
+codebase has changed since that artifact was built.
 
-This classification supplements the required XS–XXL T-shirt size, rationale, estimated duration, confidence check, and high-level task breakdown. Every pushed project commit must be posted as a concise change-and-verification summary to the configured Discord project thread, with delivery verified before final handoff; completed roadmap milestones must be identified explicitly. Significant visual changes must also include repository and Discord screenshots. A backend-only milestone should explicitly state that it introduced no meaningful visual surface instead of reusing an unrelated image.
+## Notification delivery program
 
-## Current milestone
+| ID | Size | State | Implementation focus |
+| --- | --- | --- | --- |
+| M36 Notification Event-Source Authorization | Architecture gate | Waiting externally | Identify an authorized station event source, webhook, or privacy-compatible relay and document ownership, payloads, authentication, retention/deletion, abuse, outage, and station support |
+| M37 Secure Closed-App Notification Delivery | L | Planned after M36 | Minimal opt-in events, station/token isolation, duplicate safety, sign-out/reinstall behavior, and no protected-session forwarding or perpetual polling |
+| M38 Notification Lifecycle and Privacy Certification | L | Planned after M37 | Foreground/background/closed/idle/reboot/network testing, latency, battery/traffic, payload privacy, deep-link safety, and all-station coverage |
 
-### M23 — Play-Testing Readiness Program
+M27 remains complete for exact-name local notifications produced from the actively observed Chat feed. It is not
+closed-app push and does not authorize M37.
 
-- Task Complexity Level: 2 — Feature Logic & API Integration
-- Size: XL as an umbrella, divided into seven S–L sub-milestones
-- Estimated elapsed time: 3–6 focused days plus owner and station-side input
-- Usage intensity: Medium–High across the complete program
-- Confidence: Medium
-- Outcome: retain the completed Alpha preparation while closing every release-artifact, UGC, platform-target, Play-review, rights, device, and store-quality boundary needed for a defensible Google Play test release.
-- Expected layers: release configuration, domain/repository/UI policy work for UGC, Android 16 behavior validation, secure local signing handoff, privacy/data-safety reconciliation, Play declarations, bundle/APK inspection, device testing, tester documentation, and final repository/Discord evidence.
-- Dependencies: approved Google Play developer account, protected upload identity, administrator reconciliation of the authorized moderation-report test, written brand/content authorization, reusable reviewer accounts, Play App Signing, and explicit authorization before any publication action.
-- Principal risks: shipping publicly accessible UGC without required moderation controls, missing the August 31, 2026 API 36 deadline, or submitting third-party branding/artwork without review-ready permission evidence.
-- Completion gate: every required M23.1–M23.6 outcome passes; M23.7 is required before a public store listing but may follow tightly controlled internal QA. No store release is submitted during M23.
-- Status: in progress. M23.1's audit and protected Ubuntu build are green with explicit backup exclusions, native open-source notices, 132 unit tests, lint, release AAB/APK signatures, exact upload-certificate verification, 16 KB APK/ELF checks, Android developer-verification email confirmation, and Node 24-compatible official CI actions; per-app Console status, version-code eligibility, and Play delivery remain. M23.3 API 36 readiness and M23.7 launcher polish are complete. M23.2 is authorized and its native age/Terms/reveal, report, block, privacy, and duplicate-safe delivery implementation is green; only administrator receipt reconciliation remains. M23.6 coverage is green across API 26, API 36, 16 KB, Fold, and Tablet states; 2× text checks and real Google TalkBack service traversal pass across phone/Fold/Tablet variants, the current Tablet suite passes 48/48, live phone/Tablet network cut-and-restore cycles automatically resume once, the 1,500-track Favorites path preserves stable list state and traverses end to end, and physical Razr playback/UI survive a measured open/tabletop/closed/reopened cycle. Human audible TalkBack review remains. M17 Private Messages remains explicitly deferred and is not shipped.
+## Alpha distribution program
 
-#### M23 sub-milestone plan
+| ID | Size | State | Implementation focus |
+| --- | --- | --- | --- |
+| M39 Alpha Candidate and Documentation Freeze | M | Planned | Build the current-head signed artifacts, freeze version/listing/release notes/roadmap/testing, verify signer/dependencies/permissions/16 KB packaging, and require no open release-critical finding |
+| M40 Play Alpha Delivery and Pre-launch Remediation | M plus external time | Planned after M39 | Upload, inspect Play splits, install/update through Play, complete reviewer access, and reconcile pre-review/pre-launch findings |
+| M41 Explicit Alpha Publication | S plus review time | Planned after M40 | Publish only after explicit owner authorization; verify availability, instructions, support, and rollback record |
 
-| Milestone | Size | Estimate | Usage | Outcome and completion gate | Primary confidence variable |
-| --- | --- | --- | --- | --- | --- |
-| M23.1 Current-head signed release candidate | M, protected Ubuntu build green | 2–4 hours | Medium | Commit `2086ab9` produced the protected signed AAB/APK through the Linux helper; the exact registered upload certificate, production manifest, dependencies/notices, backup exclusions, and 16 KB packaging pass. Google's July 16 account notice confirms automatic Android developer-verification registration; confirm per-app Console status, version-code eligibility, and Play-delivered install/update; see `m23-release-candidate-audit.md` | Whether version code 2 has already reached Play and Play-generated delivery behavior |
-| M23.2 UGC safety and moderation | L, implementation green; receipt pending | 6–12 hours after station input | High | **In progress:** authorized native age/Terms/reveal gates, separate report-content/report-user/block-user actions, local block management, privacy boundaries, and duplicate-safe indeterminate delivery are implemented; see `m23-ugc-safety-validation.md` | Administrator confirmation of whether the single harmless report reached the monitored inbox |
-| M23.3 Android 16 / API 36 readiness | M | 2–4 hours | Medium | **Complete:** target API 36 with predictive Back, edge-to-edge, adaptive UI, connected MediaSession, lint/release, and 27/27 API 36 device coverage; see `m23-api36-readiness.md` | Closed with one corrected viewport-dependent lazy-list test assumption |
-| M23.4 Play review declarations | M, local packet/video rehearsal prepared | 2–4 hours plus owner input | Medium | Accurate listing, copy-ready media-playback declaration, reviewer navigation, content-rating boundaries, privacy/Data Safety worksheets, and a frame-inspected notification video rehearsal are prepared; complete protected credentials, the signed-candidate video/link, owner attestations, and Console submission | CAPTCHA-compatible reviewer accounts, final questionnaire wording, and station retention answers |
-| M23.5 Brand and content-rights evidence | S, request packet prepared | 1–2 hours plus external confirmation | Low locally | Copy-ready authorization and sanitized evidence handling now cover app/station names, logos, artwork/metadata, authorized stream access, screenshots, and Play testing/distribution; privately retain the authorized response and submit advance evidence to Play; see `m23-owner-response-packet.md` | Scope and availability of the rights holder's written authorization |
-| M23.6 Release device matrix and pre-launch report | M, accessibility/network/performance/device checkpoints green | 3–6 hours | Medium | Emulator coverage passes across API 26, API 36, 16 KB, Fold, and Tablet states; large-text reflow, real TalkBack service traversal, one-shot network restoration, 1,500-track Favorites performance, and physical Razr hinge checks pass. Complete a human audible TalkBack review plus Play delivery/update and pre-launch remediation | Play crawler/delivery access and human speech-quality review |
-| M23.7 Adaptive launcher/store polish | S | 1–2 hours | Low | **Complete:** density-specific legacy, masked adaptive, and Android 13 monochrome launcher resources preserve the selected logo; store graphics and screenshots were revalidated without unnecessary recapture | Closed with APK resource inspection, API 35 drawable test, lint, and launcher inspection |
+Publication is never an automatic consequence of a passing local build or CI run.
 
-## Latest completed checkpoint
+## Production program
 
-M26 In-App Diagnostics completed July 16, 2026. The native More screen now previews a deliberately generated support snapshot before explicit Android Copy or Share actions. A fixed allowlist covers app/build, coarse device/API, selected station, bounded playback/error/network/output state, and at most five enum-only transitions; credentials, sessions, account/community/report content, endpoints, route names, identifiers, raw errors, and logs have no report path. The full 141-test unit suite, debug lint, focused physical-Razr connected test, real clipboard confirmation, and Android Share chooser pass. See [m26-diagnostics-validation.md](m26-diagnostics-validation.md).
+| ID | Size | State | Implementation focus |
+| --- | --- | --- | --- |
+| M42 Closed-Test Operations and Stabilization | Campaign | Planned after M41 | Maintain qualifying tester continuity, collect structured feedback, fix/retest findings, review Play vitals, and meet exit criteria |
+| M43 Production Access and Policy Approval | External gate | Planned after M42 | Submit testing, feedback, change, value, and readiness evidence; reconcile any additional testing request |
+| M44 Production Release and Staged Rollout | Campaign | Planned after M43 | Final production candidate, explicit authorization, staged percentages, health thresholds, pause/rollback, release notes, and update validation |
+| M45 Operational Reliability and Recertification | Recurring | Planned | Monitor Play quality/support without invasive tracking, recertify station contracts/rights/moderation, maintain policies/toolchain/dependencies, and exercise key recovery |
 
-The earlier M24 Sleep Timer checkpoint completed July 16, 2026. The existing playback service owns a bounded 1–720 minute deadline, publishes immutable countdown state through MediaSession, exposes cancellation to compatible system media surfaces, restores consistent same-boot deadlines, and stops the existing player at expiry. The full 136-test unit suite, debug lint, four focused physical-Razr connected tests (including real 60-second expiry), and manual compact UI inspection pass. See [m24-sleep-timer-validation.md](m24-sleep-timer-validation.md).
+## Deferred and future programs
 
-The M23.1 protected Linux signing checkpoint on July 16, 2026 remains valid. Commit `2086ab9` produced the signed current-product AAB/APK through the memory-backed Ubuntu path, and commit `3b775b7` corrected self-signed upload-certificate verification while preserving exact certificate pinning. The focused signing suite passes 8/8, both artifact signatures match the registered upload certificate, and Google's July 16 account notice confirms automatic Android developer-verification registration. The sanitized confirmation, release evidence, and hashes are recorded in [m23-release-candidate-audit.md](m23-release-candidate-audit.md). M23.1 remains active until per-app Console status is confirmed and a post-M26 candidate passes version-code eligibility and Play-delivered install/update checks.
+M46–M57 are detailed in [future scope](future-scope.md). They are nonblocking for M41 unless the owner explicitly moves
+one into the Alpha contract.
 
-The earlier M23.6 startup and large-Favorites performance checkpoint completed July 16, 2026. Availability resolution is isolated from unrelated metadata/request emissions, unchanged 1,500-track state and default ordering reuse their existing list instances, and the connected test now traverses to track 1,500 before returning to sort. Five API 35 debug-emulator cold launches measured 948–986 ms with a 969 ms median; this is diagnostic evidence rather than a Play/physical performance claim. The 132-test unit suite, 40/40 Tablet connected suite, and debug lint pass. See [m23-performance-validation.md](m23-performance-validation.md).
+- M46 — Architecture Sustainability.
+- M47–M50 — repaired and certified Private Messages.
+- M51–M54 — Forum links, native reading, authenticated participation, and certification/notifications.
+- M55 — Google Cast feasibility and certification.
+- M56 — extended station capability certification.
+- M57 — account registration, recovery, and management access.
 
-The earlier M23.6 network-loss and playback-reconnection checkpoint remains green; see [m23-network-recovery-validation.md](m23-network-recovery-validation.md).
+## Validation strategy
 
-The M23.6 accessibility checkpoint remains green at normal and maximum tested accessibility settings. Real Google
-TalkBack service traversal also passes across API 35 phone, Fold open/half-open/closed, and Tablet landscape/portrait;
-the two previously unlabeled community checkboxes now announce explicit descriptions. Human audible/intelligibility
-review remains a physical-device Alpha check; see [m23-accessibility-validation.md](m23-accessibility-validation.md).
+- Start with the smallest affected Gradle task and never run routine `clean`.
+- Unit-test repository, parser, state, security, and migration behavior at their owning boundaries.
+- Use connected tests for Compose semantics, service/MediaSession behavior, lifecycle, permissions, and adaptive UI.
+- Use the physical Razr for meaningful phone/fold/accessory/accessibility evidence.
+- Use Play-delivered artifacts for M40–M44; a local APK does not substitute for Play split/install/update evidence.
+- Keep the manual catalog synchronized at the [Product Testing page](../privacy-site/project/product-testing/index.html).
+- Preserve `PT-*` IDs across milestone renumbering and release cycles so tester results remain comparable.
+- Record backend-only work as having no meaningful visual change rather than attaching unrelated screenshots.
 
-M23.7 Adaptive launcher/store polish remains the latest completed full sub-milestone. It completed July 15, 2026; see [m23-launcher-polish.md](m23-launcher-polish.md).
+## GitHub and Discord
 
-## Shared feature milestones
-
-| Milestone | Size | Estimate | Usage | Rationale and outcome | Primary confidence variable |
-| --- | --- | --- | --- | --- | --- |
-| M17 Private Messages | L (provisional) | 4–8 hours after server repair | High | Add native station-isolated inbox/read/compose/reply/refresh and explicit user-initiated send over existing protected sessions after the reproduced profile-send non-delivery is repaired | Website repair, delivery confirmation, production limits, and consistent authenticated forms |
-
-Each shared milestone includes repository/ViewModel/UI work as applicable, lifecycle-safe state, accessibility semantics, focused tests, affected-module validation, physical Razr inspection, documentation, a focused commit, push, and remote confirmation.
-
-## Station certification milestones
-
-The certification program would be XL if treated as one unit, so it is split into five reviewable S–L milestones. Total expected active elapsed time is 20–35 hours, approximately 3–6 focused days. Confidence is Medium-Low because live accounts, CAPTCHA, station rules, rate limits, metadata quality, and legacy server behavior can differ.
-
-| Milestone | Size | Estimate | Usage | Rationale and focus | Primary confidence variable |
-| --- | --- | --- | --- | --- | --- |
-| M18 StreamingSoundtracks.com certification | S | 2–4 hours | Medium | Most live coverage already exists; certify VIP/non-admin behavior, 30-row Queue, request messages, Favorites, chat, and authenticated workflows | Legacy PM stability and privileged accounts masking ordinary-member restrictions |
-| M19 1980s.FM certification | M | 4–7 hours | High | Establish equivalent live evidence for playback/fallback, metadata, account isolation, Queue/history, chat, Favorites, requests, and membership behavior | Availability of a representative station account and undocumented rules |
-| M20 Adagio.FM certification | M | 4–7 hours | High | Certify classical metadata presentation plus playback/fallback, account isolation, Queue/history, chat, Favorites, requests, and membership behavior | Metadata shape and availability of a representative station account |
-| M21 Death.FM certification | L | 6–10 hours | High | Harden the compact Queue feed, sparse metadata/artwork behavior, RIP membership differences, playback/fallback, chat, Favorites, and requests | Reduced identifiers/metadata and station-specific membership behavior |
-| M22 Entranced.FM certification | M | 4–7 hours | High | Establish live evidence for playback/fallback, metadata, account isolation, Queue/history, chat, Favorites, requests, and membership behavior | Availability of a representative station account and undocumented rules |
-
-### Common station task breakdown and completion gate
-
-1. Reconfirm permitted primary/fallback playback and Media3 behavior without changing working URLs casually.
-2. Verify metadata, artwork, Queue/history limits, stale/error handling, and station-scoped parsing.
-3. Verify independent authentication, restoration, expiration, logout, and account capability presentation.
-4. Verify chat read/post limits, Favorites discovery, requests, eligibility, cooldown, attribution/messages, and Private Messages when available.
-5. Preserve unsupported differences as explicit capability-unavailable states; never guess endpoints or rules.
-6. Add or update parser, repository, ViewModel, Compose, accessibility, and isolation tests for station-specific evidence.
-7. Run focused and broad validators, perform a physical Razr smoke test, update matrices/handoff, commit, push, and confirm the remote branch.
-
-M18–M22 are complete while M17 remains deferred; every in-scope station capability now has passing evidence or an explicit certified unavailable/unverified boundary.
-
-## Pre-Alpha feature milestones
-
-| Milestone | Size | Estimate | Usage | Rationale and outcome | Primary confidence variable |
-| --- | --- | --- | --- | --- | --- |
-| M24 Sleep Timer | M | 3–5 hours | Medium | **Complete:** service-owned presets/custom countdown, visible remaining time, adjust/cancel, MediaSession/system cancellation state, same-boot restoration, device-sleep-safe timing, manual-Stop cancellation, and deterministic expiry without another player; see [validation](m24-sleep-timer-validation.md) | Closed with 136 unit tests, lint, four focused physical-Razr connected tests, real 60-second expiry, and manual UI inspection |
-| M25 Cast / Audio-Output Selection | M | 35–55 minutes | Medium | **Complete through the dedicated output path:** Android's native system switcher and immutable current-route state cover device, Bluetooth, wired/USB, and system-managed remote routes without changing the service-owned Media3 player or stream source; Google Cast stays gated behind receiver/authorization evidence. See [validation](m25-audio-output-validation.md) | Closed with 139 unit tests, lint, a focused physical-Razr Compose test, live phone ↔ JBL handoff, matching System UI/app route state, and Bluetooth-disconnect fallback |
-| M26 In-App Diagnostics | M | 4–7 hours | Medium | **Complete:** explicit user-reviewed fixed-allowlist snapshot covering app/build, coarse device/API, selected station, bounded playback/error/network/output categories, and at most five enum-only transitions; Android clipboard/share actions remain explicit and no account/community/report content, endpoints, route names, identifiers, raw errors, or logs enter the report. See [validation](m26-diagnostics-validation.md) | Closed with 141 unit tests, lint, a focused physical-Razr Compose test, clipboard confirmation, system Share chooser, redaction audit, and provisional Data Safety reconciliation |
-| M27 Community Push Notifications | L, split | 6–12 hours total plus delivery authorization | High | **M27.1 complete:** station-scoped opt-in, exact signed-in-name matching, first-snapshot baseline, blocked-user filtering, bounded in-memory duplicate suppression, private Android channel, safety-gated Chat navigation, and privacy/Data Safety reconciliation for actively observed Chat. See [validation](m27-community-notification-validation.md). **M27.2 pending:** reliable closed-app Chat mention delivery and capability-gated PM events | Authorized event source or privacy-compatible relay; identity and delivery semantics across all stations; M17 server repair for live PM alerts |
-
-M24–M26 and M27.1 are complete. M25 research selected Android's supported system Output Switcher, which keeps playback local to the existing Media3 session and requires no new station endpoint. The existing audio path remains direct from Media3 to station-provided HTTP relays; route selection does not make that source encrypted, and an app-operated HTTPS proxy remains out of scope without explicit rebroadcast authorization and a separate privacy, bandwidth, and reliability design. Google Cast remains gated because its separate receiver path and permitted stream use have not been verified. M26 adds no endpoint or automatic transfer: its allowlisted snapshot is local until an explicit Copy or Share action. M27.1 adds no endpoint or polling: it processes the already-visible Chat snapshot only while Chat is selected, baselines existing messages, and emits privacy-minimized alerts only for later exact-name mentions. The current app still has no developer-operated backend, so it cannot provide reliable push without a newly authorized event path. M27.2 must not introduce perpetual background polling, expose station sessions to a relay, or claim reliable delivery from periodic work. Any proposed relay must document payload minimization, authentication, retention, deletion, abuse protection, outage behavior, Chat/PM event separation, and Google Play Data Safety impact before architecture is approved.
-
-## Distribution milestones
-
-| Milestone | Size | Estimate | Usage | Rationale and outcome | Primary confidence variable |
-| --- | --- | --- | --- | --- | --- |
-| M23 Play-Testing Readiness Program | XL umbrella split into M23.1–M23.7 | 3–6 focused days plus external input | Medium–High | Close release-artifact, UGC, API 36, Play-review, rights, device, and launcher-quality gates as separate reviewable workstreams | Owner/station responses and Play delivery results |
-| M28 Alpha publication completion | M | 1–3 hours after M23–M27 | Medium | Revalidate and publish the explicitly authorized signed bundle to internal/closed testing only after every required readiness and feature gate passes | Signing authorization, feature closure, tester-track configuration, and release review outcome |
-
-M23 is the sole XL umbrella and is already divided into seven reviewable S–L workstreams. Any future phase that exceeds L will likewise be divided before implementation.
-
-M28 re-runs every release check affected by M24–M27, including unit/connected coverage, lint, release packaging/signing, privacy and Data Safety declarations, device/pre-launch evidence, reviewer instructions, and Play-delivered installation. The earlier M23 readiness evidence remains the baseline but is not treated as proof for a candidate changed by later feature milestones.
+- Repository roadmap files, the public portal, and GitHub Project #1 must use the canonical IDs from ROADMAP.md.
+- Each GitHub Project card stores one canonical milestone. Legacy IDs appear only in migration/evidence notes.
+- Commit only intentional files and preserve unrelated user changes.
+- Post to the configured Discord project thread after a completed, committed roadmap milestone or when the user explicitly
+  requests a project announcement. Do not announce every push.
+- Discord updates must contain no secrets, tester identities, private endpoint details, credentials, or protected evidence,
+  and delivery must be verified before reporting success.

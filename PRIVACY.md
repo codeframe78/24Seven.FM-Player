@@ -1,6 +1,6 @@
 # Privacy notice for 24Seven.FM Player Alpha
 
-Last updated: July 16, 2026.
+Last updated: July 18, 2026.
 
 24Seven.FM Player is an unofficial, non-commercial native Android client for the five public 24Seven.FM radio stations. It is not affiliated with or endorsed by 24Seven.FM or its stations.
 
@@ -10,7 +10,8 @@ Last updated: July 16, 2026.
 - **Account credentials:** A username, password, and station security code are sent only to the selected station when the user explicitly signs in. Passwords and security-code answers are held only long enough to complete that sign-in attempt and are not written to app storage.
 - **Station sessions:** Successful station cookies and the returned display identity are encrypted locally using an Android Keystore key. Sessions are scoped to the exact station and can be removed with Sign out or by clearing the app's data.
 - **User submissions:** Chat posts, song requests, and optional request messages are sent only after an explicit user action. The app does not automate or bulk-submit requests.
-- **Community safety preferences:** The app stores the adult/not-adult result from its age screen, the accepted Terms version, the mature-community-content visibility choice, and station-scoped blocked display identities on the device. It does not save the date of birth entered on the age screen.
+- **Community safety and notification preferences:** The app stores the adult/not-adult result from its age screen, the accepted Terms version, the mature-community-content visibility choice, station-scoped blocked display identities, and the stations for which the user enables local Chat-mention notifications. It does not save the date of birth entered on the age screen.
+- **Local Chat-mention notifications:** When enabled, exact signed-in display-name mentions are matched on the device against the actively observed Chat feed. The first snapshot is only a baseline, duplicate fingerprints are bounded in memory, blocked authors are filtered, and Android notification text contains the station and sender but not the Chat message. The current implementation does not provide closed-app push delivery or add background polling.
 - **Android backup and transfer:** All app-private data is excluded from Android cloud backup and device-to-device transfer. Protected station sessions and local safety preferences are not migrated through those Android mechanisms.
 - **Abuse reports:** After an explicit **Send report** action, the app sends the selected station, report category, reported username, displayed timestamp, a bounded Chat/request snapshot, reporter name and email, and optional details directly to that station's authorized administrators through its HTTPS Contact Us form. Report form data, CAPTCHA values, submitted reports, and station responses are not persisted by the app. The station administration may retain and process a received report under its own moderation and privacy practices.
 - **Chat history:** Chat messages are kept in memory for the current app session and are not persisted by the app.
@@ -26,7 +27,7 @@ The application does not include advertising, analytics, crash-reporting, tracki
 - **Internet:** Required for live streams and station features.
 - **Network state:** Used by the media/network libraries to detect connectivity changes and present connection or retry states.
 - **Foreground media playback:** Required to continue audio while the app is in the background and to expose system media controls.
-- **Notifications:** On Android 13 and newer, used for the media-playback notification. Denying it may reduce visible background playback controls.
+- **Notifications:** On Android 13 and newer, requested contextually for visible media-playback controls and optional local Chat-mention alerts. Denying it does not prevent public playback or Chat use, but may remove those notification surfaces.
 - **Wake lock:** Used only by the media playback stack to keep an active live stream from being suspended while the screen is off. The app does not use it to keep the display awake.
 
 Android also adds an app-specific, signature-protected dynamic-receiver permission during the build. It is an internal platform safety mechanism that prevents other apps from sending to non-exported receivers; users are not asked to grant it and it does not provide access to user data.
@@ -35,7 +36,7 @@ The app does not request contacts, location, microphone, camera, photos, phone, 
 
 ## Retention and deletion
 
-Protected station sessions, the adult age-screen result, accepted Terms version, community-content visibility preference, and local block list remain on the originating device until the relevant in-app action, app-data clearing, or uninstall removes them. They are excluded from Android cloud backup and device-to-device transfer. Chat, favorite-track lists, request activity, membership indicators, pending song-request text, abuse-report form/submission data, and generated diagnostic previews are transient. A copied diagnostic snapshot is controlled by Android's clipboard, and a shared snapshot is controlled by the recipient selected by the user. Android's app settings can clear all locally retained application data.
+Protected station sessions, the adult age-screen result, accepted Terms version, community-content visibility preference, local block list, and station-scoped Chat-mention opt-ins remain on the originating device until the relevant in-app action, app-data clearing, or uninstall removes them. They are excluded from Android cloud backup and device-to-device transfer. Chat, mention-deduplication fingerprints, favorite-track lists, request activity, membership indicators, pending song-request text, abuse-report form/submission data, and generated diagnostic previews are transient. A copied diagnostic snapshot is controlled by Android's clipboard, and a shared snapshot is controlled by the recipient selected by the user. Android's app settings can clear all locally retained application data.
 
 ## Alpha limitations
 

@@ -17,18 +17,18 @@ StreamingSoundtracks.com, 1980s.FM, Adagio.FM, and Entranced.FM each exposed the
 Two station-specific routes were also directly observed:
 
 - StreamingSoundtracks.com: `/modules.php?name=STM` for Soundtrack of the Month.
-- 1980s.FM: `/modules.php?name=Games` and `/modules.php?name=80s_Awards`.
+- Historical 1980s.FM discovery included `/modules.php?name=Games` and `80s_Awards`; the later catalog refinement removed both, and they are not shipped capabilities.
 
 These pages are intentionally not parsed or recreated in Compose. They are secondary, browser-appropriate content and open only after the listener taps a clearly labelled native card.
 
 ## Death.FM HTTPS limitation
 
-The configured `https://death.fm/` origin failed modern browser TLS negotiation with `ERR_SSL_VERSION_OR_CIPHER_MISMATCH` during this audit. M16 does not downgrade to HTTP, guess an alternate host, or expose broken cards. Death.FM therefore reports that no secure secondary pages are verified. Its live stream behavior is unchanged; the route can be enabled during M21 only after the HTTPS origin is repaired and reverified.
+The configured `https://death.fm/` origin failed modern browser TLS negotiation with `ERR_SSL_VERSION_OR_CIPHER_MISMATCH` during this audit. M16 does not downgrade to HTTP, guess an alternate host, or expose broken cards. Death.FM therefore reports that no secure secondary pages are verified. Its live stream behavior is unchanged; the route can be enabled during M20 only after the HTTPS origin is repaired and reverified.
 
-### M21 follow-up — July 15, 2026
+### M20 follow-up — July 15, 2026
 
 The configured HTTPS origin now negotiates successfully. A fresh read-only audit verified the station root, Forums,
-Members List, Stats, Top 100, Contact, and the Death.FM-specific `RIP_Subscribe` membership route. M21 therefore
+Members List, Stats, Top 100, Contact, and the Death.FM-specific `RIP_Subscribe` membership route. M20 therefore
 enables these exact same-station HTTPS cards under the existing trust policy. This follow-up supersedes only the
 temporary Death.FM availability conclusion above; it does not rewrite the historical M16 observation or relax any
 trust rule.

@@ -1,14 +1,14 @@
-# M23 Alpha Test Distribution readiness
+# M28–M35 Alpha Test Distribution readiness
 
-Prepared early on July 14, 2026 and activated July 15 after M15–M22 completed. A July 15 Play-readiness audit expanded
-M23 into the seven reviewable sub-milestones maintained in `README.md` and `docs/IMPLEMENTATION_PLAN.md`. This file
+Prepared early on July 14, 2026 and activated July 15 after M15–M21 completed. A July 15 Play-readiness audit expanded
+M28–M35 into the seven reviewable sub-milestones maintained in `README.md` and `docs/IMPLEMENTATION_PLAN.md`. This file
 retains the detailed release/signing evidence and records the additional completion gates without representing them
 as already complete.
 
 ## Estimate
 
 - Task Complexity Level: 2 — Feature Logic & API Integration
-- T-shirt size: XL umbrella divided into M23.1–M23.7 S–L milestones
+- T-shirt size: XL umbrella divided into eight S–L milestones, M28–M35
 - Estimated duration: 3–6 focused days plus owner and station-side input
 - Rationale: the app implementation is stable, but Play readiness now explicitly spans current-head artifact integrity,
   UGC moderation, API 36 behavior, privacy/data-safety declarations, rights evidence, Play configuration, tester guidance,
@@ -18,7 +18,7 @@ as already complete.
 
 ## Task breakdown
 
-1. Reconcile privacy, data-safety, tester, release-note, permission, and dependency documentation with M18–M22.
+1. Reconcile privacy, data-safety, tester, release-note, permission, and dependency documentation with M17–M21.
 2. Confirm version/application identity and release Gradle behavior without upgrading the toolchain.
 3. Create or locate the upload key outside Git, configure complete local-only signing inputs, and record private fingerprints.
 4. Build and validate the signed release AAB with `scripts/validate-play-bundle.ps1`.
@@ -36,7 +36,7 @@ as already complete.
 - Version advanced to `0.1.0-alpha01` / version code 2.
 - Privacy notice, Alpha tester guide, release notes, and known limitations documented.
 - Required permissions reviewed: Internet, network-state awareness, foreground media playback, wake lock for uninterrupted screen-off playback, and Android 13+ notification access. Network-state and wake-lock access are contributed by the existing media/network stack. The build-generated app-specific dynamic-receiver permission is signature-protected and grants no user-data access.
-- Application ID, minimum/target SDK, verified streams, network security, dependencies, and completed M1–M22 behavior remain unchanged.
+- Application ID, minimum/target SDK, verified streams, network security, dependencies, and completed M01–M21 behavior remain unchanged.
 - Debug and release candidates are built and inspected without committing APKs or signing material.
 - Debug unit tests, affected-module lint, debug APK, unsigned release APK, and unsigned release AAB builds pass.
 - The earlier 21-test connected suite passes on the Android 16 Razr. The expanded API 35 emulator suite passes 24/24,
@@ -54,22 +54,22 @@ as already complete.
 - The actual encrypted recovery package is now stored on the owner-selected off-PC volume and independently validated with the owner-held passphrase. The encrypted package SHA-256 is `361E6A85452DBF9ACDC816F554569E3B7DBA0F98B60C30DB255E54C2644C4D1C`; neither its location nor its passphrase is committed.
 - The signed release APK was installed cleanly on the API 35 emulator, cold-launched as version code 2, exposed the expected adaptive Player semantics, and reached `Playing live` on StreamingSoundtracks with the Pause action available. The emulator was restored to the debug build afterward; the wirelessly connected Razr and its sessions were not modified.
 - The release dependency graph contains no advertising, analytics, Crashlytics, App Center, or Sentry SDK.
-- M23.1's current local release audit confirms the production manifest, complete resolved dependency inventory, 16 KB
+- M35's current local release audit confirms the production manifest, complete resolved dependency inventory, 16 KB
   APK/ELF packaging, explicit cloud/device-transfer backup exclusions, and intentionally unsigned release AAB/APK.
   Apache-2.0, MIT, GPLv2-with-Classpath-Exception, and MPL-2.0 notices are recorded in
   `THIRD_PARTY_NOTICES.md` and are reachable inside the app under More → Privacy → Open-source licenses. See
   `m23-release-candidate-audit.md`; protected current-head signing is complete, while version-code eligibility and
   Play-delivered installation remain open.
 - Google's July 16 Android developer-verification email confirms that the account's Play apps were automatically
-  registered to the verified developer account. The sanitized confirmation is preserved in the M23.1 audit; exact
+  registered to the verified developer account. The sanitized confirmation is preserved in the M35 audit; exact
   per-app Play Console status, version-code eligibility, and Play-delivered installation remain open.
-- Google Play accepts target API 35 on July 15, 2026 but requires API 36 for new apps and updates beginning August 31, 2026. M23.3 therefore migrates before the closed-test/update window instead of treating API 35 as the final Alpha target.
-- The project-specific provisional Data Safety worksheet is recorded in `docs/m23-data-safety.md`; it includes the M23.2 age/Terms/block preferences and transient abuse-report fields. Final answers remain gated on the active Play Console form and station retention confirmation.
-- The non-secret M23.4 declaration packet now contains copy-ready media-playback foreground-service text, an exact demonstration shot list, reviewer navigation instructions, content-rating evidence boundaries, and owner-only fields. The draft store listing was corrected to remove unimplemented sleep timer, shortcuts, sharing, appearance preferences, and diagnostics.
-- A credential-free M23.4 media-playback video rehearsal passed frame inspection on the API 35 Pixel Tablet: start,
+- Google Play accepts target API 35 on July 15, 2026 but requires API 36 for new apps and updates beginning August 31, 2026. M22 therefore migrates before the closed-test/update window instead of treating API 35 as the final Alpha target.
+- The project-specific provisional Data Safety worksheet is recorded in `docs/m23-data-safety.md`; it includes the M28 age/Terms/block preferences and transient abuse-report fields. Final answers remain gated on the active Play Console form and station retention confirmation.
+- The non-secret M29 declaration packet now contains copy-ready media-playback foreground-service text, an exact demonstration shot list, reviewer navigation instructions, content-rating evidence boundaries, and owner-only fields. The draft store listing was corrected to remove unimplemented sleep timer, shortcuts, sharing, appearance preferences, and diagnostics.
+- A credential-free M29 media-playback video rehearsal passed frame inspection on the API 35 Pixel Tablet: start,
   buffering/playback, Home, expanded media notification, notification-body return, pause, resume, and stop are visible.
   It remains an uncommitted debug-build rehearsal; the final hosted video must use the protected signed candidate after
-  M23.1 and M23.5 close.
+  M35 and M30 close.
 - The non-secret `m23-owner-response-packet.md` now provides exact report-receipt choices, a rights/stream/distribution
   authorization request, a station-retention table, reviewer-account confirmation, and the evidence required before
   Private Messaging research can resume. No private response, credential, or rights evidence is committed.
@@ -106,10 +106,10 @@ as already complete.
   passed, and the preserved full MorG Favorites list loaded and switched sorting on the physical Razr without an ANR.
 - The post-fix suite contains 117 unit-test methods. GitHub Android CI passed unit tests, lint, and debug assembly after
   the changes; focused folded-layout, notification-navigation, multi-field search, and full-list checks also passed.
-- M23.3 migrated the app to target API 36 without changing the compile or minimum SDK. All 117 unit tests, debug lint,
+- M22 migrated the app to target API 36 without changing the compile or minimum SDK. All 117 unit tests, debug lint,
   release bundle/lint-vital checks, and 27/27 connected tests pass on the API 36 AVD. A cold launch reported target 36,
   and two Back actions opened the existing exit dialog with edge-to-edge content intact. See `m23-api36-readiness.md`.
-- M17 browser investigation reached Inbox and Sent Box, found a suspect New Message selection path, and reproduced a
+- M47 browser investigation reached Inbox and Sent Box, found a suspect New Message selection path, and reproduced a
   profile-originated MorgHubby send that appeared to submit but was absent from the recipient account. The result was
   reported to the site owner; no native PM endpoint or behavior was guessed.
 
@@ -134,7 +134,7 @@ Signing files and secrets must never be committed. Gradle should receive their p
   protected candidate recorded in `m23-release-candidate-audit.md`.
 - Verify Play-delivered installation on the physical Razr and a same-key Play update after a subsequent version code exists.
 - Complete the owner-input Console forms: least-privileged reviewer credentials/instructions, save the selected 18+ target audience, content rating, and final Data Safety answers.
-- Confirm administrator receipt of the single authorized M23.2 harmless report. Native age/Terms/mature-content gates, separate report-content/report-user/block-user actions, local block management, and duplicate-safe report handling are implemented and test-green.
+- Confirm administrator receipt of the single authorized M28 harmless report. Native age/Terms/mature-content gates, separate report-content/report-user/block-user actions, local block management, and duplicate-safe report handling are implemented and test-green.
 - **Complete:** API 36 target migration and Android 16 regression pass; see `m23-api36-readiness.md`.
 - Save the media-playback foreground-service declaration with its description, interruption impact, use case, and demonstration video.
 - Privately confirm written rights for the app/station branding, artwork, streams, screenshots, and Play distribution.

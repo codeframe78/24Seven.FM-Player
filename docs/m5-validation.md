@@ -1,6 +1,6 @@
-# M5 native navigation validation
+# M05 native navigation validation
 
-M5 replaces the decorative phone navigation shell with immutable destination state and working native Player, Chat, Queue, and More destinations.
+M05 replaces the decorative phone navigation shell with immutable destination state and working native Player, Chat, Queue, and More destinations.
 
 ## Implemented behavior
 
@@ -24,4 +24,4 @@ The full debug and release unit-test suites, Android lint, debug APK assembly, a
 
 The debug build was installed on the Motorola Razr 2023. Player and Chat were visually inspected on the 1080 × 2640 main display; all four navigation actions and the mini-player were also exercised by the Compose device test. Playback was not started for the navigation visual pass.
 
-The API 35 emulator accepted a temporary 800 dp display override, but its headless framebuffer capture stalled. The override was reset to the original size and density. Adaptive branch selection is therefore covered deterministically by instrumentation rather than claimed as a tablet screenshot. A physical tablet or interactive tablet AVD visual pass can be added later without blocking the tested M5 layout behavior.
+The API 35 emulator accepted a temporary 800 dp display override, but its headless framebuffer capture stalled. The override was reset to the original size and density. Adaptive branch selection is therefore covered deterministically by instrumentation rather than claimed as a tablet screenshot. A physical tablet or interactive tablet AVD visual pass can be added later without blocking the tested M05 layout behavior.

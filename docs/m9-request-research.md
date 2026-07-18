@@ -1,4 +1,4 @@
-# M9 native song-request research
+# M09 native song-request research
 
 ## Authorization and limits
 
@@ -33,7 +33,7 @@ eligibility. These rules remain server-authoritative; the app does not reproduce
 - Each confirmation produces at most one network request. Submission failures are never retried automatically.
 - Same-origin HTTPS checks, bounded responses, timeouts, safe identifier validation, and plain-text rendering are
   enforced in the data layer.
-- Cookies remain in Android-protected storage through the M7 session contract. Credentials, cookies, tokens,
+- Cookies remain in Android-protected storage through the M07 session contract. Credentials, cookies, tokens,
   captured pages, request history, and browsing history are not logged or committed.
 - Search results and album tracks are transient UI state. The app does not persist or batch them.
 

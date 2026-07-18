@@ -1,4 +1,4 @@
-# M23 site-owner response packet
+# M28–M35 site-owner response packet
 
 Prepared July 15, 2026
 
@@ -9,18 +9,18 @@ privately. Retain the original response and its sender/date privately; commit on
 put reviewer passwords, cookies, tokens, private endpoints, unredacted Console captures, or private correspondence in
 Git, Discord, or a public issue.
 
-The moderation authorization already supplied for M23.2 authorizes app-originated abuse reports. It does not, by
+The moderation authorization already supplied for M28 authorizes app-originated abuse reports. It does not, by
 itself, establish permission to use third-party names, logos, artwork, streams, screenshots, or to distribute the app.
 
 ## 1. Reconcile the single harmless moderation report
 
 Please reply with exactly one factual statement:
 
-> I received the clearly labeled M23.2 harmless test report submitted on July 15, 2026.
+> I received the clearly labeled M28 harmless test report submitted on July 15, 2026.
 
 or:
 
-> I did not receive the clearly labeled M23.2 harmless test report submitted on July 15, 2026.
+> I did not receive the clearly labeled M28 harmless test report submitted on July 15, 2026.
 
 Do not ask the app project to send another report until that answer is known. The original request had an indeterminate
 server response, and the app intentionally suppresses duplicate retries.
@@ -78,7 +78,7 @@ so reviewers can see a non-empty authenticated surface.
 
 ## 5. Private Messaging repair confirmation
 
-M17 remains excluded from the shipping build. Resume native investigation only after the owner can provide this factual
+M47 remains excluded from the shipping build. Resume native investigation only after the owner can provide this factual
 confirmation, with real test details replacing the brackets:
 
 > The 24seven.FM Private Messaging send path has been repaired. On [date], a harmless test message sent from [sender test account] to [recipient test account] appeared in the sender's Sent Box and the recipient's Inbox. The normal member-facing Inbox, Sent Box, compose/profile PM, read, reply, and send forms may be investigated for the native app using non-administrator test accounts. The applicable recipient, message-length, rate, storage, and account-tier limits are: [limits].
@@ -90,14 +90,14 @@ implemented from a success page alone; both sender and recipient delivery must b
 
 - Keep the original rights response, sender identity, authority/role, date, and any attachment in private project records.
 - Keep reviewer credentials only in Play Console and the owner's password manager.
-- Record only a sanitized repository note such as: “Written authorization covering the documented M23.5 scope was
+- Record only a sanitized repository note such as: “Written authorization covering the documented M30 scope was
   received from an authorized network representative on [date]; original evidence retained privately.”
-- M23.2 completes only after the report receipt answer is reconciled with the app result.
-- M23.4 completes only after reviewer access, retention facts, the foreground-service video, and the active Console
+- M28 completes only after the report receipt answer is reconciled with the app result.
+- M29 completes only after reviewer access, retention facts, the foreground-service video, and the active Console
   questionnaires are saved and reviewed.
-- M23.5 completes only after the full rights statement or an equivalent written grant is received and any exclusions are
+- M30 completes only after the full rights statement or an equivalent written grant is received and any exclusions are
   reflected in the artifact/listing.
-- M17 restarts only after verified PM delivery and limits are supplied.
+- M47 restarts only after verified PM delivery and limits are supplied.
 
 ## Google Play references
 
