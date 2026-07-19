@@ -47,6 +47,20 @@ package was installed. UIAutomator reported no `NAF=true` actionable node after 
 surfaces. This verifies service discovery, focus order, labels, roles, and actions. It does not substitute for a human
 listening to speech pronunciation, pacing, and clarity on physical hardware.
 
+## M33 confirmation-dialog follow-up
+
+The M33 request confirmation now identifies the selected station and signed-in account before the one-shot request
+submission. Its content body is vertically scrollable so the identity, long track metadata, optional message field,
+and both actions remain reachable at maximum text scale rather than being clipped by a compact window.
+
+| Device/runtime | Focused maximum-text evidence | Result |
+| --- | --- | --- |
+| Motorola Razr 2023, Android 16 / API 36 | Physical-device connected test at font scale 2.0: confirmation content, station identity, optional message, Cancel, and Send | 2/2 focused confirmation tests passed. |
+| API 35 Pixel Tablet emulator | Expanded-window connected test at font scale 2.0 with a long track title and artist | 1/1 focused confirmation test passed. |
+
+These fixture-only checks do not submit a request or expose an account. They close the current M33 dialog's automated
+large-text reachability follow-up; the human audible/intelligibility and alternative-input M34 gates remain open.
+
 ## Verification
 
 - `:app:connectedDebugAndroidTest`: 39/39 at maximum tested Tablet accessibility settings.

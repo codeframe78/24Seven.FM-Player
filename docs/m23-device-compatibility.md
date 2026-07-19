@@ -31,6 +31,7 @@ not a list of hard-coded device models.
 | API 35 Pixel Tablet emulator, native landscape | 2560×1600 physical display; 1280×800dp | 40/40 current-head connected tests plus cold-launch inspection | Expanded two-pane Player, navigation rail, artwork, controls, station carousel, full 1,500-track Favorites traversal, and the complete current feature suite pass. |
 | API 35 Pixel Tablet emulator, native portrait | 1600×2560 physical display; 800×1280dp | Earlier 34/34 full suite; 1/1 current-head open-source disclosure test; rotation inspection | Medium-width rail layout retains visible artwork, controls, and a horizontally reachable station carousel after rotation; the current legal-disclosure path is also scroll-reachable. |
 | API 36 phone AVD targeting API 36 | 411×914dp compact portrait | 36/36 current-head connected tests plus cold-launch/two-Back inspection | Adaptive navigation, UGC safety, legal disclosures, Favorites lazy scrolling, MediaSession service, edge-to-edge Player, and the exit dialog pass under Android 16 target behavior. |
+| M33 request-confirmation follow-up | Physical Razr compact and API 35 Pixel Tablet expanded windows at font scale 2.0 | Focused confirmation reachability tests: 2/2 Razr and 1/1 Tablet | Long station/account confirmation identity, optional message, Cancel, and Send remain reachable without a real request submission. |
 
 ### Maximum tested accessibility settings
 

@@ -1187,6 +1187,63 @@ class RadioAppTest {
     }
 
     @Test
+    fun requestConfirmationRemainsReachableAtMaximumTextScale() {
+        val track = RequestableTrack(
+            albumId = "ALBUM_1",
+            songId = "12345",
+            title = "A deliberately long requestable soundtrack title",
+            artist = "A deliberately long composer name",
+            eligible = true,
+        )
+        val requestStation = station.copy(
+            capabilities = StationCapabilities(
+                supportsAuthentication = true,
+                supportsRequests = true,
+                supportsRequestMessages = true,
+            ),
+        )
+        composeRule.setContent {
+            val density = LocalDensity.current
+            CompositionLocalProvider(
+                LocalDensity provides Density(density.density, fontScale = 2f),
+            ) {
+                MaterialTheme {
+                    Box(Modifier.requiredSize(343.dp, 762.dp)) {
+                        RequestConfirmationDialog(
+                            state = sampleState().copy(
+                                selectedStation = requestStation,
+                                stations = listOf(requestStation),
+                                auth = AuthState(requestStation.id, AuthStatus.SignedIn, "Test Listener"),
+                                requests = SongRequestState(
+                                    stationId = requestStation.id,
+                                    status = SongRequestLoadStatus.Ready,
+                                    tracks = listOf(track),
+                                    pendingRequest = PreparedSongRequest(
+                                        requestStation.id,
+                                        "Test Listener",
+                                        track,
+                                    ),
+                                ),
+                            ),
+                            onCancelRequest = {},
+                            onConfirmRequest = {},
+                            onReviewTerms = {},
+                        )
+                    }
+                }
+            }
+        }
+
+        composeRule.onNodeWithTag("request_confirmation_content").assertIsDisplayed()
+        composeRule.onNodeWithText("Station: StreamingSoundtracks.com", substring = true)
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeRule.onNodeWithText("Message (optional)").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText("Send request").assertIsDisplayed().assertHasClickAction()
+        composeRule.onNodeWithText("Cancel").assertIsDisplayed().assertHasClickAction()
+    }
+
+    @Test
     fun favoritesShowAccessibleStoplightsAndReuseRequestConfirmation() {
         val availableDescription = "Request Now — track is currently available to request"
         val unavailableDescription = "Track Recently Played — track is not currently available to request"

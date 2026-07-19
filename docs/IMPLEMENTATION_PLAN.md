@@ -34,8 +34,7 @@ The active program is M29–M35 Alpha readiness:
 | M34 Device, Accessibility, and Pre-launch Acceptance | L | In progress | Human audible TalkBack, alternative input, adaptive/device coverage, Play delivery/update, and pre-launch evidence | Test hardware, humans, and Play artifact |
 | M35 Release Signing and Console Eligibility | M | In progress | Protected signer path, physical-device verification, package registration, version-code eligibility, and repeatable signed build | Owner-only Console state |
 
-M31–M33 are complete. M34 must incorporate M33's confirmation-dialog change into the remaining accessibility and device acceptance where it alters
-observable behavior. M35's current signing checkpoint is valuable evidence, but it is not a final candidate because the
+M31–M33 are complete. M34's M33 confirmation-dialog follow-up passes focused 2×-text Razr and Tablet checks; human audible/alternative-input and Play-controlled acceptance remain open. M35's current signing checkpoint is valuable evidence, but it is not a final candidate because the
 codebase has changed since that artifact was built.
 
 ## Notification delivery program
