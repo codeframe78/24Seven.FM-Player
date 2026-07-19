@@ -17,7 +17,7 @@ object StationPageTrustPolicy {
     fun trustedUrl(station: Station?, page: StationPage): String? {
         if (station == null || !station.capabilities.supportsSecondaryContent) return null
         if (page !in station.secondaryPages) return null
-        if (page.kind == StationPageKind.Contact) return null
+        if (page.kind == StationPageKind.Contact || page.kind == StationPageKind.Membership) return null
 
         val stationUri = station.websiteUrl.toUriOrNull() ?: return null
         val pageUri = page.url.toUriOrNull() ?: return null

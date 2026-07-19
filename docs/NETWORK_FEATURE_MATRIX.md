@@ -4,8 +4,8 @@ Audited July 15, 2026. `Implemented` means present in native code; `verified` di
 
 M18 public/device evidence directly verifies 1980s.FM playback, metadata/artwork, Queue/History, public Chat,
 signed-out Favorites/request boundaries, least-played request browsing, and native sign-in challenge loading. The
-current shipped secondary catalog is limited to Contact and Membership; historical Games/Awards evidence is not a
-current product capability.
+current shipped secondary catalog is limited to Contact; historical Membership, Games, and Awards evidence is not a
+current product capability. M31 removed every VIP/RIP purchase and registration handoff from the global Play candidate.
 
 M19 public/device evidence now directly verifies Adagio.FM playback and both relay sources, truthful classical
 metadata/artwork, Queue/History, public Chat, signed-out Favorites/request boundaries, least-played request browsing,
@@ -30,10 +30,10 @@ membership/request-activity differences remain pending.
 | Server favorite tracks | Yes | Same module | Same module | Same module | Same module | Yes | Yes | No known requirement | Favorites discovery/list HTML | No | Implemented; SST live verified | Other four share audited module and adapter contract; live account verification remains |
 | Community chat | Yes | Same module | Same module | Same module | Same module | Yes | Read public; post authenticated | No | ClearChat HTML | No | Implemented; SST live verified | 30-second minimum, history memory-only |
 | Private Messages | Yes | Yes | Yes | Yes | Yes | Potentially | Yes | No | Legacy HTML | Possibly | M47 deferred | Underlying website/server issues and production limits must be resolved first |
-| Contact and membership links | Contact + VIP | Contact + VIP | Contact + VIP | Contact + RIP | Contact + VIP | Native directory only | Email/browser-dependent | Some destinations | Fixed monitored email + legacy membership HTML | Contact uses exact-recipient `ACTION_SENDTO`; membership uses allowlisted Custom Tab | Current shipped catalog | Email/browser apps and protected app sessions remain separate |
+| Contact handoff | Contact | Contact | Contact | Contact | Contact | Native directory + Android email handoff | Email app required | No | Fixed monitored email | No browser route | Current shipped catalog | One reviewed `ACTION_SENDTO` draft; the user controls final send and protected sessions are not transferred |
 | Forum access | Historical route evidence only | Same | Same | Same | Same | Future native/browser program | Station-dependent | Unknown | Not yet approved | Browser fallback planned | M51–M54 future scope | Not shipped; no current test may require Forum controls |
 | Other legacy pages | Not shipped | Not shipped | Not shipped | Not shipped | Not shipped | No current surface | Unknown | Unknown | Not approved | No | Explicitly unavailable | Games, Awards, news, stats, profiles, and other historical routes are not current capabilities |
-| Membership/VIP status | VIP verified | VIP unverified | VIP unverified | RIP route verified; account status unverified | VIP unverified | Yes if reliably exposed | Yes | N/A | Profile-scoped legacy HTML | Exact membership-management Custom Tab on all five | SST native status in M15; M16/M20 browser management | Explicit badge only; administrative rank never implies membership; browser and app sessions are not bridged |
+| Membership/VIP status | VIP verified | VIP unverified | VIP unverified | RIP route historically verified; account status unverified | VIP unverified | Yes if reliably exposed | Yes | N/A | Profile-scoped legacy HTML | No current purchase or management route | SST read-only native status in M15; future commerce is M58–M60 | Explicit badge only; administrative rank never implies membership; M31 removed browser purchase/registration routes |
 | Local favorites/preferences | N/A | N/A | N/A | N/A | N/A | Yes | No | No | Local persistence | No | Planned | Clearly separate from server favorites |
 | Sleep Timer | N/A | N/A | N/A | N/A | N/A | Yes | No | No | Local playback/service state | No | Implemented and Razr-validated in M24 | Service-owned deadline; presets/custom duration, adjust/cancel, persistence, system cancellation state, and deterministic expiry without another player |
 | System audio-output selection | Existing verified stream | Same | Same | Same | Same | Current route state only | No for listening | No | Android system Output Switcher | No | Dedicated Android output path implemented in M25 | Device/Bluetooth/wired/USB and supported system routes use the existing Media3 session; no scan, relay, proxy, or new endpoint. Google Cast remains a separate M55 feasibility gate |

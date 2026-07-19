@@ -63,7 +63,8 @@ Console form immediately before submission.
   no Player-added user payload; confirm the active form's treatment before saving Yes.
 - **Can users request deletion?** The app can remove local protected sessions and application data. It cannot presently
   delete pre-existing station accounts, posts, request records, server logs, or sent email. Do not claim a broader
-  mechanism until the station supplies one. M31 must also confirm that no external route enables account creation.
+  mechanism until the station supplies one. M31 confirmed that the current Contact-only external catalog does not
+  expose account creation; repeat the audit if a later Forum, account, or commerce milestone adds a route.
 - **Ephemeral processing:** Password/security-code, local search UI, and pending-message handling are transient inside the
   Player, but end-to-end processing is not known to be ephemeral while station retention is unknown.
 - **Independent security review:** No.
@@ -88,7 +89,8 @@ confirms one network-wide rule:
 1. Re-run the release dependency and merged-manifest audits against the exact protected pre-M39 candidate AAB.
 2. Probe every user-data endpoint and redirect for HTTPS/TLS without recording credentials, cookies, or private content.
 3. Confirm the owner/station facts above and update the public/native privacy wording where needed.
-4. Audit every M31 external destination for account creation/deletion implications.
+4. Preserve M31's Contact-only boundary and repeat the account creation/deletion audit before any M51, M57, or
+   M58–M60 external/account/commerce route ships.
 5. Compare every active Console question with this worksheet; Console wording is authoritative.
 6. Have the product owner attest to the final answers before saving or submitting them.
 7. Retain only sanitized completion evidence in Git.

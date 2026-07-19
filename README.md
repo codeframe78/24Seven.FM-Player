@@ -33,7 +33,7 @@ The [comprehensive project portal](https://codeframe78.github.io/24Seven.FM-Play
 
 ## Alpha status
 
-The canonical roadmap now runs from **M01 through M57**. **M01–M28 are complete**, preserving all 28 verified achievements. The active Alpha-readiness program is **M29–M35**; authorized closed-app community delivery is **M36–M38**; candidate delivery and publication are **M39–M41**.
+The canonical roadmap now runs from **M01 through M60**. **M01–M28 are complete**, preserving all 28 verified achievements. The active Alpha-readiness program is **M29–M35**; authorized closed-app community delivery is **M36–M38**; candidate delivery and publication are **M39–M41**.
 
 > [!IMPORTANT]
 > **Current focus:** close M29–M35 without weakening external approval, security, accessibility, signing, or request-integrity gates. M36–M38 cannot begin until an authorized event source exists, and M41 requires explicit publication authorization.
@@ -41,7 +41,7 @@ The canonical roadmap now runs from **M01 through M57**. **M01–M28 are complet
 <details>
 <summary><strong>Explore the current Alpha capability and validation summary</strong></summary>
 
-The current Alpha provides a responsive native player, service-owned Media3 playback and Sleep Timer, Android-managed audio-output selection, five-station navigation, device-local startup preferences, live metadata and artwork, Queue/History, five isolated station accounts with Android-protected sessions, Chat, song requests, Favorites, verified SST request activity, selected public station links, and user-reviewed privacy-safe diagnostics. Request availability is conservatively revalidated against fresh Queue and recent-play data before a one-shot submission, including stable indexed handling for 1,500-track Favorites lists.
+The current Alpha provides a responsive native player, service-owned Media3 playback and Sleep Timer, Android-managed audio-output selection, five-station navigation, device-local startup preferences, live metadata and artwork, Queue/History, five isolated station accounts with Android-protected sessions, Chat, song requests, Favorites, verified SST request activity, fixed-recipient Contact handoff, and user-reviewed privacy-safe diagnostics. Request availability is conservatively revalidated against fresh Queue and recent-play data before a one-shot submission, including stable indexed handling for 1,500-track Favorites lists.
 
 Public community content remains behind the adult age screen, versioned Terms acceptance, and separate mature-content reveal. Native report actions prepare bounded, station-scoped email drafts addressed to the monitored moderation contact for user review and explicit sending; Contact Us uses the same fixed-recipient handoff. Station-scoped local block controls are implemented. M27 supplies opt-in exact-name Chat-mention detection only while the existing Chat feed is actively observed; it is not closed-app push. Reliable delivery remains M36–M38 and will not be imitated with perpetual background polling.
 
@@ -60,7 +60,7 @@ The roadmap was renumbered into one dependency-ordered sequence on July 18, 2026
 | Community delivery | M36–M38 | ⏳ Authorization-gated | Authorized event source, secure delivery, and lifecycle/privacy certification |
 | Alpha delivery | M39–M41 | ⏳ Planned | Candidate freeze, Play-delivered remediation, and explicitly authorized Alpha publication |
 | Production readiness | M42–M45 | ⏳ Planned | Closed-test stabilization, production access, staged rollout, and operations |
-| Bounded future scope | M46–M57 | 🧊 Planned/deferred | Architecture sustainability, repaired Private Messages, native Forum phases, Cast feasibility, extended station capabilities, and account access |
+| Bounded future scope | M46–M60 | 🧊 Planned/deferred | Architecture sustainability, repaired Private Messages, native Forum phases, Cast feasibility, extended station/account capabilities, and authorized native VIP/RIP commerce |
 
 ### Current progression
 
@@ -70,11 +70,11 @@ The roadmap was renumbered into one dependency-ordered sequence on July 18, 2026
 - **Publication:** M39–M41 deliberately separate candidate freeze, Play delivery, and the final user-authorized Alpha action.
 - **Production:** M42–M45 add stabilization, production-access evidence, staged release, and operational recertification.
 - **Deferred/future:** Private Messages remain excluded until M47 repairs and verifies server delivery. Native Forum access is split across M51–M54. Google Cast remains a feasibility gate at M55.
-- **Testing:** the [Product Testing catalog](https://codeframe78.github.io/24Seven.FM-Player/project/product-testing/) now contains 35 stable test cases covering the current product, Alpha gates, release campaigns, and capability-gated future slices. PT-35 is the exact-artifact M29 Play declaration/privacy/reviewer-access case.
+- **Testing:** the [Product Testing catalog](https://codeframe78.github.io/24Seven.FM-Player/project/product-testing/) now contains 38 stable test cases covering the current product, Alpha gates, release campaigns, and capability-gated future slices. PT-35 is the exact-artifact M29 Play declaration/privacy/reviewer-access case; PT-36–PT-38 define the future authorized VIP/RIP purchase, activation, and lifecycle evidence.
 
 Use these sources as the current planning authority:
 
-- [Full M01–M57 roadmap](docs/ROADMAP.md)
+- [Full M01–M60 roadmap](docs/ROADMAP.md)
 - [Milestone ID migration ledger](docs/MILESTONE_MIGRATION.md)
 - [Implementation and acceptance plan](docs/IMPLEMENTATION_PLAN.md)
 - [Future-scope boundaries](docs/future-scope.md)
@@ -127,7 +127,7 @@ Most captures are from the physical Razr and use live station data, so track and
     <td width="50%" align="center" valign="top"><img src="docs/screenshots/m21-death-certification.png" alt="Death.FM Player with live title, artist, station artwork, station carousel, and playback controls" width="300"><br><strong>M20 Death.FM Player</strong><br><sub>Certified sparse-metadata playback and station navigation.</sub></td>
   </tr>
   <tr>
-    <td width="50%" align="center" valign="top"><img src="docs/screenshots/m21-death-rip-pages.png" alt="Death.FM trusted station-page directory including RIP membership" width="300"><br><strong>Death.FM RIP Pages</strong><br><sub>Trusted station pages and RIP membership access.</sub></td>
+    <td width="50%" align="center" valign="top"><img src="docs/screenshots/m21-death-rip-pages.png" alt="Historical Death.FM station-page evidence from M20 before the M31 Play-compliance removal" width="300"><br><strong>Historical Death.FM Page Evidence</strong><br><sub>M20 certification evidence retained for history; the RIP purchase route is not in the current Play catalog.</sub></td>
     <td width="50%" align="center" valign="top"><img src="docs/screenshots/m21-death-authenticated.png" alt="Independent Death.FM account signed in as Morgue while other visible station accounts remain signed out" width="300"><br><strong>M20 Death.FM Authentication</strong><br><sub>Verified station-isolated Death.FM account session.</sub></td>
   </tr>
   <tr>

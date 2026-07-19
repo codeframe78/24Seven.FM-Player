@@ -23,7 +23,7 @@ Public, device, and representative authenticated certification was performed Jul
 | Request browsing | The native least-played suggestion returned album-track content and retained the signed-out submission boundary; no request was submitted | Pass |
 | Authentication challenge | Native username/password fields, same-station CAPTCHA image, alphanumeric security-code field, sign-in action, and new-code action loaded without an error | Pass |
 | Capability differences | Request messages and listener activity remain explicit `Not verified`; they do not inherit SST-only capability flags | Pass |
-| Secondary pages at certification time | Historical Games/Awards browser evidence passed; the later catalog refinement removed those controls, leaving only Contact and Membership in the shipped app | Historical pass; not current scope |
+| Secondary pages at certification time | Historical Games/Awards and Membership browser evidence passed; later refinements removed those controls. M31 leaves only Contact in the global Play candidate. | Historical pass; Contact is current scope |
 | Navigation/accessibility | Player, Favorites, Chat, Queue, and More remain present with station-qualified semantics and the persistent mini-player on secondary destinations | Pass |
 
 No production Chat post, song request, profile change, membership action, or request mutation was performed. The only
@@ -55,7 +55,8 @@ automated repository/ViewModel tests, while the live gate proves successful rest
 
 - authentication, Chat, Favorites, Queue, History, requests, and trusted secondary content remain enabled;
 - SST-only request messages and listener activity remain disabled;
-- the current HTTPS station catalog contains exact Contact and Membership entries; historical Games/Awards routes remain evidence only and are not shipped controls.
+- the certification-time HTTPS station catalog contained exact Contact and Membership entries; M31 later removed the
+  Membership route, while historical Games/Awards routes also remain evidence only and are not shipped controls.
 
 The focused unit test passes.
 

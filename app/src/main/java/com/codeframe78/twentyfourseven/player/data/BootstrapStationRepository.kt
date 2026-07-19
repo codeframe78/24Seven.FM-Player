@@ -57,8 +57,6 @@ class BootstrapStationRepository(
             description = "Extreme metal",
             domain = "death.fm",
             capabilities = queueCapabilities.copy(supportsSecondaryContent = true),
-            membershipTitle = "RIP membership",
-            membershipModule = "RIP_Subscribe",
         ),
         station(
             id = "entranced",
@@ -122,8 +120,6 @@ class BootstrapStationRepository(
             domain: String,
             websiteDomain: String = domain,
             capabilities: StationCapabilities,
-            membershipTitle: String = "VIP membership",
-            membershipModule: String = "VIP_Subscribe",
         ) = Station(
             id = StationId(id),
             name = name,
@@ -133,28 +129,19 @@ class BootstrapStationRepository(
             streams = streams(domain),
             capabilities = capabilities,
             secondaryPages = if (capabilities.supportsSecondaryContent) {
-                secondaryPages(domain, membershipTitle, membershipModule)
+                secondaryPages()
             } else {
                 emptyList()
             },
         )
 
-        fun secondaryPages(domain: String, membershipTitle: String, membershipModule: String) = listOf(
+        fun secondaryPages() = listOf(
             StationPage(
                 StationPageKind.Contact,
                 "Contact Us",
                 "Email the monitored 24Seven.FM Player contact",
                 "mailto:$PLAYER_CONTACT_EMAIL",
             ),
-            page(domain, StationPageKind.Membership, membershipTitle, "Station membership information", membershipModule),
         )
-
-        fun page(
-            domain: String,
-            kind: StationPageKind,
-            title: String,
-            description: String,
-            module: String,
-        ) = StationPage(kind, title, description, "https://$domain/modules.php?name=$module")
     }
 }

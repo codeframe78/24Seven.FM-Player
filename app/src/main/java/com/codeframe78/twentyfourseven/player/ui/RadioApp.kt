@@ -1574,7 +1574,7 @@ private fun SecondaryContentSection(
     }
     Text("Station links", style = MaterialTheme.typography.titleMedium)
     Text(
-        "Contact Us opens your email app; website links open securely in your browser.",
+        "Contact Us opens a reviewed draft in your email app.",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )

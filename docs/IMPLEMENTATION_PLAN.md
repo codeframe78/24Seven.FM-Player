@@ -70,7 +70,7 @@ Publication is never an automatic consequence of a passing local build or CI run
 
 ## Deferred and future programs
 
-M46–M57 are detailed in [future scope](future-scope.md). They are nonblocking for M41 unless the owner explicitly moves
+M46–M60 are detailed in [future scope](future-scope.md). They are nonblocking for M41 unless the owner explicitly moves
 one into the Alpha contract.
 
 - M46 — Architecture Sustainability.
@@ -79,6 +79,9 @@ one into the Alpha contract.
 - M55 — Google Cast feasibility and certification.
 - M56 — extended station capability certification.
 - M57 — account registration, recovery, and management access.
+- M58 — membership commerce authorization and billing architecture (**Sol Extra High**).
+- M59 — native VIP/RIP purchase and activation (**Terra High**, with unresolved policy/security returned to Sol).
+- M60 — subscription lifecycle and five-station certification (**Sol Extra High** acceptance).
 
 ## Validation strategy
 

@@ -121,6 +121,9 @@ None of these milestones blocks M41 unless a later owner decision explicitly mov
 | M55 | Google Cast Feasibility and Certification | Planned research gate | Permitted stream use, receiver compatibility, lifecycle/route behavior, rights review, and five-station validation before implementation |
 | M56 | Extended Station Capability Certification | Planned research gate | Independently verify non-SST request messages, activity/cooldown, membership, and other capability differences without inheritance |
 | M57 | Account Registration, Recovery, and Management Access | Planned research gate | Verify permitted station routes and deletion/recovery behavior, then choose trusted browser or authorized native interfaces without sharing browser/app sessions |
+| M58 | Membership Commerce Authorization and Billing Architecture | Planned research/authorization gate | Confirm station-owner and merchant authority, choose Play Billing or an enrolled regional alternative, define VIP/RIP products and trusted activation contracts, and close tax, support, refund, privacy, and security obligations |
+| M59 | Native VIP/RIP Purchase and Activation | Planned after M58 | Implement the approved fully native purchase, pending, acknowledgement, activation, restore, and error flows with server-verified entitlement and strict station/account isolation |
+| M60 | Subscription Lifecycle and Five-Station Certification | Planned after M59 | Certify renewal, cancellation, grace, refund, revocation, restore, reinstall, device/account switching, accessibility, support, and independent VIP/RIP behavior across all five stations |
 
 ## Program dependencies
 
@@ -130,7 +133,8 @@ None of these milestones blocks M41 unless a later owner decision explicitly mov
 4. M40 proves Play delivery and resolves automated/reviewer findings.
 5. M41 requires explicit owner publication authorization.
 6. M42–M45 form the production path; Alpha publication is not production readiness.
-7. M47–M57 remain capability- and authorization-gated future work.
+7. M47–M60 remain capability- and authorization-gated future work. M58 must authorize commerce before M59 adds a
+   purchase surface, and M60 must certify the complete subscription lifecycle before release.
 
 The manual acceptance catalog is maintained on the
 [Product Testing page](../privacy-site/project/product-testing/index.html). `PT-*` identifiers do not change during

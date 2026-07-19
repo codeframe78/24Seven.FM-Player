@@ -32,7 +32,7 @@ Do not distribute the development debug APK as the public Alpha. Its machine-loc
 7. Check Queue and recently played content.
 8. If using a test account, verify sign in, session restoration, Chat, and Favorites. On SST, open More and refresh Request activity to verify recent requests, readiness, and the explicit membership indicator. Confirm eligible Favorites show a green `Request Now`; recently played or queued tracks show a red `Track Recently Played` and cannot be selected. Switch Favorites between Library order and Play state, including on a large list when available.
 9. Search the station library by Title, Album, Artist, and Genre. Submit an eligible favorite or catalog track only through the explicit confirmation while respecting station cooldowns.
-10. In More, open one verified **More from…** card. Confirm it opens in a browser tab and Back returns to the app. Browser sign-in is intentionally separate from the protected app session.
+10. In More, open **Contact Us** and confirm Android offers an email draft addressed to the monitored Player contact. Cancel without sending. Confirm there is no VIP/RIP membership, payment, registration, recovery, management, or deletion browser card in the Play candidate.
 11. Press Back twice and verify the exit confirmation. Choose **Keep listening** unless intentionally stopping playback.
 
 ## Suggested configuration coverage
@@ -67,5 +67,7 @@ Never include passwords, security-code answers or images, cookies, session value
 - Representative authenticated certification is complete for all five stations; natural server-side session expiry was not forcibly induced.
 - M24 Sleep Timer, M25's dedicated Android audio-output path, M26's user-reviewed privacy-safe diagnostics, and M27's local actively-observed Chat mentions are included. Google Cast is not exposed because receiver compatibility and permitted stream use remain unverified. Authorized closed-app delivery remains M36–M38 before the M41 publication gate.
 - Station accounts are currently station-specific.
+- M31 removes station VIP/RIP purchase and account-creation browser routes from the global Play candidate. Existing
+  membership status may still be shown when the station reports it, but the Player does not sell or upgrade membership.
 - Public station interfaces can change independently of the app.
 - Physical Razr playback and UI survive a measured open/tabletop/closed/reopened hinge cycle. Play-delivered install/update validation, the Play pre-launch report, and a complete spoken TalkBack pass remain release checks.

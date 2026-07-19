@@ -41,17 +41,19 @@ The phone shell uses bottom navigation below 600 dp. Wider layouts use a navigat
 ## Secondary station content
 
 `StationPage` and `StationPageKind` are immutable domain models attached to each catalogued station. A dedicated
-`supportsSecondaryContent` capability controls whether the native More directory is shown; unsupported stations
-render an explicit unavailable state. Compose emits the selected page upward and never opens a browser directly.
+`supportsSecondaryContent` capability controls whether the native More directory is shown. Compose emits the selected
+page upward and never launches an external app directly.
 
-`MainActivity` is the Android boundary that launches an Android Custom Tab only after
-`StationPageTrustPolicy` confirms the page is an exact entry for the selected station, uses HTTPS, has no embedded
-credentials or fragment, uses the default HTTPS port, and resolves to the same canonical station host. The browser
-owns its cookies and page lifecycle: protected app sessions are never copied, pages are not fetched or parsed by
-the app, and there is no polling, caching, or automatic form submission. Death.FM uses the same trust boundary but
-its independently verified membership card targets the station-specific `RIP_Subscribe` route rather than the
-other stations' `VIP_Subscribe` route. See `docs/m16-secondary-content-research.md` and
-`docs/m21-death-certification.md`.
+The M31 Play catalog contains exactly one Contact entry per station. `MainActivity` validates it through
+`StationPageTrustPolicy` and opens the fixed monitored recipient through `ACTION_SENDTO`; the email app owns the draft
+and final send. VIP/RIP membership pages were verified to advertise paid digital benefits and registration, so they
+are absent from the catalog and the trust policy rejects `Membership` even if accidentally supplied. The native
+Privacy notice also routes questions back to Contact rather than launching a separate browser account surface.
+
+The exact-entry same-origin HTTPS Custom Tab boundary remains dormant for a future authorized public page. It validates
+scheme, origin, credentials, fragments, and port before launch and never copies the protected app session. M51 and M57
+must re-audit the destination's reachable navigation—including legacy subscription and registration links—before
+cataloguing any Forum or account route. See `docs/m31-payments-account-lifecycle-validation.md`.
 
 ## Queue and history
 

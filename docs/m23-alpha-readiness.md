@@ -94,8 +94,9 @@ as already complete.
   expanded tablet, landscape/freeform, API 35 emulator, and API 36 Razr evidence. Display overrides were restored.
 - Authenticated Favorites browsing is available for all five stations, discovers the current member's station-specific list identifier without hard-coding it, keeps list data in memory only, and reuses the existing explicit one-shot request confirmation.
 - The compact More experience now prioritizes the selected station account, hides other station accounts until requested,
-  and places song requests, request activity, and device preferences behind accessible saved-state disclosures. Browser
-  links are limited to the mobile-relevant Contact and Membership pages.
+  and places song requests, request activity, and device preferences behind accessible saved-state disclosures. M31
+  limits the current station-page catalog to Contact through a fixed-recipient Android email draft; there is no shipped
+  station browser, Membership, purchase, registration, or account-management route.
 - Trusted HTTPS chat emoticons under each station's verified ClearChat smiley path render inline without permitting
   cross-origin images; bounded alt text remains the plain-text and accessibility fallback. Submitted phpBB emoticon
   codes are normalized only for the post-send visible-message confirmation.

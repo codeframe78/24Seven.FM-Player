@@ -3,6 +3,10 @@
 Public, physical-device, and representative authenticated certification was completed July 15, 2026 on
 `agent/initial-android-scaffold`.
 
+> Historical validation: M31 preserves this station certification but removes the RIP purchase/registration browser
+> route from the current global Play candidate. The screenshot and route observations below remain evidence of M20's
+> completed work, not a description of the current station-page catalog.
+
 ## Task assessment
 
 - Task Complexity Level: 2 — Feature Logic & API Integration
@@ -98,6 +102,6 @@ out. It contains only the administrator-approved test identity and no credential
 ## Certified limits
 
 Death.FM request messages, listener request activity, and native membership state remain explicitly `Not verified`.
-The RIP membership browser card remains available as separately verified secondary content, but the app does not copy
-its protected session into the browser or infer native account capabilities from that page. Native Private Messages
-remain deferred under M47.
+The RIP membership browser card was separately verified during certification, but M31 removed it from the current
+global Play candidate. Future purchase and activation work is gated by M58–M60. Native Private Messages remain
+deferred under M47.

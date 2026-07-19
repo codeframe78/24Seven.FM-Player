@@ -22,7 +22,7 @@ navigation:
   - section: roadmap
     label: Roadmap
     path: /project/roadmap/
-    description: Canonical M01–M57 milestones, dependencies, evidence, and future scope.
+    description: Canonical M01–M60 milestones, dependencies, evidence, and future scope.
   - section: resources
     label: Resources
     path: /project/resources/
@@ -35,7 +35,7 @@ navigation:
 roadmap_meta:
   updated: 2026-07-18
   achieved_count: 28
-  total_count: 57
+  total_count: 60
   active_phase: M29–M35
   active_label: Alpha readiness and release integrity
 
@@ -590,3 +590,33 @@ roadmap:
     dependencies: "M31 and station authorization"
     evidence: "docs/future-scope.md"
     summary: "Verify permitted routes then choose trusted browser or authorized native interfaces."
+
+  - id: "M58"
+    phase: "future"
+    name: "Membership Commerce Authorization and Billing Architecture"
+    state: "planned"
+    state_label: "Research and authorization gated"
+    blocking: false
+    dependencies: "Station/merchant authority and approved Play billing path"
+    evidence: "docs/future-scope.md"
+    summary: "Authorize the billing merchant product activation support refund privacy and security contracts before implementation."
+
+  - id: "M59"
+    phase: "future"
+    name: "Native VIP/RIP Purchase and Activation"
+    state: "planned"
+    state_label: "Planned after M58"
+    blocking: false
+    dependencies: "M58 approved architecture and activation service"
+    evidence: "docs/future-scope.md"
+    summary: "Implement the approved native purchase verification activation restore and truthful failure flows."
+
+  - id: "M60"
+    phase: "future"
+    name: "Subscription Lifecycle and Five-Station Certification"
+    state: "planned"
+    state_label: "Planned after M59"
+    blocking: false
+    dependencies: "M59 and independent station products"
+    evidence: "docs/future-scope.md"
+    summary: "Certify subscription lifecycle devices accessibility policy and independent VIP/RIP station behavior."

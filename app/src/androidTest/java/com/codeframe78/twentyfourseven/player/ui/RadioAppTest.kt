@@ -986,6 +986,34 @@ class RadioAppTest {
     }
 
     @Test
+    fun privacyQuestionsUseTheExistingContactHandoffWithoutABrowserLink() {
+        composeRule.setContent {
+            MaterialTheme {
+                RadioApp(
+                    state = sampleState().copy(destination = MainDestination.More),
+                    onSelectStation = {},
+                    onSelectDestination = {},
+                    onPlay = {},
+                    onPause = {},
+                    onStop = {},
+                    onRefreshQueue = {},
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("Read privacy notice").performScrollTo().performClick()
+        composeRule.onNodeWithText(
+            "For privacy questions, close this notice and use Contact Us in More.",
+            substring = true,
+        ).performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText(
+            "The current Alpha does not link to station websites",
+            substring = true,
+        ).performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText("Open project privacy questions").assertDoesNotExist()
+    }
+
+    @Test
     fun verifiedSecondaryContentIsReachableAndEmitsTheSelectedPage() {
         val opened = mutableListOf<StationPage>()
         val contact = StationPage(

@@ -9,7 +9,7 @@ section: product-testing
   <div>
     <p class="eyebrow">Tester workspace</p>
     <h1>Test the player. Record every result.</h1>
-    <p class="page-lede">This is the canonical manual acceptance catalog for the M01–M57 roadmap. A coordinator assigns current, specialist, campaign, or future cases with the stations, accounts, devices, and accessories needed for each run; no single tester is expected to own the entire matrix.</p>
+    <p class="page-lede">This is the canonical manual acceptance catalog for the M01–M60 roadmap. A coordinator assigns current, specialist, campaign, or future cases with the stations, accounts, devices, accessories, and approved commerce environments needed for each run; no single tester is expected to own the entire matrix.</p>
     <div class="actions">
       <a class="button primary" href="https://github.com/codeframe78/24Seven.FM-Player/issues/new?template=product-test.yml">Submit a test result</a>
       <a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/issues?q=is%3Aissue+label%3Atesting-feedback">Browse tester reports</a>
@@ -17,7 +17,7 @@ section: product-testing
   </div>
   <aside class="page-summary" aria-label="Testing workspace summary">
     <span>Manual acceptance catalog</span>
-    <strong>35 test cases</strong>
+    <strong>38 test cases</strong>
     <dl>
       <div><dt>Stations</dt><dd>5</dd></div>
       <div><dt>Outcomes</dt><dd>4</dd></div>
@@ -47,10 +47,10 @@ section: product-testing
     <button type="button" data-test-filter="future" aria-pressed="false">Future</button>
   </div>
   <div class="tester-catalog-progress">
-    <span data-test-progress-text>0 of 35 checked</span>
-    <progress max="35" value="0" data-test-progress aria-label="Tester catalog progress">0 of 35</progress>
+    <span data-test-progress-text>0 of 38 checked</span>
+    <progress max="38" value="0" data-test-progress aria-label="Tester catalog progress">0 of 38</progress>
   </div>
-  <p class="catalog-visible-count" data-test-visible-count role="status" aria-live="polite">35 test cases visible</p>
+  <p class="catalog-visible-count" data-test-visible-count role="status" aria-live="polite">38 test cases visible</p>
   <button type="button" class="catalog-clear" data-test-clear-progress>Clear progress</button>
 </div>
 <p class="catalog-empty-state" data-test-empty-state hidden>No test cases match the current search and filter.</p>
@@ -195,9 +195,9 @@ section: product-testing
     </article>
     <article id="pt-18">
       <span>PT-18 · Every station across the cohort</span>
-      <h3>Trusted station pages and browser isolation</h3>
-      <ol><li>For the assigned station, open Contact Us and verify Android offers an email composer addressed to the exact monitored recipient with the station named in the subject/body. Cancel without sending.</li><li>Open Membership only when the M31 compliance coordinator explicitly assigns PT-23. After M51 ships, also open the independently verified Forum entry; otherwise mark those subcases Blocked.</li><li>For approved website destinations, confirm Android uses a secure browser Custom Tab at the expected HTTPS station host, never an in-app WebView. Contact Us must use the email app instead of the browser.</li><li>Press Back and verify the existing app task, selected station, navigation state, timer, and playback remain intact after both handoff types.</li><li>Confirm neither the email app nor browser receives the protected native station session. Do not send a Contact Us message unless a separate case authorizes it.</li><li>Record clear no-email-app, no-browser, unavailable, or rejected states rather than navigating to an unexpected recipient or host.</li></ol>
-      <p class="test-pass"><strong>Pass:</strong> Contact Us uses only the fixed monitored recipient, approved web pages remain allowlisted and same-station, external apps receive no protected session, and Back returns to the live native task.</p>
+      <h3>Contact handoff and current external-route boundary</h3>
+      <ol><li>For the assigned station, open Contact Us and verify Android offers an email composer addressed to the exact monitored recipient with the station named in the subject/body. Cancel without sending.</li><li>Confirm the current station-page directory has no Membership, VIP/RIP purchase, subscription, registration, Forum, Games, Awards, website, or other browser card.</li><li>Open the native Privacy notice and confirm its questions/support guidance points to More → Contact Us without a direct browser link.</li><li>Press Back from the email draft and verify the existing app task, selected station, navigation state, timer, and playback remain intact.</li><li>Confirm the email app receives no protected native station session. Do not send a Contact Us message unless a separate case authorizes it.</li><li>Record a clear no-email-app or unavailable state rather than navigating to an unexpected recipient, browser, or host.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> Contact Us uses only the fixed monitored recipient, no unapproved web or commerce route is present, no protected session leaves the app, and Back returns to the live native task.</p>
     </article>
     <article id="pt-19">
       <span>PT-19 · Release-build support check</span>
@@ -212,7 +212,7 @@ section: product-testing
   <div class="content-intro wide">
     <p class="eyebrow">PT-20–PT-25 and PT-35 · Device, accessibility, policy, and release integrity</p>
     <h2>Cover human and specialist boundaries</h2>
-    <p>PT-20 and PT-21 are current physical/manual acceptance gates. PT-22–PT-25 define blocked future or specialist evidence for M31, M32, and M38. PT-35 is the active M29 Play-policy reconciliation case. Do not improvise a harness, credential, Console fact, operator policy, or authorization that has not been supplied.</p>
+    <p>PT-20 and PT-21 are current physical/manual acceptance gates. PT-23 is the M31 regression case; PT-22, PT-24, and PT-25 define blocked future or specialist evidence for M38 and M32. PT-35 is the active M29 Play-policy reconciliation case. Do not improvise a harness, credential, Console fact, operator policy, or authorization that has not been supplied.</p>
   </div>
   <div class="test-session-grid comprehensive-test-grid">
     <article id="pt-20">
@@ -233,11 +233,11 @@ section: product-testing
       <ol><li>Do not run this case against the current active-Chat preview. Mark it Blocked until M36 authorizes a source and an M37 delivery build is supplied.</li><li>When supplied, test permission allow/deny, foreground, background, task-removed/closed, device-idle, reboot, reinstall/token rotation, and network outage/recovery states.</li><li>Across assigned station/account pairs, verify exact-name mapping, self/blocked/duplicate suppression, station-specific opt-in/out, sign-out, and minimal private lock-screen payloads.</li><li>Tap an alert and verify station selection plus gated native Chat navigation; no protected session or message text may pass through a relay.</li><li>Record delivery delay, duplicate count, data/battery observations, and outage behavior. Private Message delivery remains excluded until M47–M50 close.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> authorized events arrive once under the documented lifecycle states, respect privacy and user controls, and never depend on continuous background polling.</p>
     </article>
-    <article class="future-test-case" id="pt-23">
-      <span>PT-23 · M31 compliance assignment only</span>
+    <article id="pt-23">
+      <span>PT-23 · M31 current-candidate regression</span>
       <h3>Membership, payment, and account-route compliance</h3>
-      <ol><li>Use the exact Play-candidate build and coordinator-approved station without entering payment or personal account data.</li><li>Open each shipped Membership or other external-content entry and record every reachable purchase, subscription, registration, recovery, management, and deletion path.</li><li>Verify regional/build gating and required disclosures match the approved M31 decision; a disallowed transaction or account-creation route must be absent or blocked.</li><li>Confirm browser/app sessions remain separate and Back returns to the same native task.</li><li>Cross-check the privacy notice, Data Safety worksheet, store listing, and tester instructions against the observed artifact.</li></ol>
-      <p class="test-pass"><strong>Pass:</strong> the Play artifact exposes only routes approved by M31 and its account/payment declarations match observable behavior.</p>
+      <ol><li>Use the exact Play-candidate build and repeat this case for all five stations without entering payment or personal account data.</li><li>Inspect More and the native Privacy notice. Confirm there is no Membership, VIP/RIP purchase, subscription, registration, recovery, management, deletion, GitHub Issues, station website, or other browser link.</li><li>Open Contact Us only far enough to verify a reviewed fixed-recipient email draft, then cancel. Confirm it does not launch a browser or transfer a protected station session.</li><li>Verify read-only membership evidence, where independently supported, does not offer purchase, activation, or management.</li><li>Cross-check the privacy notice, Data Safety worksheet, store listing, release notes, and tester instructions against the observed artifact.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> the current Play artifact exposes no payment or account-creation route, Contact remains an explicit user-controlled email draft, and every declaration matches observable behavior.</p>
     </article>
     <article class="future-test-case" id="pt-24">
       <span>PT-24 · M32 expiring-session harness required</span>
@@ -254,7 +254,7 @@ section: product-testing
     <article id="pt-35">
       <span>PT-35 · M29 Play coordinator only</span>
       <h3>Play declarations, privacy, reviewer access, and foreground media</h3>
-      <ol><li>Identify the exact signed candidate, package/version code, merged release manifest, runtime dependency graph, backup rules, and approved network policy. Confirm no permission, SDK, endpoint class, or data flow is absent from the M29 packet.</li><li>Trace credentials, sessions, Chat/request messages, library search terms, report/diagnostic handoffs, and source-IP handling. Confirm explicit user payloads use approved same-station HTTPS paths; public cleartext live audio must contain no Player-added credential, cookie, message, report, or diagnostic data.</li><li>From a clean install and non-owner network, validate one reusable least-privileged reviewer account for each station using the English Console instructions. Keep all identities and passwords only in Play Console; record only a sanitized five-station pass/block result.</li><li>Reconcile the public and native privacy notices, Data Safety form, developer identity/contact, operator retention/processors/IP use, and actual deletion boundary. Sign out must be described only as local-session removal, never station-account/content deletion.</li><li>Audit every shipped external route under PT-23. If any route enables account creation, stop and require the M31-approved in-app and web account-deletion paths before saving the declaration.</li><li>Verify the saved 18+ audience, explicit Restrict Minor Access decision, accurate IARC/UGC answers for public text Chat/request attribution and mature content, and the Music & Audio versus Social/anonymous/random-chat classification. If Child Safety Standards apply, require verified public CSAE standards, an operational CSAM response/reporting process, and a designated contact before self-certification.</li><li>Save only evidence-backed Console answers. Record one credential-free video from the exact signed candidate showing explicit Play, background playback, ongoing media notification, notification return to the existing task, Pause, Resume, and Stop; keep its private URL outside Git.</li></ol>
+      <ol><li>Identify the exact signed candidate, package/version code, merged release manifest, runtime dependency graph, backup rules, and approved network policy. Confirm no permission, SDK, endpoint class, or data flow is absent from the M29 packet.</li><li>Trace credentials, sessions, Chat/request messages, library search terms, report/diagnostic handoffs, and source-IP handling. Confirm explicit user payloads use approved same-station HTTPS paths; public cleartext live audio must contain no Player-added credential, cookie, message, report, or diagnostic data.</li><li>From a clean install and non-owner network, validate one reusable least-privileged reviewer account for each station using the English Console instructions. Keep all identities and passwords only in Play Console; record only a sanitized five-station pass/block result.</li><li>Reconcile the public and native privacy notices, Data Safety form, developer identity/contact, operator retention/processors/IP use, and actual deletion boundary. Sign out must be described only as local-session removal, never station-account/content deletion.</li><li>Repeat PT-23 on the exact artifact and confirm M31's Contact-only boundary remains intact. If any later route enables account creation, stop and require an approved in-app and web account-deletion path before saving the declaration.</li><li>Verify the saved 18+ audience, explicit Restrict Minor Access decision, accurate IARC/UGC answers for public text Chat/request attribution and mature content, and the Music & Audio versus Social/anonymous/random-chat classification. If Child Safety Standards apply, require verified public CSAE standards, an operational CSAM response/reporting process, and a designated contact before self-certification.</li><li>Save only evidence-backed Console answers. Record one credential-free video from the exact signed candidate showing explicit Play, background playback, ongoing media notification, notification return to the existing task, Pause, Resume, and Stop; keep its private URL outside Git.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> the exact artifact, five-station reviewer access, privacy/Data Safety/account boundaries, audience/content/UGC classifications, and media-playback declaration agree with the saved Console state, with only sanitized evidence recorded. Any missing operator fact, credential, candidate video, applicable child-safety process, or Console answer is <strong>Blocked</strong>, not a pass.</p>
     </article>
   </div>
@@ -262,7 +262,7 @@ section: product-testing
 
 <section class="content-section" id="future-tests">
   <div class="content-intro wide">
-    <p class="eyebrow">PT-26–PT-34 · Deferred and future capability contracts</p>
+    <p class="eyebrow">PT-26–PT-34 and PT-36–PT-38 · Deferred and future capability contracts</p>
     <h2>Publish the test boundary before the feature</h2>
     <p>These cases are intentionally visible and marked Future. Run them only when the named milestone supplies an authorized build, accounts, station evidence, and mutation allowance; otherwise record Blocked rather than treating absence as a defect.</p>
   </div>
@@ -321,6 +321,24 @@ section: product-testing
       <ol><li>Verify the assigned station's approved registration, recovery, management, and deletion entry points without exposing real credentials or personal data.</li><li>Confirm exact HTTPS host/path, browser/native choice, disclosures, cancellation, Back behavior, and app/browser session isolation.</li><li>Exercise unavailable, invalid, expired, success, and indeterminate outcomes only within the authorized test contract.</li><li>Cross-check M31 payments/account-creation/deletion decisions, privacy, Data Safety, and Play listing behavior.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> users can reach only verified compliant account-lifecycle actions with clear ownership and safe session boundaries.</p>
     </article>
+    <article class="future-test-case" id="pt-36">
+      <span>PT-36 · M58/M59 approved sandbox only</span>
+      <h3>VIP/RIP purchase authorization, verification, and activation</h3>
+      <ol><li>Confirm the build, station, account, region, product, price, renewal terms, billing provider, disclosures, and sandbox identity match the M58 authorization packet.</li><li>Exercise product loading, explicit confirmation, user cancellation, success, already-owned, rejected, unavailable, and indeterminate purchase outcomes without making an automatic second purchase.</li><li>For an approved sandbox success, verify the backend validates the purchase before activating VIP/RIP and that repeated callbacks remain idempotent.</li><li>Verify a purchase for one station/account cannot activate another station/account and that Death.FM uses only certified RIP products while the other stations use only independently certified VIP products.</li><li>Confirm purchase tokens, financial data, tester identity, private endpoints, and entitlement details are absent from logs, diagnostics, public reports, and screenshots.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> one authorized sandbox transaction is explicitly initiated, server-verified, activated once for the intended station/account, and truthfully represented through every failure boundary.</p>
+    </article>
+    <article class="future-test-case" id="pt-37">
+      <span>PT-37 · M60 lifecycle sandbox</span>
+      <h3>Subscription lifecycle, restore, and revocation</h3>
+      <ol><li>Use supplied lifecycle controls to exercise pending completion, renewal, non-renewing cancellation, expiry, grace/account hold where applicable, refund, chargeback, and revocation.</li><li>Verify entitlement appears, remains, downgrades, or clears only when the trusted verification source says it should; no client clock or cached purchase result may grant access alone.</li><li>Reinstall, change device, restore purchases, switch accounts, switch stations, sign out/in, and recover from process/network/server interruption.</li><li>Confirm duplicate callbacks and repeated restore actions are idempotent, while an indeterminate activation provides a safe support/recheck path without repurchase.</li><li>Verify cancellation, refund, support, and account-deletion guidance matches the approved provider and Play disclosures.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> the verified entitlement follows the complete authorized lifecycle across reinstall, restore, outages, refunds, and revocation without cross-account or cross-station leakage.</p>
+    </article>
+    <article class="future-test-case" id="pt-38">
+      <span>PT-38 · M60 five-station release certification</span>
+      <h3>Membership commerce station, device, accessibility, and policy certification</h3>
+      <ol><li>Repeat the authorized PT-36 and PT-37 matrix independently for all offered VIP/RIP station products; unsupported stations/products must remain explicit and unavailable.</li><li>Validate compact/expanded/foldable layouts, rotation, 2× text, TalkBack, alternative input, dark/light themes, process recreation, network loss, and physical Razr behavior.</li><li>Reconcile the exact signed artifact with Play product configuration, regional eligibility, privacy, Data Safety, Terms, pricing/renewal disclosures, support, refunds, and account lifecycle.</li><li>Confirm Player commerce remains separate from Administrator credentials, sessions, endpoints, capabilities, artifacts, and signing identity.</li><li>Record only sanitized evidence and require Sol Extra High final security, policy, lifecycle, and release acceptance.</li></ol>
+      <p class="test-pass"><strong>Pass:</strong> every offered station product, lifecycle, device, accessibility, privacy, support, and Play boundary is independently certified on the exact release candidate.</p>
+    </article>
   </div>
 </section>
 
@@ -335,10 +353,10 @@ section: product-testing
       <thead><tr><th>Target</th><th>Required cases</th><th>Distinct evidence to capture</th></tr></thead>
       <tbody>
         <tr><th>All five stations</th><td>PT-03, PT-07, signed-out PT-09–PT-11, PT-15 read, approved PT-18</td><td>One clean station-scoped result for playback/metadata, Queue/History, public/member gates, Chat read, and currently approved station links.</td></tr>
-        <tr><th>StreamingSoundtracks.com</th><td>PT-03, PT-07, PT-09–PT-19 as assigned; PT-23 only by M31 coordinator</td><td>Extended Queue, large Favorites, one-shot optional request message, request activity/cooldown, explicit membership evidence, and approved Contact/external-link behavior.</td></tr>
+        <tr><th>StreamingSoundtracks.com</th><td>PT-03, PT-07, PT-09–PT-19 as assigned; PT-23</td><td>Extended Queue, large Favorites, one-shot optional request message, request activity/cooldown, explicit membership evidence, and the Contact-only M31 boundary.</td></tr>
         <tr><th>1980s.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, approved PT-18</td><td>Independent authenticated session, request capability without SST-only fields, and approved Contact/external-link behavior.</td></tr>
         <tr><th>Adagio.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, approved PT-18</td><td>Composer/work/ensemble presentation without invented fields, independent session, requests, and approved station links.</td></tr>
-        <tr><th>Death.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, approved PT-18</td><td>Sparse metadata, compact Queue/History, independent session, requests, and approved RIP-branded external-link behavior.</td></tr>
+        <tr><th>Death.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, PT-18, PT-23</td><td>Sparse metadata, compact Queue/History, independent session, requests, and absence of the historical RIP purchase route.</td></tr>
         <tr><th>Entranced.FM</th><td>PT-03, PT-07, PT-09–PT-12, PT-15, approved PT-18</td><td>Legacy ICY punctuation presentation, extended Queue/History, independent session, requests, and approved station links.</td></tr>
       </tbody>
     </table>
@@ -355,7 +373,7 @@ section: product-testing
         <tr><th>Bluetooth and available wired/USB output</th><td>PT-04, PT-06</td><td>Record exact hardware category, Android chooser behavior, media buttons, and disconnect state.</td></tr>
         <tr><th>Maximum text plus physical TalkBack</th><td>PT-21</td><td>A human audible/intelligibility result is required; automated semantics alone do not close this row.</td></tr>
         <tr><th>Authorized closed-app delivery build</th><td>PT-22</td><td>Remain Blocked until M36–M38 supply an authorized source, implementation, and certification build.</td></tr>
-        <tr><th>Play policy and release-security coordination</th><td>PT-23–PT-25 and PT-35</td><td>Run only with the named M29/M31/M32 coordinator, controlled accounts, current Console/operator facts, mock routes, and supplied security tools.</td></tr>
+        <tr><th>Play policy and release-security coordination</th><td>PT-23–PT-25 and PT-35</td><td>PT-23 is the current M31 regression; run PT-24/PT-25/PT-35 only with the named M29/M32 coordinator, controlled accounts, current Console/operator facts, mock routes, and supplied security tools.</td></tr>
       </tbody>
     </table>
   </div>
@@ -370,6 +388,7 @@ section: product-testing
         <tr><th>M42 closed-test campaign</th><td>Full risk-distributed current catalog over the qualifying period</td><td>Tester continuity, representative engagement, feedback themes, fixes, retests, and exit criteria.</td></tr>
         <tr><th>M44 staged production</th><td>PT-01 update plus release-risk smoke at each stage</td><td>Health thresholds remain green or rollout pauses/rolls back under the documented plan.</td></tr>
         <tr><th>M45 recurring recertification</th><td>Risk-based station, device, policy, and dependency regression</td><td>Current station contracts, moderation, rights, privacy, Play quality, and update lineage remain valid.</td></tr>
+        <tr><th>M58–M60 membership commerce</th><td>PT-36–PT-38 only after authorization</td><td>Approved sandbox purchase and server activation, complete entitlement lifecycle, all-station isolation, accessibility, support, privacy, and Play evidence.</td></tr>
       </tbody>
     </table>
   </div>
@@ -397,7 +416,7 @@ section: product-testing
     <div><p class="eyebrow">Public report</p><h2>Redact before submitting</h2></div>
     <div>
       <p>GitHub issues are public. Never include passwords, security answers or CAPTCHA images, cookies, session values, account email addresses, real dates of birth, private messages, abuse-report content, signing material, private endpoints, full network captures, or screenshots containing personal information.</p>
-      <p>Do not repeatedly submit a song request, Chat post, Forum post, Private Message, or moderation report while investigating an indeterminate response. Inspect the relevant visible destination once, record the outcome, and stop. Do not test PT-22–PT-34 as shipped capabilities until their named roadmap milestones provide an authorized build and assignment. PT-35 may be run only by the M29 Play coordinator with current candidate, Console, and operator evidence.</p>
+      <p>Do not repeatedly submit a song request, Chat post, Forum post, Private Message, membership purchase, activation, or moderation report while investigating an indeterminate response. Inspect the relevant visible destination once, record the outcome, and stop. PT-23 is a current M31 regression; do not test PT-22, PT-24–PT-34, or PT-36–PT-38 as shipped capabilities until their named roadmap milestones provide an authorized build and assignment. PT-35 may be run only by the M29 Play coordinator with current candidate, Console, and operator evidence.</p>
       <ul class="inline-requirements"><li>Case ID included</li><li>Public metadata only</li><li>One environment per result</li><li>Redacted screenshots</li><li>No account secrets</li><li>No raw traffic captures</li></ul>
     </div>
   </div>

@@ -110,4 +110,18 @@ class StationPageTrustPolicyTest {
             )
         }
     }
+
+    @Test
+    fun `membership transaction route remains blocked even if catalogued`() {
+        val membership = StationPage(
+            StationPageKind.Membership,
+            "VIP membership",
+            "Station membership information",
+            "https://streamingsoundtracks.com/modules.php?name=VIP_Subscribe",
+        )
+        val membershipStation = station.copy(secondaryPages = listOf(membership))
+
+        assertNull(StationPageTrustPolicy.trustedUrl(membershipStation, membership))
+        assertNull(StationPageTrustPolicy.trustedEmailRecipient(membershipStation, membership))
+    }
 }

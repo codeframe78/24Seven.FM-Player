@@ -104,7 +104,7 @@ class BootstrapStationRepositoryTest {
     }
 
     @Test
-    fun `mobile relevant secondary pages are capability scoped and trusted`() = runTest {
+    fun `play compliant contact page is capability scoped and trusted`() = runTest {
         val stations = repository.observeStations().first()
 
         assertEquals(
@@ -113,7 +113,7 @@ class BootstrapStationRepositoryTest {
         )
         stations.filter { it.capabilities.supportsSecondaryContent }.forEach { station ->
             assertEquals(
-                listOf(StationPageKind.Contact, StationPageKind.Membership),
+                listOf(StationPageKind.Contact),
                 station.secondaryPages.map { it.kind },
             )
             assertEquals(
@@ -140,10 +140,7 @@ class BootstrapStationRepositoryTest {
         }
         assertEquals("https://1980s.fm/", station.websiteUrl)
         assertEquals(
-            listOf(
-                StationPageKind.Contact,
-                StationPageKind.Membership,
-            ),
+            listOf(StationPageKind.Contact),
             station.secondaryPages.map { it.kind },
         )
         assertEquals(
@@ -169,10 +166,7 @@ class BootstrapStationRepositoryTest {
         }
         assertEquals("https://adagio.fm/", station.websiteUrl)
         assertEquals(
-            listOf(
-                StationPageKind.Contact,
-                StationPageKind.Membership,
-            ),
+            listOf(StationPageKind.Contact),
             station.secondaryPages.map { it.kind },
         )
         assertEquals(
@@ -198,14 +192,9 @@ class BootstrapStationRepositoryTest {
         }
         assertEquals("https://death.fm/", station.websiteUrl)
         assertEquals(
-            listOf(
-                StationPageKind.Contact,
-                StationPageKind.Membership,
-            ),
+            listOf(StationPageKind.Contact),
             station.secondaryPages.map { it.kind },
         )
-        assertEquals("RIP membership", station.secondaryPages.last().title)
-        assertEquals("https://death.fm/modules.php?name=RIP_Subscribe", station.secondaryPages.last().url)
         assertEquals(
             true,
             station.secondaryPages.all { it.isTrustedFor(station) },
@@ -229,14 +218,9 @@ class BootstrapStationRepositoryTest {
         }
         assertEquals("https://entranced.fm/", station.websiteUrl)
         assertEquals(
-            listOf(
-                StationPageKind.Contact,
-                StationPageKind.Membership,
-            ),
+            listOf(StationPageKind.Contact),
             station.secondaryPages.map { it.kind },
         )
-        assertEquals("VIP membership", station.secondaryPages.last().title)
-        assertEquals("https://entranced.fm/modules.php?name=VIP_Subscribe", station.secondaryPages.last().url)
         assertEquals(
             true,
             station.secondaryPages.all { it.isTrustedFor(station) },

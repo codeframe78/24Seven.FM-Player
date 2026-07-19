@@ -18,11 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.codeframe78.twentyfourseven.player.R
-
-private const val ProjectIssuesUrl = "https://github.com/codeframe78/24Seven.FM-Player/issues"
 
 @Composable
 internal fun PrivacySection() {
@@ -49,7 +46,6 @@ internal fun PrivacySection() {
 
 @Composable
 private fun PrivacyNoticeDialog(onDismiss: () -> Unit) {
-    val uriHandler = LocalUriHandler.current
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Privacy notice") },
@@ -66,14 +62,12 @@ private fun PrivacyNoticeDialog(onDismiss: () -> Unit) {
                 Text("The app stores only the adult/not-adult age-screen result, accepted Terms version, mature-community-content visibility choice, station-scoped blocked identities, and which stations you enable for Chat-mention notifications. It does not save the entered date of birth.")
                 Text("All app-private data is excluded from Android cloud backup and device-to-device transfer.")
                 Text("When you explicitly choose Review email for an abuse report, the app prepares a bounded draft with the selected station, report category, reported user, content snapshot, your entered name or station nickname, and optional details. Android opens your chosen email app with the monitored moderation recipient, subject, and body prefilled. You may edit, cancel, or send it there. The Player cannot read your email account or confirm sending or delivery, and it does not save the draft or report. The email app and recipient may retain a sent report under their own practices.")
-                Text("Selected public station pages open only after you tap them in a secure browser tab. The app passes an allowlisted station address but does not copy its protected session into the browser. Browser cookies and history are managed separately by your browser.")
+                Text("The current Alpha does not link to station websites, VIP/RIP purchase or activation, account registration, recovery, management, or deletion pages. Contact Us opens only a reviewed draft in your email app and does not copy the protected station session.")
                 Text("Chat posts, song requests, and optional request messages are sent only after explicit actions. Chat history and pending request text are transient. If enabled, exact-name Chat mentions are matched on-device; notification deduplication retains only bounded message fingerprints in memory, and notification text contains the station and sender but not the Chat message. The current preview works only while Chat is actively refreshing and does not claim closed-app push delivery. The app contains no ads, analytics, tracking SDK, crash reporting, or developer-operated backend.")
                 Text("Station, stream, content-delivery, and network providers can receive connection information such as the source IP address and may retain normal server or network logs under their own practices. The Player does not read or persist the source IP address itself.")
                 Text("Permissions", style = MaterialTheme.typography.titleSmall)
                 Text("Internet and network-state access support station connections. Foreground media playback and notification access support background audio and system controls. The app does not request contacts, location, microphone, camera, photos, phone, SMS, or broad file access.")
-                TextButton(onClick = { uriHandler.openUri(ProjectIssuesUrl) }) {
-                    Text("Open project privacy questions")
-                }
+                Text("For privacy questions, close this notice and use Contact Us in More. The Player will open a reviewed email draft and you control whether it is sent.")
             }
         },
         confirmButton = { TextButton(onClick = onDismiss) { Text("Close") } },

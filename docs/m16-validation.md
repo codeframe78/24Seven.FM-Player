@@ -2,6 +2,10 @@
 
 Validated July 14, 2026 from implementation commit `90a7f98` on `agent/initial-android-scaffold`.
 
+> Historical validation: M31 preserves this completed milestone but supersedes its shipping catalog. The current
+> global Play candidate exposes only Contact through a reviewed Android email draft; membership, payment, registration,
+> and other browser routes are absent pending their later authorization programs.
+
 ## Delivered behavior
 
 - Added immutable station-page presentation models and a `supportsSecondaryContent` capability.
