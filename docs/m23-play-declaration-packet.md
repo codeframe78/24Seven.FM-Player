@@ -1,6 +1,6 @@
 # M29 Google Play declaration packet
 
-Date: July 18, 2026
+Date: July 19, 2026
 
 Status: exact-artifact and current-policy audit complete; owner, station, final-candidate, and Play Console gates remain
 
@@ -34,7 +34,7 @@ The audit used the current `main` source and release variant. `:app:processRelea
 | Target audience | Owner selected 18+; the app uses a neutral age screen and is not designed for children | Verify the saved selection and decide whether to enable Restrict Minor Access |
 | Content rating | Music & Audio app with public text Chat, requester identity/message, possible mature themes/profanity, and no user image/video upload | Owner must answer actual content frequency/intensity and submit the generated IARC ratings |
 | UGC | M28 provides Terms acceptance, objectionable-content rules, content/user reporting, blocking, ongoing monitored moderation, and a separate mature-content reveal | Reconcile the exact UGC and incidental-content answers with the candidate and active questionnaire |
-| Child Safety Standards | Current category is Music & Audio; the app does not declare itself Social and its authenticated station Chat is neither anonymous nor random | If Play classification or functionality puts the app in scope, do not self-certify until public CSAE standards, an operational CSAM response/reporting process, and a designated point of contact are verified |
+| Child Safety Standards | Current category is Music & Audio; radio is the core function, and authenticated station Chat is neither anonymous nor random | Current scope covers anonymous/random-chat apps and apps in Social/Dating categories. If active Console classification or functionality puts the Player in scope, do not self-certify until public CSAE standards, an operational CSAM response/reporting process, and a designated point of contact are verified |
 | Data Safety | Field inventory is complete in `m23-data-safety.md`; there is no developer backend or telemetry SDK | Station retention/deletion/IP-use facts, final TLS probes, and owner review remain |
 | Account deletion | No account creation in the native app or current external catalog; Sign out removes only the local protected session | M31 audit complete for the current candidate; any later account-creation route requires approved in-app and web deletion paths before release |
 | Privacy policy | Public HTTPS policy and native notice exist and disclose the station/operator boundary | Align the exact Play developer identity/contact and station retention/deletion path; keep native and public wording consistent |
@@ -143,10 +143,13 @@ The owner must answer questions about the real frequency/intensity of sexual the
 violence, or other mature station/community content. Do not minimize those answers to obtain a lower rating. Retain
 the generated multi-authority rating result privately.
 
-Google currently defines a Social app for Child Safety Standards as an app that declares itself Social in Play
-Console. The saved category is Music & Audio, and this app is not an anonymous or random chat service. Treat Child
-Safety Standards as a classification gate: re-evaluate it against the active Console and current functionality. If it
-becomes applicable, an 18+ target and age gate do not exempt the app.
+Google's current Child Safety Standards scope includes anonymous/random-chat apps and apps declared in the Social or
+Dating categories. The saved category is Music & Audio, radio remains the app's core functionality, station Chat
+requires a named authenticated station account, and the app does not randomly connect people. Treat this as a
+classification gate rather than a permanent exemption: re-evaluate it against the active Console and current
+functionality. If the app becomes in scope, an 18+ target and age gate do not exempt it. Google's announced
+Age-Restricted Content and Functionality expansion for anonymous/random-chat apps takes effect August 26, 2026; the
+current Player does not match those definitions, but confirm the active Restrict Minor Access questions before saving.
 
 ## Data Safety, privacy, and deletion
 
@@ -191,3 +194,4 @@ M29 remains **Waiting externally** until all of the following are true:
 - [User Data and UGC policies](https://support.google.com/googleplay/android-developer/answer/17190352)
 - [Account deletion requirements](https://support.google.com/googleplay/android-developer/answer/13327111)
 - [Child Safety Standards guidance](https://support.google.com/googleplay/android-developer/answer/14747720)
+- [Age-Restricted Content and Functionality](https://support.google.com/googleplay/android-developer/answer/16302250)

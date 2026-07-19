@@ -1,6 +1,6 @@
 # M29 Google Play Data Safety worksheet
 
-Checked against the current Google Play definitions and the release variant on July 18, 2026. This is a conservative
+Checked against the current Google Play definitions through July 19, 2026 and the release variant on July 18, 2026. This is a conservative
 implementation worksheet, not the final owner declaration. Reconcile it with the exact signed candidate and active
 Console form immediately before submission.
 
