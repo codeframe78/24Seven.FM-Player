@@ -1,6 +1,6 @@
 # M28–M35 modern Android device compatibility matrix
 
-Validated through July 16, 2026 for the `0.1.0-alpha01` candidate. The product requirement is adaptive support across
+Validated through July 19, 2026 for the `0.1.0-alpha01` candidate. The product requirement is adaptive support across
 current Android phones, tablets, foldables, multi-window, and freely resized windows. This is a window-size contract,
 not a list of hard-coded device models.
 
@@ -54,8 +54,11 @@ and diagnostics actions as appropriate to each surface. Two unlabeled checkbox n
 now announces `I Agree`, and the station-scoped Chat setting announces `Notify when my station name is mentioned`.
 UIAutomator reported no remaining `NAF=true` actionable node on the inspected surfaces after that correction.
 
-This is real accessibility-service traversal, not semantics-only inference. A human audible/intelligibility check on
-physical hardware still remains for Alpha because automated inspection cannot judge speech pronunciation or clarity.
+This is real accessibility-service traversal, not semantics-only inference. On July 19, a human completed the audible
+check on the physical Razr using the signed release package: TalkBack clearly announced `StreamingSoundtracks.com`,
+`Play live radio, button`, and the Player, Favorites, Queue, and More destinations. TalkBack was then disabled and the
+previous Voice Access service restored. This closes the human pronunciation/intelligibility portion of M34 without
+recording a personal profile, audio capture, or private accessibility setting.
 
 ### Voice Access physical follow-up
 
@@ -102,8 +105,8 @@ changes cancel a pending recovery.
   two-Back flow reaches the expected exit dialog.
 - Automated semantics verify descriptive click targets for all five navigation items even when enlarged text requires
   labels to yield their limited navigation-bar space. Real Google TalkBack service traversal passes across the API 35
-  phone, Fold open/half-open/closed, and Tablet landscape/portrait matrix; human audible review remains a physical-device
-  Alpha check.
+  phone, Fold open/half-open/closed, and Tablet landscape/portrait matrix; the physical-Razr human audible review also
+  passes for the signed release package.
 - Three recovery-policy tests cover offline one-shot recovery, online server-error suppression, and pause/cancel intent;
   a connected Compose test verifies the waiting explanation and available Pause action.
 

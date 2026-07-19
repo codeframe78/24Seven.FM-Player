@@ -70,4 +70,6 @@ Never include passwords, security-code answers or images, cookies, session value
 - M31 removes station VIP/RIP purchase and account-creation browser routes from the global Play candidate. Existing
   membership status may still be shown when the station reports it, but the Player does not sell or upgrade membership.
 - Public station interfaces can change independently of the app.
-- Physical Razr playback and UI survive a measured open/tabletop/closed/reopened hinge cycle. Play-delivered install/update validation, the Play pre-launch report, and a complete spoken TalkBack pass remain release checks.
+- Physical Razr playback and UI survive a measured open/tabletop/closed/reopened hinge cycle, and the signed release
+  package passes the human spoken TalkBack check. Play-delivered install/update validation and the Play pre-launch
+  report remain M40 release checks.

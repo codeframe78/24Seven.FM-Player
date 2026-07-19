@@ -380,7 +380,7 @@ roadmap:
     blocking: true
     dependencies: "Test humans and hardware"
     evidence: "docs/m23-device-compatibility.md"
-    summary: "Local device coverage is strong; human audible TalkBack and broader fair alternative-input and adaptive evidence remain."
+    summary: "Local device coverage is strong and the physical human TalkBack pass is recorded; broader fair alternative-input and adaptive evidence remain."
 
   - id: "M35"
     legacy_id: "M23.1"

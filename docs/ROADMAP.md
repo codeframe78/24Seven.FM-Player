@@ -72,7 +72,7 @@ allow, but no partial checkpoint should be described as release-ready.
 | M31 | Payments, External Links, and Account Lifecycle Compliance | Complete | Contact-only external catalog; VIP/RIP purchase/registration and direct privacy browser routes removed; declarations and account boundary reconciled in `9e340b9` |
 | M32 | Session, Controller, Network, and Supply-Chain Security | Complete | Least-privilege MediaSession controller policy, coherent station-isolated cookie rotation/absolute expiry, trusted redirects, canonical station-ID migration, pinned/verified build inputs, and adversarial Razr harness evidence in `2bc45f7` |
 | M33 | Request Transaction Integrity | Complete | Fresh station/Queue/account/membership/cooldown/limit/identity validation, exact availability semantics, explicit station/account confirmation, and bounded one-shot result handling in `572d419` |
-| M34 | Device and Accessibility Acceptance | In progress | Human audible TalkBack, fair keyboard/pointer/assistive access, multi-window/foldable coverage, and local physical-device acceptance; Play delivery/pre-launch belongs to M40 |
+| M34 | Device and Accessibility Acceptance | In progress | Human audible TalkBack passes; fair keyboard/pointer/assistive access, multi-window/foldable coverage, and local physical-device acceptance remain; Play delivery/pre-launch belongs to M40 |
 | M35 | Release Signing and Console Eligibility | Complete | Current-head protected upload identity, local physical clean-install/update verification, package registration, eligible unused version code, and reproducible signed build accepted from evidence commit `55413bd` |
 
 ## Phase 5 — Authorized closed-app community notifications

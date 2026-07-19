@@ -35,8 +35,8 @@ The active program is M29–M35 Alpha readiness:
 | M35 Release Signing and Console Eligibility | M | Complete | Current-head protected signer path, local physical clean-install/update verification, package registration, version-code eligibility, and repeatable signed build | Re-audit if signer, package, version, or build path changes |
 
 M31–M33 are complete. M34's M33 confirmation-dialog follow-up passes focused 2×-text Razr and Tablet checks, and its
-focused Voice Access playback/navigation pass is recorded; human audible TalkBack and broader fair alternative-input,
-adaptive, and local-device acceptance remain open. M35 is Sol-accepted: its current-head protected build, local Razr
+focused Voice Access playback/navigation and physical-Razr human audible TalkBack passes are recorded; broader fair
+alternative-input, adaptive, and local-device acceptance remain open. M35 is Sol-accepted: its current-head protected build, local Razr
 clean/update path, exact package registration, and unused version code pass. Play-generated delivery, update, and
 pre-launch evidence belong exclusively to M40 after M39 freezes the exact candidate.
 
