@@ -262,7 +262,7 @@ section: product-testing
 
 <section class="content-section" id="future-tests">
   <div class="content-intro wide">
-    <p class="eyebrow">PT-26–PT-34 and PT-36–PT-38 · Deferred and future capability contracts</p>
+    <p class="eyebrow">PT-26–PT-28, PT-32–PT-34, and PT-36–PT-38 · Deferred and future capability contracts</p>
     <h2>Publish the test boundary before the feature</h2>
     <p>These cases are intentionally visible and marked Future. Run them only when the named milestone supplies an authorized build, accounts, station evidence, and mutation allowance; otherwise record Blocked rather than treating absence as a defect.</p>
   </div>
@@ -284,24 +284,6 @@ section: product-testing
       <h3>Private Message station, lifecycle, and notification certification</h3>
       <ol><li>Repeat PT-26 and PT-27 across all five stations with independent accounts and representative content.</li><li>Verify logout, expiry, process recreation, adaptive layouts, large text, TalkBack, and Razr lifecycle behavior.</li><li>If M38 is complete, test opt-in PM notifications, minimal payloads, duplicate suppression, sign-out, blocked identities where applicable, and gated navigation.</li><li>Confirm Chat and PM event controls and content never cross.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> each station passes independently and optional delivery uses only the authorized notification architecture.</p>
-    </article>
-    <article class="future-test-case" id="pt-29">
-      <span>PT-29 · M52 read-only build</span>
-      <h3>Native Forum reading and browser fallback</h3>
-      <ol><li>Complete community gates, then browse categories, boards, thread lists, pagination, posts, authors, timestamps, quotes, links, and supported media.</li><li>Verify loading, empty, stale, malformed, failure, station-switch, logout, and memory-bound behavior.</li><li>Confirm blocked authors and report actions apply before content is displayed where required.</li><li>Open unsupported formatting or content through the trusted M51 browser fallback and return to the same native task.</li></ol>
-      <p class="test-pass"><strong>Pass:</strong> authorized semantic content is native, bounded, safe, and station-scoped with an honest browser fallback.</p>
-    </article>
-    <article class="future-test-case" id="pt-30">
-      <span>PT-30 · M53 mutation approval required</span>
-      <h3>Forum compose, reply, report, and block</h3>
-      <ol><li>Verify sign-in, draft limits, supported formatting, preview, destination thread, and confirmation.</li><li>Cancel once, then submit one harmless approved post/reply once; classify success, rejection, or indeterminate result without retry.</li><li>Exercise report-content, report-user, block, unblock, expired session, and station-switch safety.</li><li>Confirm unsupported editing, deletion, attachments, reactions, polls, or private boards remain unavailable.</li></ol>
-      <p class="test-pass"><strong>Pass:</strong> Forum mutations are explicit, one-shot, moderated, and limited to certified behavior.</p>
-    </article>
-    <article class="future-test-case" id="pt-31">
-      <span>PT-31 · M54 certification build</span>
-      <h3>Forum five-station, lifecycle, accessibility, and notifications</h3>
-      <ol><li>Repeat PT-29 and authorized PT-30 paths for all five stations, including pagination and sparse/malformed content.</li><li>Validate phone, tablet, foldable, rotation, process recreation, 2× text, TalkBack, alternative input, and Razr use.</li><li>If M38 is complete, verify minimal station/thread notification payloads, opt-in/out, dedupe, blocks, sign-out, and gated deep links.</li><li>Confirm browser fallback remains available when native behavior cannot safely render or recover.</li></ol>
-      <p class="test-pass"><strong>Pass:</strong> each station and intended capability is independently certified without removing safe fallback.</p>
     </article>
     <article class="future-test-case" id="pt-32">
       <span>PT-32 · M55 Cast-certified build</span>
@@ -392,7 +374,7 @@ section: product-testing
         <tr><th>M42 closed-test campaign</th><td>Full risk-distributed current catalog over the qualifying period</td><td>Tester continuity, representative engagement, feedback themes, fixes, retests, and exit criteria.</td></tr>
         <tr><th>M44 staged production</th><td>PT-01 update plus release-risk smoke at each stage</td><td>Health thresholds remain green or rollout pauses/rolls back under the documented plan.</td></tr>
         <tr><th>M45 recurring recertification</th><td>Risk-based station, device, policy, and dependency regression</td><td>Current station contracts, moderation, rights, privacy, Play quality, and update lineage remain valid.</td></tr>
-        <tr><th>M51 verified Forum links</th><td>PT-18 only after a compliant M51 build exists</td><td>For now PT-18 must confirm Forum cards remain absent. Future exposure requires five exact HTTPS destinations, no payment/account-route regression, verified linked-UGC safety, separate browser sessions, and safe return to the existing task.</td></tr>
+        <tr><th>M51–M54 Forum scope · Retired</th><td>PT-18 Contact-only regression</td><td>Forum links, browser fallback, native Forum access, participation, and Forum notifications are permanently out of scope. PT-18 confirms the directory remains free of browser cards.</td></tr>
         <tr><th>M58–M60 membership commerce</th><td>PT-36–PT-38 only after authorization</td><td>Approved sandbox purchase and server activation, complete entitlement lifecycle, all-station isolation, accessibility, support, privacy, and Play evidence.</td></tr>
       </tbody>
     </table>
@@ -421,7 +403,7 @@ section: product-testing
     <div><p class="eyebrow">Public report</p><h2>Redact before submitting</h2></div>
     <div>
       <p>GitHub issues are public. Never include passwords, security answers or CAPTCHA images, cookies, session values, account email addresses, real dates of birth, private messages, abuse-report content, signing material, private endpoints, full network captures, or screenshots containing personal information.</p>
-      <p>Do not repeatedly submit a song request, Chat post, Forum post, Private Message, membership purchase, activation, or moderation report while investigating an indeterminate response. Inspect the relevant visible destination once, record the outcome, and stop. PT-23 is a current M31 regression. PT-24 and PT-25 are current M32 regressions only when the supplied controlled harnesses and assignment are available. Do not test PT-22, PT-26–PT-34, or PT-36–PT-38 as shipped capabilities until their named roadmap milestones provide an authorized build and assignment. PT-35 may be run only by the M29 Play coordinator with current candidate, Console, and operator evidence.</p>
+      <p>Do not repeatedly submit a song request, Chat post, Private Message, membership purchase, activation, or moderation report while investigating an indeterminate response. Inspect the relevant visible destination once, record the outcome, and stop. Forum access is permanently out of scope. PT-23 is a current M31 regression. PT-24 and PT-25 are current M32 regressions only when the supplied controlled harnesses and assignment are available. Do not test PT-22, PT-26–PT-28, PT-32–PT-34, or PT-36–PT-38 as shipped capabilities until their named roadmap milestones provide an authorized build and assignment. PT-35 may be run only by the M29 Play coordinator with current candidate, Console, and operator evidence.</p>
       <ul class="inline-requirements"><li>Case ID included</li><li>Public metadata only</li><li>One environment per result</li><li>Redacted screenshots</li><li>No account secrets</li><li>No raw traffic captures</li></ul>
     </div>
   </div>

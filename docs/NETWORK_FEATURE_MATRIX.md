@@ -1,6 +1,6 @@
 # 24seven.FM network feature matrix
 
-Audited July 15, 2026. `Implemented` means present in native code; `verified` distinguishes live evidence from structural similarity. Every account/session remains station-specific. StreamingSoundtracks.com completed its current-Alpha certification in M17; Private Messages remain separately deferred as M47.
+Audited July 15, 2026; current scope reconciled July 19, 2026. `Implemented` means present in native code; `verified` distinguishes live evidence from structural similarity. Every account/session remains station-specific. StreamingSoundtracks.com completed its current-Alpha certification in M17; Private Messages remain separately deferred as M47.
 
 M18 public/device evidence directly verifies 1980s.FM playback, metadata/artwork, Queue/History, public Chat,
 signed-out Favorites/request boundaries, least-played request browsing, and native sign-in challenge loading. The
@@ -9,7 +9,7 @@ current product capability. M31 removed every VIP/RIP purchase and registration 
 
 M19 public/device evidence now directly verifies Adagio.FM playback and both relay sources, truthful classical
 metadata/artwork, Queue/History, public Chat, signed-out Favorites/request boundaries, least-played request browsing,
-native sign-in challenge loading, and trusted Forums/secondary pages. Its authenticated account and
+native sign-in challenge loading, and historical secondary-page evidence. Its authenticated account and
 membership/request-activity differences remain pending.
 
 | Feature | StreamingSoundtracks.com | 1980s.FM | Adagio.FM | Death.FM | Entranced.FM | Native possible | Auth required | VIP required | Structured endpoint | Browser fallback | Status | Notes/blockers |
@@ -31,7 +31,7 @@ membership/request-activity differences remain pending.
 | Community chat | Yes | Same module | Same module | Same module | Same module | Yes | Read public; post authenticated | No | ClearChat HTML | No | Implemented; SST live verified | 30-second minimum, history memory-only |
 | Private Messages | Yes | Yes | Yes | Yes | Yes | Potentially | Yes | No | Legacy HTML | Possibly | M47 deferred | Underlying website/server issues and production limits must be resolved first |
 | Contact handoff | Contact | Contact | Contact | Contact | Contact | Native directory + Android email handoff | Email app required | No | Fixed monitored email | No browser route | Current shipped catalog | One reviewed `ACTION_SENDTO` draft; the user controls final send and protected sessions are not transferred |
-| Forum access | Public route verified | Same | Same | Same | Same | Future native/browser program | Station-dependent | Unknown | Administrator-approved; Play/safety remediation pending | Browser fallback planned | M51 waiting externally | All current pages expose VIP/RIP purchase/account navigation and lack a verified linked-UGC report/block boundary; no current test may require Forum controls |
+| Forum access | Retired | Retired | Retired | Retired | Retired | No | N/A | N/A | Historical route research only | No | Permanently excluded | The Player will not expose Forum links, browser fallback, native retrieval, participation, or notifications |
 | Other legacy pages | Not shipped | Not shipped | Not shipped | Not shipped | Not shipped | No current surface | Unknown | Unknown | Not approved | No | Explicitly unavailable | Games, Awards, news, stats, profiles, and other historical routes are not current capabilities |
 | Membership/VIP status | VIP verified | VIP unverified | VIP unverified | RIP route historically verified; account status unverified | VIP unverified | Yes if reliably exposed | Yes | N/A | Profile-scoped legacy HTML | No current purchase or management route | SST read-only native status in M15; future commerce is M58–M60 | Explicit badge only; administrative rank never implies membership; M31 removed browser purchase/registration routes |
 | Local favorites/preferences | N/A | N/A | N/A | N/A | N/A | Yes | No | No | Local persistence | No | Planned | Clearly separate from server favorites |

@@ -23,7 +23,7 @@ The audit used the current `main` source and release variant. `:app:processRelea
 | Network | Credentials, sessions, Chat, search, Favorites, request, Queue, History, artwork, and other app data use approved same-station HTTPS paths with same-origin enforcement | Final probes must confirm that every user-data path and redirect remains HTTPS before answering that all collected data is encrypted in transit |
 | Live audio | Only the five verified public live-radio hosts are permitted cleartext; those requests carry no Player-added credentials, cookies, Chat/request text, or report content | Do not describe all network traffic as HTTPS; distinguish unauthenticated public live audio from user-data transmission |
 | External handoffs | Contact/report opens a fixed-recipient email draft; diagnostics Copy/Share uses Android clipboard/chooser; M31 removed station browser routes from the candidate | Reconcile on-device transfer to another app and the specific user-initiated sharing exception in the active Data Safety form |
-| Accounts | The app signs into independently existing station accounts and has no native or linked account-creation or station-side deletion operation | M31 verified the candidate's Contact-only external boundary; re-audit this row if M51, M57, or M58–M60 later adds a route |
+| Accounts | The app signs into independently existing station accounts and has no native or linked account-creation or station-side deletion operation | M31 verified the candidate's Contact-only external boundary; re-audit this row if M57 or M58–M60 later adds a route |
 
 ## Console decision ledger
 

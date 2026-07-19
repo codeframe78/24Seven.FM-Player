@@ -43,7 +43,6 @@ data class StationCapabilities(
 
 enum class StationPageKind {
     Website,
-    Forums,
     Members,
     Statistics,
     TopTracks,

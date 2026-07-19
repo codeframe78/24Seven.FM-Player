@@ -35,7 +35,7 @@ The active program is M29–M35 Alpha readiness:
 | --- | --- | --- | --- | --- |
 | M29 Play Declarations, Privacy, and Data Safety | M | Waiting externally | PT-35 exact-artifact privacy/Data Safety; five-station reviewer access; audience/content/UGC classification; retention, deletion, processor, and IP facts; account boundary; foreground-media evidence | Station/operator facts, final candidate, and Play Console |
 | M30 Brand, Content, and Distribution Rights | S | Waiting externally | Preserve private rights evidence and record only sanitized completion facts | Written rights-holder authorization |
-| M31 Payments, External Links, and Account Lifecycle | M | Complete | Contact-only external catalog; membership/account browser routes removed; privacy, declarations, release notes, testing, and evidence reconciled | Re-audit before M51, M57, or M58–M60 ships |
+| M31 Payments, External Links, and Account Lifecycle | M | Complete | Contact-only external catalog; membership/account browser routes removed; privacy, declarations, release notes, testing, and evidence reconciled | Re-audit before M57 or M58–M60 ships |
 | M32 Session, Controller, Network, and Supply-Chain Security | XL, split | Complete | Controller command policy, protected-session coherence, trusted redirects, station-ID migration, dependency/action integrity, and adversarial tests | Re-audit when controller, session, redirect, station-ID, or build-input boundaries change |
 | M33 Request Transaction Integrity | L | Complete | Fresh station/Queue/account/membership/cooldown/limit checks, exact status contract, station/account/track identity, and bounded one-shot submission | Re-audit when request, Queue, account, readiness, or station capability contracts change; see `m33-request-transaction-validation.md` |
 | M34 Device and Accessibility Acceptance | L | Complete | Human audible TalkBack, fair alternative-input checks, adaptive/multi-window/foldable coverage, and local physical-device acceptance | Re-audit when an accessibility, input, windowing, or lifecycle boundary changes |
@@ -84,7 +84,7 @@ one into the Alpha contract.
 
 - M46 — Architecture Sustainability.
 - M47–M50 — repaired and certified Private Messages.
-- M51–M54 — Forum links, native reading, authenticated participation, and certification/notifications.
+- M51–M54 — retired Forum scope; retained only as historical roadmap IDs and research evidence.
 - M55 — Google Cast feasibility and certification.
 - M56 — extended station capability certification.
 - M57 — account registration, recovery, and management access.

@@ -6,10 +6,10 @@ import org.junit.Test
 
 class StationPageTrustPolicyTest {
     private val page = StationPage(
-        kind = StationPageKind.Forums,
-        title = "Forums",
-        description = "Community discussions",
-        url = "https://streamingsoundtracks.com/modules.php?name=Forums",
+        kind = StationPageKind.Statistics,
+        title = "Statistics",
+        description = "Station statistics",
+        url = "https://streamingsoundtracks.com/modules.php?name=Statistics",
     )
     private val station = Station(
         id = StationId("sst"),
@@ -28,7 +28,7 @@ class StationPageTrustPolicyTest {
 
     @Test
     fun `rejects a page that is not in the selected station catalog`() {
-        val unlisted = page.copy(url = "https://streamingsoundtracks.com/modules.php?name=Private_Messages")
+        val unlisted = page.copy(url = "https://streamingsoundtracks.com/modules.php?name=Statistics&view=monthly")
 
         assertNull(StationPageTrustPolicy.trustedUrl(station, unlisted))
     }
@@ -36,11 +36,11 @@ class StationPageTrustPolicyTest {
     @Test
     fun `rejects cross origin cleartext credentials fragments and nonstandard ports`() {
         listOf(
-            "https://example.com/modules.php?name=Forums",
-            "http://streamingsoundtracks.com/modules.php?name=Forums",
-            "https://listener@streamingsoundtracks.com/modules.php?name=Forums",
-            "https://streamingsoundtracks.com:8443/modules.php?name=Forums",
-            "https://streamingsoundtracks.com/modules.php?name=Forums#private",
+            "https://example.com/modules.php?name=Statistics",
+            "http://streamingsoundtracks.com/modules.php?name=Statistics",
+            "https://listener@streamingsoundtracks.com/modules.php?name=Statistics",
+            "https://streamingsoundtracks.com:8443/modules.php?name=Statistics",
+            "https://streamingsoundtracks.com/modules.php?name=Statistics#private",
         ).forEach { unsafeUrl ->
             val unsafe = page.copy(url = unsafeUrl)
             val unsafeStation = station.copy(secondaryPages = listOf(unsafe))

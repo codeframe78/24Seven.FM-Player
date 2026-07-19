@@ -107,7 +107,7 @@ body:
         - label: Diagnostics, privacy, or legal disclosures
         - label: Adaptive layout, lifecycle, large text, or TalkBack
         - label: Release integrity, Play delivery, or security harness
-        - label: Private Messages, Forum, Cast, or another future capability
+        - label: Private Messages, Cast, or another future capability
   - type: textarea
     id: scenario
     attributes:

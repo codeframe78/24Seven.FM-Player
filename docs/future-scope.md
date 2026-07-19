@@ -40,41 +40,13 @@ moderation boundaries, and representative accounts. Do not expose a partial ship
 - Validate device, accessibility, lifecycle, and account-isolation behavior.
 - Add new-message notifications only through M36–M38 after their authorization and privacy gates pass.
 
-## M51–M54 — Forum access program
+## M51–M54 — Retired Forum scope
 
-### M51 — Verified Forum Links
-
-- **Current finding (July 19, 2026):** administrator authorization and the five exact public HTTPS routes are verified,
-  but every current Forum page exposes VIP/RIP purchase and account navigation, and the linked-UGC report/block
-  boundary is not verified. Keep the catalog Contact-only until the remediation in
-  `m51-forum-links-research.md` is satisfied.
-- Verify each station's exact public HTTPS Forum route, TLS behavior, browser rendering, and permitted use.
-- Add only verified station-scoped routes to the existing trusted Custom Tab directory.
-- Keep browser cookies and sign-in separate from protected app sessions.
-- Extend PT-18 and the station matrix; retain an explicit unavailable state where no route is verified.
-
-### M52 — Native Forum Read-Only Foundation
-
-- Obtain authorization for native retrieval, fields, cadence, and sanitized fixtures before implementing an adapter.
-- Define repository contracts and immutable models for categories, boards, threads, posts, authors, timestamps,
-  pagination, and loading/empty/error/stale states.
-- Render verified semantic content in Compose without arbitrary HTML; use trusted browser fallback for unsupported content.
-- Keep data bounded and memory-only initially, cancel observation when leaving, and clear content on station changes.
-- Apply age, Terms, mature-content reveal, local blocks, and accessible report actions before displaying Forum UGC.
-
-### M53 — Authenticated Forum Participation
-
-- Certify session reuse, form discovery, CSRF, encoding, preview, limits, and result classification per station.
-- Add explicit compose/reply preview and confirmation with transient drafts and one-shot submission.
-- Extend report/block behavior without claiming indeterminate reports were delivered.
-- Keep editing, deletion, attachments, reactions, polls, and private boards disabled until independently authorized.
-
-### M54 — Five-Station and Notification Certification
-
-- Certify public/authenticated reading and intended participation for all five stations, including pagination,
-  malformed/sparse content, logout, lifecycle, large text, assistive access, adaptive layouts, and Razr use.
-- Add Forum notifications only through M36–M38 with minimal, station-scoped, duplicate-safe, block-aware payloads.
-- Retain Custom Tabs wherever native behavior is unsupported or fails safely.
+Forum access is permanently excluded from the Player by project decision. M51–M54 remain reserved historical IDs so
+past research, roadmap references, and tester evidence stay traceable; they have no implementation forecast and must
+not be revived by station authorization alone. The Player must not expose Forum links, Custom Tabs, browser fallback,
+native Forum retrieval, authenticated Forum participation, or Forum notifications. The July 19 route and policy audit
+remains in `m51-forum-links-research.md` as historical evidence only.
 
 ## M55 — Google Cast Feasibility and Certification
 

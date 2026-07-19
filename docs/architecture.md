@@ -50,10 +50,10 @@ and final send. VIP/RIP membership pages were verified to advertise paid digital
 are absent from the catalog and the trust policy rejects `Membership` even if accidentally supplied. The native
 Privacy notice also routes questions back to Contact rather than launching a separate browser account surface.
 
-The exact-entry same-origin HTTPS Custom Tab boundary remains dormant for a future authorized public page. It validates
-scheme, origin, credentials, fragments, and port before launch and never copies the protected app session. M51 and M57
-must re-audit the destination's reachable navigation—including legacy subscription and registration links—before
-cataloguing any Forum or account route. See `docs/m31-payments-account-lifecycle-validation.md`.
+The exact-entry same-origin HTTPS Custom Tab boundary remains dormant for any future authorized public page. It validates
+scheme, origin, credentials, fragments, and port before launch and never copies the protected app session. Forum access
+is retired and must not be catalogued; M57 must re-audit reachable navigation—including legacy subscription and
+registration links—before cataloguing any future account route. See `docs/m31-payments-account-lifecycle-validation.md`.
 
 ## Queue and history
 

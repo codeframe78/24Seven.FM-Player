@@ -85,7 +85,7 @@ notes remain in [MILESTONE_FORECAST.md](docs/MILESTONE_FORECAST.md).
 | --- | --- |
 | M46 Architecture sustainability | 1–3 active weeks per approved slice |
 | M47–M50 Private Messages | External repair first; then 1–3, 1–2, 1–2, and 2–4 active weeks respectively |
-| M51–M54 Forum | 2–5 active days, then 2–3, 2–3, and 2–4 active weeks respectively |
+| M51–M54 Forum | Retired by project decision; no implementation forecast |
 | M55 Cast feasibility | 2–4 active weeks; may end in an explicit no-go |
 | M56–M57 Station/account research | 1–3 active weeks each |
 | M58–M60 VIP/RIP commerce | 2–4 active weeks for architecture with external contract timing, then 3–6 and 2–4 active weeks |
@@ -97,7 +97,7 @@ notes remain in [MILESTONE_FORECAST.md](docs/MILESTONE_FORECAST.md).
 | Community delivery | M36–M38 | ⏳ Authorization-gated | Authorized event source, secure delivery, and lifecycle/privacy certification |
 | Alpha delivery | M39–M41 | ⏳ Planned | Candidate freeze, Play-delivered remediation, and explicitly authorized Alpha publication |
 | Production readiness | M42–M45 | ⏳ Planned | Closed-test stabilization, production access, staged rollout, and operations |
-| Bounded future scope | M46–M60 | 🧊 Planned/deferred | Architecture sustainability, repaired Private Messages, native Forum phases, Cast feasibility, extended station/account capabilities, and authorized native VIP/RIP commerce |
+| Bounded future scope | M46–M60 | 🧊 Planned/deferred | Architecture sustainability, repaired Private Messages, retired Forum scope, Cast feasibility, extended station/account capabilities, and authorized native VIP/RIP commerce |
 
 ### Current progression
 
@@ -106,8 +106,8 @@ notes remain in [MILESTONE_FORECAST.md](docs/MILESTONE_FORECAST.md).
 - **Authorization-gated:** M36–M38 require an approved station-side event source or privacy-compatible relay before implementation.
 - **Publication:** M39–M41 deliberately separate candidate freeze, Play delivery, and the final user-authorized Alpha action.
 - **Production:** M42–M45 add stabilization, production-access evidence, staged release, and operational recertification.
-- **Deferred/future:** Private Messages remain excluded until M47 repairs and verifies server delivery. M51 has verified administrator permission and five public Forum routes but waits for a destination that removes payment-navigation and linked-UGC safety blockers; native Forum access remains split across M51–M54. Google Cast remains a feasibility gate at M55, and native VIP/RIP commerce is authorization-gated across M58–M60.
-- **Testing:** the [Product Testing catalog](https://codeframe78.github.io/24Seven.FM-Player/project/product-testing/) now contains 38 stable test cases covering the current product, Alpha gates, release campaigns, and capability-gated future slices. PT-35 is the exact-artifact M29 Play declaration/privacy/reviewer-access case; PT-36–PT-38 define the future authorized VIP/RIP purchase, activation, and lifecycle evidence.
+- **Deferred/future:** Private Messages remain excluded until M47 repairs and verifies server delivery. M51–M54 are retired by project decision: the Player will not expose, retrieve, or participate in station Forums; the historical research remains retained as evidence. Google Cast remains a feasibility gate at M55, and native VIP/RIP commerce is authorization-gated across M58–M60.
+- **Testing:** the [Product Testing catalog](https://codeframe78.github.io/24Seven.FM-Player/project/product-testing/) now contains 35 stable test cases covering the current product, Alpha gates, release campaigns, and capability-gated future slices. PT-29–PT-31 were retired with the permanent removal of Forum scope. PT-35 is the exact-artifact M29 Play declaration/privacy/reviewer-access case; PT-36–PT-38 define the future authorized VIP/RIP purchase, activation, and lifecycle evidence.
 
 Use these sources as the current planning authority:
 

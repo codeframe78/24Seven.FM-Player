@@ -1,9 +1,9 @@
-# M51 verified Forum links research
+# M51 historical Forum links research
 
 Date: July 19, 2026
 
-Status: public-route and policy audit complete; link exposure is waiting for a compliant destination and moderation
-contract
+Status: retired by project decision on July 19, 2026. This audit is historical evidence only; the Player will not
+expose Forum links, Custom Tabs, native retrieval, participation, or notifications.
 
 ## Authorization and scope
 
@@ -66,9 +66,9 @@ The current global Play candidate must not add these Forum cards yet:
 Site-administrator authorization resolves permitted station use, but it does not supersede Google Play Payments or UGC
 requirements. Adding the cards now would regress M31 and make the M29 declarations inaccurate.
 
-## Required remediation
+## Superseded remediation options
 
-M51 can resume when one of these designs is approved and verified:
+Before the retirement decision, M51 could have resumed when one of these designs was approved and verified:
 
 - a dedicated public HTTPS Forum experience for Player users whose complete reachable navigation cannot lead to
   VIP/RIP purchase, gift, registration, or another alternate-payment path; keeps navigation HTTPS; and provides
@@ -79,14 +79,15 @@ M51 can resume when one of these designs is approved and verified:
 M52 remains a separate option only after explicit native-retrieval authorization defines permitted fields, cadence,
 pagination, sanitized fixtures, and reporting/blocking behavior. M51 does not authorize M52 or M53.
 
-## Existing implementation boundary
+## Final implementation boundary
 
 - The bootstrap catalog remains Contact-only.
 - No Forum, payment, registration, recovery, management, or deletion card is exposed.
 - No WebView, network adapter, parser, cookie bridge, new permission, or new dependency was added.
-- `StationPageKind.Forums`, the exact-entry trust policy, and the Custom Tab launcher remain dormant infrastructure.
-- PT-18 remains the current Contact-only regression. Future Forum cases stay blocked until an authorized compliant
-  build exists.
+- The Forum page kind and its dedicated trust-policy test were removed. The generic Custom Tab boundary remains only
+  for separately authorized non-Forum future scope and must not be used for Forum access.
+- PT-18 remains the current Contact-only regression. Forum-specific future cases were removed from the Product Testing
+  catalog; M51–M54 remain retired historical IDs.
 
 Official policy references:
 

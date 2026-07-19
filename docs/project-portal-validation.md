@@ -1,6 +1,6 @@
 # Comprehensive project portal validation
 
-Validated July 18, 2026.
+Validated July 19, 2026.
 
 ## Outcome
 
@@ -9,10 +9,10 @@ The GitHub Pages surface now provides a comprehensive, responsive, interactive p
 - a product overview with an accessible screenshot lightbox and detailed feature/station boundaries;
 - an interactive native architecture explorer, source organization, engineering principles, and milestone workflow;
 - automated, emulator, physical-device, accessibility, network, performance, signing, and CI evidence with copyable commands and inspectable table rows;
-- a tester-facing 38-case product workspace with local search, status filters, device-only checklist progress, bounded smoke/member/device/resilience/adaptive sessions, dedicated M29/M31 policy cases, future VIP/RIP commerce lifecycle cases, and a structured public result form for passes, failures, notes, and blocked tests;
+- a tester-facing product workspace with local search, status filters, device-only checklist progress, bounded smoke/member/device/resilience/adaptive sessions, dedicated M29/M31 policy cases, future VIP/RIP commerce lifecycle cases, and a structured public result form for passes, failures, notes, and blocked tests;
 - all 33 achieved checkpoints in verified chronological order, including completed M24 Sleep Timer, M25 Audio-Output Selection, M26 In-App Diagnostics, M27 local Chat mentions, M28 UGC safety, M31 payments/account-route compliance, M32 security, M33 request integrity, M34 device/accessibility acceptance, and M35 signing/Console eligibility;
 - the two remaining M29–M35 Alpha-readiness gates, completed M31–M35, deferred M47 boundary, M36–M38 closed-app delivery gates, and M39–M41 Alpha-delivery program;
-- trigger-based estimates and confidence on every unfinished M29–M60 roadmap card, while preserving the rule that estimates start only after their named dependency; model routing remains in the planning documents;
+- trigger-based estimates and confidence on every unfinished roadmap card, while preserving the rule that estimates start only after their named dependency; M51–M54 are visibly retired and retain no forecast; model routing remains in the planning documents;
 - a searchable, category-filtered public resource index for architecture, protocol research, station certification, Play readiness, release notes, testing, and contribution;
 - a searchable privacy notice with a generated on-page table of contents while keeping all canonical notice text visible without JavaScript.
 
@@ -30,7 +30,7 @@ Repeated navigation and milestone history are generated from `privacy-site/_data
 - Theme selection and persistence, mobile navigation, site explorer search/keyboard controls, privacy search/table of contents, architecture exploration, command copying, tester checklist/filtering, roadmap filtering, resource filtering, inspectable tables, and screenshot lightboxes: pass.
 - All interactive checks completed with no uncaught browser exceptions or console errors: pass.
 - Product-testing issue-form YAML with 17 blocks and 16 unique field IDs: pass.
-- Roadmap review through M60, including the reordered M24–M41 sequence and M58–M60 commerce program: pass.
+- Roadmap review through M60, including the retired M51–M54 Forum scope and M58–M60 commerce program: pass.
 - All local stylesheets, scripts, icons, and screenshots resolved with no missing assets.
 - `git diff --check`: pass.
 
