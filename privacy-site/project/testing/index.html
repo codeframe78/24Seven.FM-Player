@@ -13,11 +13,11 @@ section: testing
   </div>
   <aside class="page-summary" aria-label="Current test summary">
     <span>Current green baseline</span>
-    <strong>194 checks</strong>
+    <strong>M32 green</strong>
     <dl>
-      <div><dt>Unit</dt><dd>147</dd></div>
-      <div><dt>Connected</dt><dd>48</dd></div>
-      <div><dt>Stations</dt><dd>5/5</dd></div>
+      <div><dt>Unit</dt><dd>157</dd></div>
+      <div><dt>Razr</dt><dd>20/20</dd></div>
+      <div><dt>Foreign app</dt><dd>1/1</dd></div>
     </dl>
   </aside>
 </section>
@@ -38,7 +38,7 @@ section: testing
     <p>Routine development preserves Gradle caches and starts with the smallest affected task. Broader checks are added only after targeted behavior passes or when integration risk requires them.</p>
   </div>
   <div class="validation-layers" data-command-library>
-    <article><span>Fast</span><h3>Local unit tests</h3><p>147 tests cover models, parsers, policies, repository behavior, ViewModel state, timer restoration/formatting, audio-route classification, diagnostic allowlisting/redaction, Chat-mention matching/deduplication, availability indexing, bounded email handoffs, and release helpers.</p><code>./gradlew :app:testDebugUnitTest</code></article>
+    <article><span>Fast</span><h3>Local unit tests</h3><p>157 tests cover models, parsers, controller and redirect policies, session rotation/expiry, repository behavior, ViewModel state, timer restoration/formatting, audio-route classification, diagnostic allowlisting/redaction, Chat-mention matching/deduplication, availability indexing, bounded email handoffs, and release helpers.</p><code>./gradlew :app:testDebugUnitTest</code></article>
     <article><span>Integration</span><h3>Connected Compose tests</h3><p>The current 48-test Tablet suite exercises UI semantics, navigation, dialogs, adaptive layouts, accessibility reflow, Favorites traversal, and device behavior.</p><code>./gradlew :app:connectedDebugAndroidTest</code></article>
     <article><span>Static</span><h3>Compilation and lint</h3><p>Kotlin compilation catches layer and type failures early; Android lint checks resources, manifests, API usage, accessibility, and packaging concerns.</p><code>./gradlew :app:compileDebugKotlin :app:lintDebug</code></article>
     <article><span>Release</span><h3>Artifact validation</h3><p>Release AAB/APK signatures, registered upload certificate, production manifest, dependencies, backup exclusions, and 16 KB packaging are audited separately.</p><code>validate-protected-play-bundle-linux.py</code></article>
@@ -60,7 +60,7 @@ section: testing
         <tr><th>API 35 · 16 KB</th><td>Modern runtime memory-page compatibility</td><td><span class="result-pass">Pass</span> APK, ELF, and runtime checks</td></tr>
         <tr><th>Pixel Fold</th><td>Foldable window states and compact/expanded transitions</td><td><span class="result-pass">Pass</span> open-state suite and focused regressions</td></tr>
         <tr><th>Pixel Tablet</th><td>Expanded portrait/landscape and two-pane behavior</td><td><span class="result-pass">Pass</span> current 48/48 connected suite</td></tr>
-        <tr><th>Motorola Razr 2023 · Android 16</th><td>OEM behavior, notification navigation, local mention controls, and physical hinge lifecycle</td><td><span class="result-pass">Pass</span> focused M27 2/2 checks, earlier 21/21 suite, and open/tabletop/closed/reopened playback cycle</td></tr>
+        <tr><th>Motorola Razr 2023 · Android 16</th><td>OEM behavior, notification navigation, local mention controls, security boundaries, and physical hinge lifecycle</td><td><span class="result-pass">Pass</span> M32 20/20 focused session/controller regressions plus 1/1 genuine foreign-app test, earlier 21/21 suite, and open/tabletop/closed/reopened playback cycle</td></tr>
       </tbody>
     </table>
   </div>
@@ -78,6 +78,7 @@ section: testing
     <article><span class="evidence-icon" aria-hidden="true">969</span><h3>Startup diagnostics</h3><p>Five API 35 debug-emulator cold launches measured 948–986 ms with a 969 ms median. This is diagnostic evidence, not a physical-device or Play performance claim.</p><a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/m23-performance-validation.md">See measurements</a></article>
     <article><span class="evidence-icon" aria-hidden="true">✓</span><h3>Station certification</h3><p>All five stations have representative public and authenticated validation covering their supported metadata, Queue, account, Chat, Favorites, request, and secondary-page boundaries.</p><a href="{{ '/project/resources/' | relative_url }}#station-certification">Browse station evidence</a></article>
     <article><span class="evidence-icon" aria-hidden="true">AAB</span><h3>Protected signing</h3><p>The Ubuntu path keeps the keystore in memory-backed storage, uses non-persistent Gradle inputs, verifies the exact registered upload certificate, and removes temporary material.</p><a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/m23-release-candidate-audit.md">Read release audit</a></article>
+    <article><span class="evidence-icon" aria-hidden="true">SEC</span><h3>Controller and session security</h3><p>M32 proves least-privilege MediaSession commands with a genuine foreign-package app, absolute cookie expiry and station isolation, strict same-origin redirects, canonical station-ID migration, and verified build inputs.</p><a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/m32-security-validation.md">Read M32 security evidence</a></article>
   </div>
 </section>
 
@@ -85,7 +86,7 @@ section: testing
   <div class="content-intro wide">
     <p class="eyebrow">GitHub Actions</p>
     <h2>Every PR gets an independent build</h2>
-    <p>The Android workflow checks out the candidate, configures JDK 17 and Android 36, and runs tests, lint, and debug assembly. A separate Pages workflow builds the canonical privacy notice and project portal with Jekyll before deployment from <code>main</code>.</p>
+    <p>The Android workflow uses commit-pinned actions, configures JDK 17 and Android 36, and runs dependency-verified tests, lint, and debug assembly. The Gradle wrapper and resolved dependencies have recorded checksums. A separate commit-pinned Pages workflow builds the canonical privacy notice and project portal with Jekyll before deployment from <code>main</code>.</p>
   </div>
   <div class="ci-flow" aria-label="Continuous integration sequence">
     <div><span>1</span><strong>Pull request</strong><small>Focused change and evidence</small></div>
@@ -110,6 +111,7 @@ section: testing
     <a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/m23-api36-readiness.md"><strong>API 36 readiness</strong><span>Platform migration and Android 16 results</span></a>
     <a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/m23-ugc-safety-validation.md"><strong>UGC safety validation</strong><span>Age, Terms, report, block, privacy, and delivery boundaries</span></a>
     <a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/m23-release-candidate-audit.md"><strong>Release-candidate audit</strong><span>Manifest, dependencies, signing, backup, and 16 KB checks</span></a>
+    <a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/m32-security-validation.md"><strong>M32 security validation</strong><span>Controller authority, protected sessions, redirects, station IDs, build integrity, and adversarial Razr evidence</span></a>
   </div>
 </section>
 

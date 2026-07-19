@@ -212,7 +212,7 @@ section: product-testing
   <div class="content-intro wide">
     <p class="eyebrow">PT-20–PT-25 and PT-35 · Device, accessibility, policy, and release integrity</p>
     <h2>Cover human and specialist boundaries</h2>
-    <p>PT-20 and PT-21 are current physical/manual acceptance gates. PT-23 is the M31 regression case; PT-22, PT-24, and PT-25 define blocked future or specialist evidence for M38 and M32. PT-35 is the active M29 Play-policy reconciliation case. Do not improvise a harness, credential, Console fact, operator policy, or authorization that has not been supplied.</p>
+    <p>PT-20 and PT-21 are current physical/manual acceptance gates. PT-23 is the M31 regression case; PT-24 and PT-25 are current M32 controlled security regressions using the supplied harnesses. PT-22 remains blocked for M38, and PT-35 is the active M29 Play-policy reconciliation case. Do not improvise a harness, credential, Console fact, operator policy, or authorization that has not been supplied.</p>
   </div>
   <div class="test-session-grid comprehensive-test-grid">
     <article id="pt-20">
@@ -239,16 +239,16 @@ section: product-testing
       <ol><li>Use the exact Play-candidate build and repeat this case for all five stations without entering payment or personal account data.</li><li>Inspect More and the native Privacy notice. Confirm there is no Membership, VIP/RIP purchase, subscription, registration, recovery, management, deletion, GitHub Issues, station website, or other browser link.</li><li>Open Contact Us only far enough to verify a reviewed fixed-recipient email draft, then cancel. Confirm it does not launch a browser or transfer a protected station session.</li><li>Verify read-only membership evidence, where independently supported, does not offer purchase, activation, or management.</li><li>Cross-check the privacy notice, Data Safety worksheet, store listing, release notes, and tester instructions against the observed artifact.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> the current Play artifact exposes no payment or account-creation route, Contact remains an explicit user-controlled email draft, and every declaration matches observable behavior.</p>
     </article>
-    <article class="future-test-case" id="pt-24">
-      <span>PT-24 · M32 expiring-session harness required</span>
+    <article id="pt-24">
+      <span>PT-24 · M32 controlled session harness</span>
       <h3>Protected-session expiry and recovery coherence</h3>
       <ol><li>Sign in to two approved stations, then expire or rotate only one station session through the supplied safe harness or operator action.</li><li>Exercise Chat, Favorites, Requests, and Listener Activity for the affected station and verify every surface converges on one explicit expired/signed-out state.</li><li>Confirm the unaffected station remains signed in and usable.</li><li>Reauthenticate the expired station and verify new cookies/session state persist correctly through process recreation without extending an already expired lifetime.</li><li>Sign out and confirm all memory-only protected content clears only for that station.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> session rotation, expiry, recovery, and logout remain coherent and isolated across every protected feature.</p>
     </article>
-    <article class="future-test-case" id="pt-25">
-      <span>PT-25 · M32 specialist security harness</span>
+    <article id="pt-25">
+      <span>PT-25 · M32 supplied security harness</span>
       <h3>External controller and station-network trust</h3>
-      <ol><li>Use the approved foreign-controller test app to connect to the exported MediaSession.</li><li>Verify system/foreign controllers receive only approved transport commands and cannot replace media, inject a stream, or set/cancel the sleep timer.</li><li>Use approved mock station responses to exercise same-origin redirects, cross-origin redirects, HTTPS downgrade, unexpected ports, excess redirects, and malformed destinations for Queue/artwork/public reads.</li><li>Confirm untrusted targets fail closed with generic UI errors and no endpoint detail.</li><li>Verify the trusted local controller and approved station redirects still preserve normal playback and data behavior.</li></ol>
+      <ol><li>Use the supplied foreign-controller test app to connect to the exported MediaSession.</li><li>Verify an Android-trusted system controller receives approved transport/read commands and may cancel—but not set—an active Sleep Timer. Verify an untrusted foreign controller receives approved transport/read commands but cannot set or cancel the timer. Neither controller may replace media or inject a stream.</li><li>Use the supplied mock station responses to exercise same-origin redirects, cross-origin redirects, HTTPS downgrade, unexpected ports, user information, excess redirects, and malformed destinations for Queue/artwork/public reads.</li><li>Confirm untrusted targets fail closed with generic UI errors and no endpoint detail.</li><li>Verify the local Player controller and approved same-origin station redirects still preserve normal playback and data behavior.</li></ol>
       <p class="test-pass"><strong>Pass:</strong> controller authority and network redirects stay within the explicit M32 trust policy without regressing approved system controls.</p>
     </article>
     <article id="pt-35">
@@ -373,7 +373,7 @@ section: product-testing
         <tr><th>Bluetooth and available wired/USB output</th><td>PT-04, PT-06</td><td>Record exact hardware category, Android chooser behavior, media buttons, and disconnect state.</td></tr>
         <tr><th>Maximum text plus physical TalkBack</th><td>PT-21</td><td>A human audible/intelligibility result is required; automated semantics alone do not close this row.</td></tr>
         <tr><th>Authorized closed-app delivery build</th><td>PT-22</td><td>Remain Blocked until M36–M38 supply an authorized source, implementation, and certification build.</td></tr>
-        <tr><th>Play policy and release-security coordination</th><td>PT-23–PT-25 and PT-35</td><td>PT-23 is the current M31 regression; run PT-24/PT-25/PT-35 only with the named M29/M32 coordinator, controlled accounts, current Console/operator facts, mock routes, and supplied security tools.</td></tr>
+        <tr><th>Play policy and release-security coordination</th><td>PT-23–PT-25 and PT-35</td><td>PT-23 is the current M31 regression. PT-24/PT-25 are current M32 regressions but require the supplied controlled session/mock/foreign-controller harnesses. Run PT-35 only with the M29 coordinator, current candidate, controlled accounts, and current Console/operator facts.</td></tr>
       </tbody>
     </table>
   </div>
@@ -382,6 +382,7 @@ section: product-testing
       <thead><tr><th>Roadmap campaign</th><th>Required catalog</th><th>Exit evidence</th></tr></thead>
       <tbody>
         <tr><th>M29 Play declarations</th><td>PT-35 plus PT-23 account-route cross-check</td><td>Exact-artifact reconciliation, five reusable reviewer accounts, operator facts, saved Console answers, and final-candidate media video agree without exposing private evidence.</td></tr>
+        <tr><th>M32 security regression</th><td>PT-24 and PT-25 with supplied controlled harnesses</td><td>157 unit tests, 20/20 focused Razr session/controller tests, 1/1 genuine foreign-package controller test, and the strict dependency-verified build remain green.</td></tr>
         <tr><th>M39 candidate freeze</th><td>All currently applicable PT cases on the exact candidate</td><td>Every required case has Pass, Pass with notes, resolved Fail, or justified Blocked evidence tied to version/code.</td></tr>
         <tr><th>M40 Play Alpha delivery</th><td>PT-01 plus PT-02/PT-03/PT-04 and risk-based changed-feature smoke</td><td>Play-generated fresh install/update, pre-launch findings, reviewer access, and split behavior reconciled.</td></tr>
         <tr><th>M41 Alpha publication</th><td>Owner-authorized post-publication smoke</td><td>Tester availability, install, playback, support route, and rollback record verified.</td></tr>
@@ -416,7 +417,7 @@ section: product-testing
     <div><p class="eyebrow">Public report</p><h2>Redact before submitting</h2></div>
     <div>
       <p>GitHub issues are public. Never include passwords, security answers or CAPTCHA images, cookies, session values, account email addresses, real dates of birth, private messages, abuse-report content, signing material, private endpoints, full network captures, or screenshots containing personal information.</p>
-      <p>Do not repeatedly submit a song request, Chat post, Forum post, Private Message, membership purchase, activation, or moderation report while investigating an indeterminate response. Inspect the relevant visible destination once, record the outcome, and stop. PT-23 is a current M31 regression; do not test PT-22, PT-24–PT-34, or PT-36–PT-38 as shipped capabilities until their named roadmap milestones provide an authorized build and assignment. PT-35 may be run only by the M29 Play coordinator with current candidate, Console, and operator evidence.</p>
+      <p>Do not repeatedly submit a song request, Chat post, Forum post, Private Message, membership purchase, activation, or moderation report while investigating an indeterminate response. Inspect the relevant visible destination once, record the outcome, and stop. PT-23 is a current M31 regression. PT-24 and PT-25 are current M32 regressions only when the supplied controlled harnesses and assignment are available. Do not test PT-22, PT-26–PT-34, or PT-36–PT-38 as shipped capabilities until their named roadmap milestones provide an authorized build and assignment. PT-35 may be run only by the M29 Play coordinator with current candidate, Console, and operator evidence.</p>
       <ul class="inline-requirements"><li>Case ID included</li><li>Public metadata only</li><li>One environment per result</li><li>Redacted screenshots</li><li>No account secrets</li><li>No raw traffic captures</li></ul>
     </div>
   </div>

@@ -34,7 +34,7 @@ navigation:
 
 roadmap_meta:
   updated: 2026-07-18
-  achieved_count: 29
+  achieved_count: 30
   total_count: 60
   active_phase: M29–M35
   active_label: Alpha readiness and release integrity
@@ -292,6 +292,14 @@ milestones:
     evidence: "docs/m31-payments-account-lifecycle-validation.md"
     outcome: "Contact-only candidate boundary with unapproved VIP/RIP purchase and account-registration routes removed."
 
+  - order: 30
+    id: "M32"
+    name: "Session Controller Network and Supply-Chain Security"
+    date: "2026-07-18"
+    commit: "2bc45f7"
+    evidence: "docs/m32-security-validation.md"
+    outcome: "Least-privilege controller authority, coherent station-isolated sessions, trusted redirects, canonical station IDs, and verified build inputs."
+
 
 roadmap:
   - id: "M29"
@@ -329,12 +337,12 @@ roadmap:
   - id: "M32"
     phase: "alpha-readiness"
     name: "Session Controller Network and Supply-Chain Security"
-    state: "planned"
-    state_label: "Planned"
+    state: "done"
+    state_label: "Complete"
     blocking: true
-    dependencies: "Sol security decisions"
-    evidence: "docs/ROADMAP.md"
-    summary: "Harden MediaSession authority sessions redirects station IDs dependencies and adversarial tests."
+    dependencies: "Re-audit on controller session redirect station-ID or build-input change"
+    evidence: "docs/m32-security-validation.md"
+    summary: "Controller authority sessions redirects canonical station IDs and dependency/action integrity are hardened with adversarial Razr evidence."
 
   - id: "M33"
     phase: "alpha-readiness"
