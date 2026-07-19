@@ -58,4 +58,4 @@ On the physical Motorola Razr 2023 running Android 16:
 
 - Reconfirm the diagnostics preview and chooser in the protected signed release candidate because the displayed build type/version will differ from debug.
 - Reconcile the final Data Safety and privacy-policy answers against the exact Play Console form and all active artifacts.
-- A foldable-specific regression is not required for completion because the feature reuses the already validated scrollable More shell and passed on the compact physical Razr; it remains covered by the broader M34 device matrix before publication.
+- A foldable-specific regression is not required for completion because the feature reuses the already validated scrollable More shell and passed on the compact physical Razr; it is covered by the completed M34 device matrix.

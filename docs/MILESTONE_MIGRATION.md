@@ -38,7 +38,7 @@ published evidence retain their historical text; this ledger is the permanent tr
 | Audit addition | M31 | Payments, External Links, and Account Lifecycle Compliance |
 | Audit addition | M32 | Session, Controller, Network, and Supply-Chain Security |
 | Audit addition | M33 | Request Transaction Integrity |
-| M23.6 | M34 | Device, Accessibility, and Pre-launch Acceptance |
+| M23.6 | M34 | Device and Accessibility Acceptance |
 | M23.1 | M35 | Release Signing and Console Eligibility |
 | M27.2 authorization slice | M36 | Notification Event-Source Authorization |
 | M27.2 implementation slice | M37 | Secure Closed-App Notification Delivery |

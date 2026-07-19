@@ -34,7 +34,7 @@ navigation:
 
 roadmap_meta:
   updated: 2026-07-19
-  achieved_count: 32
+  achieved_count: 33
   total_count: 60
   active_phase: M29–M35
   active_label: Alpha readiness and release integrity
@@ -317,6 +317,15 @@ milestones:
     evidence: "docs/m23-release-candidate-audit.md"
     outcome: "Protected current-head signing, exact upload identity, local Razr clean/update lineage, package registration, and unused version code 2."
 
+  - order: 33
+    id: "M34"
+    legacy_id: "M23.6"
+    name: "Device and Accessibility Acceptance"
+    date: "2026-07-19"
+    commit: "6ea021f"
+    evidence: "docs/m23-device-compatibility.md"
+    outcome: "Adaptive window and foldable evidence, physical Razr hinge lifecycle, human TalkBack, focused Voice Access, and signed-release Bluetooth keyboard/pointer acceptance."
+
 
 roadmap:
   - id: "M29"
@@ -375,12 +384,12 @@ roadmap:
     legacy_id: "M23.6"
     phase: "alpha-readiness"
     name: "Device and Accessibility Acceptance"
-    state: "active"
-    state_label: "In progress"
+    state: "done"
+    state_label: "Complete"
     blocking: true
-    dependencies: "Test humans and hardware"
+    dependencies: "Re-audit on accessibility, input, windowing, or lifecycle boundary change"
     evidence: "docs/m23-device-compatibility.md"
-    summary: "Local device coverage is strong and the physical human TalkBack pass is recorded; broader fair alternative-input and adaptive evidence remain."
+    summary: "Adaptive and foldable matrix, human TalkBack, focused Voice Access, and signed-release Bluetooth keyboard/pointer acceptance are complete."
 
   - id: "M35"
     legacy_id: "M23.1"

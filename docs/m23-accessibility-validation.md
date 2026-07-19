@@ -1,6 +1,6 @@
 # M34 accessibility and large-text validation
 
-Validated July 16, 2026 for the `0.1.0-alpha01` candidate.
+Validated through July 19, 2026 for the `0.1.0-alpha01` candidate.
 
 ## Outcome
 
@@ -8,8 +8,8 @@ The native Compose shell remains usable with Android font scale 2.0 and an enlar
 medium Fold, closed Fold, and expanded Tablet windows. The built-in Google TalkBack service also traverses the current
 candidate on a phone, all three tested Fold postures, and Tablet landscape/portrait with descriptive accessibility
 focus and no remaining unlabeled actionable nodes in the inspected surfaces. This closes the local large-text/reflow
-and service-level TalkBack checkpoints within M34; human audible-speech review, Play-delivered testing, and the Play
-pre-launch report remain external gates.
+and service-level TalkBack checkpoints within M34. The later physical Razr human-audible TalkBack and Bluetooth
+keyboard/pointer checks also pass. Play-delivered testing and the Play pre-launch report belong to M40.
 
 ## Defects corrected
 
@@ -59,7 +59,8 @@ and both actions remain reachable at maximum text scale rather than being clippe
 | API 35 Pixel Tablet emulator | Expanded-window connected test at font scale 2.0 with a long track title and artist | 1/1 focused confirmation test passed. |
 
 These fixture-only checks do not submit a request or expose an account. They close the current M33 dialog's automated
-large-text reachability follow-up; the human audible/intelligibility and alternative-input M34 gates remain open.
+large-text reachability follow-up; the later physical checks below close M34's human intelligibility and fair
+alternative-input gates.
 
 ## Voice Access physical follow-up
 
@@ -71,8 +72,10 @@ The user confirmed that Voice Access activated the primary Player commands after
 `03a310b`: Play/Pause, Previous station, and Next station. A direct UIAutomator inspection of that same Razr build
 records each as a named, clickable Android button rather than a named non-clickable child. This is human-device
 evidence for the primary playback controls. The follow-up command sequence also selected 1980s.FM, opened Favorites,
-and returned to Player successfully. It is not a substitute for the remaining full alternative-input traversal of
-dialogs, settings, and community surfaces.
+and returned to Player successfully. Because speech recognition was not a fair sole-input requirement for this tester,
+the complementary signed-release Bluetooth keyboard/pointer check used Tab and Enter on playback, pointer navigation
+to Queue, and pointer activation of Pause. The complete physical evidence is recorded in
+`docs/m23-device-compatibility.md`.
 
 ## Verification
 
@@ -88,5 +91,6 @@ dialogs, settings, and community surfaces.
   `docs/screenshots/m23-large-text-account.png`.
 
 Automated semantics confirm that all five navigation destinations remain descriptive click targets. Real TalkBack
-service traversal is complete on the local API 35 device matrix; a human audible/intelligibility pass on physical
-hardware remains an Alpha tester check and is not represented as completed by this checkpoint.
+service traversal is complete on the local API 35 device matrix, and human audible/intelligibility plus physical
+Bluetooth keyboard/pointer acceptance pass on the signed Razr release. These results close M34; exact Play-delivered
+artifact testing remains an M40 gate.

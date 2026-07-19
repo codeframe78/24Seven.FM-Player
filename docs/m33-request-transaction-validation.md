@@ -38,4 +38,5 @@ No credentials, cookies, tokens, protected HTML, private endpoint information, r
 
 ## Acceptance condition
 
-Sol reviewed and accepted implementation commit `572d419`. M34 still owns the broader device/accessibility matrix and M29/M30/M35 retain their independent gates.
+Sol reviewed and accepted implementation commit `572d419`. The broader device/accessibility matrix subsequently passed
+under M34; M29, M30, and M35 retained their independent gates.

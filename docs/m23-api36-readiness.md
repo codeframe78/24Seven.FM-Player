@@ -45,8 +45,8 @@ distributed. M35 still requires a fresh protected signed candidate from the fina
 
 ## Remaining boundaries
 
-- API 26 minimum-runtime, 16 KB page-size runtime, genuine tablet/unfolded foldable, physical Razr hinge, Play-delivered
-  installation/update, and Play pre-launch evidence remain M34 work.
+- API 26 minimum-runtime, 16 KB page-size runtime, genuine tablet/unfolded foldable, and physical Razr hinge evidence
+  subsequently passed under M34. Play-delivered installation/update and Play pre-launch evidence belong to M40.
 - No meaningful visual feature changed in M22, so no new repository or Discord screenshot was created.
 - M28 UGC safety/moderation is the recommended next milestone and must begin with an authorized reporting/moderation
   destination rather than an invented private endpoint.
