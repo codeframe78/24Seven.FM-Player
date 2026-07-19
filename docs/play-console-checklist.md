@@ -11,8 +11,8 @@ The Google Play developer account was approved on July 14, 2026. Use this during
   protected signed release outputs, the exact registered upload certificate, and 16 KB APK/ELF packaging. The native notice is under More → Privacy →
   Open-source licenses; see `docs/m23-release-candidate-audit.md`.
 - Google's July 16 Android developer-verification email confirms that the account's Play apps were automatically
-  registered to the verified developer account. Sanitized evidence is retained in the M35 audit; per-app status must
-  still be confirmed in Play Console Home.
+  registered to the verified developer account. On July 19 the owner confirmed that this exact package is listed as
+  Draft and has no uploaded versions/bundles, closing M35 without retaining private Console imagery.
 - Current Play target-level check (July 15, 2026): target API 35 remains accepted until August 31, 2026, when new mobile apps and updates must target API 36. M22 migrated early so the closed-test and update path do not depend on that deadline.
 - The July 18 M29 release-variant audit reconciles the manifest, dependency graph, network/data paths, external
   handoffs, and account boundary in `docs/m23-play-declaration-packet.md`. Repeat it against the exact protected
@@ -35,10 +35,10 @@ The Google Play developer account was approved on July 14, 2026. Use this during
 5. **Complete locally:** `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-protected-play-bundle.ps1 -BuildApk` built the signed APK/AAB, verified the AAB signature, and confirmed that the bundle signer matches the configured upload certificate.
 6. **Complete:** the encrypted recovery package was exported to an owner-controlled off-PC volume and independently verified with the owner-held passphrase. Its encrypted-package SHA-256 is `361E6A85452DBF9ACDC816F554569E3B7DBA0F98B60C30DB255E54C2644C4D1C`; the passphrase is stored separately and is not in Git.
 7. **Complete locally:** the Linux helper built the current protected AAB/APK from commit `2e43a2b` without persisting plaintext signing material; subsequent AAB/APK verification and local physical-Razr clean-install/update checks matched the registered upload identity.
-8. **Complete by account email; Console confirmation remains:** Google's July 16 notice says the account's Play apps
-   were automatically registered for Android developer verification. Confirm this app's registration in Play Console
-   Home. If the release is distributed outside Play, separately register its package-and-signing-key pair on the
-   Android developer verification page.
+8. **Complete:** Google's July 16 notice says the account's Play apps were automatically registered for Android
+   developer verification; on July 19 the owner confirmed the exact package is listed as Draft and has no uploaded
+   versions/bundles. If the release is distributed outside Play, separately register its package-and-signing-key pair
+   on the Android developer verification page.
 9. **M40 after M39:** upload the verified AAB, then start with Internal testing. It supports up to 100 testers and uses a private opt-in/share link rather than public search discovery.
 10. Add a feedback email or URL and a tester email list in Console. Do not commit tester identities.
 11. Complete the store listing and App content declarations needed by the selected track.

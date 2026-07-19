@@ -58,11 +58,12 @@ as already complete.
   APK/ELF packaging, explicit cloud/device-transfer backup exclusions, and protected signed release AAB/APK.
   Apache-2.0, MIT, GPLv2-with-Classpath-Exception, and MPL-2.0 notices are recorded in
   `THIRD_PARTY_NOTICES.md` and are reachable inside the app under More → Privacy → Open-source licenses. See
-  `m23-release-candidate-audit.md`; protected current-head signing and local Razr clean-install/update verification are
-  complete, while per-app registration and version-code eligibility remain open.
+  `m23-release-candidate-audit.md`; protected current-head signing, local Razr clean-install/update verification,
+  package registration, and unused version code 2 are complete.
 - Google's July 16 Android developer-verification email confirms that the account's Play apps were automatically
-  registered to the verified developer account. The sanitized confirmation is preserved in the M35 audit; exact
-  per-app Play Console status and version-code eligibility remain open. Play delivery belongs to M40 after M39.
+  registered to the verified developer account. On July 19 the owner confirmed that the exact package is listed as
+  Draft and that no app versions/bundles are uploaded, closing the M35 registration and version-code gates. Play
+  delivery belongs to M40 after M39.
 - Google Play accepts target API 35 on July 15, 2026 but requires API 36 for new apps and updates beginning August 31, 2026. M22 therefore migrates before the closed-test/update window instead of treating API 35 as the final Alpha target.
 - The July 18 exact-artifact Data Safety worksheet is recorded in `docs/m23-data-safety.md`; it covers optional
   account/community/request data, explicit external-app handoffs, source-IP handling, local-only state, HTTPS user-data
@@ -75,7 +76,7 @@ as already complete.
 - A credential-free M29 media-playback video rehearsal passed frame inspection on the API 35 Pixel Tablet: start,
   buffering/playback, Home, expanded media notification, notification-body return, pause, resume, and stop are visible.
   It remains an uncommitted debug-build rehearsal; the final hosted video must use the protected signed candidate after
-  M35 and M30 close.
+  M30 closes and the intended artifact is selected.
 - The non-secret `m23-owner-response-packet.md` records sanitized completion of the M28 handoff and provides a
   rights/stream/distribution request, station retention/deletion/IP table, reviewer-account confirmation, and the
   evidence required before Private Messaging research can resume. No private response, credential, or rights evidence
@@ -137,8 +138,8 @@ Signing files and secrets must never be committed. Gradle should receive their p
 
 - Google approved the personal Play developer account on July 14, 2026; the app and initial legal/signing declarations are now established in Console.
 - Because this is a newly activated personal account, plan for a closed test with at least 12 testers continuously opted in for 14 days before applying for production access. Internal testing itself has no access requirement.
-- For M35, confirm this app's Android developer-verification registration and that version code 2 remains eligible and
-  unused in Play Console.
+- **Complete:** M35 package registration and version-code eligibility were confirmed on July 19; the exact package is
+  listed as Draft and the app has no uploaded versions/bundles.
 - For M40 after M39 freezes the exact candidate, upload the verified AAB, confirm the expected upload-certificate
   fingerprint, inspect Play-generated splits, and verify Play-delivered fresh installation and a later same-key update.
 - Complete PT-35 and the owner-input Console forms: five least-privileged reviewer accounts/instructions, verify the

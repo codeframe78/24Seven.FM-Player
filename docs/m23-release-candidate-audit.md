@@ -1,8 +1,8 @@
 # M35 current-head release-candidate audit
 
-Date: July 18, 2026
+Date: July 19, 2026
 
-Status: current-head protected Ubuntu AAB/APK build, exact signer verification, and local Razr clean-install/update verification complete; per-app Android developer-verification registration and version-code eligibility remain open
+Status: complete; Sol accepted the protected Ubuntu signing path, exact upload identity, local Razr clean-install/update lineage, package registration, and version-code eligibility
 
 ## Outcome
 
@@ -11,15 +11,24 @@ declaration, dependency set, license notices, backup exclusions, and 16 KB packa
 built commit `2e43a2b`, the current code head at the time of this refresh, from the authenticated recovery package
 without persisting signing material. Both artifacts match the registered Play upload certificate.
 
-Google's July 16 account email also confirms that the account's Play apps were automatically registered to the verified
-developer account for Android developer verification. This closes the email-confirmation checkpoint, but not the two
-remaining M35 Console gates: the owner must still confirm this app's per-app registration and that version code 2 is
-eligible and unused in Play Console.
+Google's July 16 account email confirms that the account's Play apps were automatically registered to the verified
+developer account for Android developer verification. On July 19, the owner confirmed that the exact
+`com.codeframe78.twentyfourseven.player` package is listed in that Play account as Draft and that its releases/bundles
+catalog is empty. Together, those facts confirm the app's registration and that version code 2 remains unused and
+eligible. No Console screenshot, identity, credential, or private account metadata is retained in Git.
 
 Play-generated delivery, update, split inspection, and pre-launch evidence belong exclusively to M40 after M39 freezes
 the exact candidate; they are not M35 completion gates. The established Windows DPAPI copy remains intact. Routine
 signing can use the existing authenticated recovery package through the Linux helper without persisting a plaintext
 keystore or credential file.
+
+## Sol acceptance — July 19
+
+M35 is complete from evidence commit `55413bd`. The accepted boundary includes the protected signing/recovery path,
+the exact pinned upload certificate, signed AAB/APK verification, 16 KB packaging, physical Razr clean installation and
+same-signer local update, automatic Play package registration, and unused version code 2. The release package remains a
+pre-M39 signing checkpoint, not the frozen Alpha candidate. Actual upload, Play-generated splits, Play install/update,
+and pre-launch remediation remain exclusively M40 work after M39.
 
 ## Android developer-verification evidence
 

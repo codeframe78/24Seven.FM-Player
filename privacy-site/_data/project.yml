@@ -33,8 +33,8 @@ navigation:
     description: Canonical app privacy notice with plain-language data boundaries.
 
 roadmap_meta:
-  updated: 2026-07-18
-  achieved_count: 31
+  updated: 2026-07-19
+  achieved_count: 32
   total_count: 60
   active_phase: M29–M35
   active_label: Alpha readiness and release integrity
@@ -308,6 +308,15 @@ milestones:
     evidence: "docs/m33-request-transaction-validation.md"
     outcome: "Fresh station, account, Queue, readiness, and stable track identity checks with bounded cross-surface duplicate suppression."
 
+  - order: 32
+    id: "M35"
+    legacy_id: "M23.1"
+    name: "Release Signing and Console Eligibility"
+    date: "2026-07-19"
+    commit: "55413bd"
+    evidence: "docs/m23-release-candidate-audit.md"
+    outcome: "Protected current-head signing, exact upload identity, local Razr clean/update lineage, package registration, and unused version code 2."
+
 
 roadmap:
   - id: "M29"
@@ -365,24 +374,24 @@ roadmap:
   - id: "M34"
     legacy_id: "M23.6"
     phase: "alpha-readiness"
-    name: "Device Accessibility and Pre-launch Acceptance"
+    name: "Device and Accessibility Acceptance"
     state: "active"
     state_label: "In progress"
     blocking: true
-    dependencies: "Test humans hardware and Play artifact"
+    dependencies: "Test humans and hardware"
     evidence: "docs/m23-device-compatibility.md"
-    summary: "Local device coverage is strong; human audible alternative-input Play delivery and pre-launch evidence remain."
+    summary: "Local device coverage is strong; human audible TalkBack and broader fair alternative-input and adaptive evidence remain."
 
   - id: "M35"
     legacy_id: "M23.1"
     phase: "alpha-readiness"
     name: "Release Signing and Console Eligibility"
-    state: "active"
-    state_label: "In progress"
+    state: "done"
+    state_label: "Complete"
     blocking: true
-    dependencies: "Owner-only Console state"
+    dependencies: "Re-audit on signer package version or build-path change"
     evidence: "docs/m23-release-candidate-audit.md"
-    summary: "Signing identity is established; device verification package/version eligibility and final signed path remain."
+    summary: "Protected signing exact upload identity Razr clean/update lineage package registration and version-code eligibility are accepted."
 
   - id: "M36"
     legacy_id: "M27.2 authorization"

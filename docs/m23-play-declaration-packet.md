@@ -92,8 +92,8 @@ A credential-free rehearsal was captured on the API 35 Pixel Tablet emulator and
 notification, a notification-body tap returning to the same Player task, pause, resume, and stop/not-connected state.
 No credentials or Chat content appear. The recording remains a transient local draft and is not committed or hosted.
 It is not the final reviewer video because its notification identifies the debug build and its live station artwork
-can change. Repeat the same sequence using an exact protected candidate after the M30 rights and M35 signing gates are
-ready, inspect the final frames, and host only that final copy. That M29 declaration artifact precedes M39; M39 later
+can change. Repeat the same sequence using an exact protected candidate after the M30 rights gate closes and the
+intended artifact is selected, inspect the final frames, and host only that final copy. That M29 declaration artifact precedes M39; M39 later
 freezes the fully accepted candidate and must not be made a dependency of M29.
 
 ## App access and reviewer instructions
