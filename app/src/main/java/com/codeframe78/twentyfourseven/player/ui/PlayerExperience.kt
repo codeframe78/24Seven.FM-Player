@@ -347,20 +347,27 @@ private fun PrimaryPlayerControls(
         IconButton(
             onClick = { adjacentStationId(state.stations, state.selectedStation?.id, -1)?.let(onSelectStation) },
             enabled = state.stations.size > 1,
-            modifier = Modifier.size(56.dp).testTag("previous_station"),
+            modifier = Modifier
+                .size(56.dp)
+                .semantics { contentDescription = "Previous station" }
+                .testTag("previous_station"),
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous station")
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
         }
         Spacer(Modifier.width(22.dp))
+        val playPauseDescription = if (isActive) "Pause live radio" else "Play live radio"
         FilledIconButton(
             onClick = if (isActive) onPause else onPlay,
             enabled = state.selectedStation?.streams?.isNotEmpty() == true,
-            modifier = Modifier.size(76.dp).testTag("primary_play_pause"),
+            modifier = Modifier
+                .size(76.dp)
+                .semantics { contentDescription = playPauseDescription }
+                .testTag("primary_play_pause"),
             shape = CircleShape,
         ) {
             Icon(
                 if (isActive) Icons.Default.Pause else Icons.Default.PlayArrow,
-                contentDescription = if (isActive) "Pause live radio" else "Play live radio",
+                contentDescription = null,
                 modifier = Modifier.size(36.dp),
             )
         }
@@ -368,9 +375,12 @@ private fun PrimaryPlayerControls(
         IconButton(
             onClick = { adjacentStationId(state.stations, state.selectedStation?.id, 1)?.let(onSelectStation) },
             enabled = state.stations.size > 1,
-            modifier = Modifier.size(56.dp).testTag("next_station"),
+            modifier = Modifier
+                .size(56.dp)
+                .semantics { contentDescription = "Next station" }
+                .testTag("next_station"),
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next station")
+            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
         }
     }
 }
@@ -640,11 +650,19 @@ internal fun PersistentMiniPlayer(
             IconButton(
                 onClick = if (state.playback.status.isActive) onPause else onPlay,
                 enabled = state.selectedStation?.streams?.isNotEmpty() == true,
-                modifier = Modifier.size(52.dp),
+                modifier = Modifier
+                    .size(52.dp)
+                    .semantics {
+                        contentDescription = if (state.playback.status.isActive) {
+                            "Pause live radio"
+                        } else {
+                            "Play live radio"
+                        }
+                    },
             ) {
                 Icon(
                     if (state.playback.status.isActive) Icons.Default.Pause else Icons.Default.PlayArrow,
-                    contentDescription = if (state.playback.status.isActive) "Pause live radio" else "Play live radio",
+                    contentDescription = null,
                 )
             }
         }
