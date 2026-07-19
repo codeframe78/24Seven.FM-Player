@@ -964,7 +964,6 @@ figcaption span { color: var(--muted); font-size: 0.88rem; }
 .roadmap-forecast .forecast-label { grid-column: 1 / -1; width: fit-content; padding: 0.18rem 0.42rem; border-radius: 999px; background: color-mix(in srgb, var(--cyan) 17%, transparent); color: var(--cyan); font-size: 0.68rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
 .roadmap-forecast strong { grid-column: 1 / -1; color: var(--text); font-size: 0.95rem; }
 .roadmap-forecast .forecast-confidence { align-self: start; padding: 0.13rem 0.38rem; border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border)); border-radius: 999px; color: var(--accent); font-size: 0.7rem; font-weight: 800; white-space: nowrap; }
-.roadmap-forecast .forecast-model { align-self: center; color: var(--muted); font-size: 0.72rem; }
 .milestone-id { margin: 0 0 0.55rem; color: var(--accent) !important; font: 850 0.78rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.08em; }
 
 .milestone-history li {
