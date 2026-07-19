@@ -67,7 +67,7 @@ authorization or repair trigger is still authoritative.
 | M48 | M47 is complete | 1–2 active weeks | Medium | Terra High |
 | M49 | M48 is complete and mutation authorization is explicit | 1–2 active weeks | Medium | Terra High |
 | M50 | M49 and M38 are complete | 2–4 active weeks | Medium | Sol Extra High |
-| M51 | Each station's public Forum route and permitted use are supplied or independently verified | 2–5 active days | Medium | Sol High |
+| M51 | A compliant dedicated Forum destination or approved Play-program/safety contract resolves the verified payment-navigation and linked-UGC moderation blockers | 1–3 active days after remediation | Conditional | Sol High, then Terra Medium for bounded link implementation |
 | M52 | M51 and native read authorization are complete | 2–3 active weeks | Medium | Terra High |
 | M53 | M52 and authenticated mutation authorization are complete | 2–3 active weeks | Medium | Terra High |
 | M54 | M53 and M38 are complete | 2–4 active weeks | Medium | Sol High |

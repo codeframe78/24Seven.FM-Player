@@ -106,7 +106,7 @@ notes remain in [MILESTONE_FORECAST.md](docs/MILESTONE_FORECAST.md).
 - **Authorization-gated:** M36–M38 require an approved station-side event source or privacy-compatible relay before implementation.
 - **Publication:** M39–M41 deliberately separate candidate freeze, Play delivery, and the final user-authorized Alpha action.
 - **Production:** M42–M45 add stabilization, production-access evidence, staged release, and operational recertification.
-- **Deferred/future:** Private Messages remain excluded until M47 repairs and verifies server delivery. Native Forum access is split across M51–M54, Google Cast remains a feasibility gate at M55, and native VIP/RIP commerce is authorization-gated across M58–M60.
+- **Deferred/future:** Private Messages remain excluded until M47 repairs and verifies server delivery. M51 has verified administrator permission and five public Forum routes but waits for a destination that removes payment-navigation and linked-UGC safety blockers; native Forum access remains split across M51–M54. Google Cast remains a feasibility gate at M55, and native VIP/RIP commerce is authorization-gated across M58–M60.
 - **Testing:** the [Product Testing catalog](https://codeframe78.github.io/24Seven.FM-Player/project/product-testing/) now contains 38 stable test cases covering the current product, Alpha gates, release campaigns, and capability-gated future slices. PT-35 is the exact-artifact M29 Play declaration/privacy/reviewer-access case; PT-36–PT-38 define the future authorized VIP/RIP purchase, activation, and lifecycle evidence.
 
 Use these sources as the current planning authority:

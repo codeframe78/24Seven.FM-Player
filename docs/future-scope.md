@@ -44,6 +44,10 @@ moderation boundaries, and representative accounts. Do not expose a partial ship
 
 ### M51 — Verified Forum Links
 
+- **Current finding (July 19, 2026):** administrator authorization and the five exact public HTTPS routes are verified,
+  but every current Forum page exposes VIP/RIP purchase and account navigation, and the linked-UGC report/block
+  boundary is not verified. Keep the catalog Contact-only until the remediation in
+  `m51-forum-links-research.md` is satisfied.
 - Verify each station's exact public HTTPS Forum route, TLS behavior, browser rendering, and permitted use.
 - Add only verified station-scoped routes to the existing trusted Custom Tab directory.
 - Keep browser cookies and sign-in separate from protected app sessions.
