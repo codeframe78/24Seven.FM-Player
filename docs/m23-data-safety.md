@@ -85,7 +85,7 @@ confirms one network-wide rule:
 
 ## Console verification gate
 
-1. Re-run the release dependency and merged-manifest audits against the exact signed M39 AAB.
+1. Re-run the release dependency and merged-manifest audits against the exact protected pre-M39 candidate AAB.
 2. Probe every user-data endpoint and redirect for HTTPS/TLS without recording credentials, cookies, or private content.
 3. Confirm the owner/station facts above and update the public/native privacy wording where needed.
 4. Audit every M31 external destination for account creation/deletion implications.

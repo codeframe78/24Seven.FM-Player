@@ -15,7 +15,8 @@ The Google Play developer account was approved on July 14, 2026. Use this during
   still be confirmed in Play Console Home.
 - Current Play target-level check (July 15, 2026): target API 35 remains accepted until August 31, 2026, when new mobile apps and updates must target API 36. M22 migrated early so the closed-test and update path do not depend on that deadline.
 - The July 18 M29 release-variant audit reconciles the manifest, dependency graph, network/data paths, external
-  handoffs, and account boundary in `docs/m23-play-declaration-packet.md`. Repeat it against the exact M39 candidate.
+  handoffs, and account boundary in `docs/m23-play-declaration-packet.md`. Repeat it against the exact protected
+  pre-M39 candidate; M39 later freezes the accepted release and is not an M29 prerequisite.
 - Privacy notice, Alpha testing guide, release notes, permission review, and current device validation evidence exist;
   owner/station retention and deletion facts still need reconciliation before M29 closes.
 - Gradle accepts Play upload signing only from four `TWENTYFOURSEVEN_UPLOAD_*` environment variables. Supplying a partial set fails configuration.

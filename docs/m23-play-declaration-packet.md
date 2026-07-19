@@ -15,7 +15,7 @@ The audit used the current `main` source and release variant. `:app:processRelea
 
 | Surface | Audited fact | Declaration consequence |
 | --- | --- | --- |
-| Identity | Package `com.codeframe78.twentyfourseven.player`; version `0.1.0-alpha01` (2); min SDK 26; target/compile SDK 36 | Re-run against the exact M39 candidate because later source or version changes supersede this checkpoint |
+| Identity | Package `com.codeframe78.twentyfourseven.player`; version `0.1.0-alpha01` (2); min SDK 26; target/compile SDK 36 | Re-run against the exact protected pre-M39 candidate because later source or version changes supersede this checkpoint |
 | Permissions | Internet, network state, media foreground service, media-playback foreground-service permission, notifications, Media3 wake lock, and Android's signature-protected dynamic-receiver permission | No location, contacts, microphone, camera, photos, phone, SMS, advertising ID, or broad-storage declaration is supported by the artifact |
 | Foreground service | One Media3 `MediaSessionService`, declared `mediaPlayback`, owns user-started live radio | Declare only the Media playback use case and supply its final-candidate demonstration video |
 | Dependencies | AndroidX, Compose, Media3, Jsoup, Coil, OkHttp, Kotlin/coroutines, and test libraries | No ads, analytics, crash-reporting, tracking, billing, social-login, or developer-backend SDK is present |
@@ -92,8 +92,9 @@ A credential-free rehearsal was captured on the API 35 Pixel Tablet emulator and
 notification, a notification-body tap returning to the same Player task, pause, resume, and stop/not-connected state.
 No credentials or Chat content appear. The recording remains a transient local draft and is not committed or hosted.
 It is not the final reviewer video because its notification identifies the debug build and its live station artwork
-can change. Repeat the same sequence using the protected M39 candidate after M30–M35 close, inspect the final frames,
-and host only that final copy.
+can change. Repeat the same sequence using an exact protected candidate after the M30 rights and M35 signing gates are
+ready, inspect the final frames, and host only that final copy. That M29 declaration artifact precedes M39; M39 later
+freezes the fully accepted candidate and must not be made a dependency of M29.
 
 ## App access and reviewer instructions
 
