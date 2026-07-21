@@ -21,3 +21,10 @@
 
 - After completing and committing a roadmap milestone, post a concise completion update to the configured Discord project thread and verify delivery before reporting the milestone complete.
 - Keep Discord milestone updates free of secrets, credentials, tester identities, private endpoint details, and other sensitive data.
+
+## Milestone time ledger
+
+- Treat `docs/MILESTONE_TIME_LEDGER.md` as the canonical cumulative record of milestone time.
+- When milestone execution is authorized, immediately record the actual ISO 8601 start timestamp, approved model and reasoning strength, original forecast, and an in-progress entry.
+- Record active, automated-wait, and user-blocked pause/resume intervals as they occur; never count an unmeasured user-response gap as active work.
+- At completion, calculate counted project time, total elapsed time, user-blocked exclusion, forecast variance, lessons, and cumulative totals, then commit the ledger with the milestone documentation and include the ledger's required time block in the completion report.

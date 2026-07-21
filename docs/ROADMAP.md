@@ -1,6 +1,7 @@
 # 24Seven.FM Player roadmap
 
-Updated July 19, 2026 after M34 device/accessibility acceptance, M35 completion, and forecast reconciliation.
+Updated July 20, 2026 after M34 device/accessibility acceptance, M35 completion, forecast reconciliation, and the
+historical milestone-time reconstruction.
 
 This is the authoritative milestone sequence for the Player repository. Milestones use dependency-ordered, zero-padded
 canonical IDs. The renumbering does not rewrite Git history: legacy IDs remain traceable through
@@ -24,6 +25,10 @@ The dated, dependency-aware forecast for every unfinished milestone is maintaine
 owner/external blockers explicitly, and records the model required for the next substantive step. Under the current
 scope, M39 remains blocked by M29, M30, and M36–M38; no Alpha calendar date is credible until the M36 event-source
 authorization is resolved.
+
+Actual and historically reconstructed timing is maintained separately in
+[MILESTONE_TIME_LEDGER.md](MILESTONE_TIME_LEDGER.md). Historical uncertainty is preserved; future milestones record
+actual execution, automated wait, and user-blocked intervals from authorization through completion.
 
 Every forecast below starts only after its stated gate is met. It is an active-work or coordination range, not a
 promise of elapsed calendar time; **Conditional** and **External** entries intentionally have no start date until the
