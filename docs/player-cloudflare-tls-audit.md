@@ -21,6 +21,12 @@ GitHub, or production setting was changed.
 | CAA | No CAA record exists |
 | Legacy Page Rules | No active or disabled Page Rules exist |
 | DNS settings | CNAME flatten-all disabled; multi-provider DNS disabled; secondary overrides disabled |
+| Origin encryption | Full; not Full (Strict) |
+| HTTPS settings | Always Use HTTPS on; Automatic HTTPS Rewrites on |
+| Edge protocols | Minimum TLS 1.0; TLS 1.3 API state `zrt`; 0-RTT on; HTTP/3 on; Brotli on |
+| HSTS | Disabled; no zone-level HSTS policy is active |
+| Default cache | Aggressive cache level; browser cache TTL 14,400 seconds; Development Mode off |
+| Modern Rulesets | No deployed redirect, transform, origin, cache, configuration, compression, or response-header entry point |
 
 The dedicated DNS token is active and can read the zone and DNS configuration.
 The existing Wrangler OAuth session can identify the zone. Neither credential
@@ -28,21 +34,62 @@ has permission to read Zone Settings, SSL and Certificates, or modern Rulesets.
 The API returned authorization failures without exposing either credential.
 
 The owner then supplied a separate user API token for the expanded audit. Its
-secret is stored outside the repository with mode `0600`, and Cloudflare's token
-verification endpoint reports it active. Cloudflare nevertheless rejects direct
-reads of the approved zone, DNS, Zone Settings, SSL/certificate, and Rulesets
-resources. This indicates that its effective resource selection or permission
-policy does not include the target zone/account. No settings data was returned,
-and repeated authentication attempts were stopped after Cloudflare began
-rate-limiting the failed requests.
+secret is stored outside the repository with mode `0600`. The first reads were
+rejected while its policy had not taken effect; after the owner reviewed and
+saved the exact account and zone scope, Cloudflare authorized the zone,
+settings, SSL/certificate, and Rulesets reads. No secret or identifier was
+written to the repository or included in this record.
+
+## Verified SSL and certificate state
+
+- Universal SSL is enabled.
+- The active Universal certificate pack covers `jamesjennison.net` and
+  `*.jamesjennison.net`, uses Google Trust Services ECDSA, and expires October
+  17, 2026. This includes `player.jamesjennison.net` at the Cloudflare edge.
+- A Let's Encrypt Universal backup certificate for the same apex and wildcard
+  coverage is in `backup_issued` state and expires October 17, 2026.
+- A separate active Advanced certificate pack covers the apex,
+  `status.jamesjennison.net`, and `*.status.jamesjennison.net` with Google Trust
+  Services ECDSA and RSA certificates expiring October 20, 2026.
+- Cloudflare reports certificate verification active. The Free plan does not
+  permit uploaded custom edge certificates; none is needed for Player.
+- The zone-to-origin mode is Full. It encrypts the connection but does not
+  validate the origin certificate, so the current Player self-signed placeholder
+  would not fail solely because it is untrusted. That is not the approved
+  production posture; the target remains Full (Strict) with a trusted Player
+  origin certificate.
+
+## Verified Ruleset state
+
+Cloudflare returned four zone-visible Rulesets: its managed URL normalization,
+Free Managed WAF, and HTTP DDoS Rulesets plus one zone rate-limit entry point.
+The account inventory contains only the managed Free WAF Ruleset. There is no
+zone or account entry point in the Single Redirect, Bulk Redirect, URL Rewrite,
+request-header transform, response-header transform, Origin Rules, Cache Rules,
+Configuration Rules, or Compression Rules phase. The direct URL Rewrite and
+header-transform phase reads independently returned not found. Legacy Page
+Rules are also empty.
+
+The token does not have each product-specific permission needed to open the
+Single Redirect, Origin, Cache, Configuration, and Compression entry points
+individually. Their absence is established through Cloudflare's zone/account
+Ruleset list operations, which return configured entry points across phases;
+it is not represented as a successful product-specific phase read.
+
+The one enabled rate-limit rule blocks for ten seconds after five matches in
+ten seconds per source IP and Cloudflare data center. Its condition is limited
+to Cloudflare's leaked-password credential signal; it contains no hostname,
+Player, URI, path, or source-IP filter and does not govern ordinary static-site
+requests. No account Bulk Redirect phase is deployed, so an account redirect
+list cannot currently alter this zone even though orphan account lists were not
+enumerated.
 
 ## Verified public behavior
 
 - Cloudflare redirects HTTP apex and HTTP `www` requests permanently to HTTPS
   on the same hostname while preserving path and query string.
 - The direct Webuzo HTTP origin does not perform that redirect. The redirect is
-  therefore applied at the Cloudflare layer, but its exact implementation is
-  unverified because Zone Settings and modern Rulesets are not readable.
+  therefore applied by the verified Always Use HTTPS zone setting.
 - HTTPS `www` does not redirect to apex. The approved master canonical redirect
   is still not configured.
 - The active Cloudflare edge certificate presented for `www` contains the apex
@@ -53,8 +100,15 @@ rate-limiting the failed requests.
   no-DNS-record response, as expected.
 
 This proves that edge certificate coverage is ready for a first-level Player
-record. It does not prove the zone's origin encryption mode or certificate-pack
-dashboard state.
+record. It does not make the current self-signed Player origin suitable for the
+approved Full (Strict) production posture.
+
+On the final audit pass, HTTPS apex and `www` both returned the same 403 Webuzo
+default-site response through Cloudflare; the read-only audit did not cause that
+existing response. The status hostname returned 200 from its documented
+Cloudflare Worker Custom Domain with its own HSTS, content security policy, and
+other hardened headers. The status Worker does not depend on the Webuzo origin
+certificate path.
 
 ## Verified Webuzo origin state
 
@@ -76,33 +130,16 @@ HTTP-01 challenge returned 404. That separate renewal problem remains a risk to
 the master domain and prevents assuming that future Player renewal will work
 without a controlled test.
 
-## Facts still requiring read-only access
+## Hardening findings outside the Player cutover
 
-The next Cloudflare read must confirm:
-
-- SSL/TLS encryption mode, including whether it is already Full (Strict);
-- Always Use HTTPS and Automatic HTTPS Rewrites;
-- Universal SSL and edge certificate-pack status;
-- minimum TLS version and TLS 1.3;
-- HSTS state;
-- redirect, transform, origin, response-header, and cache Rulesets;
-- account-level bulk redirects that could affect the zone.
-
-Use a separate read-only API token limited to the JamesJennison.net zone and
-account with these permissions where available:
-
-- Zone — Zone — Read;
-- Zone — DNS — Read;
-- Zone — Zone Settings — Read;
-- Zone — SSL and Certificates — Read;
-- Zone — Page Rules — Read;
-- Zone — Transform Rules — Read;
-- Account — Mass URL Redirects — Read;
-- Account — Account Rulesets — Read.
-
-The token must be stored locally with mode `0600` or supplied through a
-connected Cloudflare integration. It must not be pasted into chat, committed,
-or stored under a public document root.
+The minimum edge TLS version is still 1.0 and HSTS is disabled. Raising the
+minimum to TLS 1.2 is recommended after a compatibility review. HSTS must wait
+until every intended web hostname and redirect is HTTPS-stable; enabling
+`includeSubDomains` prematurely could make an overlooked hostname inaccessible.
+The zone also enables 0-RTT, which is low-risk for this static site but should be
+reviewed before state-changing applications share the zone. These are separate
+approval gates and are not prerequisites for installing a trusted Player origin
+certificate.
 
 ## Recommended Player TLS and DNS sequence
 
@@ -112,13 +149,16 @@ Webuzo authoritative for issuance and renewal. Cloudflare Origin CA is the
 documented fallback if Webuzo's HTTP-01 path cannot be made reliable; it should
 not be the first choice while hosting independence is valuable.
 
-1. Complete the missing read-only Cloudflare settings and Rulesets audit.
-2. Take a fresh Restic snapshot of the Player virtual host, Webuzo database,
+1. Take a fresh Restic snapshot of the Player virtual host, Webuzo database,
    Apache configuration, and certificate state.
-3. Through Webuzo's SSL manager, temporarily assign the existing valid wildcard
+2. Through Webuzo's SSL manager, temporarily assign the existing valid wildcard
    certificate to the Player virtual host. Do not hand-edit generated Apache
    configuration.
-4. Validate direct origin HTTPS for the Player hostname and its complete chain.
+3. Validate direct origin HTTPS for the Player hostname and its complete chain,
+   and revalidate the trusted master-origin certificate.
+4. With separate approval, change the zone origin mode from Full to Full
+   (Strict), then validate apex, `www`, and the status Worker. Restore Full
+   immediately if an existing hostname unexpectedly fails.
 5. Create exactly one Cloudflare A record: `player.jamesjennison.net`, pointing
    to the same origin target as the apex, proxied, TTL Auto. Do not create
    `www.player`, `mail.player`, AAAA, CNAME, or wildcard records.
@@ -136,11 +176,11 @@ not be the first choice while hosting independence is valuable.
     cutover. Keep GitHub Pages unchanged until those gates pass.
 
 If HTTP-01 fails, withdraw the Player DNS record or retain the valid temporary
-wildcard while the hostname remains unannounced. Do not lower the zone from
-Full (Strict). The alternative is a dedicated Cloudflare Origin CA certificate
-generated from an origin-held key or CSR and installed through Webuzo. Origin
-CA is compatible with Full (Strict), but direct browsers do not trust it and it
-requires explicit expiry monitoring.
+wildcard while the hostname remains unannounced. After Full (Strict) is proven,
+do not lower the zone to accommodate an untrusted origin. The alternative is a
+dedicated Cloudflare Origin CA certificate generated from an origin-held key or
+CSR and installed through Webuzo. Origin CA is compatible with Full (Strict),
+but direct browsers do not trust it and it requires explicit expiry monitoring.
 
 ## Rollback
 

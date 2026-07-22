@@ -40,7 +40,7 @@ materially benefit a dedicated domain:
 | Webuzo user | `jamesjen` |
 | Webuzo document root | `/home/jamesjen/player.jamesjennison.net` |
 | Origin SSL owner and method | Webuzo; current auto-generated self-signed placeholder is staging-only and not production-trusted |
-| Cloudflare record and proxy state | Zone and DNS verified; Player record absent; settings and Rulesets need expanded read-only access before DNS action |
+| Cloudflare record and proxy state | Player record absent; zone is proxied and uses Full rather than Full (Strict); Universal SSL is active for the apex and wildcard; no applicable redirect, transform, origin, cache, configuration, compression, or response-header Ruleset is deployed |
 | Cache behavior | Static asset caching proposed below; no rule configured |
 | Logging | Existing Webuzo domain access/error logs only; no browser analytics |
 | Health check | Static route, asset, TLS, metadata, header, and cross-site navigation checks |
@@ -181,9 +181,13 @@ an origin IP in documentation or browser assets.
 
 The live read-only DNS and edge audit plus the recommended certificate sequence
 are recorded in
-[player-cloudflare-tls-audit.md](player-cloudflare-tls-audit.md). The exact
-SSL/TLS mode and modern Rulesets remain unverified because the available tokens
-lack Zone Settings, SSL and Certificates, and Rulesets read permissions.
+[player-cloudflare-tls-audit.md](player-cloudflare-tls-audit.md). Cloudflare is
+currently in Full mode, not Full (Strict). Always Use HTTPS and Automatic HTTPS
+Rewrites are enabled, Universal SSL has active apex and wildcard coverage, and
+the complete zone/account Ruleset inventories contain no custom phase that
+would redirect, rewrite, change the origin, change cache behavior, or alter
+response headers for Player. The trusted-origin and Full (Strict) transition
+therefore remain required and approval-gated before public cutover.
 
 ## GitHub Pages transition
 

@@ -39,7 +39,7 @@ does not alter the status, numbering, or cumulative totals of the canonical Andr
 | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |
 | Master M12 — Player local migration implementation | Complete | `July 22, 2026 at 1:51:13 PM PDT (UTC−07:00)` | 8–14 active h | By `July 23, 2026 at 3:51:13 AM PDT (UTC−07:00)` if uninterrupted | GPT-5; current default reasoning strength, unchanged | 0.61 h | 0.00 h | 0.00 h |
 | Master M13 — Player origin staging | Complete | `July 22, 2026 at 2:50:15 PM PDT (UTC−07:00)` | 1.5–3 active h | By `July 22, 2026 at 5:50:15 PM PDT (UTC−07:00)` if uninterrupted | GPT-5; current default reasoning strength, unchanged | 0.21 h | 0.00 h | 0.00 h |
-| Master M14 — Cloudflare and Player TLS verification | Waiting for corrected read-only scope | `July 22, 2026 at 3:07:22 PM PDT (UTC−07:00)` | 0.5–1.5 active h | By `July 22, 2026 at 4:37:22 PM PDT (UTC−07:00)` if uninterrupted | GPT-5; current default reasoning strength, unchanged | 0.19 h | 0.00 h | 0.33 h plus current interval |
+| Master M14 — Cloudflare and Player TLS verification | Complete | `July 22, 2026 at 3:07:22 PM PDT (UTC−07:00)` | 0.5–1.5 active h | Completed `July 22, 2026 at 3:54:26 PM PDT (UTC−07:00)` | GPT-5; current default reasoning strength, unchanged | 0.32 h | 0.00 h | 0.46 h |
 
 ### Master M12 — Player local migration implementation
 
@@ -136,13 +136,38 @@ Cumulative counted project time through Milestone Master M13: 0.82 h (master-sit
   new credential as an active user API token, but rejects direct reads of the approved zone, DNS, Zone Settings,
   SSL/certificate, and Rulesets resources. The token therefore needs its resource selection or permission policy
   corrected before the read-only audit can continue.
+- **Second resume:** Active execution resumed `July 22, 2026 at 3:46:23 PM PDT (UTC−07:00)` after the owner confirmed
+  that the token policy had been reviewed and saved in Cloudflare.
+- **Completion:** Completed `July 22, 2026 at 3:54:26 PM PDT (UTC−07:00)`. The read-only audit verified Full rather
+  than Full (Strict), active Universal wildcard edge coverage, HTTPS and protocol settings, HSTS state, the complete
+  zone/account Ruleset inventories, the narrow leaked-password rate limit, and the absence of Player DNS. No
+  Cloudflare, DNS, certificate, Webuzo, GitHub, staging-content, or production setting changed.
+- **Forecast variance:** 0.18 hours (35.1%) below the 0.5-hour lower bound based on 0.32 counted hours. The total
+  elapsed time was 0.78 hours because two owner-credential intervals totaling 0.46 hours were excluded.
+- **Evidence:** Active scoped-token verification; successful zone, DNS, settings, certificate-pack, and Ruleset API
+  reads; public edge and origin-bound TLS/HTTP checks; clean secret scan and documentation diff; detailed sanitized
+  record in `player-cloudflare-tls-audit.md`.
+- **Forecasting lesson:** Separate credential-policy activation from control-plane auditing, probe one authorized
+  endpoint before a broad read set, and use the complete Ruleset inventory plus product-specific phase checks to
+  distinguish absent rules from permission-filtered details.
 
 | Started | Ended | Category | Reason or work | Evidence | Hours |
 | --- | --- | --- | --- | --- | ---: |
 | `July 22, 2026 at 3:07:22 PM PDT (UTC−07:00)` | `July 22, 2026 at 3:16:20 PM PDT (UTC−07:00)` | Active | Discover authorized Cloudflare read access, verify the zone and TLS control plane, reconcile it with Webuzo, and document the next mutation gate. | Owner approval; branch `codex/player-site-migration`; staging commit `916ae9a`; read-only audit draft | 0.15 h |
 | `July 22, 2026 at 3:16:20 PM PDT (UTC−07:00)` | `July 22, 2026 at 3:36:21 PM PDT (UTC−07:00)` | User-blocked | Await a read-only Cloudflare credential or integration with Zone Settings, SSL and Certificates, and modern Rulesets visibility. | Cloudflare API authorization responses; required permission list in `player-cloudflare-tls-audit.md`; owner continuation | 0.33 h excluded |
 | `July 22, 2026 at 3:36:21 PM PDT (UTC−07:00)` | `July 22, 2026 at 3:38:48 PM PDT (UTC−07:00)` | Active | Validate the supplied credential and attempt the remaining zone, DNS, settings, certificate, and Rulesets reads. | Cloudflare token verification and sanitized API authorization responses | 0.04 h |
-| `July 22, 2026 at 3:38:48 PM PDT (UTC−07:00)` | In progress | User-blocked | Await correction of the active token's Cloudflare resource scope or read-only permission policy. | Active-token verification plus resource-specific `Invalid access token` responses | Excluded |
+| `July 22, 2026 at 3:38:48 PM PDT (UTC−07:00)` | `July 22, 2026 at 3:46:23 PM PDT (UTC−07:00)` | User-blocked | Await correction of the active token's Cloudflare resource scope or read-only permission policy. | Active-token verification plus resource-specific `Invalid access token` responses; owner confirmation | 0.13 h excluded |
+| `July 22, 2026 at 3:46:23 PM PDT (UTC−07:00)` | `July 22, 2026 at 3:54:26 PM PDT (UTC−07:00)` | Active | Revalidate the saved token policy, complete the remaining Cloudflare reads, reconcile public and origin behavior, and finalize the approval-gated sequence. | Scoped API reads; public probes; `player-cloudflare-tls-audit.md`; final secret scan | 0.13 h |
+
+```text
+Milestone Master M14 time:
+Forecast: 0.5–1.5 active hours
+Counted project time: 0.32 h
+Total elapsed time: 0.78 h
+User-blocked time excluded: 0.46 h
+Forecast variance: 0.18 h below the lower bound (35.1%)
+Cumulative counted project time through Milestone Master M14: 1.14 h (master-site program website milestones only; canonical Android cumulative remains Unknown)
+```
 
 ## Definitions and confidence rules
 

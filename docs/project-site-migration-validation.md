@@ -134,6 +134,8 @@ transition, and rollback contract is in
 | Backups | Pass: snapshots `40412861`, `21c5494b`, and `0f7293db`; full Restic data check and streamed restore check pass |
 | HTTPS trust | Pending: Webuzo generated a self-signed placeholder; no trusted Player certificate was issued |
 | Security/cache headers | Pending separate approval; no domain-specific header configuration was added |
+| Cloudflare TLS | Read-only audit complete: current origin mode is Full, not Full (Strict); Universal SSL actively covers the apex and wildcard |
+| Cloudflare rules | No legacy Page Rules or applicable redirect, transform, origin, cache, configuration, compression, or response-header Rulesets are deployed |
 
 The Webuzo template generated internal `www.player` and `mail.player` aliases.
 They are intentionally non-resolving and are not approved public hostnames. No
