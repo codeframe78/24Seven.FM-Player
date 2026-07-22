@@ -40,7 +40,7 @@ materially benefit a dedicated domain:
 | Webuzo user | `jamesjen` |
 | Webuzo document root | `/home/jamesjen/player.jamesjennison.net` |
 | Origin SSL owner and method | Webuzo; current auto-generated self-signed placeholder is staging-only and not production-trusted |
-| Cloudflare record and proxy state | Must be read from Cloudflare and approved before DNS action |
+| Cloudflare record and proxy state | Zone and DNS verified; Player record absent; settings and Rulesets need expanded read-only access before DNS action |
 | Cache behavior | Static asset caching proposed below; no rule configured |
 | Logging | Existing Webuzo domain access/error logs only; no browser analytics |
 | Health check | Static route, asset, TLS, metadata, header, and cross-site navigation checks |
@@ -178,6 +178,12 @@ is confirmed, with valid origin coverage and end-to-end Full (Strict) TLS.
 The exact record type, target, proxy state, origin certificate method, renewal
 owner, HTTPS enforcement, and cache rules remain approval-gated. Do not expose
 an origin IP in documentation or browser assets.
+
+The live read-only DNS and edge audit plus the recommended certificate sequence
+are recorded in
+[player-cloudflare-tls-audit.md](player-cloudflare-tls-audit.md). The exact
+SSL/TLS mode and modern Rulesets remain unverified because the available tokens
+lack Zone Settings, SSL and Certificates, and Rulesets read permissions.
 
 ## GitHub Pages transition
 

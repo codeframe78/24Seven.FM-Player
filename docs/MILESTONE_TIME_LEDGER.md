@@ -1,6 +1,6 @@
 # Milestone Real-World Time Ledger
 
-Last updated: `July 22, 2026 at 3:02:42 PM PDT (UTC−07:00)`
+Last updated: `July 22, 2026 at 3:16:20 PM PDT (UTC−07:00)`
 
 This is the permanent time-accounting record for the canonical M01–M60 milestones in [ROADMAP.md](ROADMAP.md). It
 preserves historical uncertainty instead of treating commit spans as labor time. Future milestone work must be
@@ -39,6 +39,7 @@ does not alter the status, numbering, or cumulative totals of the canonical Andr
 | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |
 | Master M12 — Player local migration implementation | Complete | `July 22, 2026 at 1:51:13 PM PDT (UTC−07:00)` | 8–14 active h | By `July 23, 2026 at 3:51:13 AM PDT (UTC−07:00)` if uninterrupted | GPT-5; current default reasoning strength, unchanged | 0.61 h | 0.00 h | 0.00 h |
 | Master M13 — Player origin staging | Complete | `July 22, 2026 at 2:50:15 PM PDT (UTC−07:00)` | 1.5–3 active h | By `July 22, 2026 at 5:50:15 PM PDT (UTC−07:00)` if uninterrupted | GPT-5; current default reasoning strength, unchanged | 0.21 h | 0.00 h | 0.00 h |
+| Master M14 — Cloudflare and Player TLS verification | Waiting for read-only access | `July 22, 2026 at 3:07:22 PM PDT (UTC−07:00)` | 0.5–1.5 active h | By `July 22, 2026 at 4:37:22 PM PDT (UTC−07:00)` if uninterrupted | GPT-5; current default reasoning strength, unchanged | 0.15 h | 0.00 h | In progress |
 
 ### Master M12 — Player local migration implementation
 
@@ -115,6 +116,25 @@ User-blocked time excluded: 0.00 h
 Forecast variance: 1.29 h below the lower bound (86.2%)
 Cumulative counted project time through Milestone Master M13: 0.82 h (master-site program website milestones only; canonical Android cumulative remains Unknown)
 ```
+
+### Master M14 — Cloudflare and Player TLS verification
+
+- **Objective:** Verify available Cloudflare control-plane access and read the zone, DNS, proxy, SSL/TLS, certificate,
+  and rule state needed to produce the exact approval-gated Player DNS and trusted-origin-certificate sequence.
+- **Authorization and start:** Authorized by the owner and started `July 22, 2026 at 3:07:22 PM PDT (UTC−07:00)`.
+- **Model, reasoning strength, and original forecast:** GPT-5 with the current default reasoning strength, unchanged;
+  0.5–1.5 active hours; expected completion by `July 22, 2026 at 4:37:22 PM PDT (UTC−07:00)` if uninterrupted.
+- **Scope boundary:** Read-only Cloudflare and public-network verification plus local documentation. Cloudflare, DNS,
+  Webuzo, certificates, GitHub, GitHub Pages, staging content, and production configuration remain unchanged.
+- **Pause:** Active execution paused `July 22, 2026 at 3:16:20 PM PDT (UTC−07:00)` after live DNS, edge TLS, public
+  redirects, legacy Page Rules, Webuzo certificates, and ACME behavior were verified. The available credentials lack
+  Zone Settings, SSL and Certificates, and modern Rulesets read permissions. The exact SSL/TLS mode and rule state
+  cannot be verified without a separately scoped read-only token or connected integration.
+
+| Started | Ended | Category | Reason or work | Evidence | Hours |
+| --- | --- | --- | --- | --- | ---: |
+| `July 22, 2026 at 3:07:22 PM PDT (UTC−07:00)` | `July 22, 2026 at 3:16:20 PM PDT (UTC−07:00)` | Active | Discover authorized Cloudflare read access, verify the zone and TLS control plane, reconcile it with Webuzo, and document the next mutation gate. | Owner approval; branch `codex/player-site-migration`; staging commit `916ae9a`; read-only audit draft | 0.15 h |
+| `July 22, 2026 at 3:16:20 PM PDT (UTC−07:00)` | In progress | User-blocked | Await a read-only Cloudflare credential or integration with Zone Settings, SSL and Certificates, and modern Rulesets visibility. | Cloudflare API authorization responses; required permission list in `player-cloudflare-tls-audit.md` | Excluded |
 
 ## Definitions and confidence rules
 
