@@ -39,7 +39,7 @@ does not alter the status, numbering, or cumulative totals of the canonical Andr
 | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |
 | Master M12 — Player local migration implementation | Complete | `July 22, 2026 at 1:51:13 PM PDT (UTC−07:00)` | 8–14 active h | By `July 23, 2026 at 3:51:13 AM PDT (UTC−07:00)` if uninterrupted | GPT-5; current default reasoning strength, unchanged | 0.61 h | 0.00 h | 0.00 h |
 | Master M13 — Player origin staging | Complete | `July 22, 2026 at 2:50:15 PM PDT (UTC−07:00)` | 1.5–3 active h | By `July 22, 2026 at 5:50:15 PM PDT (UTC−07:00)` if uninterrupted | GPT-5; current default reasoning strength, unchanged | 0.21 h | 0.00 h | 0.00 h |
-| Master M14 — Cloudflare and Player TLS verification | Waiting for read-only access | `July 22, 2026 at 3:07:22 PM PDT (UTC−07:00)` | 0.5–1.5 active h | By `July 22, 2026 at 4:37:22 PM PDT (UTC−07:00)` if uninterrupted | GPT-5; current default reasoning strength, unchanged | 0.15 h | 0.00 h | In progress |
+| Master M14 — Cloudflare and Player TLS verification | Waiting for corrected read-only scope | `July 22, 2026 at 3:07:22 PM PDT (UTC−07:00)` | 0.5–1.5 active h | By `July 22, 2026 at 4:37:22 PM PDT (UTC−07:00)` if uninterrupted | GPT-5; current default reasoning strength, unchanged | 0.19 h | 0.00 h | 0.33 h plus current interval |
 
 ### Master M12 — Player local migration implementation
 
@@ -130,11 +130,19 @@ Cumulative counted project time through Milestone Master M13: 0.82 h (master-sit
   redirects, legacy Page Rules, Webuzo certificates, and ACME behavior were verified. The available credentials lack
   Zone Settings, SSL and Certificates, and modern Rulesets read permissions. The exact SSL/TLS mode and rule state
   cannot be verified without a separately scoped read-only token or connected integration.
+- **Resume:** Active execution resumed `July 22, 2026 at 3:36:21 PM PDT (UTC−07:00)` after the owner supplied the
+  separately scoped read-only Cloudflare token. The token file was tightened from mode `0664` to `0600` before use.
+- **Second pause:** Active execution paused `July 22, 2026 at 3:38:48 PM PDT (UTC−07:00)`. Cloudflare verifies the
+  new credential as an active user API token, but rejects direct reads of the approved zone, DNS, Zone Settings,
+  SSL/certificate, and Rulesets resources. The token therefore needs its resource selection or permission policy
+  corrected before the read-only audit can continue.
 
 | Started | Ended | Category | Reason or work | Evidence | Hours |
 | --- | --- | --- | --- | --- | ---: |
 | `July 22, 2026 at 3:07:22 PM PDT (UTC−07:00)` | `July 22, 2026 at 3:16:20 PM PDT (UTC−07:00)` | Active | Discover authorized Cloudflare read access, verify the zone and TLS control plane, reconcile it with Webuzo, and document the next mutation gate. | Owner approval; branch `codex/player-site-migration`; staging commit `916ae9a`; read-only audit draft | 0.15 h |
-| `July 22, 2026 at 3:16:20 PM PDT (UTC−07:00)` | In progress | User-blocked | Await a read-only Cloudflare credential or integration with Zone Settings, SSL and Certificates, and modern Rulesets visibility. | Cloudflare API authorization responses; required permission list in `player-cloudflare-tls-audit.md` | Excluded |
+| `July 22, 2026 at 3:16:20 PM PDT (UTC−07:00)` | `July 22, 2026 at 3:36:21 PM PDT (UTC−07:00)` | User-blocked | Await a read-only Cloudflare credential or integration with Zone Settings, SSL and Certificates, and modern Rulesets visibility. | Cloudflare API authorization responses; required permission list in `player-cloudflare-tls-audit.md`; owner continuation | 0.33 h excluded |
+| `July 22, 2026 at 3:36:21 PM PDT (UTC−07:00)` | `July 22, 2026 at 3:38:48 PM PDT (UTC−07:00)` | Active | Validate the supplied credential and attempt the remaining zone, DNS, settings, certificate, and Rulesets reads. | Cloudflare token verification and sanitized API authorization responses | 0.04 h |
+| `July 22, 2026 at 3:38:48 PM PDT (UTC−07:00)` | In progress | User-blocked | Await correction of the active token's Cloudflare resource scope or read-only permission policy. | Active-token verification plus resource-specific `Invalid access token` responses | Excluded |
 
 ## Definitions and confidence rules
 

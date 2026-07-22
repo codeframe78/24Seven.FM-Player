@@ -27,6 +27,15 @@ The existing Wrangler OAuth session can identify the zone. Neither credential
 has permission to read Zone Settings, SSL and Certificates, or modern Rulesets.
 The API returned authorization failures without exposing either credential.
 
+The owner then supplied a separate user API token for the expanded audit. Its
+secret is stored outside the repository with mode `0600`, and Cloudflare's token
+verification endpoint reports it active. Cloudflare nevertheless rejects direct
+reads of the approved zone, DNS, Zone Settings, SSL/certificate, and Rulesets
+resources. This indicates that its effective resource selection or permission
+policy does not include the target zone/account. No settings data was returned,
+and repeated authentication attempts were stopped after Cloudflare began
+rate-limiting the failed requests.
+
 ## Verified public behavior
 
 - Cloudflare redirects HTTP apex and HTTP `www` requests permanently to HTTPS
