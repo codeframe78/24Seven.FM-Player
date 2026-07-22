@@ -1,43 +1,48 @@
 navigation:
   - section: overview
     label: Overview
-    path: /project/
+    path: /
     description: Product overview, current program, screenshots, and project entry points.
   - section: features
     label: Features
-    path: /project/features/
+    path: /features/
     description: Playback, discovery, accounts, community, stations, and boundaries.
   - section: development
     label: Development
-    path: /project/development/
+    path: /development/
     description: Native architecture, engineering principles, workflow, and source map.
   - section: testing
     label: Testing
-    path: /project/testing/
+    path: /testing/
     description: Automated, emulator, physical-device, accessibility, and release evidence.
   - section: product-testing
     label: Test the Player
-    path: /project/product-testing/
+    path: /product-testing/
     description: Searchable acceptance catalog with private browser-local progress.
   - section: roadmap
     label: Roadmap
-    path: /project/roadmap/
+    path: /roadmap/
     description: Canonical M01–M60 milestones, dependencies, evidence, and future scope.
   - section: resources
     label: Resources
-    path: /project/resources/
+    path: /resources/
     description: Searchable architecture, research, testing, release, and contributor library.
   - section: privacy
     label: Privacy
-    path: /
+    path: /privacy/
     description: Canonical app privacy notice with plain-language data boundaries.
 
+site_meta:
+  verified: 2026-07-22
+  source_commit: c540571
+  verification_label: Verified against repository commit c540571 on July 22, 2026
+
 roadmap_meta:
-  updated: 2026-07-19
+  updated: 2026-07-20
   achieved_count: 33
   total_count: 60
-  active_phase: M29–M35
-  active_label: Alpha readiness and release integrity
+  active_phase: M29–M30
+  active_label: Owner and external Alpha-readiness gates
 
 milestones:
   - order: 1

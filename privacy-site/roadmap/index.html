@@ -2,7 +2,7 @@
 layout: project
 title: Canonical roadmap · 24Seven.FM Player
 description: Explore the dependency-ordered M01–M60 roadmap, verified completion history, active Alpha gates, production path, and bounded future work.
-permalink: /project/roadmap/
+permalink: /roadmap/
 section: roadmap
 ---
 <section class="page-hero">
@@ -33,19 +33,19 @@ section: roadmap
   <a href="#alpha">Alpha delivery</a>
   <a href="#production">Production</a>
   <a href="#future">Future</a>
-  <a href="https://github.com/users/codeframe78/projects/1">Live dashboard ↗</a>
+  <a href="{{ site.github_url }}">Repository ↗</a>
 </nav>
 
 {% assign alpha_readiness = site.data.project.roadmap | where: "phase", "alpha-readiness" %}
 <section class="content-section" id="current">
   <div class="content-intro wide">
-    <p class="eyebrow">{{ site.data.project.roadmap_meta.active_phase }} · Current program</p>
+    <p class="eyebrow">{{ site.data.project.roadmap_meta.active_phase }} · Verified snapshot</p>
     <h2>{{ site.data.project.roadmap_meta.active_label }}</h2>
     <p>M31–M35 are complete; two independently reviewable gates remain in the Alpha-readiness program. External dependencies stay visible while policy and rights evidence progress.</p>
   </div>
   <div class="roadmap-callout migration-callout">
-    <div><p class="eyebrow">Forecast baseline · July 19, 2026</p><h2>Ranges begin at their trigger</h2></div>
-    <div><p>The forecast separates active work from outside waiting time. M29, M30, and M36 are the current external Alpha critical path; M39 cannot receive a credible calendar date until those inputs and M36–M38 are complete under the current scope.</p><div class="actions"><a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/MILESTONE_FORECAST.md">Open milestone forecasts</a></div></div>
+    <div><p class="eyebrow">Repository checkpoint · {{ site.data.project.site_meta.source_commit }}</p><h2>State is dated, not implied live</h2></div>
+    <div><p>This public view records the durable delivery stages and the repository state verified on {{ site.data.project.site_meta.verified | date: "%B %-d, %Y" }}. External waits remain visible, while speculative schedules and internal planning details stay out of the website.</p><div class="actions"><a class="button secondary" href="{{ site.github_url }}/blob/main/docs/ROADMAP.md">Read the roadmap source</a></div></div>
   </div>
   <div class="roadmap-tools" data-filter-controls data-target="#alpha-readiness-grid">
     <label class="filter-search" for="alpha-readiness-search">Find an Alpha-readiness gate<input id="alpha-readiness-search" type="search" placeholder="Search ID, policy, security, device…" autocomplete="off" data-filter-query></label>
@@ -66,8 +66,7 @@ section: roadmap
       <h3>{{ item.name }}</h3>
       <p>{{ item.summary }}</p>
       <p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p>
-      {% if item.forecast %}<div class="roadmap-forecast"><span class="forecast-label">Forecast</span><strong>{{ item.forecast }}</strong><span class="forecast-confidence">{{ item.forecast_confidence }}</span></div>{% endif %}
-      <a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/{{ item.evidence }}">View scope or evidence <span aria-hidden="true">↗</span></a>
+      <a href="{{ site.github_url }}/blob/main/{{ item.evidence }}">View scope or evidence <span aria-hidden="true">↗</span></a>
     </article>
     {% endfor %}
     <p class="filter-empty" data-filter-empty hidden>No Alpha-readiness milestones match that filter.</p>
@@ -90,14 +89,14 @@ section: roadmap
       <div class="history-order">{{ item.order }}</div>
       <div class="history-date"><time datetime="{{ item.date }}">{{ item.date | date: "%b %-d, %Y" }}</time>{% if item.joint %}<span>Joint checkpoint</span>{% endif %}</div>
       <div class="history-copy"><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.outcome }}</p></div>
-      <a class="commit-link" href="https://github.com/codeframe78/24Seven.FM-Player/commit/{{ item.commit }}"><code>{{ item.commit }}</code><span class="sr-only"> commit</span></a>
+      <a class="commit-link" href="{{ site.github_url }}/commit/{{ item.commit }}"><code>{{ item.commit }}</code><span class="sr-only"> commit</span></a>
     </li>
     {% endfor %}
     <li class="filter-empty" data-filter-empty hidden>No achieved milestones match that search.</li>
   </ol>
   <div class="roadmap-callout migration-callout">
     <div><p class="eyebrow">Renumbering trace</p><h2>Legacy IDs are never orphaned</h2></div>
-    <div><p>Old commit messages and public evidence remain valid. The migration ledger maps every former milestone and split program to its canonical ID.</p><div class="actions"><a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/MILESTONE_MIGRATION.md">Open migration ledger</a></div></div>
+    <div><p>Old commit messages and public evidence remain valid. The migration ledger maps every former milestone and split program to its canonical ID.</p><div class="actions"><a class="button secondary" href="{{ site.github_url }}/blob/main/docs/MILESTONE_MIGRATION.md">Open migration ledger</a></div></div>
   </div>
 </section>
 
@@ -105,7 +104,7 @@ section: roadmap
 <section class="content-section" id="notifications">
   <div class="content-intro wide"><p class="eyebrow">M36–M38 · Authorization before implementation</p><h2>True delivery without fake push</h2><p>M27 is complete for actively observed Chat. Closed-app delivery begins only with an authorized event source, then a secure implementation, then lifecycle/privacy certification.</p></div>
   <div class="workstream-grid">
-    {% for item in notification_items %}<article class="roadmap-card {{ item.state }}"><p class="status"><span></span>{{ item.state_label }}</p><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.summary }}</p><p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p>{% if item.forecast %}<div class="roadmap-forecast"><span class="forecast-label">Forecast</span><strong>{{ item.forecast }}</strong><span class="forecast-confidence">{{ item.forecast_confidence }}</span></div>{% endif %}</article>{% endfor %}
+    {% for item in notification_items %}<article class="roadmap-card {{ item.state }}"><p class="status"><span></span>{{ item.state_label }}</p><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.summary }}</p><p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p></article>{% endfor %}
   </div>
 </section>
 
@@ -113,7 +112,7 @@ section: roadmap
 <section class="content-section" id="alpha">
   <div class="content-intro wide"><p class="eyebrow">M39–M41 · Exact artifact to authorized release</p><h2>Freeze, prove delivery, then publish</h2><p>Candidate creation, Play delivery/remediation, and publication are separate gates. A green build never publishes itself.</p></div>
   <div class="workstream-grid">
-    {% for item in alpha_distribution %}<article class="roadmap-card {{ item.state }}"><p class="status"><span></span>{{ item.state_label }}</p><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.summary }}</p><p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p>{% if item.forecast %}<div class="roadmap-forecast"><span class="forecast-label">Forecast</span><strong>{{ item.forecast }}</strong><span class="forecast-confidence">{{ item.forecast_confidence }}</span></div>{% endif %}</article>{% endfor %}
+    {% for item in alpha_distribution %}<article class="roadmap-card {{ item.state }}"><p class="status"><span></span>{{ item.state_label }}</p><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.summary }}</p><p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p></article>{% endfor %}
   </div>
 </section>
 
@@ -121,7 +120,7 @@ section: roadmap
 <section class="content-section" id="production">
   <div class="content-intro wide"><p class="eyebrow">M42–M45 · Beyond Alpha</p><h2>A complete path to production and maintenance</h2><p>Closed testing, production access, staged rollout, and continuing operations now have explicit exit criteria instead of disappearing after Alpha publication.</p></div>
   <div class="workstream-grid">
-    {% for item in production_items %}<article class="roadmap-card {{ item.state }}"><p class="status"><span></span>{{ item.state_label }}</p><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.summary }}</p><p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p>{% if item.forecast %}<div class="roadmap-forecast"><span class="forecast-label">Forecast</span><strong>{{ item.forecast }}</strong><span class="forecast-confidence">{{ item.forecast_confidence }}</span></div>{% endif %}</article>{% endfor %}
+    {% for item in production_items %}<article class="roadmap-card {{ item.state }}"><p class="status"><span></span>{{ item.state_label }}</p><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.summary }}</p><p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p></article>{% endfor %}
   </div>
 </section>
 
@@ -134,12 +133,12 @@ section: roadmap
     <p class="filter-count" aria-live="polite"><strong data-filter-count>{{ future_items.size }}</strong> visible</p>
   </div>
   <div class="workstream-grid" id="future-grid" data-filter-scope>
-    {% for item in future_items %}<article class="roadmap-card {{ item.state }}" data-filter-item data-state="{{ item.state }}"><p class="status"><span></span>{{ item.state_label }}</p><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.summary }}</p><p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p>{% if item.forecast %}<div class="roadmap-forecast"><span class="forecast-label">Forecast</span><strong>{{ item.forecast }}</strong><span class="forecast-confidence">{{ item.forecast_confidence }}</span></div>{% endif %}<a href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/{{ item.evidence }}">View future scope <span aria-hidden="true">↗</span></a></article>{% endfor %}
+    {% for item in future_items %}<article class="roadmap-card {{ item.state }}" data-filter-item data-state="{{ item.state }}"><p class="status"><span></span>{{ item.state_label }}</p><p class="milestone-id">{{ item.id }}</p><h3>{{ item.name }}</h3><p>{{ item.summary }}</p><p class="roadmap-dependency"><strong>Dependency:</strong> {{ item.dependencies }}</p><a href="{{ site.github_url }}/blob/main/{{ item.evidence }}">View future scope <span aria-hidden="true">↗</span></a></article>{% endfor %}
     <p class="filter-empty" data-filter-empty hidden>No future milestones match that filter.</p>
   </div>
 </section>
 
 <section class="cta" aria-labelledby="roadmap-cta-title">
-  <div><p class="eyebrow">Live execution state</p><h2 id="roadmap-cta-title">Follow every canonical milestone on GitHub.</h2><p>The repository roadmap is authoritative; GitHub Project #1 mirrors status, evidence, area, and achievement order.</p></div>
-  <div class="actions"><a class="button primary" href="https://github.com/users/codeframe78/projects/1">Open live dashboard</a><a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/ROADMAP.md">Read the roadmap source</a></div>
+  <div><p class="eyebrow">Canonical source</p><h2 id="roadmap-cta-title">Inspect the roadmap in the repository.</h2><p>The public website is a curated checkpoint. The repository roadmap remains the detailed planning and evidence authority.</p></div>
+  <div class="actions"><a class="button primary" href="{{ site.github_url }}/blob/main/docs/ROADMAP.md">Read the roadmap source</a><a class="button secondary" href="{{ site.github_url }}">Open the repository</a></div>
 </section>

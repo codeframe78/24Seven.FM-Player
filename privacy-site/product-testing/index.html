@@ -2,7 +2,7 @@
 layout: project
 title: Product testing · 24Seven.FM Player
 description: Run the complete manual test catalog for the 24Seven.FM Player and submit structured, privacy-safe results.
-permalink: /project/product-testing/
+permalink: /product-testing/
 section: product-testing
 ---
 <section class="page-hero">
@@ -11,13 +11,13 @@ section: product-testing
     <h1>Test the player. Record every result.</h1>
     <p class="page-lede">This is the canonical manual acceptance catalog for the M01–M60 roadmap. A coordinator assigns current, specialist, campaign, or future cases with the stations, accounts, devices, accessories, and approved commerce environments needed for each run; no single tester is expected to own the entire matrix.</p>
     <div class="actions">
-      <a class="button primary" href="https://github.com/codeframe78/24Seven.FM-Player/issues/new?template=product-test.yml">Submit a test result</a>
-      <a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/issues?q=is%3Aissue+label%3Atesting-feedback">Browse tester reports</a>
+      <a class="button primary" href="{{ site.github_url }}/issues/new?template=product-test.yml">Submit a test result</a>
+      <a class="button secondary" href="{{ site.github_url }}/issues?q=is%3Aissue+label%3Atesting-feedback">Browse tester reports</a>
     </div>
   </div>
   <aside class="page-summary" aria-label="Testing workspace summary">
     <span>Manual acceptance catalog</span>
-    <strong>38 test cases</strong>
+    <strong>35 test cases</strong>
     <dl>
       <div><dt>Stations</dt><dd>5</dd></div>
       <div><dt>Outcomes</dt><dd>4</dd></div>
@@ -47,10 +47,10 @@ section: product-testing
     <button type="button" data-test-filter="future" aria-pressed="false">Future</button>
   </div>
   <div class="tester-catalog-progress">
-    <span data-test-progress-text>0 of 38 checked</span>
-    <progress max="38" value="0" data-test-progress aria-label="Tester catalog progress">0 of 38</progress>
+    <span data-test-progress-text>0 of 35 checked</span>
+    <progress max="35" value="0" data-test-progress aria-label="Tester catalog progress">0 of 35</progress>
   </div>
-  <p class="catalog-visible-count" data-test-visible-count role="status" aria-live="polite">38 test cases visible</p>
+  <p class="catalog-visible-count" data-test-visible-count role="status" aria-live="polite">35 test cases visible</p>
   <button type="button" class="catalog-clear" data-test-clear-progress>Clear progress</button>
 </div>
 <p class="catalog-empty-state" data-test-empty-state hidden>No test cases match the current search and filter.</p>
@@ -393,8 +393,8 @@ section: product-testing
     <article><span>Low / Note</span><h3>Usability or polish</h3><p>The task completes, but wording, spacing, latency, spoken feedback, or consistency should improve. Select Pass with notes when the expected result still occurred.</p></article>
   </div>
   <div class="actions">
-    <a class="button primary" href="https://github.com/codeframe78/24Seven.FM-Player/issues/new?template=product-test.yml">Open structured result form</a>
-    <a class="button secondary" href="https://github.com/codeframe78/24Seven.FM-Player/blob/main/docs/alpha-testing.md">Read installation and reporting guidance</a>
+    <a class="button primary" href="{{ site.github_url }}/issues/new?template=product-test.yml">Open structured result form</a>
+    <a class="button secondary" href="{{ site.github_url }}/blob/main/docs/alpha-testing.md">Read installation and reporting guidance</a>
   </div>
 </section>
 
@@ -411,5 +411,5 @@ section: product-testing
 
 <section class="cta" aria-labelledby="submit-result-title">
   <div><p class="eyebrow">Finished a case?</p><h2 id="submit-result-title">Record the result while it is fresh.</h2><p>Passes establish coverage. Failures establish work. Blocked cases identify a missing build, account, permission, station, device, or accessory without being mistaken for a product defect.</p></div>
-  <div class="actions"><a class="button primary" href="https://github.com/codeframe78/24Seven.FM-Player/issues/new?template=product-test.yml">Submit result</a></div>
+  <div class="actions"><a class="button primary" href="{{ site.github_url }}/issues/new?template=product-test.yml">Submit result</a></div>
 </section>

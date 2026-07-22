@@ -1,0 +1,22 @@
+{% assign meta_title = page.title | default: site.title %}
+{% assign meta_description = page.description | default: site.description %}
+{% assign canonical_url = page.url | replace: 'index.html', '' | absolute_url %}
+{% assign social_image = page.image | default: '/assets/project/feature-graphic.png' | absolute_url %}
+<meta name="description" content="{{ meta_description | escape }}">
+<meta name="robots" content="{{ page.robots | default: 'index, follow, max-image-preview:large' }}">
+<link rel="canonical" href="{{ canonical_url }}">
+<meta property="og:title" content="{{ meta_title | escape }}">
+<meta property="og:description" content="{{ meta_description | escape }}">
+<meta property="og:image" content="{{ social_image }}">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="500">
+<meta property="og:image:alt" content="24Seven.FM Player project artwork">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ meta_title | escape }}">
+<meta name="twitter:description" content="{{ meta_description | escape }}">
+<meta name="twitter:image" content="{{ social_image }}">
+<meta name="twitter:image:alt" content="24Seven.FM Player project artwork">

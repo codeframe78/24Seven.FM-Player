@@ -4,15 +4,15 @@
   <p><strong>Five stations. One adaptive, fully native Android player.</strong></p>
   <p>A community-built Kotlin, Jetpack Compose, and Media3 client for the 24seven.FM internet-radio network.</p>
   <p>
-    <a href="https://github.com/codeframe78/24Seven.FM-Player/actions/workflows/android.yml"><img src="https://github.com/codeframe78/24Seven.FM-Player/actions/workflows/android.yml/badge.svg?branch=main" alt="Android CI status"></a>
-    <a href="https://github.com/codeframe78/24Seven.FM-Player/actions/workflows/privacy-pages.yml"><img src="https://github.com/codeframe78/24Seven.FM-Player/actions/workflows/privacy-pages.yml/badge.svg?branch=main" alt="Project Pages status"></a>
+    <a href="https://github.com/James-Jennison/24Seven.FM-Player/actions/workflows/android.yml"><img src="https://github.com/James-Jennison/24Seven.FM-Player/actions/workflows/android.yml/badge.svg?branch=main" alt="Android CI status"></a>
+    <a href="https://github.com/James-Jennison/24Seven.FM-Player/actions/workflows/privacy-pages.yml"><img src="https://github.com/James-Jennison/24Seven.FM-Player/actions/workflows/privacy-pages.yml/badge.svg?branch=main" alt="Project site status"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-7b52ab" alt="Apache-2.0 license"></a>
   </p>
   <p>
-    <a href="https://codeframe78.github.io/24Seven.FM-Player/project/"><strong>Project portal</strong></a> ·
-    <a href="https://codeframe78.github.io/24Seven.FM-Player/project/product-testing/"><strong>Test the Player</strong></a> ·
-    <a href="https://codeframe78.github.io/24Seven.FM-Player/project/roadmap/"><strong>Interactive roadmap</strong></a> ·
-    <a href="https://github.com/users/codeframe78/projects/1"><strong>Build dashboard</strong></a>
+    <a href="https://player.jamesjennison.net/"><strong>Project portal</strong></a> ·
+    <a href="https://player.jamesjennison.net/product-testing/"><strong>Test the Player</strong></a> ·
+    <a href="https://player.jamesjennison.net/roadmap/"><strong>Interactive roadmap</strong></a> ·
+    <a href="https://github.com/James-Jennison/24Seven.FM-Player"><strong>Repository</strong></a>
   </p>
 </div>
 
@@ -29,7 +29,30 @@
 | :---: | :---: | :---: | :---: | :---: |
 | Soundtracks | 1980s | Classical | Extreme metal | Trance |
 
-The [comprehensive project portal](https://codeframe78.github.io/24Seven.FM-Player/project/) connects the product experience to its native architecture, development workflow, validation evidence, milestone history, release readiness, and contributor resources. The canonical [privacy notice](https://codeframe78.github.io/24Seven.FM-Player/) remains at the site root.
+The [comprehensive project portal](https://player.jamesjennison.net/) connects the product experience to its native architecture, development workflow, validation evidence, milestone history, release readiness, and contributor resources. The canonical [privacy notice](https://player.jamesjennison.net/privacy/) has a dedicated stable route.
+
+### Project website development
+
+The website remains a Jekyll static build. Docker is the only local runtime dependency; the build script uses the same
+digest-pinned GitHub Pages build image as the repository workflow.
+
+```bash
+./scripts/validate-project-site.sh
+```
+
+This prepares the canonical privacy notice and artwork, builds `_site/`, validates routes, links, fragments, metadata,
+public-content boundaries, and JavaScript syntax, and audits the temporary GitHub Pages transition artifact. Only the
+reviewed `_site/` directory is eligible for an approved Webuzo deployment. No script deploys it.
+
+With `_site/` served locally on port 4173, the dependency-free Chromium contract test can be run with:
+
+```bash
+node scripts/test-project-site-browser.mjs http://127.0.0.1:4173
+```
+
+The existing GitHub Pages site remains unchanged unless the separately approved
+`PLAYER_PAGES_TRANSITION_APPROVED` repository variable is set to `true` and the Project Site workflow is dispatched or
+runs on an approved `main` push. See [the migration and deployment plan](docs/project-site-migration.md).
 
 ## Alpha status
 
@@ -53,42 +76,8 @@ The validated baseline includes 163 unit tests, debug lint and release checks, A
 
 The roadmap was renumbered into one dependency-ordered sequence on July 18, 2026. Historical documents and filenames remain available; the [migration ledger](docs/MILESTONE_MIGRATION.md) records every former identifier.
 
-The [milestone forecast](docs/MILESTONE_FORECAST.md) separates active-work estimates from external waiting time. Under
-the current scope, M29/M30/M36 are the external Alpha critical path; it intentionally gives no Alpha release date
-until those triggers are resolved.
-
-### Forecast at a glance
-
-These ranges begin only when the named milestone dependency is satisfied; they are not promises of elapsed calendar
-time. `Conditional` and `External` entries intentionally remain undated. The full trigger wording and model-routing
-notes remain in [MILESTONE_FORECAST.md](docs/MILESTONE_FORECAST.md).
-
-| Milestone | Estimate after trigger | Confidence | Next model |
-| --- | --- | --- | --- |
-| M29 Play declarations | 2–5 active days | Conditional | Sol High |
-| M30 Rights | 0.5–1 active day | Conditional | Sol High |
-| M36 Event-source authorization | 1–3 active Sol days | Conditional | Sol High |
-| M37 Secure delivery | 5–10 active days | Medium | Terra High |
-| M38 Delivery certification | 5–10 active days | Medium | Terra High → Sol High acceptance |
-| M39 Candidate freeze | 1–2 active days | High once triggered | Sol High |
-| M40 Play delivery/remediation | 3–10 calendar days | Medium | Terra High; Sol High release decisions |
-| M41 Explicit Alpha publication | 0.5–1 active day | High once authorized | Sol High |
-
-| Production milestone | Estimate after trigger | Confidence | Next model |
-| --- | --- | --- | --- |
-| M42 Closed-test operations | 3–5 calendar weeks | Medium | Terra Medium; Sol High checkpoints |
-| M43 Production access | 1–2 calendar weeks | Medium | Sol Extra High |
-| M44 Staged rollout | 1–4 calendar weeks | Medium | Sol Extra High |
-| M45 Operations | Recurring monthly, quarterly, and release-triggered review | High | Terra Medium; Sol High for material policy/security |
-
-| Future program | Estimate after trigger |
-| --- | --- |
-| M46 Architecture sustainability | 1–3 active weeks per approved slice |
-| M47–M50 Private Messages | External repair first; then 1–3, 1–2, 1–2, and 2–4 active weeks respectively |
-| M51–M54 Forum | Retired by project decision; no implementation forecast |
-| M55 Cast feasibility | 2–4 active weeks; may end in an explicit no-go |
-| M56–M57 Station/account research | 1–3 active weeks each |
-| M58–M60 VIP/RIP commerce | 2–4 active weeks for architecture with external contract timing, then 3–6 and 2–4 active weeks |
+The public roadmap emphasizes verified outcomes, dependencies, and explicit approval gates. Detailed working estimates
+remain project-maintenance material rather than public release promises.
 
 | Phase | Milestones | State | Required outcome |
 | --- | --- | :---: | --- |
@@ -107,18 +96,17 @@ notes remain in [MILESTONE_FORECAST.md](docs/MILESTONE_FORECAST.md).
 - **Publication:** M39–M41 deliberately separate candidate freeze, Play delivery, and the final user-authorized Alpha action.
 - **Production:** M42–M45 add stabilization, production-access evidence, staged release, and operational recertification.
 - **Deferred/future:** Private Messages remain excluded until M47 repairs and verifies server delivery. M51–M54 are retired by project decision: the Player will not expose, retrieve, or participate in station Forums; the historical research remains retained as evidence. Google Cast remains a feasibility gate at M55, and native VIP/RIP commerce is authorization-gated across M58–M60.
-- **Testing:** the [Product Testing catalog](https://codeframe78.github.io/24Seven.FM-Player/project/product-testing/) now contains 35 stable test cases covering the current product, Alpha gates, release campaigns, and capability-gated future slices. PT-29–PT-31 were retired with the permanent removal of Forum scope. PT-35 is the exact-artifact M29 Play declaration/privacy/reviewer-access case; PT-36–PT-38 define the future authorized VIP/RIP purchase, activation, and lifecycle evidence.
+- **Testing:** the [Product Testing catalog](https://player.jamesjennison.net/product-testing/) contains 35 stable test cases covering the current product, Alpha gates, release campaigns, and capability-gated future slices. PT-29–PT-31 were retired with the permanent removal of Forum scope. PT-35 is the exact-artifact M29 Play declaration/privacy/reviewer-access case; PT-36–PT-38 define the future authorized VIP/RIP purchase, activation, and lifecycle evidence.
 
 Use these sources as the current planning authority:
 
 - [Full M01–M60 roadmap](docs/ROADMAP.md)
-- [Trigger-based milestone forecast](docs/MILESTONE_FORECAST.md)
 - [Cumulative milestone time ledger](docs/MILESTONE_TIME_LEDGER.md)
 - [Milestone ID migration ledger](docs/MILESTONE_MIGRATION.md)
 - [Implementation and acceptance plan](docs/IMPLEMENTATION_PLAN.md)
 - [Future-scope boundaries](docs/future-scope.md)
-- [Interactive public roadmap](https://codeframe78.github.io/24Seven.FM-Player/project/roadmap/)
-- [GitHub Project delivery dashboard](https://github.com/users/codeframe78/projects/1)
+- [Interactive public roadmap](https://player.jamesjennison.net/roadmap/)
+- [James-Jennison repository](https://github.com/James-Jennison/24Seven.FM-Player)
 
 The app remains fully native and uses immutable Compose UI state, repository boundaries, and station capability flags. It includes play, pause, stop, live metadata and artwork, a persistent mini-player, signed-in favorite-track browsing/filtering, capability-aware states, and Android Keystore-backed account sessions. Remote data stays bounded to documented station interfaces and approved refresh rules.
 

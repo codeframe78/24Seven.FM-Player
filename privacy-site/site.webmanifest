@@ -1,0 +1,17 @@
+{
+  "name": "24Seven.FM Player",
+  "short_name": "24Seven Player",
+  "description": "An unofficial, community-built native Android player for the 24seven.FM radio network.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#090c15",
+  "theme_color": "#090c15",
+  "icons": [
+    {
+      "src": "/assets/project/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

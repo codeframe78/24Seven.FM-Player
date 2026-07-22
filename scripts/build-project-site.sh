@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+repository_root="$(cd -- "${script_dir}/.." && pwd)"
+jekyll_image="${PROJECT_SITE_JEKYLL_IMAGE:-ghcr.io/actions/jekyll-build-pages@sha256:6791ebfd912185ed59bfb5fb102664fa872496b79f87ff8b9cfba292a7345041}"
+destination="${repository_root}/_site"
+
+"${script_dir}/prepare-project-site.sh"
+
+if [[ -d "${destination}" ]]; then
+  rm -rf -- "${destination}"
+fi
+
+docker run --rm \
+  --user "$(id -u):$(id -g)" \
+  -e GITHUB_WORKSPACE=/workspace \
+  -e INPUT_SOURCE=privacy-site \
+  -e INPUT_DESTINATION=_site \
+  -e INPUT_TOKEN= \
+  -e GITHUB_REPOSITORY=James-Jennison/24Seven.FM-Player \
+  -e INPUT_BUILD_REVISION="$(git -C "${repository_root}" rev-parse HEAD)" \
+  -e GITHUB_API_URL=https://api.github.com \
+  -e INPUT_VERBOSE=false \
+  -e INPUT_FUTURE=false \
+  -v "${repository_root}:/workspace" \
+  "${jekyll_image}"
+
+printf 'Built the project site at %s\n' "${destination}"

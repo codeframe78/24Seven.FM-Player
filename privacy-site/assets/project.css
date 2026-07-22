@@ -99,16 +99,10 @@ body::after {
   background: color-mix(in srgb, var(--accent) 9%, transparent);
   filter: blur(7rem);
   opacity: 0.6;
-  animation: ambient-drift 24s ease-in-out infinite alternate;
 }
 
 .ambient-stage span:first-child { top: 5%; right: -22rem; }
-.ambient-stage span:last-child { bottom: 4%; left: -24rem; background: color-mix(in srgb, var(--cyan) 8%, transparent); animation-delay: -11s; }
-
-@keyframes ambient-drift {
-  from { transform: translate3d(-2rem, -1rem, 0) scale(0.94); }
-  to { transform: translate3d(3rem, 4rem, 0) scale(1.08); }
-}
+.ambient-stage span:last-child { bottom: 4%; left: -24rem; background: color-mix(in srgb, var(--cyan) 8%, transparent); }
 
 [hidden] { display: none !important; }
 
@@ -118,6 +112,15 @@ a:focus-visible {
   outline: 3px solid var(--cyan);
   outline-offset: 4px;
   border-radius: 0.25rem;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 4px;
 }
 
 .skip-link {
@@ -415,12 +418,7 @@ h3 { font-size: 1.3rem; }
 .hero-status small { color: var(--muted); font-size: 0.68rem; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; }
 .hero-status strong { overflow: hidden; margin-top: 0.15rem; text-overflow: ellipsis; white-space: nowrap; }
 .hero-status > span:last-child { color: var(--cyan); font-size: 0.78rem; font-weight: 800; white-space: nowrap; }
-.live-dot { width: 0.65rem; height: 0.65rem; border-radius: 50%; background: var(--warning); box-shadow: 0 0 0 0 color-mix(in srgb, var(--warning) 45%, transparent); animation: pulse 2.2s ease-out infinite; }
-
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--warning) 48%, transparent); }
-  70%, 100% { box-shadow: 0 0 0 0.6rem transparent; }
-}
+.live-dot { width: 0.65rem; height: 0.65rem; border-radius: 50%; background: var(--warning); box-shadow: 0 0 0 0.22rem color-mix(in srgb, var(--warning) 20%, transparent); }
 
 .hero-art {
   position: relative;
@@ -439,11 +437,10 @@ h3 { font-size: 1.3rem; }
   background: var(--cyan);
   box-shadow: 0 0 1.6rem var(--cyan);
   content: "";
-  animation: orbit 8s ease-in-out infinite alternate;
 }
 
 .hero-art::before { top: 17%; right: 14%; }
-.hero-art::after { bottom: 16%; left: 12%; width: 0.45rem; background: var(--accent); box-shadow: 0 0 1.6rem var(--accent); animation-delay: -4s; }
+.hero-art::after { bottom: 16%; left: 12%; width: 0.45rem; background: var(--accent); box-shadow: 0 0 1.6rem var(--accent); }
 
 .art-glow {
   position: absolute;
@@ -466,11 +463,6 @@ h3 { font-size: 1.3rem; }
 }
 
 .hero-art:hover .hero-icon { transform: rotate(0deg) translateY(-0.5rem) scale(1.025); box-shadow: 0 2.5rem 6rem var(--shadow); }
-
-@keyframes orbit {
-  from { transform: translate3d(-0.6rem, 0.5rem, 0) scale(0.8); opacity: 0.55; }
-  to { transform: translate3d(0.7rem, -0.8rem, 0) scale(1.2); opacity: 1; }
-}
 
 .station-strip {
   padding-block: 1.5rem;
@@ -649,6 +641,7 @@ figcaption span { color: var(--muted); font-size: 0.88rem; }
 }
 
 .project-footer p { max-width: 38rem; margin: 0.4rem 0 0; }
+.project-footer .site-verification { color: var(--cyan); font-size: 0.75rem; }
 
 .sr-only {
   position: absolute;
@@ -962,10 +955,6 @@ figcaption span { color: var(--muted); font-size: 0.88rem; }
 .workstream-grid .roadmap-card > a { color: var(--cyan); font-size: 0.82rem; font-weight: 750; }
 .workstream-grid .roadmap-card .roadmap-dependency { flex-grow: 0; margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid var(--border); font-size: 0.78rem; }
 .workstream-grid .roadmap-card .roadmap-dependency strong { color: var(--text); }
-.roadmap-forecast { display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 0.55rem; margin-top: 0.9rem; padding: 0.85rem 0.9rem; border: 1px solid color-mix(in srgb, var(--cyan) 28%, var(--border)); border-left: 3px solid var(--cyan); border-radius: 0.7rem; background: color-mix(in srgb, var(--cyan) 7%, transparent); font-size: 0.8rem; line-height: 1.4; }
-.roadmap-forecast .forecast-label { grid-column: 1 / -1; width: fit-content; padding: 0.18rem 0.42rem; border-radius: 999px; background: color-mix(in srgb, var(--cyan) 17%, transparent); color: var(--cyan); font-size: 0.68rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
-.roadmap-forecast strong { grid-column: 1 / -1; color: var(--text); font-size: 0.95rem; }
-.roadmap-forecast .forecast-confidence { align-self: start; padding: 0.13rem 0.38rem; border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border)); border-radius: 999px; color: var(--accent); font-size: 0.7rem; font-weight: 800; white-space: nowrap; }
 .milestone-id { margin: 0 0 0.55rem; color: var(--accent) !important; font: 850 0.78rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.08em; }
 
 .milestone-history li {
@@ -1551,6 +1540,7 @@ h2:hover .anchor-copy,
 }
 
 @media (max-width: 560px) {
+  .site-explorer-toggle { display: none; }
   .project-header { position: relative; align-items: flex-start; justify-content: center; gap: 0.75rem; }
   .project-header nav { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.35rem; }
   .project-header nav a { padding: 0.35rem; text-align: left; }
@@ -1633,4 +1623,34 @@ h2:hover .anchor-copy,
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+@media (forced-colors: active) {
+  body,
+  :root[data-theme="light"] body { background: Canvas; }
+  body::before,
+  body::after,
+  .ambient-stage,
+  .art-glow { display: none; }
+  .project-header,
+  .page-summary,
+  .cta,
+  .roadmap-callout,
+  .catalog-toolbar,
+  .site-explorer,
+  .media-dialog { border: 1px solid CanvasText; background: Canvas; box-shadow: none; }
+  .button,
+  .filter-buttons button,
+  .catalog-filters button,
+  .catalog-clear,
+  .theme-toggle,
+  .nav-toggle,
+  .site-explorer-toggle,
+  .back-to-top { border: 1px solid ButtonText; background: ButtonFace; color: ButtonText; }
+  .live-dot,
+  .status span { background: CanvasText; box-shadow: none; forced-color-adjust: auto; }
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  [tabindex]:focus-visible { outline: 3px solid Highlight; outline-offset: 4px; }
 }

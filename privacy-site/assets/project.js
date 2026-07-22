@@ -548,10 +548,12 @@
   const mediaImage = mediaDialog ? mediaDialog.querySelector('img') : null;
   const mediaCaption = mediaDialog ? mediaDialog.querySelector('p') : null;
   const mediaClose = mediaDialog ? mediaDialog.querySelector('.media-dialog-close') : null;
+  let mediaOpener = null;
   document.querySelectorAll('[data-lightbox]').forEach(function (trigger) {
     trigger.addEventListener('click', function (event) {
       if (!mediaDialog || !mediaImage || !mediaCaption || typeof mediaDialog.showModal !== 'function') return;
       event.preventDefault();
+      mediaOpener = trigger;
       mediaImage.src = trigger.dataset.lightbox;
       mediaImage.alt = trigger.dataset.lightboxAlt || '';
       mediaCaption.textContent = trigger.dataset.lightboxCaption || '';
@@ -562,6 +564,15 @@
   if (mediaDialog) {
     mediaDialog.addEventListener('click', function (event) {
       if (event.target === mediaDialog) mediaDialog.close();
+    });
+    mediaDialog.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && mediaDialog.open) {
+        event.preventDefault();
+        mediaDialog.close();
+      }
+    });
+    mediaDialog.addEventListener('close', function () {
+      if (mediaOpener && typeof mediaOpener.focus === 'function') mediaOpener.focus();
     });
   }
 
@@ -630,6 +641,11 @@
       if (opener && typeof opener.focus === 'function') opener.focus();
     });
     explorer.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeExplorer();
+        return;
+      }
       if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
       const visibleItems = items().filter(function (item) { return !item.hidden; });
       if (!visibleItems.length) return;
@@ -689,7 +705,7 @@
     revealTargets.forEach(function (item) { revealObserver.observe(item); });
   }
 
-  if (finePointer) {
+  if (finePointer && !reducedMotion) {
     document.querySelectorAll(
       '.feature-grid article, .portal-grid a, .roadmap-card, .detail-grid article, .principle-grid article, ' +
       '.source-map article, .validation-layers article, .evidence-grid article, .boundary-grid article, ' +

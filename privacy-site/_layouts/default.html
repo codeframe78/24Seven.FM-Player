@@ -5,22 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#090c15">
     <meta name="color-scheme" content="dark light">
-    <meta name="description" content="{{ site.description | escape }}">
-    <meta property="og:title" content="{{ page.title | default: site.title | escape }}">
-    <meta property="og:description" content="{{ site.description | escape }}">
-    <meta property="og:image" content="{{ '/assets/project/feature-graphic.png' | absolute_url }}">
-    <meta property="og:type" content="website">
-    <title>{{ page.title | default: site.title | escape }} · 24Seven.FM Player</title>
+    {% include metadata.html %}
+    <title>{{ page.title | default: site.title | escape }}</title>
     <link rel="icon" type="image/png" href="{{ '/assets/project/app-icon.png' | relative_url }}">
-    <script>
-      try {
-        var savedTheme = localStorage.getItem('project-theme');
-        var preferredTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-        document.documentElement.dataset.theme = savedTheme || preferredTheme;
-      } catch (error) {
-        document.documentElement.dataset.theme = 'dark';
-      }
-    </script>
+    <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}">
+    <script src="{{ '/assets/theme-init.js' | relative_url }}"></script>
     <link rel="stylesheet" href="{{ '/assets/project.css' | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/privacy.css' | relative_url }}">
   </head>
@@ -29,7 +18,7 @@
     <div class="ambient-stage" aria-hidden="true"><span></span><span></span></div>
     <div class="scroll-progress" aria-hidden="true"><span></span></div>
     <header class="project-header" data-site-header>
-      <a class="project-brand" href="{{ '/project/' | relative_url }}" aria-label="24Seven.FM Player project home">
+      <a class="project-brand" href="{{ '/' | relative_url }}" aria-label="24Seven.FM Player project home">
         <img src="{{ '/assets/project/app-icon.png' | relative_url }}" alt="" width="44" height="44">
         <span><strong>24Seven.FM Player</strong><small>Privacy center</small></span>
       </a>
@@ -47,7 +36,7 @@
           <span class="theme-toggle-icon" aria-hidden="true">◐</span>
           <span class="theme-toggle-label">Theme</span>
         </button>
-        <a class="header-github" href="https://github.com/codeframe78/24Seven.FM-Player">GitHub <span aria-hidden="true">↗</span></a>
+        <a class="header-github" href="{{ site.github_url }}">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </header>
     <main id="main-content" class="privacy-main">
@@ -84,12 +73,15 @@
       <div>
         <strong>24Seven.FM Player</strong>
         <p>An unofficial, non-commercial community project. Not affiliated with or endorsed by 24seven.FM or its stations.</p>
+        <p class="site-verification">{{ site.data.project.site_meta.verification_label }}.</p>
       </div>
       <nav aria-label="Footer navigation">
-        <a href="{{ '/project/' | relative_url }}">Project overview</a>
-        <a href="{{ '/project/product-testing/' | relative_url }}">Test the Player</a>
-        <a href="{{ '/project/roadmap/' | relative_url }}">Roadmap</a>
-        <a href="https://github.com/codeframe78/24Seven.FM-Player/issues">Report an app issue</a>
+        <a href="{{ '/' | relative_url }}">Project overview</a>
+        <a href="{{ '/product-testing/' | relative_url }}">Test the Player</a>
+        <a href="{{ '/roadmap/' | relative_url }}">Roadmap</a>
+        <a href="{{ site.github_url }}/issues">Report an app issue</a>
+        <a href="{{ site.master_url }}">JamesJennison.net</a>
+        <a href="{{ site.status_url }}">Service status</a>
       </nav>
     </footer>
     <button class="back-to-top" type="button" aria-label="Back to top" title="Back to top"><span aria-hidden="true">↑</span></button>

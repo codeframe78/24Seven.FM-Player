@@ -1,6 +1,6 @@
 # Milestone Real-World Time Ledger
 
-Last updated: `July 20, 2026 at 7:43:14 PM PDT (UTC−07:00)`
+Last updated: `July 22, 2026 at 2:27:41 PM PDT (UTC−07:00)`
 
 This is the permanent time-accounting record for the canonical M01–M60 milestones in [ROADMAP.md](ROADMAP.md). It
 preserves historical uncertainty instead of treating commit spans as labor time. Future milestone work must be
@@ -29,6 +29,55 @@ Elapsed totals are arithmetic milestone totals, not unique calendar time. Milest
 be assigned to only one milestone while each milestone retains its own wall-clock elapsed period. The confidence counts
 cover all 60 canonical entries: 25 completed observable windows, the M29/M30 start boundaries, and the M51 research-to-
 retirement window are Estimated; every entry without a defensible historical duration is Unknown.
+
+## Master-site program website milestones
+
+Website work requested through the JamesJennison.net program is tracked here because it changes this repository, but it
+does not alter the status, numbering, or cumulative totals of the canonical Android M01–M60 roadmap.
+
+| Program milestone | Status | Started | Forecast | Expected completion | Model and reasoning | Active | Automated wait | User-blocked |
+| --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |
+| Master M12 — Player local migration implementation | Complete | `July 22, 2026 at 1:51:13 PM PDT (UTC−07:00)` | 8–14 active h | By `July 23, 2026 at 3:51:13 AM PDT (UTC−07:00)` if uninterrupted | GPT-5; current default reasoning strength, unchanged | 0.61 h | 0.00 h | 0.00 h |
+
+### Master M12 — Player local migration implementation
+
+- **Objective:** Reuse the existing Jekyll project portal while implementing the owner-approved dedicated-domain
+  routes, James-Jennison identity, curated public content, GitHub-only privacy contact, metadata, accessibility,
+  artifact validation, and migration documentation.
+- **Authorization and start:** Authorized by the owner and started `July 22, 2026 at 1:51:13 PM PDT (UTC−07:00)`.
+- **Model, reasoning strength, and original forecast:** GPT-5 with the current default reasoning strength, unchanged;
+  8–14 active hours; expected completion by `July 23, 2026 at 3:51:13 AM PDT (UTC−07:00)` if uninterrupted.
+- **Completion gates:** Reproducible static build; approved URL and identity migration; reviewed public content;
+  keyboard, reduced-motion, responsive, link, metadata, and artifact checks; milestone documentation; and a local
+  commit. GitHub push, GitHub Pages changes, Webuzo, DNS, Cloudflare, SSL, staging, and production remain excluded.
+- **Completion:** Implementation and validation completed `July 22, 2026 at 2:27:41 PM PDT (UTC−07:00)`. The measured
+  window was 0.61 active hours with no user-blocked interval. Short build and audit executions remained actively
+  monitored and did not create a separately measured automated-wait interval.
+- **Forecast variance:** 7.39 hours (92.4%) below the 8-hour lower bound. The original forecast reserved time for a
+  broader redesign and uncertain portal remediation; owner approval to retain the already strong portal narrowed the
+  work to a static-route migration, public-content review, accessibility hardening, validation, and deployment
+  preparation.
+- **Evidence:** Dedicated-domain and transition validators pass; the browser suite passes nine routes at four
+  viewports with keyboard and pointer interaction checks; the final mobile Lighthouse audit is 99/100/100/100 and the
+  desktop audit is 100/100/100/100; artifact inventory digest
+  `db2d0047cc43168c1d5483df4afc88d0a016da34c81136bb76a27e06ab7e7a7b`.
+- **Forecasting lesson:** When a polished static project site already exists, estimate migration separately from visual
+  redesign and production infrastructure work. Keep DNS, SSL, Webuzo discovery, staging, and production rollout in
+  their own approval-gated forecasts.
+
+| Started | Ended | Category | Reason or work | Evidence | Hours |
+| --- | --- | --- | --- | --- | ---: |
+| `July 22, 2026 at 1:51:13 PM PDT (UTC−07:00)` | `July 22, 2026 at 2:27:41 PM PDT (UTC−07:00)` | Active | Create an isolated worktree, implement the approved website migration, validate it, and document the result. | Owner approval; branch `codex/player-site-migration`; base `c540571`; validation record | 0.61 h |
+
+```text
+Milestone Master M12 time:
+Forecast: 8–14 active hours
+Counted project time: 0.61 h
+Total elapsed time: 0.61 h
+User-blocked time excluded: 0.00 h
+Forecast variance: 7.39 h below the lower bound (92.4%)
+Cumulative counted project time through Milestone Master M12: 0.61 h (master-site program website milestones only; canonical Android cumulative remains Unknown)
+```
 
 ## Definitions and confidence rules
 

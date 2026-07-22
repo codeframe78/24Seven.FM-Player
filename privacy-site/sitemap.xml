@@ -1,0 +1,13 @@
+---
+layout: null
+permalink: /sitemap.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{% for item in site.data.project.navigation %}
+  <url>
+    <loc>{{ item.path | absolute_url }}</loc>
+    <lastmod>{{ site.data.project.site_meta.verified }}</lastmod>
+  </url>
+{% endfor %}
+</urlset>

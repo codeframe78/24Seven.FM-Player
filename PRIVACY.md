@@ -1,6 +1,6 @@
 # Privacy notice for 24Seven.FM Player Alpha
 
-Last updated: July 18, 2026.
+Last updated: July 22, 2026.
 
 24Seven.FM Player is an unofficial, non-commercial native Android client for the five public 24Seven.FM radio stations. It is not affiliated with or endorsed by 24Seven.FM or its stations.
 
@@ -43,4 +43,4 @@ Protected station sessions, the adult age-screen result, accepted Terms version,
 
 This is pre-release software. Testers should use a non-administrator station account where practical and should not include credentials, private messages, session values, or security-code images in bug reports.
 
-The application is maintained by the community contributors to the `codeframe78/24Seven.FM-Player` project. Privacy questions can be sent to [24sevenplayer@jamesjennison.net](mailto:24sevenplayer@jamesjennison.net). Reports can also be submitted through [the project's GitHub issue channel](https://github.com/codeframe78/24Seven.FM-Player/issues) without sensitive account information.
+The application is maintained by the community contributors to the `James-Jennison/24Seven.FM-Player` project. Privacy questions and reports can be submitted through [the project's GitHub issue channel](https://github.com/James-Jennison/24Seven.FM-Player/issues) without sensitive account information.

@@ -1,5 +1,9 @@
 # Comprehensive project portal validation
 
+> Historical record: this report covers the original GitHub Pages portal. The
+> dedicated-domain migration supersedes its route, content, and deployment
+> conclusions; see [project-site-migration-validation.md](project-site-migration-validation.md).
+
 Validated July 19, 2026.
 
 ## Outcome

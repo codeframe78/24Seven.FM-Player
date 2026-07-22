@@ -1,0 +1,17 @@
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "24Seven.FM Player",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Android",
+    "description": {{ site.description | jsonify }},
+    "url": {{ site.url | append: '/' | jsonify }},
+    "codeRepository": {{ site.github_url | jsonify }},
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "JamesJennison.net",
+      "url": {{ site.master_url | append: '/' | jsonify }}
+    }
+  }
+</script>
