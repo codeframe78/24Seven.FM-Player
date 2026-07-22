@@ -140,13 +140,13 @@ transition, and rollback contract is in
 | Webuzo configuration | Pass: Apache syntax valid; Webuzo and MariaDB active; origin pages served successfully |
 | Public DNS | Unchanged: Player and generated internal aliases have no A, AAAA, or CNAME records |
 | Existing sites | Apex and `www` retain their pre-existing 403 responses; status and the current organizational GitHub Pages site return 200 |
-| Legacy Pages URL | `codeframe78.github.io/24Seven.FM-Player/` returns GitHub's 404; repository records identify it as a historical Play Console privacy URL, so owner verification is required before cutover |
+| Legacy Pages URL | Retired by owner decision; `codeframe78.github.io/24Seven.FM-Player/` returns GitHub's 404 and does not require a redirect |
 | Backups | Pass: pre-hardening snapshot `bcefb231` passed a full Restic data check and streamed `index.html`/`.htaccess` restores; post-hardening snapshot `77f5810b` passed artifact and `.htaccess` restore verification |
 | HTTPS trust | Pass: Webuzo installed the existing publicly trusted Let's Encrypt wildcard for Player; direct-origin chain and hostname validation pass without a trust bypass |
 | Certificate isolation | Pass: only Player's Webuzo certificate set changed; the apex wildcard identity remained unchanged; unprivileged key access is blocked by Webuzo's restricted SSL directory chain |
 | Security headers | Pass: CSP, Permissions Policy, Referrer Policy, MIME sniffing protection, frame denial, and cross-origin opener policy match exactly on HTTPS success and custom-404 responses |
 | HSTS/cache headers | Intentionally unchanged pending edge-wide HTTPS and caching review |
-| Cloudflare TLS | Read-only audit complete: current origin mode is Full, not Full (Strict); Universal SSL actively covers the apex and wildcard |
+| Cloudflare TLS | Pass: current origin mode is Full (Strict); three repeated edge passes and direct-origin hostname checks found no 526 or baseline regression |
 | Cloudflare rules | No legacy Page Rules or applicable redirect, transform, origin, cache, configuration, compression, or response-header Rulesets are deployed |
 
 The Webuzo template generated internal `www.player` and `mail.player` aliases.
@@ -167,9 +167,9 @@ that date; this checkpoint does not claim that future renewal is automatic.
 - GitHub push or pull request
 - Dedicated origin certificate issuance and renewal validation
 - Cache header configuration
-- Approved Cloudflare Full (Strict) change and Player DNS record
+- Approved Player DNS record and public launch
 - Production deployment and validation
-- Play Console and other external privacy-URL verification/update
+- Owner-timed Play Console update to `https://player.jamesjennison.net/privacy/` at app testing submission
 - GitHub Pages transition activation and eventual retirement
 
 None of the remaining actions occurred during this milestone.

@@ -1,6 +1,6 @@
 # Milestone Real-World Time Ledger
 
-Last updated: `July 22, 2026 at 4:24:19 PM PDT (UTC−07:00)`
+Last updated: `July 22, 2026 at 4:36:32 PM PDT (UTC−07:00)`
 
 This is the permanent time-accounting record for the canonical M01–M60 milestones in [ROADMAP.md](ROADMAP.md). It
 preserves historical uncertainty instead of treating commit spans as labor time. Future milestone work must be
@@ -41,6 +41,7 @@ does not alter the status, numbering, or cumulative totals of the canonical Andr
 | Master M13 — Player origin staging | Complete | `July 22, 2026 at 2:50:15 PM PDT (UTC−07:00)` | 1.5–3 active h | By `July 22, 2026 at 5:50:15 PM PDT (UTC−07:00)` if uninterrupted | GPT-5; current default reasoning strength, unchanged | 0.21 h | 0.00 h | 0.00 h |
 | Master M14 — Cloudflare and Player TLS verification | Complete | `July 22, 2026 at 3:07:22 PM PDT (UTC−07:00)` | 0.5–1.5 active h | Completed `July 22, 2026 at 3:54:26 PM PDT (UTC−07:00)` | GPT-5; current default reasoning strength, unchanged | 0.32 h | 0.00 h | 0.46 h |
 | Master M15 — Player trusted-origin hardening | Complete | `July 22, 2026 at 3:59:38 PM PDT (UTC−07:00)` | 1–2 active h | Completed `July 22, 2026 at 4:24:19 PM PDT (UTC−07:00)` | GPT-5; current default reasoning strength, unchanged | 0.41 h | 0.00 h | 0.00 h |
+| Master M16A — Cloudflare Full (Strict) hardening | Complete | `July 22, 2026 at 4:32:50 PM PDT (UTC−07:00)` | 0.25–0.5 active h | Completed `July 22, 2026 at 4:36:32 PM PDT (UTC−07:00)` | GPT-5; current default reasoning strength, unchanged | 0.03 h | 0.00 h | 0.03 h |
 
 ### Master M12 — Player local migration implementation
 
@@ -215,6 +216,55 @@ Total elapsed time: 0.41 h
 User-blocked time excluded: 0.00 h
 Forecast variance: 0.59 h below the lower bound (58.9%)
 Cumulative counted project time through Milestone Master M15: 1.55 h (master-site program website milestones only; canonical Android cumulative remains Unknown)
+```
+
+### Master M16A — Cloudflare Full (Strict) hardening
+
+- **Objective:** Change the `jamesjennison.net` Cloudflare zone from Full to Full (Strict), verify every affected
+  proxied hostname against its pre-change baseline, and roll back immediately if Cloudflare reports an origin
+  certificate failure or an unexpected service regression.
+- **Authorization and start:** The owner explicitly approved M16A, and execution started
+  `July 22, 2026 at 4:32:50 PM PDT (UTC−07:00)`.
+- **Model, reasoning strength, and original forecast:** GPT-5 with the current default reasoning strength, unchanged;
+  0.25–0.5 active hours; expected completion by `July 22, 2026 at 5:02:50 PM PDT (UTC−07:00)` if uninterrupted.
+- **Scope boundary:** One zone-level SSL/TLS mode change from Full to Full (Strict), validation, rollback readiness,
+  and local documentation. Player DNS, public launch, Webuzo, certificate issuance, site content, GitHub Pages,
+  repository push, master canonical behavior, HSTS, minimum TLS, cache policy, and all mail DNS remain excluded. Per
+  owner direction, this website project does not use Discord milestone notices.
+- **Pre-change evidence:** The zone remains in Full mode. Direct-origin hostname and public-chain verification pass
+  for the apex, `www`, webmail, autoconfig, and autodiscover. Status is a Cloudflare Worker. Mail delivery retains one
+  MX record and a DNS-only mail address. Baseline HTTP results are recorded before the change.
+- **Completion gates:** Owner-applied Full (Strict) setting; verified control-plane state; no 526 responses; unchanged
+  expected responses for every proxied hostname; intact HTTPS redirects and mail DNS; documented rollback; clean diff;
+  and a local milestone commit without push.
+- **Pause and resume:** Active execution paused `July 22, 2026 at 4:33:17 PM PDT (UTC−07:00)` for the owner-applied
+  dashboard change because the available Cloudflare Zone Settings credential is read-only. Execution resumed
+  `July 22, 2026 at 4:35:09 PM PDT (UTC−07:00)` after the owner confirmed completion.
+- **Completion:** Completed `July 22, 2026 at 4:36:32 PM PDT (UTC−07:00)`. Counted project time was 0.03 active hours;
+  the 0.03-hour owner-action interval is excluded. No automated-wait interval was measured.
+- **Forecast variance:** 0.22 hours (88.0%) below the 0.25-hour lower bound. The complete read-only preflight supplied
+  exact baselines, the owner applied the single setting promptly, and all checks passed on the first validation cycle.
+- **Evidence:** Cloudflare reports `strict`; three consecutive edge passes match all six recorded hostname baselines;
+  independent direct-origin chain and hostname verification passes for every Webuzo-backed proxied name; no 526 was
+  observed; apex and `www` redirects preserve paths and query strings; status and the current organizational Pages
+  site return 200; Player DNS remains absent; MX and DNS-only mail records remain intact; rollback was not required.
+- **Forecasting lesson:** A zone-wide encryption-mode change can be a short milestone when all proxied names, origin
+  certificates, response baselines, mail boundaries, and rollback conditions are fully enumerated before approval.
+
+| Started | Ended | Category | Reason or work | Evidence | Hours |
+| --- | --- | --- | --- | --- | ---: |
+| `July 22, 2026 at 4:32:50 PM PDT (UTC−07:00)` | `July 22, 2026 at 4:33:17 PM PDT (UTC−07:00)` | Active | Record the approved change boundary, confirm the Full baseline and clean branch, and prepare immediate validation and rollback checks. | Owner approval; scoped read-only Cloudflare audit; origin and edge baselines | 0.01 h |
+| `July 22, 2026 at 4:33:17 PM PDT (UTC−07:00)` | `July 22, 2026 at 4:35:09 PM PDT (UTC−07:00)` | User-blocked | Await the owner-applied Cloudflare SSL/TLS mode change because the available scoped credential has read-only Zone Settings access. | Cloudflare token scope; exact dashboard path supplied to owner; owner completion confirmation | 0.03 h excluded |
+| `July 22, 2026 at 4:35:09 PM PDT (UTC−07:00)` | `July 22, 2026 at 4:36:32 PM PDT (UTC−07:00)` | Active | Verify strict control-plane state, repeat every affected edge baseline, validate origin certificates and redirects, confirm mail and Player DNS boundaries, and document completion. | Scoped Cloudflare reads; three edge passes; direct-origin TLS checks; current Pages and mail-DNS checks | 0.02 h |
+
+```text
+Milestone Master M16A time:
+Forecast: 0.25–0.5 active hours
+Counted project time: 0.03 h
+Total elapsed time: 0.06 h
+User-blocked time excluded: 0.03 h
+Forecast variance: 0.22 h below the lower bound (88.0%)
+Cumulative counted project time through Milestone Master M16A: 1.58 h (master-site program website milestones only; canonical Android cumulative remains Unknown)
 ```
 
 ## Definitions and confidence rules

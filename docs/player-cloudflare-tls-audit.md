@@ -21,7 +21,7 @@ GitHub, or production setting was changed.
 | CAA | No CAA record exists |
 | Legacy Page Rules | No active or disabled Page Rules exist |
 | DNS settings | CNAME flatten-all disabled; multi-provider DNS disabled; secondary overrides disabled |
-| Origin encryption | Full; not Full (Strict) |
+| Origin encryption | Full (Strict), enabled under separately approved M16A after the read-only audit |
 | HTTPS settings | Always Use HTTPS on; Automatic HTTPS Rewrites on |
 | Edge protocols | Minimum TLS 1.0; TLS 1.3 API state `zrt`; 0-RTT on; HTTP/3 on; Brotli on |
 | HSTS | Disabled; no zone-level HSTS policy is active |
@@ -131,15 +131,27 @@ Direct-origin HTTPS now passes public chain and exact-hostname validation for
 `player.jamesjennison.net`. The Player certificate identity matches the
 existing wildcard, Apache syntax passes, all project routes and the custom 404
 retain their expected statuses, and apex, `www`, and status retain their
-pre-change responses. Public Player DNS remains absent, Cloudflare remains in
-Full mode, and no Cloudflare setting changed. Hardened-state snapshot
+pre-change responses. Public Player DNS remains absent. Hardened-state snapshot
 `77f5810b` preserves the verified result.
 
 The current organizational GitHub Pages site at
 `james-jennison.github.io/24Seven.FM-Player/` remains available with HTTP 200,
 and the approval-gated transition variable is absent. The historical
-`codeframe78.github.io` URL returns GitHub's 404 and must not be treated as a
-healthy fallback.
+`codeframe78.github.io` URL returns GitHub's 404; the owner confirmed that this
+address is retired, no longer used, and does not require a redirect. The owner
+will update Play Console to `https://player.jamesjennison.net/privacy/` when the
+app is ready for testing submission.
+
+### M16A Full (Strict) checkpoint
+
+The owner separately approved and applied the zone-wide change from Full to
+Full (Strict). Cloudflare's control plane now reports `strict`. Three
+consecutive edge passes matched the recorded baselines for the apex, `www`,
+webmail, autoconfig, autodiscover, and the status Worker, with no 526 response.
+Independent direct-origin checks verified a trusted, hostname-matching chain
+for every Webuzo-backed proxied name. Apex and `www` HTTP redirects continue to
+preserve path and query strings. Player DNS remains absent; the MX and DNS-only
+mail address remain intact. No rollback was required.
 
 This wildcard is temporary Player coverage and expires August 27, 2026. The
 failed earlier HTTP-01 renewal means a dedicated Webuzo-managed certificate and
@@ -184,7 +196,7 @@ not be the first choice while hosting independence is valuable.
    configuration.
 3. **Complete:** validate direct origin HTTPS for the Player hostname and its complete chain,
    and revalidate the trusted master-origin certificate.
-4. With separate approval, change the zone origin mode from Full to Full
+4. **Complete:** with separate approval, change the zone origin mode from Full to Full
    (Strict), then validate apex, `www`, and the status Worker. Restore Full
    immediately if an existing hostname unexpectedly fails.
 5. Create exactly one Cloudflare A record: `player.jamesjennison.net`, pointing
@@ -222,9 +234,7 @@ server configuration.
 
 ## Approval boundary
 
-The subsequent owner approval authorized only the recorded origin-hardening
-checkpoint: artifact security headers, verified backups, redeployment to the
-existing isolated root, and temporary wildcard assignment through Webuzo. It
-does not authorize new certificate issuance, challenge-file creation, DNS
-records, Cloudflare changes, GitHub changes, public staging, or production
-cutover.
+Subsequent owner approvals authorized the recorded origin-hardening checkpoint
+and the M16A zone-wide Full (Strict) change. They do not authorize new
+certificate issuance, challenge-file creation, DNS records, other Cloudflare
+changes, GitHub changes, public staging, or production cutover.

@@ -40,7 +40,7 @@ materially benefit a dedicated domain:
 | Webuzo user | `jamesjen` |
 | Webuzo document root | `/home/jamesjen/player.jamesjennison.net` |
 | Origin SSL owner and method | Webuzo; existing publicly trusted Let's Encrypt apex/wildcard certificate assigned to Player through Webuzo's supported install-certificate workflow; dedicated renewal proof remains pending |
-| Cloudflare record and proxy state | Player record absent; zone is proxied and uses Full rather than Full (Strict); Universal SSL is active for the apex and wildcard; no applicable redirect, transform, origin, cache, configuration, compression, or response-header Ruleset is deployed |
+| Cloudflare record and proxy state | Player record absent; zone is proxied and uses Full (Strict); Universal SSL is active for the apex and wildcard; no applicable redirect, transform, origin, cache, configuration, compression, or response-header Ruleset is deployed |
 | Cache behavior | Static asset caching proposed below; no rule configured |
 | Logging | Existing Webuzo domain access/error logs only; no browser analytics |
 | Health check | Static route, asset, TLS, metadata, header, and cross-site navigation checks |
@@ -194,13 +194,13 @@ origin IP in documentation or browser assets.
 The live read-only DNS and edge audit plus the recommended certificate sequence
 are recorded in
 [player-cloudflare-tls-audit.md](player-cloudflare-tls-audit.md). Cloudflare is
-currently in Full mode, not Full (Strict). Always Use HTTPS and Automatic HTTPS
-Rewrites are enabled, Universal SSL has active apex and wildcard coverage, and
-the complete zone/account Ruleset inventories contain no custom phase that
+now in Full (Strict) mode. Always Use HTTPS and Automatic HTTPS Rewrites are
+enabled, Universal SSL has active apex and wildcard coverage, and the complete
+zone/account Ruleset inventories contain no custom phase that
 would redirect, rewrite, change the origin, change cache behavior, or alter
 response headers for Player. Trusted direct-origin coverage is now verified;
-the zone-wide Full (Strict) transition remains required and approval-gated
-before public cutover.
+three repeated edge passes and independent origin checks confirmed the strict
+transition without a 526 or service-baseline change.
 
 ## GitHub Pages transition
 
@@ -219,11 +219,12 @@ The variable must not be created or changed until:
 
 The repository's current GitHub Pages URL is
 `https://james-jennison.github.io/24Seven.FM-Player/` and returns 200. The
-historical `codeframe78.github.io` URL now returns GitHub's 404. The transition
-variable is absent, so the guarded workflow has not replaced the current
-organizational Pages site. Before public cutover, verify which URL Play Console
-and every other external consumer currently stores; repository documentation
-still records the historical URL as the saved privacy destination.
+historical `codeframe78.github.io` URL is retired and returns GitHub's 404; the
+owner confirmed that it is no longer used and does not require a redirect. The
+transition variable is absent, so the guarded workflow has not replaced the
+current organizational Pages site. The owner will update Play Console to
+`https://player.jamesjennison.net/privacy/` when the app is ready for testing
+submission.
 
 Each static transition page has a visible ordinary link and a five-second HTML
 fallback. Its small script preserves the incoming query string and fragment
@@ -281,7 +282,7 @@ If the new site fails:
 - Any redirects or domain-specific server configuration
 - Cache headers
 - Production deployment
-- Play Console and other external privacy-URL verification/update
+- Owner-timed Play Console privacy URL update at app testing submission
 - `PLAYER_PAGES_TRANSITION_APPROVED` repository variable
 - GitHub push or pull request
 - GitHub Pages transition and later retirement
