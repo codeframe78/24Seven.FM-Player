@@ -143,7 +143,8 @@ try {
   ];
 
   for (const viewport of [
-    { width: 390, height: 844, label: "narrow mobile" },
+    { width: 320, height: 568, label: "narrow mobile" },
+    { width: 390, height: 844, label: "standard mobile" },
     { width: 768, height: 1024, label: "tablet" },
     { width: 1440, height: 1000, label: "laptop" },
     { width: 1920, height: 1080, label: "large desktop" },
@@ -154,7 +155,7 @@ try {
       deviceScaleFactor: 1,
       mobile: viewport.width < 600,
     });
-    const testedRoutes = viewport.width === 390 ? routes : ["/", "/product-testing/", "/privacy/"];
+    const testedRoutes = viewport.width <= 390 ? routes : ["/", "/product-testing/", "/privacy/"];
     for (const route of testedRoutes) {
       await navigate(route);
       await evaluate("window.scrollTo(0, document.documentElement.scrollHeight)");
@@ -308,7 +309,7 @@ try {
   assert(noScript.h1 === 1 && noScript.navigation === 8 && noScript.projectCards === 6, "No-JavaScript fallback lost essential content");
 
   assert(browserErrors.length === 0, `Browser errors: ${browserErrors.join(" | ")}`);
-  console.log("Validated four responsive viewports, nine routes, keyboard and pointer interactions, local-only state, reduced motion, forced colors, and no-JavaScript fallback.");
+  console.log("Validated five responsive viewports, nine routes, keyboard and pointer interactions, local-only state, reduced motion, forced colors, and no-JavaScript fallback.");
 } finally {
   if (socket?.readyState === WebSocket.OPEN) socket.close();
   if (chrome.exitCode === null) {

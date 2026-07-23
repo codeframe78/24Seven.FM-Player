@@ -157,6 +157,34 @@ This wildcard is temporary Player coverage and expires August 27, 2026. The
 failed earlier HTTP-01 renewal means a dedicated Webuzo-managed certificate and
 controlled renewal proof remain required before relying on unattended renewal.
 
+### M16B production activation and Automatic SSL
+
+The owner separately approved the Player-only public activation. On July 22,
+2026, exactly one proxied A record was created for
+`player.jamesjennison.net`, TTL Auto, using the apex Webuzo origin target.
+Cloudflare remained in Full (Strict). No `www.player`, `mail.player`, AAAA,
+CNAME, or wildcard record was created, and the mail-related DNS record set was
+identical before and after activation.
+
+A randomized HTTP-01 probe passed through Cloudflare and was removed. Webuzo's
+supported Automatic SSL command then issued a dedicated Let's Encrypt
+certificate whose only SAN is `player.jamesjennison.net`. It is valid through
+October 21, 2026, Webuzo records September 20 as the next renewal time, the
+existing daily renewal job remains present exactly once, and no challenge file
+remains in the document root.
+
+Public edge and direct-origin chain validation pass. All content routes, the
+custom 404, path/query-preserving HTTP upgrade, and sensitive-path boundaries
+pass. An owner-approved HTML-only `Cache-Control: public, max-age=0,
+must-revalidate, no-transform` directive prevents Cloudflare JavaScript
+Detection from modifying the reviewed static HTML; the strict
+`connect-src 'none'` CSP and Cloudflare's security features remain enabled.
+
+Pre-activation snapshot `85b7382c`, post-Automatic-SSL snapshot `11ad18e9`,
+and final production snapshot `1f28541a` passed Restic repository and streamed
+restore checks. The exact prior release remains at
+`/home/jamesjen/.player-previous-m16b-20260723T040350Z`.
+
 Webuzo runs its Let's Encrypt renewal command daily at midnight. Webuzo also
 attempted a Player certificate immediately after the approved subdomain was
 created, despite certificate issuance being disabled in the API request. It
@@ -199,21 +227,22 @@ not be the first choice while hosting independence is valuable.
 4. **Complete:** with separate approval, change the zone origin mode from Full to Full
    (Strict), then validate apex, `www`, and the status Worker. Restore Full
    immediately if an existing hostname unexpectedly fails.
-5. Create exactly one Cloudflare A record: `player.jamesjennison.net`, pointing
+5. **Complete:** create exactly one Cloudflare A record: `player.jamesjennison.net`, pointing
    to the same origin target as the apex, proxied, TTL Auto. Do not create
    `www.player`, `mail.player`, AAAA, CNAME, or wildcard records.
-6. Confirm edge certificate coverage, origin reachability, and Full (Strict)
+6. **Complete:** confirm edge certificate coverage, origin reachability, and Full (Strict)
    operation before treating the hostname as available.
-7. Place a short-lived randomized HTTP-01 probe under the Player document root,
+7. **Complete:** place a short-lived randomized HTTP-01 probe under the Player document root,
    retrieve it through Cloudflare without cache interference, then remove it.
-8. If the probe passes, ask Webuzo to issue a dedicated Let's Encrypt
+8. **Complete:** after the probe passes, ask Webuzo to issue a dedicated Let's Encrypt
    certificate only for `player.jamesjennison.net`; generated aliases remain
    non-resolving and must not be requested as public names.
-9. Validate the new certificate chain, Webuzo renewal ownership, route matrix,
+9. **Complete:** validate the new certificate chain, Webuzo renewal ownership, route matrix,
    custom 404, logs, existing master/status/mail health, and the GitHub Pages
    fallback.
-10. Security headers are complete. Request separate approval for cache headers
-    and production cutover. Keep GitHub Pages unchanged until those gates pass.
+10. **Complete:** apply the separately approved Player-only HTML cache header
+    and production cutover. Keep GitHub Pages unchanged until its separate
+    transition gate is approved.
 
 If HTTP-01 fails, withdraw the Player DNS record or retain the valid temporary
 wildcard while the hostname remains unannounced. After Full (Strict) is proven,
@@ -224,17 +253,19 @@ but direct browsers do not trust it and it requires explicit expiry monitoring.
 
 ## Rollback
 
-Before public DNS, restore the prior Player certificate and Webuzo state from
-the fresh snapshot if any SSL installation fails. After DNS creation, remove
-only the Player record to return the hostname to its current non-resolving
-state, restore the prior Player certificate through Webuzo, and re-run apex,
-`www`, status, mail, and GitHub Pages checks. No rollback step may alter the
-master-site files, status service, mail DNS, unrelated domains, or shared
-server configuration.
+Remove only the Player Cloudflare record to withdraw the public hostname.
+Atomically restore
+`/home/jamesjen/.player-previous-m16b-20260723T040350Z` or recover the required
+state from snapshot `1f28541a`; if certificate restoration is required, use
+Webuzo's supported certificate workflow. Re-run apex, `www`, Player, status,
+QuireForge, mail, and GitHub Pages checks. No rollback step may alter master
+files, the status service, mail DNS, unrelated domains, or shared server
+configuration.
 
 ## Approval boundary
 
-Subsequent owner approvals authorized the recorded origin-hardening checkpoint
-and the M16A zone-wide Full (Strict) change. They do not authorize new
-certificate issuance, challenge-file creation, DNS records, other Cloudflare
-changes, GitHub changes, public staging, or production cutover.
+Subsequent owner approvals authorized the origin-hardening checkpoint, M16A
+Full (Strict), and M16B Player activation, dedicated Automatic SSL, and the
+Player-only HTML `no-transform` correction recorded above. They do not
+authorize another DNS, Cloudflare, SSL, Webuzo, GitHub, master-site, status,
+Play Console, or GitHub Pages change.

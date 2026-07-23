@@ -1,21 +1,18 @@
 # Dedicated-domain project-site validation
 
-Validated July 22, 2026. Production deployment is not authorized by this
-record.
+Validated in production July 22, 2026. Owner-approved activation is complete.
+This record does not authorize any later infrastructure or repository change.
 
 ## Outcome
 
-The existing Jekyll portal was retained, refined, and staged as a static
-artifact for `https://player.jamesjennison.net`. The implementation uses the
-approved clean route model, James-Jennison identity, curated public content,
-GitHub-only privacy contact, an Apache-local custom 404 mapping, and six
-artifact-level security headers. Webuzo origin staging and trusted wildcard
-assignment are complete. Public DNS, Cloudflare settings, GitHub settings,
-GitHub Pages, and production remain unchanged.
+The existing Jekyll portal was retained, refined, and deployed as a static site
+at `https://player.jamesjennison.net`. It uses clean routes, James-Jennison
+identity, curated public content, a GitHub-only privacy contact, a custom 404,
+six security headers, and an HTML-only `no-transform` cache directive.
 
-Source was isolated on local branch `codex/player-site-migration` from commit
-`c54057151f34e5505f238391d08a5520d8e45c06`. The owner's separate dirty main
-checkout was not used for implementation.
+The live artifact was built from local branch `codex/player-site-migration` at
+source checkpoint `2cb59c8`. The owner's separate main checkout was not used.
+The checkpoint and completion record remain local until push approval.
 
 ## Reproducible validation
 
@@ -26,23 +23,21 @@ Run from the repository root:
 python3 -m http.server 4173 --directory _site
 # In a second terminal:
 node ./scripts/test-project-site-browser.mjs http://127.0.0.1:4173
+node ./scripts/test-project-site-firefox.mjs http://127.0.0.1:4173
 ```
 
 The static build uses the digest-pinned image
 `ghcr.io/actions/jekyll-build-pages@sha256:6791ebfd912185ed59bfb5fb102664fa872496b79f87ff8b9cfba292a7345041`.
 
-The final `_site/` artifact contains 25 files totaling approximately 3.42 MiB,
-including nine HTML documents. Its deterministic inventory digest, calculated
-by sorting each relative file path and content SHA-256 into a second SHA-256,
-is:
+The production `_site/` artifact contains 25 files totaling 3,587,618 bytes,
+including nine HTML documents. Its deterministic inventory digest is:
 
 ```text
-3729bc53082966c0473e8fb04da820f731c0f1c3140a5f7d821a8717b7d79bb5
+9ba4d8e103f23201d5705ce7bc300d0c3247f585cc2be9674cd068f3d8863396
 ```
 
-The digest is a local validation checkpoint, not a signed release provenance
-record. It must be recalculated from the approved deployment commit before
-staging or production.
+The digest was calculated by sorting each relative path and content SHA-256
+into a second SHA-256. Local, promoted, and live-origin inventories matched.
 
 ## Automated results
 
@@ -53,123 +48,89 @@ staging or production.
 | GitHub Pages transition validator | Pass: 8 `noindex` compatibility pages |
 | Internal routes, fragments, and assets | Pass |
 | Canonical, Open Graph, social, sitemap, manifest, robots, and structured data | Pass |
-| JavaScript syntax | Pass |
-| Shell script static analysis | Pass |
-| Workflow YAML parsing | Pass |
+| JavaScript syntax, including both browser suites | Pass |
+| Shell script static analysis and workflow YAML parsing | Pass |
 | Sensitive-file, symlink, credential-marker, source-map, and private-content boundary | Pass |
-| Artifact-local security-header contract | Pass: six exact directives; HSTS intentionally absent |
+| Artifact-local response contract | Pass: six security headers plus HTML `no-transform`; HSTS intentionally absent |
+| Chromium production suite | Pass: 320, 390, 768, 1440, and 1920 pixel viewports |
+| Firefox production suite | Pass: 500, 768, 1024, and 1440 pixel viewports |
 | `git diff --check` | Pass |
 
-The browser suite exercised all nine routes at 390 by 844 pixels and key
-routes at 768 by 1024, 1440 by 1000, and 1920 by 1080. It verified one primary
-heading per route, canonical metadata, navigation, overflow, images, themes,
-the mobile menu, site explorer, screenshot lightbox, local-only test progress,
-resource and privacy search, reduced motion, forced colors, no-JavaScript
-fallback, and absence of browser errors.
+Chromium exercised all nine routes at both mobile widths and key routes at the
+three larger widths. Firefox exercised all nine routes at its practical
+500-pixel headless minimum and key routes at larger widths. The suites verified
+one primary heading per route, navigation, overflow, images, themes, pointer
+and keyboard interaction, local-only test progress, reduced motion, forced
+colors, no-JavaScript fallback, lazy-image loading, and absence of browser
+errors.
 
-The same browser suite also passed against the HTTPS origin with Chrome's
-operator-supplied hostname resolver mapping. This exercised the deployed CSP
-and other response headers while retaining normal public certificate and
-hostname verification; it did not require public DNS or a TLS trust bypass.
+## Production Lighthouse
 
-## Lighthouse
+| Category or metric | Mobile | Desktop |
+| --- | ---: | ---: |
+| Performance | 98 | 100 |
+| Accessibility | 100 | 100 |
+| Best Practices | 100 | 96 |
+| SEO | 92 | 92 |
+| First Contentful Paint | 930.2 ms | 262.6 ms |
+| Largest Contentful Paint | 2455.2 ms | 510.6 ms |
+| Cumulative Layout Shift | 0 | 0.0001277 |
+| Total Blocking Time | 0 ms | 0 ms |
 
-The final mobile homepage audit reported:
+Performance, Accessibility, and Best Practices meet the approved targets. The
+owner approved the SEO measurement exception. Lighthouse's only failed SEO
+audit is its internal `robots.txt` request being denied by the deliberate
+`connect-src 'none'` CSP. Public retrieval of `robots.txt` and the sitemap
+passes; canonical URLs and indexing directives are valid. The stricter CSP is
+retained instead of weakening it to improve a synthetic score.
 
-| Category or metric | Result |
-| --- | ---: |
-| Performance | 99 |
-| Accessibility | 100 |
-| Best Practices | 100 |
-| SEO | 100 |
-| First Contentful Paint | 1.35 s |
-| Largest Contentful Paint | 1.80 s |
-| Cumulative Layout Shift | 0 |
-| Total Blocking Time | 0 ms |
-
-An immediately preceding mobile run scored 100 in all four categories, and the
-desktop homepage audit also scored 100 in all four categories. Privacy, Product
-Testing, Roadmap, and Resources each scored 100 for accessibility, best
-practices, and SEO in route-level audits.
-
-Lighthouse results are controlled local measurements, not guarantees of
-production field performance. Webuzo, Cloudflare, network, cache, and origin
-behavior require separate staging and production validation.
-
-## Public-content review
-
-- The canonical privacy notice remains generated from `PRIVACY.md` and is
-  published at `/privacy/`.
-- The public privacy contact is limited to the approved GitHub issue route.
-- The old `codeframe78` site identity and repository destinations are absent
-  from the deployment artifact.
-- Internal planning details and speculative delivery forecasts are absent
-  from the rendered site.
-- The resource library is narrowed to 20 durable, public-facing references.
-- Current-development and roadmap statements carry dated verification context.
-- No `.git`, `.env`, credential, private key, development dependency, log,
-  source map, internal configuration, or repository source document is in the
-  artifact.
-
-## Deployment safety
-
-The production artifact is `_site/`; source and dependencies must remain
-outside every public document root. The Project Site workflow validates both
-the dedicated-domain artifact and a temporary GitHub Pages transition, but its
-deploy job cannot run unless the separately approval-gated repository variable
-`PLAYER_PAGES_TRANSITION_APPROVED` equals `true`.
-
-Webuzo remains authoritative for the exact user, document root, ownership,
-permissions, active server chain, certificate, logs, and backup. Origin
-staging uses Webuzo 4.7.4, Apache 2.4.68, user `jamesjen`, and document root
-`/home/jamesjen/player.jamesjennison.net`. The complete deployment, health,
-transition, and rollback contract is in
-[project-site-migration.md](project-site-migration.md).
-
-## Origin-hardening validation
+## Production infrastructure validation
 
 | Check | Result |
 | --- | --- |
-| Webuzo domain | Pass: `player.jamesjennison.net` is an isolated subdomain owned by `jamesjen` |
-| Document root | Pass: exact approved path; no overlap with master, status, webmail, or another user |
-| Artifact parity | Pass: all 25 files match digest `3729bc53082966c0473e8fb04da820f731c0f1c3140a5f7d821a8717b7d79bb5` locally and at the origin |
-| Canonical routes | Pass: eight content routes return 200 with their approved canonical URLs |
-| Custom 404 | Pass: unknown paths return status 404 with the Player error page |
-| Static assets | Pass: CSS, JavaScript, PNG, manifest, robots, and sitemap are served |
-| Sensitive paths | Pass: `.git`, `.env`, source documentation, and `.htaccess` are not publicly readable |
-| Webuzo configuration | Pass: Apache syntax valid; Webuzo and MariaDB active; origin pages served successfully |
-| Public DNS | Unchanged: Player and generated internal aliases have no A, AAAA, or CNAME records |
-| Existing sites | Apex and `www` retain their pre-existing 403 responses; status and the current organizational GitHub Pages site return 200 |
-| Legacy Pages URL | Retired by owner decision; `codeframe78.github.io/24Seven.FM-Player/` returns GitHub's 404 and does not require a redirect |
-| Backups | Pass: pre-hardening snapshot `bcefb231` passed a full Restic data check and streamed `index.html`/`.htaccess` restores; post-hardening snapshot `77f5810b` passed artifact and `.htaccess` restore verification |
-| HTTPS trust | Pass: Webuzo installed the existing publicly trusted Let's Encrypt wildcard for Player; direct-origin chain and hostname validation pass without a trust bypass |
-| Certificate isolation | Pass: only Player's Webuzo certificate set changed; the apex wildcard identity remained unchanged; unprivileged key access is blocked by Webuzo's restricted SSL directory chain |
-| Security headers | Pass: CSP, Permissions Policy, Referrer Policy, MIME sniffing protection, frame denial, and cross-origin opener policy match exactly on HTTPS success and custom-404 responses |
-| HSTS/cache headers | Intentionally unchanged pending edge-wide HTTPS and caching review |
-| Cloudflare TLS | Pass: current origin mode is Full (Strict); three repeated edge passes and direct-origin hostname checks found no 526 or baseline regression |
-| Cloudflare rules | No legacy Page Rules or applicable redirect, transform, origin, cache, configuration, compression, or response-header Rulesets are deployed |
+| Webuzo domain | Pass: isolated subdomain owned by `jamesjen` |
+| Document root | Pass: `/home/jamesjen/player.jamesjennison.net`; no overlap with another site |
+| Server architecture | Pass: Webuzo 4.7.4 and Apache 2.4.68; syntax valid; Webuzo and MariaDB active |
+| Runtime isolation | Pass: static files only; no application process, port, reverse proxy, database, or new scheduled task |
+| DNS | Pass: exactly one proxied Player A record, TTL Auto; no public alias, AAAA, CNAME, or wildcard |
+| Cloudflare TLS | Pass: Full (Strict), valid edge certificate, no 526 |
+| Origin TLS | Pass: dedicated Let's Encrypt SAN only for `player.jamesjennison.net` |
+| Certificate renewal | Pass: next renewal registered for September 20, 2026; daily Webuzo renewal job retained |
+| Canonical routes | Pass: eight content routes return 200 |
+| Custom 404 | Pass: unknown paths retain status 404 with the Player error page |
+| HTTP redirect | Pass: HTTPS destination preserves path and query string |
+| Sensitive paths | Pass: `.git`, `.env`, keys, source documentation, and `.htaccess` are not publicly readable |
+| Security and cache headers | Pass on successful HTML and custom 404 responses; no edge-injected script |
+| Backups | Pass: `85b7382c`, `11ad18e9`, and `1f28541a` passed Restic checks and streamed restores |
+| Service isolation | Pass: master, `www`, status, QuireForge, webmail, mail DNS, and organizational Pages behavior retained |
+| Production logs | Pass: no Player 5xx response in the reviewed access-log window |
 
-The Webuzo template generated internal `www.player` and `mail.player` aliases.
-They are intentionally non-resolving and are not approved public hostnames. No
-generated virtual-host file was hand-edited, no shared service was restarted,
-and no custom reverse proxy, runtime process, database, or scheduled task was
-introduced.
+Webuzo's generated `www.player` and `mail.player` aliases remain non-resolving
+and are not approved public hostnames. No generated virtual-host file was
+edited and no shared service was restarted.
 
-The prior origin release remains at
-`/home/jamesjen/.player-previous-20260722T231413Z` for immediate atomic
-rollback. The temporary wildcard expires August 27, 2026. A dedicated
-Webuzo-managed certificate and controlled renewal proof remain required before
-that date; this checkpoint does not claim that future renewal is automatic.
+The immediate prior release remains at
+`/home/jamesjen/.player-previous-m16b-20260723T040350Z`. Production snapshot
+`1f28541a` preserves the final document root, Webuzo and Apache state,
+certificate state, and database export; five streamed restore comparisons
+passed.
 
-## Remaining gates
+## Public-content and transition boundary
 
-- Review and approval of this local commit
-- GitHub push or pull request
-- Dedicated origin certificate issuance and renewal validation
-- Cache header configuration
-- Approved Player DNS record and public launch
-- Production deployment and validation
-- Owner-timed Play Console update to `https://player.jamesjennison.net/privacy/` at app testing submission
-- GitHub Pages transition activation and eventual retirement
+- The canonical privacy notice is published at `/privacy/`.
+- Public contact remains limited to the approved GitHub issue route.
+- The historical `codeframe78.github.io` identity is absent and retired.
+- No private repository material, credential, environment file, key, log,
+  source map, dependency tree, or Git metadata is deployed.
+- The organizational GitHub Pages site remains unchanged and available.
+- `PLAYER_PAGES_TRANSITION_APPROVED` remains absent.
+- The Play Console privacy URL remains an owner-timed later change.
 
-None of the remaining actions occurred during this milestone.
+## Remaining approval gates
+
+- Push the local branch or open a pull request
+- Add Player to the live master-site registry and navigation
+- Add Player to public status monitoring, if desired
+- Update Play Console when the app is ready for testing submission
+- Activate and eventually retire the guarded GitHub Pages transition
+- Make any later DNS, Cloudflare, SSL, Webuzo, HSTS, redirect, or general cache change

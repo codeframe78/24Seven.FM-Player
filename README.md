@@ -33,7 +33,9 @@ The [comprehensive project portal](https://player.jamesjennison.net/) connects t
 
 ### Project website development
 
-The website remains a Jekyll static build. Docker is the only local runtime dependency; the build script uses the same
+The website is live as an isolated static Webuzo deployment at
+`player.jamesjennison.net`. It requires no application background process.
+Docker is the only local build dependency; the build script uses the same
 digest-pinned GitHub Pages build image as the repository workflow.
 
 ```bash
@@ -48,9 +50,10 @@ With `_site/` served locally on port 4173, the dependency-free Chromium contract
 
 ```bash
 node scripts/test-project-site-browser.mjs http://127.0.0.1:4173
+node scripts/test-project-site-firefox.mjs http://127.0.0.1:4173
 ```
 
-The existing GitHub Pages site remains unchanged unless the separately approved
+The organizational GitHub Pages site remains unchanged unless the separately approved
 `PLAYER_PAGES_TRANSITION_APPROVED` repository variable is set to `true` and the Project Site workflow is dispatched or
 runs on an approved `main` push. See [the migration and deployment plan](docs/project-site-migration.md).
 

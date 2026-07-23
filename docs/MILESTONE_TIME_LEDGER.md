@@ -301,12 +301,47 @@ Cumulative counted project time through Milestone Master M16A: 1.58 h (master-si
   approved no-cache-policy-change boundary and requires owner approval. The
   owner approved that exact correction, and execution resumed `July 22, 2026 at
   9:01:01 PM PDT (UTC−07:00)`.
+- **Acceptance pause:** Active execution paused again `July 22, 2026 at
+  9:11:43 PM PDT (UTC−07:00)`. The corrected production site has no injected
+  script, browser console error, or failed interaction. Lighthouse reports
+  mobile 98/100/100/92 and desktop 100/100/96/92. The only SEO failure is
+  Lighthouse's inability to load the valid public `robots.txt` while the page's
+  deliberate `connect-src 'none'` CSP is active. Retaining the stronger CSP and
+  accepting this measured-tool exception requires owner approval; relaxing it
+  to `connect-src 'self'` would require a separate security-policy approval.
+  The owner approved the stronger-policy exception, and execution resumed
+  `July 22, 2026 at 9:23:33 PM PDT (UTC−07:00)`.
+- **Completion:** The milestone completed `July 22, 2026 at 9:29:45 PM PDT
+  (UTC−07:00)`. Production serves the exact validated artifact through one
+  proxied Player record and Full (Strict), Webuzo owns a dedicated
+  exact-hostname certificate and registered renewal state, all route/browser/
+  isolation/rollback checks pass, and the approved stronger-policy exception
+  is documented. The master site, status monitoring, GitHub Pages, Play
+  Console, push/PR, and any broader infrastructure change remain separate
+  approval gates.
+- **Forecasting lesson:** A public static-site activation can fit below a
+  one-hour counted window when staging, origin trust, Cloudflare scope, backups,
+  and rollback are already proved. Edge HTML transformation and synthetic-audit
+  behavior should still be tested immediately after public activation because
+  neither is fully observable from origin staging.
 
 | Started | Ended | Category | Reason or work | Evidence | Hours |
 | --- | --- | --- | --- | --- | ---: |
 | `July 22, 2026 at 8:50:10 PM PDT (UTC−07:00)` | `July 22, 2026 at 8:58:56 PM PDT (UTC−07:00)` | Active | Revalidate source, origin, backup, DNS, TLS, and unaffected-service pre-state; create the exact record; validate public Full (Strict); enroll Automatic SSL; test browsers and Lighthouse; checkpoint the result. | Owner approval; snapshots `85b7382c` and `11ad18e9`; exact Cloudflare record; dedicated certificate and renewal state; production test results | 0.15 h |
 | `July 22, 2026 at 8:58:56 PM PDT (UTC−07:00)` | `July 22, 2026 at 9:01:01 PM PDT (UTC−07:00)` | User-blocked | Await approval for the narrow domain-artifact `Cache-Control: no-transform` correction and redeployment; do not weaken CSP or change a zone-wide Cloudflare security feature. | Production CSP console errors; Lighthouse Best Practices 92 and SEO 92; owner approval | 0.04 h excluded |
-| `July 22, 2026 at 9:01:01 PM PDT (UTC−07:00)` | In progress | Active | Implement, validate, back up, atomically deploy, and production-test the approved Player-only HTML `no-transform` correction. | Owner approval | In progress |
+| `July 22, 2026 at 9:01:01 PM PDT (UTC−07:00)` | `July 22, 2026 at 9:11:43 PM PDT (UTC−07:00)` | Active | Implement, validate, back up, atomically deploy, and production-test the approved Player-only HTML `no-transform` correction; add and run Chromium and Firefox production coverage; capture the production snapshot and unaffected-service evidence. | Commit `2cb59c8`; retained rollback release; snapshot `1f28541a`; production browser/Lighthouse/API/TLS/DNS checks | 0.18 h |
+| `July 22, 2026 at 9:11:43 PM PDT (UTC−07:00)` | `July 22, 2026 at 9:23:33 PM PDT (UTC−07:00)` | User-blocked | Await the owner's decision to retain `connect-src 'none'` and accept the Lighthouse robots/SEO score exception or separately authorize a weaker same-origin connection policy. | Valid public robots and sitemap; Chromium and Firefox passes; Lighthouse SEO 92 due only to the CSP-limited robots fetch; owner exception approval | 0.20 h excluded |
+| `July 22, 2026 at 9:23:33 PM PDT (UTC−07:00)` | `July 22, 2026 at 9:29:45 PM PDT (UTC−07:00)` | Active | Finalize the approved stronger-policy exception, production record, repository validation, and local completion checkpoint. | Owner approval; production route/header/TLS recheck; artifact digest; validator; clean secret/process review | 0.10 h |
+
+```text
+Milestone Master M16B time:
+Forecast: 1–2 active hours
+Counted project time: 0.43 h
+Total elapsed time: 0.66 h
+User-blocked time excluded: 0.24 h
+Forecast variance: 0.57 h below the lower bound (57.0%)
+Cumulative counted project time through Milestone Master M16B: 2.01 h (master-site program website milestones only; canonical Android cumulative remains Unknown)
+```
 
 ## Definitions and confidence rules
 

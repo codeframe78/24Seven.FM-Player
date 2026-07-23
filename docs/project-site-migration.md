@@ -1,6 +1,8 @@
-# Project-site migration and deployment preparation
+# Project-site migration and production record
 
-Production deployment is not authorized by this document.
+Owner-approved production activation completed July 22, 2026. This document
+does not authorize any later GitHub, master-site, status-monitoring, Play
+Console, Cloudflare, DNS, SSL, or Webuzo change.
 
 ## Approved outcome
 
@@ -25,27 +27,27 @@ materially benefit a dedicated domain:
 | --- | --- |
 | Public project | 24Seven.FM Player |
 | Repository | `James-Jennison/24Seven.FM-Player` |
-| Source branch | `codex/player-site-migration`; remote through `b94eacd`, with the current hardening milestone local-only pending review |
+| Source branch | `codex/player-site-migration`; production artifact source checkpoint `2cb59c8`, local-only pending push approval |
 | Approved hostname | `player.jamesjennison.net` |
 | Canonical hostname | `player.jamesjennison.net`; no `www` variant |
 | Framework | Jekyll through the GitHub Pages build environment |
 | Build runtime | Digest-pinned `ghcr.io/actions/jekyll-build-pages` container |
 | Build method | `./scripts/build-project-site.sh` |
 | Validation method | `./scripts/validate-project-site.sh` |
-| Production output | Static `_site/` artifact; current origin artifact digest `3729bc53082966c0473e8fb04da820f731c0f1c3140a5f7d821a8717b7d79bb5` |
+| Production output | Static `_site/` artifact; live production digest `9ba4d8e103f23201d5705ce7bc300d0c3247f585cc2be9674cd068f3d8863396` |
 | Server runtime | None |
 | Database | None |
 | Persistent process or port | None |
 | Webuzo | Version 4.7.4, revision 3723; Apache 2.4.68 serves the public virtual hosts directly |
 | Webuzo user | `jamesjen` |
 | Webuzo document root | `/home/jamesjen/player.jamesjennison.net` |
-| Origin SSL owner and method | Webuzo; existing publicly trusted Let's Encrypt apex/wildcard certificate assigned to Player through Webuzo's supported install-certificate workflow; dedicated renewal proof remains pending |
-| Cloudflare record and proxy state | Player record absent; zone is proxied and uses Full (Strict); Universal SSL is active for the apex and wildcard; no applicable redirect, transform, origin, cache, configuration, compression, or response-header Ruleset is deployed |
-| Cache behavior | Static asset caching proposed below; no rule configured |
+| Origin SSL owner and method | Webuzo Automatic SSL; dedicated Let's Encrypt certificate for only `player.jamesjennison.net`, valid through October 21, 2026, with next renewal registered for September 20 |
+| Cloudflare record and proxy state | Exactly one proxied A record for `player.jamesjennison.net`, TTL Auto; Full (Strict); no public `www.player`, `mail.player`, AAAA, CNAME, or wildcard record |
+| Cache behavior | HTML returns `public, max-age=0, must-revalidate, no-transform`; other cache behavior remains unchanged |
 | Logging | Existing Webuzo domain access/error logs only; no browser analytics |
 | Health check | Static route, asset, TLS, metadata, header, and cross-site navigation checks |
-| Backup | Restic pre-change snapshots `40412861`, `21c5494b`, `0f7293db`, and `bcefb231`; hardened-state snapshot `77f5810b` |
-| Rollback | Withdraw any later Player DNS, atomically restore the retained prior origin release or snapshot `bcefb231`, reinstall the backed-up prior certificate through Webuzo if needed, and leave Pages available |
+| Backup | Restic pre-activation `85b7382c`, post-Automatic-SSL `11ad18e9`, and production `1f28541a`; each passed repository and streamed-restore checks |
+| Rollback | Remove only the Player Cloudflare record, atomically restore `/home/jamesjen/.player-previous-m16b-20260723T040350Z` or snapshot `1f28541a`, restore certificate state through Webuzo only if required, and leave Pages available |
 
 The source, build container, Docker socket, repository metadata, documentation,
 dependencies, and credentials must remain outside the public document root.
@@ -152,6 +154,35 @@ swap, with the prior release retained at
 `/home/jamesjen/.player-previous-20260722T231413Z`. Post-change snapshot
 `77f5810b` preserves the validated working state.
 
+## Production-activation record
+
+Owner-approved production activation completed July 22, 2026. Exactly one
+proxied A record was created for `player.jamesjennison.net`, pointing to the
+same Webuzo origin target as the apex. Cloudflare remained in Full (Strict).
+No `www.player`, `mail.player`, AAAA, CNAME, or wildcard record was created, and
+the complete mail-related DNS boundary remained byte-for-byte unchanged.
+
+A randomized short-lived HTTP-01 probe passed through Cloudflare and was
+removed before Webuzo's supported domain-scoped Automatic SSL operation ran.
+Webuzo issued and installed a dedicated Let's Encrypt certificate whose only
+subject alternative name is `player.jamesjennison.net`. The certificate is
+valid through October 21, 2026; Webuzo registered September 20 as the next
+renewal time, retained the existing daily `renew_all` job, and left no
+challenge file behind.
+
+Cloudflare's JavaScript Detection initially injected an inline bootstrap into
+the reviewed HTML. The strict CSP correctly blocked it. After separate owner
+approval, the source artifact added an HTML-only `no-transform` cache
+directive. The exact rebuilt artifact was promoted atomically; the prior
+release remains at
+`/home/jamesjen/.player-previous-m16b-20260723T040350Z`.
+
+The first correction promotion restored the prior release automatically when
+its validation harness incorrectly treated a normal CRLF header terminator as
+a failed header. The artifact and Apache syntax were valid. The corrected
+assertion then promoted the same reviewed artifact successfully. No shared
+service reload or generated virtual-host edit was required.
+
 ## Active domain-specific headers
 
 The approved headers are implemented in the deployment artifact's local
@@ -166,30 +197,38 @@ Referrer-Policy: strict-origin-when-cross-origin
 X-Content-Type-Options: nosniff
 X-Frame-Options: DENY
 Cross-Origin-Opener-Policy: same-origin
+Cache-Control on HTML: public, max-age=0, must-revalidate, no-transform
 ```
 
-Direct-origin HTTP and HTTPS checks confirm all six exact values on successful
-and custom-404 responses. HSTS remains intentionally absent until origin and
-edge HTTPS are stable and the effect on every covered hostname is understood.
+Direct-origin and public HTTPS checks confirm all seven exact values on
+successful and custom-404 responses. The `no-transform` directive prevents
+Cloudflare from injecting scripts while retaining the strict CSP and
+zone-level security features. HSTS remains intentionally absent until a
+separate hostname-wide review approves it.
 
 Recommended caching after Webuzo and Cloudflare review:
 
-- HTML, XML, robots, and manifest: short cache with revalidation;
+- HTML: the approved zero-age revalidation and `no-transform` policy is active;
+- XML, robots, and manifest: a future short cache with revalidation remains
+  unconfigured;
 - versioned CSS, JavaScript, icons, and screenshots: longer cache only after an
   asset-versioning strategy exists;
 - 404 responses: short or no cache;
 - no cache rule may interfere with the temporary GitHub Pages transition.
 
-## DNS, Cloudflare, and SSL proposal
+## DNS, Cloudflare, and SSL state
 
-Before any change, verify current records and whether mail or another service
-depends on them. The expected design is one DNS record for
-`player.jamesjennison.net`, proxied through Cloudflare only after origin health
-is confirmed, with valid origin coverage and end-to-end Full (Strict) TLS.
+The production design uses exactly one proxied A record for
+`player.jamesjennison.net`, TTL Auto, targeting the same Webuzo origin as the
+apex. Cloudflare uses Full (Strict), and Webuzo owns the dedicated
+exact-hostname Let's Encrypt origin certificate and registered renewal state.
+Do not expose the origin target in documentation or browser assets.
 
-The exact record type, target, proxy state, dedicated-certificate renewal path,
-HTTPS enforcement, and cache rules remain approval-gated. Do not expose an
-origin IP in documentation or browser assets.
+The certificate was issued only after a short-lived randomized HTTP-01 path
+passed through Cloudflare. Mail-related records were compared before and after
+activation and did not change. No broader cache rule, redirect rule, zone-wide
+HSTS, minimum-TLS change, or additional Player hostname is part of the active
+configuration.
 
 The live read-only DNS and edge audit plus the recommended certificate sequence
 are recorded in
@@ -251,8 +290,23 @@ Test direct origin behavior where safe and approved, then the Cloudflare path:
 - Lighthouse performance, accessibility, best-practices, and SEO targets;
 - logs for new errors without recording or publishing sensitive topology.
 
-The master registry must keep Player in `planned` state until these checks pass.
-Changing it to `live` is a separate reviewed master-site commit.
+All listed Player production checks passed. Chromium covered 320, 390, 768,
+1440, and 1920 pixel viewports; Firefox covered its practical 500-pixel
+headless minimum plus 768, 1024, and 1440 pixel viewports. Keyboard, reduced
+motion, forced colors, no-JavaScript, custom-404, privacy, external navigation,
+and browser-console checks passed.
+
+Production Lighthouse results were 98/100/100/92 on mobile and
+100/100/96/92 on desktop for Performance, Accessibility, Best Practices, and
+SEO respectively. The owner approved the SEO measurement exception: the only
+failing SEO audit is Lighthouse's internal `robots.txt` fetch being denied by
+the deliberately strict `connect-src 'none'` CSP. The public `robots.txt`,
+sitemap, canonical metadata, and indexing directives are valid and reachable.
+The CSP was not weakened to optimize a synthetic score.
+
+The master registry and public status service do not yet include Player.
+Adding the master-site project link or a status-monitoring component requires a
+separate reviewed change and approval.
 
 ## Rollback
 
@@ -263,8 +317,10 @@ certificate state, and expected restoration time.
 If the new site fails:
 
 1. stop the release promotion without changing unrelated Webuzo services;
-2. atomically restore the retained prior document-root release or snapshot
-   `bcefb231` while preserving the failed release for diagnosis;
+2. atomically restore
+   `/home/jamesjen/.player-previous-m16b-20260723T040350Z` or recover the
+   required state from snapshot `1f28541a`, while preserving the failed release
+   for diagnosis;
 3. if certificate rollback is required, extract the prior Player materials into
    a root-only temporary directory and reinstall them through Webuzo's supported
    certificate workflow; never hand-edit the generated virtual host;
@@ -277,11 +333,9 @@ If the new site fails:
 
 ## Remaining approval gates
 
-- DNS and Cloudflare record
-- Dedicated origin-certificate issuance and renewal proof before the temporary wildcard expires
-- Any redirects or domain-specific server configuration
-- Cache headers
-- Production deployment
+- Add Player to the live master-site project registry and navigation
+- Add Player to public status monitoring, if desired
+- Any additional hostname, redirect, general cache rule, HSTS, or zone-wide TLS change
 - Owner-timed Play Console privacy URL update at app testing submission
 - `PLAYER_PAGES_TRANSITION_APPROVED` repository variable
 - GitHub push or pull request
